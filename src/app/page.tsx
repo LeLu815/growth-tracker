@@ -1,3 +1,3 @@
 export default function Home() {
-  return <div></div>;
+  return <div>배포하겠음</div>;
 }
