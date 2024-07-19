@@ -4,8 +4,24 @@ export async function getGoogleLogin() {
   const supabase = createClient()
   await supabase.auth.signInWithOAuth({
     provider: "google",
-    options: {
-      redirectTo: `http://example.com/auth/callback`,
-    },
   })
+}
+
+export async function getLogout() {
+  const supabase = createClient()
+  const { error } = await supabase.auth.signOut()
+  return error
+}
+
+export async function getMe() {
+  const supabase = createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (user) {
+    return user.email
+  } else {
+    return ""
+  }
 }
