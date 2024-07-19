@@ -3,13 +3,6 @@ import { createClient } from "@/supabase/client"
 export async function getGoogleLogin() {
   const supabase = createClient()
   await supabase.auth.signInWithOAuth({
-    provider: "google",
-  })
-}
-
-export async function getKaKaoLogin() {
-  const supabase = createClient()
-  await supabase.auth.signInWithOAuth({
     provider: "kakao",
   })
 }
