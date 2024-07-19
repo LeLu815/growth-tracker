@@ -1,12 +1,16 @@
 "use client"
 
+import { getGoogleLogin, getKaKaoLogin, getLogout, getMe } from "@/api/auth/google/api.google"
 import { useEffect, useState } from "react"
-import { getGoogleLogin, getLogout, getMe } from "@/api/auth/google/api.google"
 
 export default function Home() {
   const [user, setUser] = useState<string>("")
+
   const handleClickGoogleLogin = async () => {
     await getGoogleLogin()
+  }
+  const handleClickKakaoLogin = async () => {
+    await getKaKaoLogin()
   }
   const handleClickLogOut = async () => {
     const error = await getLogout()
@@ -32,6 +36,12 @@ export default function Home() {
           className="border border-cyan-500 bg-white px-4 py-2 text-cyan-500 hover:brightness-95 active:brightness-75"
         >
           구글 로그인
+        </button>
+        <button
+          onClick={handleClickKakaoLogin}
+          className="border border-cyan-500 bg-white px-4 py-2 text-cyan-500 hover:brightness-95 active:brightness-75"
+        >
+          카카오 로그인
         </button>
         <button
           onClick={handleClickLogOut}
