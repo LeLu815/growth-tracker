@@ -2,7 +2,6 @@ import { redirect } from "next/navigation"
 import { createClient } from "@/supabase/server"
 
 export async function GET() {
-  console.log("안녕 나는 이인 GET 1")
   const supabase = createClient()
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
