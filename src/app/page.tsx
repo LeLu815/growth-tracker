@@ -1,10 +1,10 @@
 "use client"
 
-import axios from "axios"
+import { getGoogleLogin } from "@/api/auth/google/api.google"
 
 export default function Home() {
   const handleClick = async () => {
-    await axios.get("/api/auth/google")
+    await getGoogleLogin()
   }
   return (
     <div>
