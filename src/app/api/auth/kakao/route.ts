@@ -1,5 +1,5 @@
-import { createClient } from "@/supabase/server"
 import { redirect } from "next/navigation"
+import { createClient } from "@/supabase/server"
 
 export async function GET() {
   const supabase = createClient()
@@ -10,7 +10,7 @@ export async function GET() {
       redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/kakao/callback`,
     },
   })
-  
+
   if (data.url) {
     redirect(data.url)
   }

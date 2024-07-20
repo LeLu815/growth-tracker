@@ -5,10 +5,15 @@ import { handleSocialLogin } from "@/api/auth/api.auth"
 import { useAuth } from "@/context/auth.context"
 
 export default function Home() {
+  const [nickname, setNickname] = useState<string>("")
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
+  const [authPage, setAuthPage] = useState<"sign-up" | "log-in">("log-in")
   const { me, isInitialized, isLoggedIn, signUp, logIn, logOut } = useAuth()
 
+  const handleChangeNickname: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setNickname(e.target.value)
+  }
   const handleChangeEmail: ChangeEventHandler<HTMLInputElement> = (e) => {
     setEmail(e.target.value)
   }
@@ -22,9 +27,17 @@ export default function Home() {
     handleSocialLogin("google")
   }
   const handleSignUp = async () => {
-    await signUp(email, password)
+    const response = await signUp(email, password, nickname)
+    if (response.status === 422) {
+      return alert("중복된 계정이 존재합니다.")
+    }
+    setEmail("")
+    setPassword("")
+    setNickname("")
   }
   const handleLogIn = async () => {
+    setEmail("")
+    setPassword("")
     await logIn(email, password)
   }
   return (
@@ -61,38 +74,75 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col gap-4">
+            <h1 className="text-center">{authPage}</h1>
+            {authPage === "sign-up" && (
+              <div className="flex flex-col">
+                <label htmlFor="nickname">닉네임</label>
+                <input
+                  type="nickname"
+                  id="nickname"
+                  value={nickname}
+                  onChange={handleChangeNickname}
+                  className="border border-neutral-500 px-2 py-1"
+                />
+              </div>
+            )}
             <div className="flex flex-col">
               <label htmlFor="email">이메일</label>
               <input
                 type="email"
                 id="email"
+                value={email}
                 onChange={handleChangeEmail}
                 className="border border-neutral-500 px-2 py-1"
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="passowrd">비밀번호</label>
+              <label htmlFor="password">비밀번호</label>
               <input
-                type="passowrd"
-                id="passowrd"
+                type="password"
+                id="password"
+                value={password}
                 onChange={handleChangePassword}
                 className="border border-neutral-500 px-2 py-1"
               />
             </div>
           </div>
           <div>
-            <button
-              onClick={handleSignUp}
-              className="rounded border border-neutral-500 bg-white px-3 py-1.5 text-neutral-500 hover:brightness-95 active:brightness-75"
-            >
-              회원가입
-            </button>
-            <button
-              onClick={handleLogIn}
-              className="rounded border border-neutral-500 bg-white px-3 py-1.5 text-neutral-500 hover:brightness-95 active:brightness-75"
-            >
-              회원가입
-            </button>
+            {authPage === "log-in" ? (
+              <>
+                <button
+                  onClick={handleLogIn}
+                  className="rounded border border-neutral-500 bg-white px-3 py-1.5 text-neutral-500 hover:brightness-95 active:brightness-75"
+                >
+                  로그인
+                </button>
+                <p
+                  className="cursor-pointer text-neutral-400 underline"
+                  onClick={() => setAuthPage("sign-up")}
+                >
+                  회원가입
+                </p>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={handleSignUp}
+                  className="rounded border border-neutral-500 bg-white px-3 py-1.5 text-neutral-500 hover:brightness-95 active:brightness-75"
+                >
+                  회원가입
+                </button>
+                <p
+                  className="cursor-pointer text-neutral-400 underline"
+                  onClick={() => {
+                    setAuthPage("log-in")
+                    setNickname("")
+                  }}
+                >
+                  로그인
+                </p>
+              </>
+            )}
           </div>
         </>
       )}
