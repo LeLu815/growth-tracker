@@ -18,7 +18,11 @@ type AuthContextValue = {
   userData: { nickname: string | null; imageUrl: string | null } | null
   logIn: (email: string, password: string) => Promise<{ status: number }>
   logOut: () => void
-  signUp: (email: string, password: string) => Promise<{ status: number }>
+  signUp: (
+    email: string,
+    password: string,
+    nickname: string
+  ) => Promise<{ status: number }>
 }
 
 const initialValue: AuthContextValue = {
@@ -40,7 +44,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     useState<AuthContextValue["isInitialized"]>(false)
   const [me, setMe] = useState<AuthContextValue["me"]>(null)
   const [userData, setUserData] = useState<AuthContextValue["userData"]>(null)
-  const isLoggedIn = !!me
+  const isLoggedIn = Boolean(me)
   const supabase = createClient()
 
   const fetchUserData = async (userId: string) => {
@@ -73,6 +77,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
         body: JSON.stringify(data),
       }
     )
+    if (response.status === 401) {
+      setMe(null)
+      setUserData(null)
+      return { status: 401, message: "회원가입에 실패했습니다." }
+    }
     const user = await response.json()
     setMe(user)
     fetchUserData(user.id)
@@ -84,7 +93,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
   }
 
   // 가입 함수
-  const signUp: AuthContextValue["signUp"] = async (email, password) => {
+  const signUp: AuthContextValue["signUp"] = async (
+    email,
+    password,
+    nickname
+  ) => {
     if (!email || !password) {
       return { status: 401, message: "이메일, 비밀번호 모두 채워 주세요." }
     }
@@ -94,6 +107,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const data = {
       email,
       password,
+      nickname,
     }
     const response = await fetch(
       process.env.NEXT_PUBLIC_DOMAIN + "/api/auth/sign-up",
@@ -102,14 +116,20 @@ export function AuthProvider({ children }: PropsWithChildren) {
         body: JSON.stringify(data),
       }
     )
-    const user = await response.json()
-    setMe(user)
-
-    fetchUserData(user.id)
-
+    if (response.status === 422) {
+      setMe(null)
+      setUserData(null)
+      return { status: 422, message: "이미 존재하는 이메일입니다." }
+    }
     if (response.status === 401) {
+      setMe(null)
+      setUserData(null)
       return { status: 401, message: "회원가입에 실패했습니다." }
     }
+    const user = await response.json()
+    setMe(user)
+    fetchUserData(user.id)
+
     return { status: 200 }
   }
 
