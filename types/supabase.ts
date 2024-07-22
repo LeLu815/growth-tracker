@@ -9,7 +9,7 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      CHALLENGE: {
+      challenge: {
         Row: {
           comment_cnt: number
           created_at: string
@@ -60,12 +60,12 @@ export type Database = {
             foreignKeyName: "CHALLENGE_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "USER"
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      CHALLENGE_COMMENT: {
+      challenge_comment: {
         Row: {
           challenge_id: string
           content: string
@@ -95,19 +95,19 @@ export type Database = {
             foreignKeyName: "CHALLENGE_COMMENT_challenge_id_fkey"
             columns: ["challenge_id"]
             isOneToOne: false
-            referencedRelation: "CHALLENGE"
+            referencedRelation: "challenge"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "CHALLENGE_COMMENT_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "USER"
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      CHALLENGE_COMMENT_LIKE: {
+      challenge_comment_like: {
         Row: {
           comment_id: string
           created_at: string
@@ -131,19 +131,19 @@ export type Database = {
             foreignKeyName: "CHALLENGE_COMMENT_LIKE_comment_id_fkey"
             columns: ["comment_id"]
             isOneToOne: false
-            referencedRelation: "CHALLENGE_COMMENT"
+            referencedRelation: "challenge_comment"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "CHALLENGE_COMMENT_LIKE_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "USER"
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      CHALLENGE_LIKE: {
+      challenge_like: {
         Row: {
           challenge_id: string
           id: string
@@ -164,62 +164,61 @@ export type Database = {
             foreignKeyName: "CHALLENGE_LIKE_challenge_id_fkey"
             columns: ["challenge_id"]
             isOneToOne: false
-            referencedRelation: "CHALLENGE"
+            referencedRelation: "challenge"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "CHALLENGE_LIKE_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "USER"
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      DIARY: {
+      diary: {
         Row: {
           challenge_id: string
           content: string
           created_at: string
           id: string
-          master_id: string
+          routine_done_daily_id: string
         }
         Insert: {
           challenge_id?: string
           content: string
           created_at?: string
           id?: string
-          master_id?: string
+          routine_done_daily_id?: string
         }
         Update: {
           challenge_id?: string
           content?: string
           created_at?: string
           id?: string
-          master_id?: string
+          routine_done_daily_id?: string
         }
         Relationships: [
           {
             foreignKeyName: "DIARY_challenge_id_fkey"
             columns: ["challenge_id"]
             isOneToOne: false
-            referencedRelation: "CHALLENGE"
+            referencedRelation: "challenge"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "DIARY_master_id_fkey"
-            columns: ["master_id"]
+            foreignKeyName: "diary_routine_done_daily_id_fkey"
+            columns: ["routine_done_daily_id"]
             isOneToOne: false
-            referencedRelation: "ROUTINE_DONE_MASTER"
+            referencedRelation: "routine_done_daily"
             referencedColumns: ["id"]
           },
         ]
       }
-      MILESTONE: {
+      milestone: {
         Row: {
           challenge_id: string
           created_at: string
-          day_cnt: number
           end_at: string
           id: string
           is_fri: boolean
@@ -231,11 +230,13 @@ export type Database = {
           is_tue: boolean
           is_wed: boolean
           start_at: string
+          success_requirement_cnt: number
+          total_cnt: number
+          total_day: number
         }
         Insert: {
           challenge_id?: string
           created_at?: string
-          day_cnt: number
           end_at: string
           id?: string
           is_fri: boolean
@@ -247,11 +248,13 @@ export type Database = {
           is_tue: boolean
           is_wed: boolean
           start_at: string
+          success_requirement_cnt: number
+          total_cnt: number
+          total_day: number
         }
         Update: {
           challenge_id?: string
           created_at?: string
-          day_cnt?: number
           end_at?: string
           id?: string
           is_fri?: boolean
@@ -263,18 +266,21 @@ export type Database = {
           is_tue?: boolean
           is_wed?: boolean
           start_at?: string
+          success_requirement_cnt?: number
+          total_cnt?: number
+          total_day?: number
         }
         Relationships: [
           {
             foreignKeyName: "MILESTONE_challenge_id_fkey"
             columns: ["challenge_id"]
             isOneToOne: false
-            referencedRelation: "CHALLENGE"
+            referencedRelation: "challenge"
             referencedColumns: ["id"]
           },
         ]
       }
-      ROUTINE: {
+      routine: {
         Row: {
           content: string
           created_at: string
@@ -298,63 +304,54 @@ export type Database = {
             foreignKeyName: "ROUTINE_milestone_id_fkey"
             columns: ["milestone_id"]
             isOneToOne: false
-            referencedRelation: "MILESTONE"
+            referencedRelation: "milestone"
             referencedColumns: ["id"]
           },
         ]
       }
-      ROUTINE_DONE: {
+      routine_done: {
         Row: {
           created_at: string
           id: string
-          milestone_id: string
-          routine_done_master_id: string
+          routine_done_daily_id: string
           routine_id: string
         }
         Insert: {
           created_at?: string
           id?: string
-          milestone_id?: string
-          routine_done_master_id?: string
+          routine_done_daily_id?: string
           routine_id?: string
         }
         Update: {
           created_at?: string
           id?: string
-          milestone_id?: string
-          routine_done_master_id?: string
+          routine_done_daily_id?: string
           routine_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "ROUTINE_DONE_milestone_id_fkey"
-            columns: ["milestone_id"]
+            foreignKeyName: "routine_done_routine_done_daily_id_fkey"
+            columns: ["routine_done_daily_id"]
             isOneToOne: false
-            referencedRelation: "MILESTONE"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ROUTINE_DONE_routine_done_master_id_fkey"
-            columns: ["routine_done_master_id"]
-            isOneToOne: false
-            referencedRelation: "ROUTINE_DONE_MASTER"
+            referencedRelation: "routine_done_daily"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "ROUTINE_DONE_routine_id_fkey"
             columns: ["routine_id"]
             isOneToOne: false
-            referencedRelation: "ROUTINE"
+            referencedRelation: "routine"
             referencedColumns: ["id"]
           },
         ]
       }
-      ROUTINE_DONE_MASTER: {
+      routine_done_daily: {
         Row: {
           challenge_id: string
           created_at: string
           id: string
           is_success: boolean
+          milestone_id: string
           user_id: string
         }
         Insert: {
@@ -362,6 +359,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_success?: boolean
+          milestone_id?: string
           user_id?: string
         }
         Update: {
@@ -369,33 +367,41 @@ export type Database = {
           created_at?: string
           id?: string
           is_success?: boolean
+          milestone_id?: string
           user_id?: string
         }
         Relationships: [
           {
+            foreignKeyName: "routine_done_daily_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "milestone"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "ROUTINE_DONE_MASTER_challenge_id_fkey"
             columns: ["challenge_id"]
             isOneToOne: false
-            referencedRelation: "CHALLENGE"
+            referencedRelation: "challenge"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "ROUTNE_DONE_MASTER_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "USER"
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      USER: {
+      users: {
         Row: {
           created_at: string
           email: string
           id: string
           nickname: string
           profile_image_url: string | null
-          social_type: string
+          social_type: string | null
         }
         Insert: {
           created_at?: string
@@ -403,7 +409,7 @@ export type Database = {
           id?: string
           nickname: string
           profile_image_url?: string | null
-          social_type: string
+          social_type?: string | null
         }
         Update: {
           created_at?: string
@@ -411,7 +417,7 @@ export type Database = {
           id?: string
           nickname?: string
           profile_image_url?: string | null
-          social_type?: string
+          social_type?: string | null
         }
         Relationships: [
           {
