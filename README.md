@@ -28,3 +28,5 @@
 | 💄 style  | css                            |
 | 🙈 gitfix | gitignore 수정                 |
 | 🔨script  | package.json 변경(npm 설치 등) |
+
+## api 설계
