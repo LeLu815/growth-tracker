@@ -15,7 +15,7 @@ type AuthContextValue = {
   isLoggedIn: boolean
   me: User | null
 
-  userData: { nickname: string | null; imageUrl: string | null } | null
+  userData: { nickname: string | null; profile_image_url: string | null } | null
   logIn: (email: string, password: string) => Promise<{ status: number }>
   logOut: () => void
   signUp: (
@@ -50,7 +50,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const fetchUserData = async (userId: string) => {
     const { data, error } = await supabase
       .from("users")
-      .select("nickname, imageUrl")
+      .select("nickname, profile_image_url")
       .eq("id", userId)
       .single()
     if (data) {
