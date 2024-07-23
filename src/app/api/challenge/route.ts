@@ -31,7 +31,14 @@ export const POST = async (request: NextRequest) => {
     .select()
   // 에러 발생하면 에러 코드는 없음 : 첼린지 생성이 안되서 삭제할 첼린지 id가 없음
   if (challengeCreateResopose.error) {
-    return NextResponse.json({ error: "" })
+    return NextResponse.json(
+      {
+        error: {
+          message: "challenge create error",
+        },
+      },
+      { status: 400 }
+    )
   }
 
   // 첼린지 아이디 추출
@@ -52,7 +59,20 @@ export const POST = async (request: NextRequest) => {
 
   // 마일스톤 생성 에러 발생시 첼린지 아이디를 에러로 리턴하여 해당 챌린지 삭제처리
   if (milestoneCreateResponse.error) {
-    return NextResponse.json({ error: newChallengeId })
+    // 삭제 로직을 분리하지 말고 여기서 바로 작성, 에러 코드에 메세지를 상세하게 작성해줄 것.
+    try {
+      await supabase.from("challenge").delete().eq("id", newChallengeId)
+    } catch {
+      console.log(`챌린지 ${newChallengeId} 삭제 오류`)
+    }
+    return NextResponse.json(
+      {
+        error: {
+          message: "milestone create error",
+        },
+      },
+      { status: 400 }
+    )
   }
 
   // 마일스톤 아이디 추출 (하나의 챌린지에는 마일스톤이 여러개 들어갈 수 있기 때문에 배열)
@@ -99,7 +119,20 @@ export const POST = async (request: NextRequest) => {
     )
     const routineCreateResponses = await Promise.all(insertPromises)
   } catch (e) {
-    return NextResponse.json({ error: challengeCreateResopose.data[0].id })
+    // 삭제 로직을 분리하지 말고 여기서 바로 작성, 에러 코드에 메세지를 상세하게 작성해줄 것.
+    try {
+      await supabase.from("challenge").delete().eq("id", newChallengeId)
+    } catch {
+      console.log(`챌린지 ${newChallengeId} 삭제 오류`)
+    }
+    return NextResponse.json(
+      {
+        error: {
+          message: "routine create error",
+        },
+      },
+      { status: 400 }
+    )
   }
 
   // 위의 모든 과정 성공
