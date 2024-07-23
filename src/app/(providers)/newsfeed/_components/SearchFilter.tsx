@@ -20,8 +20,6 @@ function SearchFilter({ onSearch }: SearchProps) {
       <input
         type="text"
         ref={searchRef}
-        name=""
-        id=""
         placeholder="검색"
         className="text-black"
         onKeyDown={handleKeyDown}

@@ -7,8 +7,6 @@ function SortSelector({ filter, onChangeFilter }: SortSelectorProps) {
   return (
     <div>
       <select
-        name=""
-        id=""
         className="text-black"
         value={filter}
         onChange={(e) => onChangeFilter(e.target.value)}
