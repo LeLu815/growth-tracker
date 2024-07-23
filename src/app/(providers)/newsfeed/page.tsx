@@ -4,6 +4,8 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useQuery } from "@tanstack/react-query"
 
+import Page from "@/components/Page"
+
 import { PostType } from "../../../../types/challenge"
 import CategorySelector from "./_components/CategorySelector"
 import ChallengePosts from "./_components/ChallengePosts"
@@ -52,8 +54,7 @@ function NewsfeedPage() {
   }
 
   return (
-    <div>
-      <h2>뉴스피드 페이지</h2>
+    <Page title="뉴스피드 페이지">
       {/* 카테고리 */}
       <CategorySelector
         category={category}
@@ -68,7 +69,7 @@ function NewsfeedPage() {
 
       {/* 목록 */}
       <ChallengePosts posts={posts} onClickPost={handlePostClick} />
-    </div>
+    </Page>
   )
 }
 
