@@ -8,7 +8,7 @@ import queryClient from "../queryClient"
 
 const CHALLENGE_QEURY_KEY = "challenge"
 
-function UserChallengeQuery() {
+function useChallengeQuery() {
   const { isPending: challengeCreateIsPending, mutate: challengeCreateMutate } =
     useMutation({
       mutationFn: async (variables: POSTchallengeArgumentType) =>
@@ -27,4 +27,4 @@ function UserChallengeQuery() {
   return { challengeCreateMutate, challengeCreateIsPending }
 }
 
-export { UserChallengeQuery }
+export { useChallengeQuery }

@@ -33,7 +33,13 @@ type MilestonePartialType = Partial<RemainingType>
 export type POSTchallengeArgumentType = {
   challenge: Pick<
     ChallengeType,
-    "user_id" | "goal" | "start_at" | "end_at" | "is_secret" | "day_cnt"
+    | "user_id"
+    | "goal"
+    | "start_at"
+    | "end_at"
+    | "is_secret"
+    | "day_cnt"
+    | "category"
   >
   milestone: (MilestoneRequiredType & MilestonePartialType)[]
   routine: Pick<RoutineType, "content" | "milestone_id">[][]

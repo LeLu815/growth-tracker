@@ -11,45 +11,48 @@ export type Database = {
     Tables: {
       challenge: {
         Row: {
+          category: string | null
           comment_cnt: number
           created_at: string
           day_cnt: number | null
-          end_at: string
+          end_at: string | null
           goal: string
           id: string
           is_secret: boolean
           like_cnt: number
-          start_at: string
+          start_at: string | null
           state: string
           template_cnt: number
           user_id: string
           view_cnt: number
         }
         Insert: {
+          category?: string | null
           comment_cnt?: number
           created_at?: string
           day_cnt?: number | null
-          end_at: string
+          end_at?: string | null
           goal: string
           id?: string
           is_secret: boolean
           like_cnt?: number
-          start_at: string
+          start_at?: string | null
           state?: string
           template_cnt?: number
-          user_id?: string
+          user_id: string
           view_cnt?: number
         }
         Update: {
+          category?: string | null
           comment_cnt?: number
           created_at?: string
           day_cnt?: number | null
-          end_at?: string
+          end_at?: string | null
           goal?: string
           id?: string
           is_secret?: boolean
           like_cnt?: number
-          start_at?: string
+          start_at?: string | null
           state?: string
           template_cnt?: number
           user_id?: string
@@ -75,12 +78,12 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          challenge_id?: string
+          challenge_id: string
           content: string
           created_at?: string
           id?: string
           like_cnt?: number
-          user_id?: string
+          user_id: string
         }
         Update: {
           challenge_id?: string
@@ -115,10 +118,10 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          comment_id?: string
+          comment_id: string
           created_at?: string
           id?: number
-          user_id?: string
+          user_id: string
         }
         Update: {
           comment_id?: string
@@ -150,9 +153,9 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          challenge_id?: string
+          challenge_id: string
           id?: string
-          user_id?: string
+          user_id: string
         }
         Update: {
           challenge_id?: string
@@ -185,11 +188,11 @@ export type Database = {
           routine_done_daily_id: string
         }
         Insert: {
-          challenge_id?: string
+          challenge_id: string
           content: string
           created_at?: string
           id?: string
-          routine_done_daily_id?: string
+          routine_done_daily_id: string
         }
         Update: {
           challenge_id?: string
@@ -235,18 +238,18 @@ export type Database = {
           total_day: number
         }
         Insert: {
-          challenge_id?: string
+          challenge_id: string
           created_at?: string
           end_at: string
           id?: string
-          is_fri: boolean
-          is_mon: boolean
-          is_sat: boolean
-          is_success: boolean
-          is_sun: boolean
-          is_thu: boolean
-          is_tue: boolean
-          is_wed: boolean
+          is_fri?: boolean
+          is_mon?: boolean
+          is_sat?: boolean
+          is_success?: boolean
+          is_sun?: boolean
+          is_thu?: boolean
+          is_tue?: boolean
+          is_wed?: boolean
           start_at: string
           success_requirement_cnt: number
           total_cnt: number
@@ -291,7 +294,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
-          milestone_id?: string
+          milestone_id: string
         }
         Update: {
           content?: string
@@ -319,8 +322,8 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
-          routine_done_daily_id?: string
-          routine_id?: string
+          routine_done_daily_id: string
+          routine_id: string
         }
         Update: {
           created_at?: string
@@ -355,12 +358,12 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          challenge_id?: string
+          challenge_id: string
           created_at?: string
           id?: string
           is_success?: boolean
-          milestone_id?: string
-          user_id?: string
+          milestone_id: string
+          user_id: string
         }
         Update: {
           challenge_id?: string
@@ -434,7 +437,34 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      execute_sql2: {
+        Args: {
+          sql: string
+        }
+        Returns: undefined
+      }
+      get_challenge_with_milestones: {
+        Args: {
+          request_challenge_id: string
+        }
+        Returns: {
+          id: string
+          created_at: string
+          user_id: string
+          goal: string
+          like_cnt: number
+          template_cnt: number
+          view_cnt: number
+          is_secret: boolean
+          day_cnt: number
+          comment_cnt: number
+          state: string
+          category: string
+          start_at: string
+          end_at: string
+          milestones: Json
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
