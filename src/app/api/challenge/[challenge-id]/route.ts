@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/supabase/server"
 
-<<<<<<< HEAD
 import { Database } from "../../../../../types/supabase"
 
 // 타입 추론을 위한 타입 추출
@@ -19,7 +18,7 @@ export const PUT = async (request: NextRequest) => {
   const routineList: RoutineType[][] = data.routine
 
   return NextResponse.json("")
-=======
+}
 export async function GET(req: NextRequest) {
   const supabase = createClient()
   const { searchParams } = new URL(req.url)
@@ -44,5 +43,4 @@ export async function GET(req: NextRequest) {
   }
 
   return NextResponse.json(listData)
->>>>>>> ca7c59eb96fba8d8fb9940513efa0d259fbdad40
 }
