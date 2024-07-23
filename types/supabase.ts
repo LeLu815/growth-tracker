@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       challenge: {
         Row: {
+          category: string | null
           comment_cnt: number
           created_at: string
           day_cnt: number | null
@@ -26,6 +27,7 @@ export type Database = {
           view_cnt: number
         }
         Insert: {
+          category?: string | null
           comment_cnt?: number
           created_at?: string
           day_cnt?: number | null
@@ -41,6 +43,7 @@ export type Database = {
           view_cnt?: number
         }
         Update: {
+          category?: string | null
           comment_cnt?: number
           created_at?: string
           day_cnt?: number | null
@@ -239,14 +242,14 @@ export type Database = {
           created_at?: string
           end_at: string
           id?: string
-          is_fri: boolean
-          is_mon: boolean
-          is_sat: boolean
-          is_success: boolean
-          is_sun: boolean
-          is_thu: boolean
-          is_tue: boolean
-          is_wed: boolean
+          is_fri?: boolean
+          is_mon?: boolean
+          is_sat?: boolean
+          is_success?: boolean
+          is_sun?: boolean
+          is_thu?: boolean
+          is_tue?: boolean
+          is_wed?: boolean
           start_at: string
           success_requirement_cnt: number
           total_cnt: number
@@ -394,6 +397,42 @@ export type Database = {
           },
         ]
       }
+      test: {
+        Row: {
+          created_at: string
+          id: number
+          tesgt2: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          tesgt2?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          tesgt2?: number | null
+        }
+        Relationships: []
+      }
+      test2: {
+        Row: {
+          created_at: string
+          id: number
+          tesgt2: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          tesgt2?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          tesgt2?: number | null
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           created_at: string
@@ -434,7 +473,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      execute_sql2: {
+        Args: {
+          sql: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

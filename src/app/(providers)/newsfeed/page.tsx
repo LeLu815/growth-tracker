@@ -1,105 +1,73 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
-import axios from "axios"
+import { useQuery } from "@tanstack/react-query"
 
-import { Database } from "../../../../types/supabase"
-
-type PostType = Database["public"]["Tables"]["challenge"]["Row"] & {
-  user: { nickname: string }
-}
+import { PostType } from "../../../../types/challenge"
+import CategorySelector from "./_components/CategorySelector"
+import ChallengePosts from "./_components/ChallengePosts"
+import SearchFilter from "./_components/SearchFilter"
+import SortSelector from "./_components/SortSelector"
+import { fetchPosts } from "./_utils/fetchPosts"
 
 function NewsfeedPage() {
-  const [posts, setPosts] = useState<PostType[]>([])
-  const searchRef = useRef<HTMLInputElement>(null)
   const [filter, setFilter] = useState<string>("recent")
   const [userId, setUserId] = useState<string>("")
-  const [category, setCategory] = useState<string>("")
+  const [category, setCategory] = useState<string>("전체보기")
+  const [searchQuery, setSearchQuery] = useState<string>("")
 
   const router = useRouter()
+
+  const {
+    data: posts = [],
+    error,
+    refetch,
+  } = useQuery<PostType[]>({
+    queryKey: ["posts", filter, category, searchQuery],
+    queryFn: () => fetchPosts(filter, category, searchQuery, userId),
+  })
 
   const handlePostClick = (id: string) => {
     router.push(`/challenge/${id}`)
   }
 
-  const fetchPosts = useCallback(async () => {
-    const searchQuery = searchRef.current?.value || ""
+  const handleSearch = (query: string) => {
+    setSearchQuery(query)
+    refetch()
+  }
 
-    try {
-      const response = await axios.get("/api/challenge", {
-        params: { userId, keyword: searchQuery, filter, category },
-      })
-      setPosts(response.data)
-    } catch (error) {
-      console.error("리스트 페팅 에러", error)
-    }
-  }, [filter, userId, category])
+  const handleFilterChange = (selectedFilter: string) => {
+    setFilter(selectedFilter)
+    refetch()
+  }
 
-  useEffect(() => {
-    fetchPosts()
-  }, [fetchPosts])
+  const handleCategoryClick = (selectedCategory: string) => {
+    setCategory(selectedCategory)
+    refetch()
+  }
 
-  console.log(posts)
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      fetchPosts()
-    }
+  if (error) {
+    console.error("리스트 페칭 에러", error)
   }
 
   return (
     <div>
       <h2>뉴스피드 페이지</h2>
+      {/* 카테고리 */}
+      <CategorySelector
+        category={category}
+        onSelectCategory={handleCategoryClick}
+      />
 
-      {/* TODO: 검색 필터 */}
-      <div>
-        <input
-          type="text"
-          ref={searchRef}
-          name=""
-          id=""
-          placeholder="검색"
-          className="text-black"
-          onKeyDown={handleKeyDown}
-        />
-        <button onClick={fetchPosts}>검색</button>
-      </div>
+      {/* 검색 필터 */}
+      <SearchFilter onSearch={handleSearch} />
 
-      {/* TODO: 정렬 */}
-      <div>
-        <select
-          name=""
-          id=""
-          className="text-black"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        >
-          <option value="recent">최신순</option>
-          <option value="popular">인기순</option>
-          <option value="followed">따라하기 많은 순</option>
-          <option value="complete">성공 루틴만 보기</option>
-        </select>
-      </div>
+      {/* 정렬 */}
+      <SortSelector filter={filter} onChangeFilter={handleFilterChange} />
 
-      {/* TODO: 목록 뿌려주기 */}
-      <div>
-        <ul>
-          {posts.map((post) => (
-            <li
-              key={post.id}
-              className="m-2 border border-slate-400 p-4"
-              onClick={() => handlePostClick(post.id)}
-            >
-              <h2>{post.goal}</h2>
-              <p>{post.user.nickname}</p>
-              <p>{post.template_cnt}</p>
-              <p>{post.state}</p>
-              <p>❤️ {post.like_cnt}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* 목록 */}
+      <ChallengePosts posts={posts} onClickPost={handlePostClick} />
     </div>
   )
 }

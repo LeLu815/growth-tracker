@@ -7,11 +7,17 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const keyword = searchParams.get("keyword") || ""
   const filter = searchParams.get("filter") || ""
+  const category = searchParams.get("category") || ""
 
   const baseQuery = supabase
     .from("challenge")
     .select(`*, user: users (nickname)`)
     .ilike("goal", `%${keyword}%`)
+
+  // 카테고리 필터링
+  const categoryQuery = category
+    ? baseQuery.eq("category", category)
+    : baseQuery
 
   // 필터링 & 정렬
   const query = (() => {
