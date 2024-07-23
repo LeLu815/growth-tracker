@@ -1,6 +1,6 @@
+import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/supabase/server"
 import { produce } from "immer"
-import { NextRequest, NextResponse } from "next/server"
 
 import { Database } from "../../../../types/supabase"
 
@@ -29,7 +29,7 @@ export const POST = async (request: NextRequest) => {
       day_cnt: data.day_cnt,
     })
     .select()
-    // 에러 발생하면 에러 코드는 없음 : 첼린지 생성이 안되서 삭제할 첼린지 id가 없음
+  // 에러 발생하면 에러 코드는 없음 : 첼린지 생성이 안되서 삭제할 첼린지 id가 없음
   if (challengeCreateResopose.error) {
     return NextResponse.json({ error: "" })
   }
@@ -50,7 +50,7 @@ export const POST = async (request: NextRequest) => {
     .insert(newMilestoneList)
     .select()
 
-    // 마일스톤 생성 에러 발생시 첼린지 아이디를 에러로 리턴하여 해당 챌린지 삭제처리
+  // 마일스톤 생성 에러 발생시 첼린지 아이디를 에러로 리턴하여 해당 챌린지 삭제처리
   if (milestoneCreateResponse.error) {
     return NextResponse.json({ error: newChallengeId })
   }
@@ -72,13 +72,15 @@ export const POST = async (request: NextRequest) => {
 
   // 받아온 마일스톤이 100개가 넘을 수 있다. => supebase bulk는 100개까지 지원해주기 때문에 100개 단위로 쪼개야 함.
   // 쪼개진 데이터 배열의 배열
-  let final_newRoutineList:RoutineType[][] = []
+  let final_newRoutineList: RoutineType[][] = []
   // 위에서 추출한 마일스톤의 개수가 100개 이상일 때
   if (newRoutineList.length > 100) {
     // 깊은복사
-    const temp_newRoutineList:RoutineType[] = JSON.parse(JSON.stringify(newRoutineList));
+    const temp_newRoutineList: RoutineType[] = JSON.parse(
+      JSON.stringify(newRoutineList)
+    )
     // 100개 이상일 때 while문으로 쪼개기
-    while(temp_newRoutineList.length > 100) {
+    while (temp_newRoutineList.length > 100) {
       // 원본배열 훼손하여 길이 확인
       const chunkList = temp_newRoutineList.splice(0, 50)
       final_newRoutineList.push(chunkList)
@@ -90,13 +92,16 @@ export const POST = async (request: NextRequest) => {
     final_newRoutineList = [newRoutineList]
   }
 
+  // 한꺼번에 프로미스로 처리하기
   try {
-    const insertPromises = final_newRoutineList.map((list)=>supabase.from("routine").insert(list))
+    const insertPromises = final_newRoutineList.map((list) =>
+      supabase.from("routine").insert(list)
+    )
     const routineCreateResponses = await Promise.all(insertPromises)
-  } catch(e) {
+  } catch (e) {
     return NextResponse.json({ error: challengeCreateResopose.data[0].id })
   }
-  }
 
+  // 위의 모든 과정 성공
   return NextResponse.json("")
 }
