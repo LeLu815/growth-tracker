@@ -397,6 +397,42 @@ export type Database = {
           },
         ]
       }
+      test: {
+        Row: {
+          created_at: string
+          id: number
+          tesgt2: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          tesgt2?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          tesgt2?: number | null
+        }
+        Relationships: []
+      }
+      test2: {
+        Row: {
+          created_at: string
+          id: number
+          tesgt2: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          tesgt2?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          tesgt2?: number | null
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           created_at: string
@@ -443,6 +479,7 @@ export type Database = {
         }
         Returns: undefined
       }
+<<<<<<< HEAD
       get_challenge_with_milestones: {
         Args: {
           request_challenge_id: string
@@ -465,6 +502,8 @@ export type Database = {
           milestones: Json
         }[]
       }
+=======
+>>>>>>> ca7c59eb96fba8d8fb9940513efa0d259fbdad40
     }
     Enums: {
       [_ in never]: never
