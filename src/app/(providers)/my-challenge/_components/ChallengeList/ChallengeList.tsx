@@ -144,6 +144,7 @@ function ChallengeList() {
   const CURRENT_DATE_NUMBER = parseInt(CURRENT_DATE.replace(/-/g, ""))
 
   const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"]
+
   const CURRENT_DAY_OF_WEEK = "수"
   const CURRENT_DAY_NUMBER = 3
 
@@ -167,127 +168,130 @@ function ChallengeList() {
   if (fetchedChallengeData) {
     console.log(fetchedChallengeData)
     return (
-      <div>
-        <div className="mt-10 flex gap-4">
+      <div className="mt-10 flex flex-col gap-y-10">
+        <div className="flex gap-4">
           <p>현재 내 아이디: </p>
           <p>{me?.id}</p>
         </div>
-        <div className="mt-10 flex gap-4">
+        <div className="flex gap-4">
           <p>오늘 날짜: </p>
           <p>
             {CURRENT_DATE} {CURRENT_DAY_OF_WEEK}
           </p>
         </div>
-        <div className="mt-10">
-          <div className="mt-5 flex flex-col gap-y-5">
-            {fetchedChallengeData?.map((challenge) => {
-              const challengeStartDate = parseInt(
-                challenge.start_at?.replace(/-/g, "") || "0"
-              )
-              const challengeEndDate = parseInt(
-                challenge.end_at?.replace(/-/g, "") || "0"
-              )
+        <div className="flex flex-col gap-y-12">
+          {fetchedChallengeData?.map((challenge) => {
+            const challengeStartDate = parseInt(
+              challenge.start_at?.replace(/-/g, "") || "0"
+            )
+            const challengeEndDate = parseInt(
+              challenge.end_at?.replace(/-/g, "") || "0"
+            )
 
-              if (
-                CURRENT_DATE_NUMBER >= challengeStartDate &&
-                CURRENT_DATE_NUMBER <= challengeEndDate
-              ) {
-                return (
-                  <div
-                    key={challenge.goal}
-                    className="flex flex-col gap-y-8 border-2 border-white px-8 py-10"
-                  >
-                    <h3 className="text-xl font-bold">
-                      챌린지: {challenge.goal}
-                    </h3>
-                    <h1>챌린지 시작: {challenge.start_at}</h1>
-                    <h1>챌린지 종료: {challenge.end_at}</h1>
-                    {challenge.milestones?.map((milestone) => {
-                      // 요일 필터링
-                      const milestoneDoDays: string[] = []
-                      if (milestone.is_sun) {
-                        milestoneDoDays.push(DAYS_OF_WEEK[0])
-                      }
-                      if (milestone.is_mon) {
-                        milestoneDoDays.push(DAYS_OF_WEEK[1])
-                      }
-                      if (milestone.is_tue) {
-                        milestoneDoDays.push(DAYS_OF_WEEK[2])
-                      }
-                      if (milestone.is_wed) {
-                        milestoneDoDays.push(DAYS_OF_WEEK[3])
-                      }
-                      if (milestone.is_thu) {
-                        milestoneDoDays.push(DAYS_OF_WEEK[4])
-                      }
-                      if (milestone.is_fri) {
-                        milestoneDoDays.push(DAYS_OF_WEEK[5])
-                      }
-                      if (milestone.is_sat) {
-                        milestoneDoDays.push(DAYS_OF_WEEK[6])
-                      }
+            if (
+              CURRENT_DATE_NUMBER >= challengeStartDate &&
+              CURRENT_DATE_NUMBER <= challengeEndDate
+            ) {
+              return (
+                <div
+                  key={challenge.goal}
+                  className="flex flex-col gap-y-5 border-2 border-white px-8 py-10"
+                >
+                  <h3 className="text-xl font-bold">
+                    챌린지: {challenge.goal}
+                  </h3>
+                  <h1>챌린지 시작: {challenge.start_at}</h1>
+                  <h1>챌린지 종료: {challenge.end_at}</h1>
+                  {challenge.milestones?.map((milestone) => {
+                    // 요일 필터링
+                    const milestoneDoDays: string[] = []
+                    if (milestone.is_sun) {
+                      milestoneDoDays.push(DAYS_OF_WEEK[0])
+                    }
+                    if (milestone.is_mon) {
+                      milestoneDoDays.push(DAYS_OF_WEEK[1])
+                    }
+                    if (milestone.is_tue) {
+                      milestoneDoDays.push(DAYS_OF_WEEK[2])
+                    }
+                    if (milestone.is_wed) {
+                      milestoneDoDays.push(DAYS_OF_WEEK[3])
+                    }
+                    if (milestone.is_thu) {
+                      milestoneDoDays.push(DAYS_OF_WEEK[4])
+                    }
+                    if (milestone.is_fri) {
+                      milestoneDoDays.push(DAYS_OF_WEEK[5])
+                    }
+                    if (milestone.is_sat) {
+                      milestoneDoDays.push(DAYS_OF_WEEK[6])
+                    }
 
-                      if (milestone.challenge_id == challenge.id) {
-                        const milestoneStartDate = parseInt(
-                          milestone.start_at?.replace(/-/g, "") || "0"
-                        )
-                        const milestoneEndDate = parseInt(
-                          milestone.end_at?.replace(/-/g, "") || "0"
-                        )
-                        if (
-                          CURRENT_DATE_NUMBER >= milestoneStartDate &&
-                          CURRENT_DATE_NUMBER <= milestoneEndDate
-                        ) {
-                          return (
-                            <div
-                              key={milestone.id}
-                              className="border-2 border-white px-4 py-10"
-                            >
-                              <div className="mt-3">
-                                <p>마일스톤 시작: {milestone.start_at}</p>
-                                <p>마일스톤의 종료: {milestone.end_at}</p>
-                              </div>
-                              <p className="mt-5">마일스톤을 실행 요일:</p>
-                              <div className="flex gap-x-5">
-                                {milestone.is_mon ? <p>월</p> : <></>}
-                                {milestone.is_tue ? <p>화</p> : <></>}
-                                {milestone.is_wed ? <p>수</p> : <></>}
-                                {milestone.is_thu ? <p>목</p> : <></>}
-                                {milestone.is_fri ? <p>금</p> : <></>}
-                                {milestone.is_sat ? <p>토</p> : <></>}
-                                {milestone.is_sun ? <p>일</p> : <></>}
-                              </div>
-                              <>
-                                {milestoneDoDays.findIndex((milestoneDoDay) => {
-                                  return milestoneDoDay == CURRENT_DAY_OF_WEEK
-                                }) == -1 ? (
-                                  <p>오늘은 할 일이 없어요</p>
-                                ) : (
-                                  <>
-                                    {milestone.routines?.map((routine) => {
-                                      if (
-                                        routine.milestone_id == milestone.id
-                                      ) {
-                                        return (
-                                          <p key={routine.id}>
-                                            루틴: {routine.content}
-                                          </p>
-                                        )
-                                      }
-                                    })}
-                                  </>
-                                )}
-                              </>
+                    if (milestone.challenge_id == challenge.id) {
+                      const milestoneStartDate = parseInt(
+                        milestone.start_at?.replace(/-/g, "") || "0"
+                      )
+                      const milestoneEndDate = parseInt(
+                        milestone.end_at?.replace(/-/g, "") || "0"
+                      )
+                      if (
+                        CURRENT_DATE_NUMBER >= milestoneStartDate &&
+                        CURRENT_DATE_NUMBER <= milestoneEndDate
+                      ) {
+                        return (
+                          <div
+                            key={milestone.id}
+                            className="border-2 border-white px-4 py-10"
+                          >
+                            <div className="mt-3">
+                              <p>마일스톤 시작: {milestone.start_at}</p>
+                              <p>마일스톤의 종료: {milestone.end_at}</p>
                             </div>
-                          )
-                        }
+                            <p className="mt-5">마일스톤을 실행 요일:</p>
+                            <div className="flex gap-x-5">
+                              {milestone.is_mon ? <p>월</p> : <></>}
+                              {milestone.is_tue ? <p>화</p> : <></>}
+                              {milestone.is_wed ? <p>수</p> : <></>}
+                              {milestone.is_thu ? <p>목</p> : <></>}
+                              {milestone.is_fri ? <p>금</p> : <></>}
+                              {milestone.is_sat ? <p>토</p> : <></>}
+                              {milestone.is_sun ? <p>일</p> : <></>}
+                            </div>
+                            <>
+                              {milestoneDoDays.findIndex((milestoneDoDay) => {
+                                return milestoneDoDay == CURRENT_DAY_OF_WEEK
+                              }) == -1 ? (
+                                <p className="mt-5">오늘은 할 일이 없어요</p>
+                              ) : (
+                                <div className="mt-5 flex flex-col gap-y-3">
+                                  {milestone.routines?.map((routine) => {
+                                    if (routine.milestone_id == milestone.id) {
+                                      return (
+                                        <div
+                                          key={routine.id}
+                                          className="flex justify-between"
+                                        >
+                                          <p>루틴: {routine.content}</p>
+                                          <input
+                                            type="checkbox"
+                                            className="h-8 w-8 rounded-lg"
+                                          />
+                                        </div>
+                                      )
+                                    }
+                                  })}
+                                </div>
+                              )}
+                            </>
+                          </div>
+                        )
                       }
-                    })}
-                  </div>
-                )
-              }
-            })}
-          </div>
+                    }
+                  })}
+                </div>
+              )
+            }
+          })}
         </div>
       </div>
     )
