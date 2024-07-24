@@ -138,29 +138,36 @@ export const PUT = async (
   return NextResponse.json("updated successfully.")
 }
 
-// 챌린지 디테일 가져오는 함수
-export async function GET(req: NextRequest) {
+export async function GET(
+  req: NextRequest,
+  {
+    params,
+  }: {
+    params: {
+      "challenge-id": string
+    }
+  }
+) {
+  const challengeId = params["challenge-id"]
   const supabase = createClient()
-  const { searchParams } = new URL(req.url)
-  const challengeId = searchParams.get("challenge-id")
 
   if (!challengeId) {
-    return NextResponse.json(
-      { error: "챌린지 아이디가 없습니다" },
-      { status: 400 }
-    )
+    return NextResponse.json({ error: "챌린지 아이디가 없습니다", status: 400 })
   }
 
-  const { data: listData, error: listError } = await supabase
-    .from("challenge")
-    .select(`*, user: users (nickname)`)
-    .eq("id", challengeId)
-    .single()
+  const request: Database["public"]["Functions"]["get_challenge_with_milestones"]["Args"] =
+    {
+      request_challenge_id: challengeId,
+    }
 
-  if (listError) {
-    console.error(listError.message)
-    return NextResponse.json({ listError: listError.message })
+  const { data, error } = await supabase.rpc(
+    "get_challenge_with_milestones",
+    request
+  )
+
+  if (error) {
+    return NextResponse.json({ error: error.message, status: 500 })
   }
 
-  return NextResponse.json(listData)
+  return NextResponse.json({ status: 200, data: data[0], error: null })
 }
