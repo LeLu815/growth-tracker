@@ -28,7 +28,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
   }
 
   const { data, isPending, isError } = useQuery<Challenge>({
-    queryKey: ["challenge"],
+    queryKey: ["challenge_detail"],
     queryFn: getChallenge,
   })
 

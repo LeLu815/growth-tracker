@@ -35,6 +35,7 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
 
     const config = { method, url }
     const response = await axios(config)
+    debugger
     return response.data
   }
 
@@ -55,12 +56,15 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
         "challenge_like",
       ])
       queryClient.setQueryData<boolean>(["challenge_like"], (prev) => !prev)
+      debugger
       return isChangedLike
     },
     onError: (err, newTodo, context: boolean | undefined) => {
+      debugger
       queryClient.setQueryData(["challenge_like"], context) // 변경된 부분
     },
     onSettled: () => {
+      debugger
       queryClient.invalidateQueries({ queryKey: ["challenge_like"] })
     },
   })

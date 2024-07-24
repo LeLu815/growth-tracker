@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/supabase/server"
 
+const { Client } = require("pg")
+
 export async function GET(
   req: NextRequest,
   {
@@ -40,10 +42,7 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { "challenge-id": string } }
 ) {
-  const supabase = createClient()
-
   const challengeId = params["challenge-id"]
-
   const { searchParams } = new URL(req.url)
   const userId = searchParams.get("userId")
 
@@ -53,16 +52,37 @@ export async function POST(
     return NextResponse.json({ error: "유저아이디가 없습니다.", status: 400 })
   }
 
-  const { data, error } = await supabase
-    .from("challenge_like")
-    .insert([{ user_id: userId, challenge_id: challengeId }])
-    .select()
+  const pgClient = new Client({
+    connectionString: process.env.NEXT_PUBLIC_SUPABASE_CONNECTION_URL!,
+  })
 
-  if (error) {
+  // supabase db 연결
+  pgClient
+    .connect()
+    .then(() => console.log("Connected to the database"))
+    .catch((err: Error) => console.error("Connection error", err.stack))
+
+  await pgClient.query("BEGIN")
+  try {
+    await pgClient.query(
+      "INSERT INTO challenge_like (user_id, challenge_id) VALUES($1, $2)",
+      [userId, challengeId]
+    )
+
+    await pgClient.query(
+      "UPDATE challenge SET like_cnt = like_cnt + 1 where id = $1",
+      [challengeId]
+    )
+
+    await pgClient.query("COMMIT")
+  } catch (error: any) {
+    await pgClient.query("ROLLBACK")
     return NextResponse.json({ error: error.message, status: 500 })
+  } finally {
+    await pgClient.end()
   }
 
-  return NextResponse.json({ data, status: 200 })
+  return NextResponse.json({ status: 200, error: null })
 }
 
 export async function DELETE(
@@ -82,15 +102,36 @@ export async function DELETE(
     return NextResponse.json({ error: "유저아이디가 없습니다.", status: 400 })
   }
 
-  const { error } = await supabase
-    .from("challenge_like")
-    .delete()
-    .eq("user_id", userId)
-    .eq("challenge_id", challengeId)
+  const pgClient = new Client({
+    connectionString: process.env.NEXT_PUBLIC_SUPABASE_CONNECTION_URL!,
+  })
 
-  if (error) {
+  // supabase db 연결
+  pgClient
+    .connect()
+    .then(() => console.log("Connected to the database"))
+    .catch((err: Error) => console.error("Connection error", err.stack))
+
+  await pgClient.query("BEGIN")
+
+  try {
+    await pgClient.query(
+      "DELETE FROM challenge_like where user_id = $1 AND challenge_id = $2",
+      [userId, challengeId]
+    )
+
+    await pgClient.query(
+      "UPDATE challenge SET like_cnt = like_cnt - 1 where id = $1",
+      [challengeId]
+    )
+
+    await pgClient.query("COMMIT")
+  } catch (error: any) {
+    await pgClient.query("ROLLBACK")
     return NextResponse.json({ error: error.message, status: 500 })
+  } finally {
+    await pgClient.end()
   }
 
-  return NextResponse.json({ status: 200 })
+  return NextResponse.json({ status: 200, error: null })
 }
