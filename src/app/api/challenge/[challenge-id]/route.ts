@@ -51,7 +51,7 @@ export const PUT = async (
     }
     // 2. 마일스톤 생성
     // sql 키값 추출 배열
-    const searchAttrs: (keyof MilestoneType)[] = [
+    const milestoneAttrs: (keyof MilestoneType)[] = [
       "end_at",
       "start_at",
       "challenge_id",
@@ -68,7 +68,7 @@ export const PUT = async (
     ]
     // promise 배열 생성
     const insertMileStonePromises = milestoneList.map((milestoneObj) => {
-      const queryList = searchAttrs.map((attr) => {
+      const queryList = milestoneAttrs.map((attr) => {
         if (attr === "challenge_id") {
           return params["challenge-id"]
         }
@@ -81,16 +81,33 @@ export const PUT = async (
     })
     // reponse 타입 지정
     type MilestoneResponse = {
-      id: string
+      rows: { id: string }[]
     }
     // promise.all : 마일스톤 생성 완료
     const milestoneCreateResponses: MilestoneResponse[] = await Promise.all(
       insertMileStonePromises
     )
-    console.log("milestoneList :", milestoneList)
-    console.log("milestoneCreateResponses :", milestoneCreateResponses)
+
+    // 생성된 마일스톤 아이디 추출
+    const milestoneIdList = milestoneCreateResponses.map(
+      (response) => response.rows[0].id
+    )
 
     // 3. 루틴 생성
+    // promise 배열 생성
+    const insertRoutinePromises = []
+    for (let i = 0; i < routineList.length; i++) {
+      for (let j = 0; j < routineList[i].length; j++) {
+        insertRoutinePromises.push(
+          pgClient.query(
+            "INSERT INTO routine (milestone_id, content) VALUES ($1, $2)",
+            [milestoneIdList[i], routineList[i][j].content]
+          )
+        )
+      }
+    }
+    // 배열 all 실행
+    await Promise.all(insertRoutinePromises)
 
     // 트랜잭션 커밋
     await pgClient.query("COMMIT")

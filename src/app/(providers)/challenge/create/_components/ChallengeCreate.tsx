@@ -217,7 +217,7 @@ function ChallengeCreate() {
         onClick={() =>
           challengeUpdateMutate({
             "challenge-id": "663d4d24-0d90-4f8e-b5fc-0796d0e9ba5f",
-            milestoneIds: ["b5e93309-8b13-4e93-acc9-1dcd5a1c2f27"],
+            milestoneIds: [],
             milestone: INITIAL_DATA.milestone,
             routine: INITIAL_DATA.routine,
           })
