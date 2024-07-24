@@ -15,7 +15,7 @@ function ChallengeDetailPage({ params }: ChallengeDetailPageProps) {
       <ChallengeInfo challengeId={challengeId}></ChallengeInfo>
       <DiaryList></DiaryList>
       <ChallengeLike challengeId={challengeId}></ChallengeLike>
-      <ChallengeCommentList></ChallengeCommentList>
+      <ChallengeCommentList challengeId={challengeId}></ChallengeCommentList>
     </div>
   )
 }

@@ -1,18 +1,27 @@
 "use client"
 
+import { useRouter } from "next/navigation"
+import { useModal } from "@/context/modal.context"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
 import { numberToWeek } from "@/app/(providers)/challenge/[challenge-id]/_utils/milestoneweekUtils"
 
 function ChallengeInfo({ challengeId }: { challengeId: string }) {
+  const modal = useModal()
+  const router = useRouter()
+
   const getChallenge = async (): Promise<Challenge> => {
     const response = await axios
       .get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}`)
       .then((response) => response.data)
 
     if (response.error) {
-      throw new Error("Network response was not ok")
+      modal.open({
+        type: "alert",
+        content: "해당 챌린지는 존재하지 않습니다.",
+      })
+      router.push("/newsfeed")
     }
 
     return response.data
