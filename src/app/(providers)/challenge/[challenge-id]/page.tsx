@@ -1,16 +1,20 @@
-"use client"
-
 import ChallengeCommentList from "@/app/(providers)/challenge/[challenge-id]/_components/ChallengeCommentList"
 import ChallengeInfo from "@/app/(providers)/challenge/[challenge-id]/_components/ChallengeInfo"
 import ChallengeLike from "@/app/(providers)/challenge/[challenge-id]/_components/ChallengeLike"
 import DiaryList from "@/app/(providers)/challenge/[challenge-id]/_components/DiaryList"
 
-function ChallengeDetailPage() {
+interface ChallengeDetailPageProps {
+  params: { "challenge-id": string }
+}
+
+function ChallengeDetailPage({ params }: ChallengeDetailPageProps) {
+  const challengeId = params["challenge-id"]
+
   return (
     <div className={"w-full"}>
-      <ChallengeInfo></ChallengeInfo>
+      <ChallengeInfo challengeId={challengeId}></ChallengeInfo>
       <DiaryList></DiaryList>
-      <ChallengeLike></ChallengeLike>
+      <ChallengeLike challengeId={challengeId}></ChallengeLike>
       <ChallengeCommentList></ChallengeCommentList>
     </div>
   )

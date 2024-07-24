@@ -1,14 +1,16 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query"
+import axios from "axios"
 
-function ChallengeInfo() {
+import { numberToWeek } from "@/app/(providers)/challenge/[challenge-id]/_utils/milestoneweekUtils"
 
+function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const getChallenge = async (): Promise<Challenge> => {
-    const promise = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/37be6653-34e9-48dc-9559-3dbca4aabd5e`
-    )
-    const response = await promise.json()
+    const response = await axios
+      .get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}`)
+      .then((response) => response.data)
+
     if (response.error) {
       throw new Error("Network response was not ok")
     }
@@ -16,12 +18,12 @@ function ChallengeInfo() {
     return response.data
   }
 
-  const { data, isLoading, isError } = useQuery<Challenge>({
+  const { data, isPending, isError } = useQuery<Challenge>({
     queryKey: ["challenge"],
     queryFn: getChallenge,
   })
 
-  if (isLoading) return <div>Loading...</div>
+  if (isPending) return <div>Loading...</div>
   if (isError) return <div>Error loading data</div>
 
   return (
@@ -38,7 +40,7 @@ function ChallengeInfo() {
       <div className={"flex flex-col gap-4"}>
         {data?.milestones?.map((milestone, index) => {
           return (
-            <div key={milestone.id} className={" border border-black"}>
+            <div key={milestone.id} className={"border border-black"}>
               마일스톤{index + 1}
               <div>
                 {milestone.start_at} ~ {milestone.end_at} ({milestone.total_day}
@@ -68,9 +70,13 @@ function ChallengeInfo() {
                   총 루틴 횟수 {milestone.total_cnt}회 | {milestone.total_day}일
                 </div>
               </div>
-              <div >
+              <div>
                 {milestone.routines.map((routine) => {
-                  return <div className={" border border-black"} key={routine.id}>{routine.content}</div>
+                  return (
+                    <div className={"border border-black"} key={routine.id}>
+                      {routine.content}
+                    </div>
+                  )
                 })}
               </div>
             </div>
@@ -79,25 +85,6 @@ function ChallengeInfo() {
       </div>
     </div>
   )
-}
-
-const numberToWeek = (index: number) => {
-  switch (index) {
-    case 0:
-      return "월"
-    case 1:
-      return "화"
-    case 2:
-      return "수"
-    case 3:
-      return "목"
-    case 4:
-      return "금"
-    case 5:
-      return "토"
-    case 6:
-      return "일"
-  }
 }
 
 export default ChallengeInfo
