@@ -274,7 +274,9 @@ function ChallengeList() {
                                           <p>루틴: {routine.content}</p>
                                           <input
                                             type="checkbox"
+                                            id={routine.id}
                                             className="h-8 w-8 rounded-lg"
+                                            checked={false}
                                           />
                                         </div>
                                       )
@@ -293,6 +295,7 @@ function ChallengeList() {
             }
           })}
         </div>
+        <button className="bg-gray-600 px-10 py-5">제출하기</button>
       </div>
     )
   }
