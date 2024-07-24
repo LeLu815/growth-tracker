@@ -1,17 +1,22 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 
 function ChallengeLike({ challengeId }: { challengeId: string }) {
   const queryClient = useQueryClient()
+  const router = useRouter()
   const { me } = useAuth()
   const [isLike, setIsLike] = useState(true)
 
   const isLikedByUserId = async (): Promise<boolean> => {
-    debugger
+    if (!me) {
+      return false
+    }
+
     const response = await axios
       .get(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}/like?userId=${me?.id}`
@@ -30,6 +35,7 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
 
     const config = { method, url }
     const response = await axios(config)
+    debugger
     return response.data
   }
 
@@ -50,12 +56,15 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
         "challenge_like",
       ])
       queryClient.setQueryData<boolean>(["challenge_like"], (prev) => !prev)
+      debugger
       return isChangedLike
     },
     onError: (err, newTodo, context: boolean | undefined) => {
+      debugger
       queryClient.setQueryData(["challenge_like"], context) // 변경된 부분
     },
     onSettled: () => {
+      debugger
       queryClient.invalidateQueries({ queryKey: ["challenge_like"] })
     },
   })
@@ -73,7 +82,7 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
   return (
     <div>
       <div>챌린지 글에 대한 좋아요</div>
-      <div onClick={() => handleLikeMutate()}>
+      <div onClick={() => (me ? handleLikeMutate() : router.push("/"))}>
         {isLike ? <p>❤️</p> : <p> 🤍</p>}
       </div>
     </div>
