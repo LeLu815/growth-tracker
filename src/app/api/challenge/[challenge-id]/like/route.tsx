@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
+import { createPGClient } from "@/supabase/pgClient"
 import { createClient } from "@/supabase/server"
-
-const { Client } = require("pg")
 
 export async function GET(
   req: NextRequest,
@@ -52,9 +51,7 @@ export async function POST(
     return NextResponse.json({ error: "유저아이디가 없습니다.", status: 400 })
   }
 
-  const pgClient = new Client({
-    connectionString: process.env.NEXT_PUBLIC_SUPABASE_CONNECTION_URL!,
-  })
+  const pgClient = createPGClient()
 
   // supabase db 연결
   pgClient
@@ -89,8 +86,6 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { "challenge-id": string } }
 ) {
-  const supabase = createClient()
-
   const challengeId = params["challenge-id"]
 
   const { searchParams } = new URL(req.url)
@@ -102,9 +97,7 @@ export async function DELETE(
     return NextResponse.json({ error: "유저아이디가 없습니다.", status: 400 })
   }
 
-  const pgClient = new Client({
-    connectionString: process.env.NEXT_PUBLIC_SUPABASE_CONNECTION_URL!,
-  })
+  const pgClient = createPGClient()
 
   // supabase db 연결
   pgClient

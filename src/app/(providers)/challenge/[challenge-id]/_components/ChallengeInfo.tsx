@@ -11,7 +11,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const modal = useModal()
   const router = useRouter()
 
-  const getChallenge = async (): Promise<Challenge> => {
+  const getChallenge = async (): Promise<ChallengeType> => {
     const response = await axios
       .get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}`)
       .then((response) => response.data)
@@ -27,7 +27,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
     return response.data
   }
 
-  const { data, isPending, isError } = useQuery<Challenge>({
+  const { data, isPending, isError } = useQuery<ChallengeType>({
     queryKey: ["challenge_detail"],
     queryFn: getChallenge,
   })
@@ -47,6 +47,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
       <div>그래프나오는 곳</div>
       <div className={"h-1 w-full bg-black"}>s</div>
       <div className={"flex flex-col gap-4"}>
+        <div className={"text-2xl"}>마일스톤 목록</div>
         {data?.milestones?.map((milestone, index) => {
           return (
             <div key={milestone.id} className={"border border-black"}>
