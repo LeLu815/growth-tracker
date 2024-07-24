@@ -1,8 +1,8 @@
 import {
   POSTchallenge,
-  POSTchallengeArgumentType,
+  POSTchallengeArgumentProps,
   PUTchallenge,
-  PUTchallengeArgumentType,
+  PUTchallengeArgumentProps,
 } from "@/api/supabase/challenge"
 import { useMutation } from "@tanstack/react-query"
 
@@ -13,7 +13,7 @@ const CHALLENGE_QEURY_KEY = "challenge"
 function useChallengeQuery() {
   const { isPending: challengeCreateIsPending, mutate: challengeCreateMutate } =
     useMutation({
-      mutationFn: async (variables: POSTchallengeArgumentType) =>
+      mutationFn: async (variables: POSTchallengeArgumentProps) =>
         await POSTchallenge(variables),
       onSuccess: () => {
         // 모달 추가
@@ -28,7 +28,7 @@ function useChallengeQuery() {
 
   const { isPending: challengeUpdateIsPending, mutate: challengeUpdateMutate } =
     useMutation({
-      mutationFn: async (variables: PUTchallengeArgumentType) =>
+      mutationFn: async (variables: PUTchallengeArgumentProps) =>
         await PUTchallenge(variables),
       onSuccess: (data, variables) => {
         // 모달 추가

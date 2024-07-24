@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { POSTchallengeArgumentType } from "@/api/supabase/challenge"
+import { POSTchallengeArgumentProps } from "@/api/supabase/challenge"
 import { useAuth } from "@/context/auth.context"
 import useChallengeQuery from "@/query/challenge/userChallengeQuery"
 
@@ -18,7 +18,7 @@ function ChallengeCreate() {
 
   // 마일스톤 객체 리스트
   const [milestones, setMilestones] = useState<
-    POSTchallengeArgumentType["milestone"]
+    POSTchallengeArgumentProps["milestone"]
   >([])
 
   const {
