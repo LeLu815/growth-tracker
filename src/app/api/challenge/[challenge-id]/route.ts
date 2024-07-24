@@ -44,8 +44,12 @@ export const PUT = async (
     // 삭제 요소가 없으면 넘어감
     if (milestoneDeleteList.length !== 0) {
       // 1. 실행되지 않은 마일스톤 다 삭제
+      // 삭제를 원하는 갯수만큼 ($1)이 반복되어야함
+      const deletCountNum = milestoneDeleteList.map(
+        (_, index) => `$${index + 1}`
+      )
       await pgClient.query(
-        "DELETE FROM milestone WHERE id IN ($1)",
+        `DELETE FROM milestone WHERE id IN (${deletCountNum.join(", ")})`,
         milestoneDeleteList
       )
     }
