@@ -397,42 +397,6 @@ export type Database = {
           },
         ]
       }
-      test: {
-        Row: {
-          created_at: string
-          id: number
-          tesgt2: number | null
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          tesgt2?: number | null
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          tesgt2?: number | null
-        }
-        Relationships: []
-      }
-      test2: {
-        Row: {
-          created_at: string
-          id: number
-          tesgt2: number | null
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          tesgt2?: number | null
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          tesgt2?: number | null
-        }
-        Relationships: []
-      }
       users: {
         Row: {
           created_at: string
