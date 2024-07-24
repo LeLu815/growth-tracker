@@ -5,7 +5,7 @@ import { Database } from "../../../types/supabase"
 // 테이블 상에 존재하는 데이터 타입
 type ChallengeType = Database["public"]["Tables"]["challenge"]["Row"]
 type MilestoneType = Database["public"]["Tables"]["milestone"]["Row"]
-type RoutineType = Database["public"]["Tables"]["routine"]["Row"]
+export type RoutineType = Database["public"]["Tables"]["routine"]["Row"]
 
 // 필요없는 타입 제외한 milestone 타입
 type MilestoneDefaultType = Pick<
@@ -44,7 +44,7 @@ export type POSTchallengeArgumentType = {
   milestone: (MilestoneRequiredType & MilestonePartialType)[]
   routine: Pick<RoutineType, "content" | "milestone_id">[][]
 }
-
+// 챌린지 생성함수
 export const POSTchallenge = async (params: POSTchallengeArgumentType) => {
   const postResponse = await axios.post("/api/challenge", {
     challenge: params.challenge,
@@ -52,4 +52,24 @@ export const POSTchallenge = async (params: POSTchallengeArgumentType) => {
     routine: params.routine,
   })
   return postResponse
+}
+
+// 챌린지 디테일 업데이트 함수 인자 타입
+export type PUTchallengeArgumentType = {
+  "challenge-id": string
+  milestoneIds: ChallengeType["id"][]
+  milestone: (MilestoneRequiredType & RemainingType)[]
+  routine: Pick<RoutineType, "content" | "milestone_id">[][]
+}
+// 챌린지 디테일 업데이트 함수
+export const PUTchallenge = async (params: PUTchallengeArgumentType) => {
+  const putResponse = await axios.put(
+    `/api/challenge/${params["challenge-id"]}`,
+    {
+      milestoneIds: params.milestoneIds,
+      milestone: params.milestone,
+      routine: params.routine,
+    }
+  )
+  return putResponse
 }
