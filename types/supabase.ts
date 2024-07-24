@@ -437,6 +437,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      decrement_like_cnt: {
+        Args: {
+          request_challenge_id: string
+        }
+        Returns: undefined
+      }
       execute_sql2: {
         Args: {
           sql: string
