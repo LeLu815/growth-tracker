@@ -30,7 +30,7 @@ type RemainingType = Omit<
 type MilestonePartialType = Partial<RemainingType>
 
 // milestone의 타입은 위의 타입연산 결과를 바탕으로 : 필수타입 + 선택 타입의 조합으로 이루어진다.
-export type POSTchallengeArgumentType = {
+export interface POSTchallengeArgumentProps {
   challenge: Pick<
     ChallengeType,
     | "user_id"
@@ -45,7 +45,7 @@ export type POSTchallengeArgumentType = {
   routine: Pick<RoutineType, "content" | "milestone_id">[][]
 }
 // 챌린지 생성함수
-export const POSTchallenge = async (params: POSTchallengeArgumentType) => {
+export const POSTchallenge = async (params: POSTchallengeArgumentProps) => {
   const postResponse = await axios.post("/api/challenge", {
     challenge: params.challenge,
     milestone: params.milestone,
@@ -55,14 +55,14 @@ export const POSTchallenge = async (params: POSTchallengeArgumentType) => {
 }
 
 // 챌린지 디테일 업데이트 함수 인자 타입
-export type PUTchallengeArgumentType = {
+export interface PUTchallengeArgumentProps {
   "challenge-id": string
   milestoneIds: ChallengeType["id"][]
   milestone: (MilestoneRequiredType & RemainingType)[]
   routine: Pick<RoutineType, "content" | "milestone_id">[][]
 }
 // 챌린지 디테일 업데이트 함수
-export const PUTchallenge = async (params: PUTchallengeArgumentType) => {
+export const PUTchallenge = async (params: PUTchallengeArgumentProps) => {
   const putResponse = await axios.put(
     `/api/challenge/${params["challenge-id"]}`,
     {
