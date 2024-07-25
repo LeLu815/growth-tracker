@@ -46,7 +46,7 @@ function UserInfoPage() {
    * */
   const handleUpdateUser = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    debugger
+
     let updateProfileImageUrl = originProfileImageUrlRef.current
     if (originProfileImageUrlRef.current !== profileImageUrl) {
       if (!deleteImage(originProfileImageUrlRef.current, PROFILE)) {
@@ -102,7 +102,7 @@ function UserInfoPage() {
   }
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    debugger
+
     const file = e.target.files?.[0]
     if (file) {
       setSelectedFile(file)
