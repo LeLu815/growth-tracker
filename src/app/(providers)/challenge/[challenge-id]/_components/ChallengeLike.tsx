@@ -35,7 +35,7 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
 
     const config = { method, url }
     const response = await axios(config)
-    debugger
+
     return response.data
   }
 
@@ -56,21 +56,18 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
         "challenge_like",
       ])
       queryClient.setQueryData<boolean>(["challenge_like"], (prev) => !prev)
-      debugger
+
       return isChangedLike
     },
     onError: (err, newTodo, context: boolean | undefined) => {
-      debugger
       queryClient.setQueryData(["challenge_like"], context) // 변경된 부분
     },
     onSettled: () => {
-      debugger
       queryClient.invalidateQueries({ queryKey: ["challenge_like"] })
     },
   })
 
   useEffect(() => {
-    debugger
     if (typeof isLikedFromServer === "boolean") {
       setIsLike(isLikedFromServer)
     }
@@ -80,10 +77,10 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
   if (isError) return <div>Error loading data</div>
 
   return (
-    <div>
+    <div className={"flex gap-4"}>
       <div>챌린지 글에 대한 좋아요</div>
       <div onClick={() => (me ? handleLikeMutate() : router.push("/"))}>
-        {isLike ? <p>❤️</p> : <p> 🤍</p>}
+        {isLike ? <p>❤️</p> : <p>🤍</p>}
       </div>
     </div>
   )
