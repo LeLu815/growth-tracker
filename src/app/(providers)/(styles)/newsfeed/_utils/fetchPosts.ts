@@ -1,6 +1,6 @@
 import axios from "axios"
 
-import { PostType } from "../../../../../types/challenge"
+import { PostType } from "../../../../../../types/challenge"
 
 export const fetchPosts = async (
   filter: string,
