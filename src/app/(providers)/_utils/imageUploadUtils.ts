@@ -1,4 +1,3 @@
-// utils.ts
 import { createClient } from "@/supabase/client"
 
 const { v4: uuidv4 } = require("uuid")
