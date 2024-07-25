@@ -5,7 +5,7 @@ import { useModal } from "@/context/modal.context"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
-import { numberToWeek } from "@/app/(providers)/challenge/[challenge-id]/_utils/milestoneweekUtils"
+import { numberToWeek } from "../_utils/milestoneweekUtils"
 
 function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const modal = useModal()

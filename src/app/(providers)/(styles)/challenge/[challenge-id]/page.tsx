@@ -1,7 +1,7 @@
-import ChallengeCommentList from "@/app/(providers)/challenge/[challenge-id]/_components/ChallengeCommentList"
-import ChallengeInfo from "@/app/(providers)/challenge/[challenge-id]/_components/ChallengeInfo"
-import ChallengeLike from "@/app/(providers)/challenge/[challenge-id]/_components/ChallengeLike"
-import DiaryList from "@/app/(providers)/challenge/[challenge-id]/_components/DiaryList"
+import ChallengeCommentList from "./_components/ChallengeCommentList"
+import ChallengeInfo from "./_components/ChallengeInfo"
+import ChallengeLike from "./_components/ChallengeLike"
+import DiaryList from "./_components/DiaryList"
 
 interface ChallengeDetailPageProps {
   params: { "challenge-id": string }

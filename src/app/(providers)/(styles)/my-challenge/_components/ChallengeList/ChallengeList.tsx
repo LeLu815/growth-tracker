@@ -8,8 +8,7 @@ import {
   tRoutine,
   tStructuredChallenge,
   tStructuredMilestone,
-} from "../../../../../../types/challengeStructure.type"
-import { Database } from "../../../../../../types/supabase"
+} from "../../../../../../../types/challengeStructure.type"
 
 function ChallengeList() {
   // 유저 아이디 정의
