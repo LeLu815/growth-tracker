@@ -84,7 +84,28 @@ function RoutineCheckBox({
     return data
   }
 
+  // routine_done 테이블에 특정 레코드를 제거하는 함수
+  const DELETEroutineDone = async (routineId: string) => {
+    const supabase = createClient()
+    const { data, error } = await supabase
+      .from("routine_done")
+      .delete()
+      .eq("routine_id", routineId)
+    queryClient.invalidateQueries({
+      queryKey: ["fetchCurrentUserRoutineDone"],
+    })
+  }
+
   const handleCheckboxChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    // 전체 routine_done에서 routine_done_daily_id를 통해서
+    // 현재 체크한 루틴에 대한 오늘 날짜의 데이터 가져오기 및 존재 여부 확인
+    const targetRD = routineDone.find((item) => {
+      return (
+        item.created_at.slice(0, 10) == createdAt &&
+        item.routine_id == routineId
+      )
+    })
+
     // 체크하는 경우
     if (event.target.checked) {
       // 전체 routine_done_daily에서 마일스톤 id를 통해서
@@ -113,16 +134,6 @@ function RoutineCheckBox({
         targetRDDId.push(targetRDD.id)
       }
 
-      // 전체 routine_done에서 routine_done_daily_id를 통해서
-      // 현재 체크한 루틴에 대한 오늘 날짜의 데이터가 이미 존재하는지 확인
-      const targetRD = routineDone.find((item) => {
-        console.log(routineId)
-        return (
-          item.created_at.slice(0, 10) == createdAt &&
-          item.routine_id == routineId
-        )
-      })
-
       // routine_done에 유효한 레코드가 없으므로 새로 생성
       if (!targetRD) {
         // routine_done 테이블에 레코드 추가
@@ -136,6 +147,11 @@ function RoutineCheckBox({
       }
     }
     // 체크를 해제하는 경우
+    else {
+      if (targetRD) {
+        DELETEroutineDone(targetRD.routine_id)
+      }
+    }
   }
 
   return (
