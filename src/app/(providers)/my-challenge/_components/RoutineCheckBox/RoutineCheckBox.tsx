@@ -28,6 +28,14 @@ function RoutineCheckBox({
   routineId,
   routineDone,
 }: PropsWithChildren<RoutineCheckBoxProps>) {
+  // 전체 routine_done에서 routine_done_daily_id를 통해서
+  // 현재 체크한 루틴에 대한 오늘 날짜의 데이터 가져오기 및 존재 여부 확인하며,
+  // 이를 활용해 추후 체크박스의 최초값(선택/해제) 부여
+  const targetRD = routineDone.find((item) => {
+    return (
+      item.created_at.slice(0, 10) == createdAt && item.routine_id == routineId
+    )
+  })
   // 개별 마일스톤에 대해서 내부 루틴을 처음 체크할 때,
   // routine_done_daily 테이블에 새로운 레코드를 생성하는 함수
   const POSTnewRoutineDoneDaily = async (
@@ -95,17 +103,8 @@ function RoutineCheckBox({
       queryKey: ["fetchCurrentUserRoutineDone"],
     })
   }
-
+  // 체크박스 체크값 대응 함수
   const handleCheckboxChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    // 전체 routine_done에서 routine_done_daily_id를 통해서
-    // 현재 체크한 루틴에 대한 오늘 날짜의 데이터 가져오기 및 존재 여부 확인
-    const targetRD = routineDone.find((item) => {
-      return (
-        item.created_at.slice(0, 10) == createdAt &&
-        item.routine_id == routineId
-      )
-    })
-
     // 체크하는 경우
     if (event.target.checked) {
       // 전체 routine_done_daily에서 마일스톤 id를 통해서
@@ -162,6 +161,7 @@ function RoutineCheckBox({
         onChange={(event) => {
           handleCheckboxChange(event)
         }}
+        checked={targetRD ? true : false}
       />
     </>
   )
