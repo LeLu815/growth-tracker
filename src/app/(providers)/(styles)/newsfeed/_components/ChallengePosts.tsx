@@ -1,4 +1,4 @@
-import { PostType } from "../../../../../types/challenge"
+import { PostType } from "../../../../../../types/challenge"
 
 interface ChallengePostsProps {
   posts: PostType[]

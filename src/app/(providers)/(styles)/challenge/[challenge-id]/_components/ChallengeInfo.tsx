@@ -1,25 +1,34 @@
 "use client"
 
+import { useRouter } from "next/navigation"
+import { useModal } from "@/context/modal.context"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
-import { numberToWeek } from "@/app/(providers)/challenge/[challenge-id]/_utils/milestoneweekUtils"
+import { numberToWeek } from "../_utils/milestoneweekUtils"
 
 function ChallengeInfo({ challengeId }: { challengeId: string }) {
-  const getChallenge = async (): Promise<Challenge> => {
+  const modal = useModal()
+  const router = useRouter()
+
+  const getChallenge = async (): Promise<ChallengeType> => {
     const response = await axios
       .get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}`)
       .then((response) => response.data)
 
     if (response.error) {
-      throw new Error("Network response was not ok")
+      modal.open({
+        type: "alert",
+        content: "해당 챌린지는 존재하지 않습니다.",
+      })
+      router.push("/newsfeed")
     }
 
     return response.data
   }
 
-  const { data, isPending, isError } = useQuery<Challenge>({
-    queryKey: ["challenge"],
+  const { data, isPending, isError } = useQuery<ChallengeType>({
+    queryKey: ["challenge_detail"],
     queryFn: getChallenge,
   })
 
@@ -36,8 +45,9 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
         <div>챌린지 복사하기</div>
       </div>
       <div>그래프나오는 곳</div>
-      <div className={"h-1 w-full bg-black"}>s</div>
+      <div className={"h-1 w-full bg-black"}></div>
       <div className={"flex flex-col gap-4"}>
+        <div className={"text-2xl"}>마일스톤 목록</div>
         {data?.milestones?.map((milestone, index) => {
           return (
             <div key={milestone.id} className={"border border-black"}>

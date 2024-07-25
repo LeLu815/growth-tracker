@@ -22,10 +22,6 @@ export const PUT = async (
   const milestoneList: MilestoneType[] = data.milestone
   const routineList: RoutineType[][] = data.routine
 
-  console.log("milestoneDeleteList :", milestoneDeleteList)
-  console.log("milestoneList :", milestoneList)
-  console.log("routineList :", routineList)
-
   // supabase db 연결 객체 생성
   const pgClient = new Client({
     connectionString: process.env.NEXT_PUBLIC_SUPABASE_CONNECTION_URL!,
