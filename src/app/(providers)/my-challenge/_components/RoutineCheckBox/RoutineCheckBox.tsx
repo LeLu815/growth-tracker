@@ -6,6 +6,7 @@ import { createClient } from "@/supabase/client"
 import { useQuery } from "@tanstack/react-query"
 import { v4 } from "uuid"
 
+import { tRoutine } from "../../../../../../types/challengeStructure.type"
 import { tRoutineDone } from "../../../../../../types/routineDone.type"
 import { tRoutineDoneDaily } from "../../../../../../types/routineDoneDaily.type"
 
@@ -17,9 +18,11 @@ interface RoutineCheckBoxProps {
   routineId: string
   routineDoneDaily: tRoutineDoneDaily[]
   routineDone: tRoutineDone[]
+  routines: tRoutine[]
 }
 
 function RoutineCheckBox({
+  routines,
   mileStoneId,
   challengeId,
   createdAt,
@@ -28,6 +31,9 @@ function RoutineCheckBox({
   routineId,
   routineDone,
 }: PropsWithChildren<RoutineCheckBoxProps>) {
+  const routineCount = routines.length
+  const supabase = createClient()
+
   // 전체 routine_done에서 routine_done_daily_id를 통해서
   // 현재 체크한 루틴에 대한 오늘 날짜의 데이터 가져오기 및 존재 여부 확인하며,
   // 이를 활용해 추후 체크박스의 최초값(선택/해제) 부여
@@ -46,7 +52,6 @@ function RoutineCheckBox({
     routineDoneId: string,
     isSuccess: boolean
   ) => {
-    const supabase = createClient()
     const { data, error } = await supabase
       .from("routine_done_daily")
       .insert([
@@ -74,7 +79,6 @@ function RoutineCheckBox({
     createdAt: string,
     routineDoneId: string
   ) => {
-    const supabase = createClient()
     const { data, error } = await supabase
       .from("routine_done")
       .insert([
@@ -89,6 +93,18 @@ function RoutineCheckBox({
     queryClient.invalidateQueries({
       queryKey: ["fetchCurrentUserRoutineDone"],
     })
+    return data
+  }
+
+  // 모든 체크박스가 선택완료됐을 때 또는 선택이 하나라도 해제됐을 때,
+  // RDD의 is_success를 true 또는 false로 바꾸는 함수
+  const PUTisSuccessRoutineDoneDaily = async (currentIsSuccess: boolean) => {
+    const { data, error } = await supabase
+      .from("routine_done_daily")
+      .update({ is_success: currentIsSuccess })
+      .eq("milestone_id", mileStoneId)
+      .select()
+
     return data
   }
 
@@ -110,7 +126,10 @@ function RoutineCheckBox({
       // 전체 routine_done_daily에서 마일스톤 id를 통해서
       // 현재 체크한 루틴에 대한 데이터가 이미 존재하는지 확인
       const targetRDD = routineDoneDaily.find((item) => {
-        return item.milestone_id == mileStoneId
+        return (
+          item.milestone_id == mileStoneId &&
+          item.created_at.slice(0, 10) == createdAt
+        )
       })
 
       const targetRDDId: string[] = []
@@ -124,7 +143,7 @@ function RoutineCheckBox({
           userId,
           createdAt,
           newId,
-          true
+          false
         )
       }
       // routine_done_daily에 유효한 레코드가 있으므로,
@@ -148,10 +167,20 @@ function RoutineCheckBox({
     // 체크를 해제하는 경우
     else {
       if (targetRD) {
-        DELETEroutineDone(targetRD.routine_id)
+        await DELETEroutineDone(targetRD.routine_id)
       }
     }
   }
+
+  const updateIsSuccess = async () => {
+    if (routineDone.length == routineCount) {
+      await PUTisSuccessRoutineDoneDaily(true)
+    } else {
+      await PUTisSuccessRoutineDoneDaily(false)
+    }
+  }
+
+  updateIsSuccess()
 
   return (
     <>

@@ -324,6 +324,7 @@ function ChallengeList() {
                                         >
                                           <p>루틴: {routine.content}</p>
                                           <RoutineCheckBox
+                                            routines={milestone.routines}
                                             challengeId={challenge.id}
                                             createdAt={CURRENT_DATE}
                                             mileStoneId={milestone.id}
