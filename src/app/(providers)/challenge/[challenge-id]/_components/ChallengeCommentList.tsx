@@ -10,9 +10,11 @@ import {
 } from "@tanstack/react-query"
 import axios from "axios"
 import { useInView } from "react-intersection-observer"
+import {useRouter} from "next/navigation";
 
 function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   const { me } = useAuth()
+  const router = useRouter()
   const queryClient = useQueryClient()
   const [content, setContent] = useState("")
   const [updateContent, setUpdateContent] = useState("")
@@ -39,7 +41,11 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
    * */
   const createComment = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!content.trim()) {
+
+    if (!me) {
+      router.push("/");
+      return
+    }  else if (!content.trim()) {
       alertOpen("댓글 내용을 입력해주세요.")
       return
     }
@@ -238,7 +244,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                     <button
                       onClick={(e) => {
                         e.preventDefault()
-                        handleCommentMutate
+                        handleCommentMutate();
                       }}
                       className={"border border-slate-600"}
                     >

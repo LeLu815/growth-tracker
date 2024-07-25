@@ -45,7 +45,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
         <div>챌린지 복사하기</div>
       </div>
       <div>그래프나오는 곳</div>
-      <div className={"h-1 w-full bg-black"}>s</div>
+      <div className={"h-1 w-full bg-black"}></div>
       <div className={"flex flex-col gap-4"}>
         <div className={"text-2xl"}>마일스톤 목록</div>
         {data?.milestones?.map((milestone, index) => {
