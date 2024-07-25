@@ -190,7 +190,7 @@ function ChallengeList() {
   //   const whatDay = date.getDay
   // // 0(일) ~ 6(토)
 
-  const CURRENT_DATE = "2024-07-24"
+  const CURRENT_DATE = "2024-07-23"
   const CURRENT_DATE_NUMBER = parseInt(CURRENT_DATE.replace(/-/g, ""))
 
   const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"]

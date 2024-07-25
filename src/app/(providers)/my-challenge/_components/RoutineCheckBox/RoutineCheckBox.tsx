@@ -89,42 +89,53 @@ function RoutineCheckBox({
     if (event.target.checked) {
       // 전체 routine_done_daily에서 마일스톤 id를 통해서
       // 현재 체크한 루틴에 대한 데이터가 이미 존재하는지 확인
-      const discriminantRDD = routineDoneDaily.findIndex((item) => {
+      const targetRDD = routineDoneDaily.find((item) => {
         return item.milestone_id == mileStoneId
       })
 
-      const routineDoneDailyId = v4()
-
+      const targetRDDId: string[] = []
       // routine_done_daily에 유효한 레코드가 없으므로 새로 생성
-      if (discriminantRDD == -1) {
+      if (!targetRDD) {
+        const newId = v4()
+        targetRDDId.push(newId)
         await POSTnewRoutineDoneDaily(
           mileStoneId,
           challengeId,
           userId,
           createdAt,
-          routineDoneDailyId,
+          newId,
           true
         )
+      }
+      // routine_done_daily에 유효한 레코드가 있으므로,
+      // 새로 생성하지 않으면서 해당 레코드의 id값만 가져옴
+      else {
+        targetRDDId.push(targetRDD.id)
       }
 
       // 전체 routine_done에서 routine_done_daily_id를 통해서
       // 현재 체크한 루틴에 대한 오늘 날짜의 데이터가 이미 존재하는지 확인
-      const discriminantRD = routineDone.findIndex((item) => {
-        return item.created_at.slice(0, 10) == createdAt
+      const targetRD = routineDone.find((item) => {
+        console.log(routineId)
+        return (
+          item.created_at.slice(0, 10) == createdAt &&
+          item.routine_id == routineId
+        )
       })
 
       // routine_done에 유효한 레코드가 없으므로 새로 생성
-      if (discriminantRD == -1) {
+      if (!targetRD) {
         // routine_done 테이블에 레코드 추가
         const routineDoneId = v4()
         await POSTnewRoutineDone(
-          routineDoneDailyId,
+          targetRDDId[0],
           routineId,
           createdAt,
           routineDoneId
         )
       }
     }
+    // 체크를 해제하는 경우
   }
 
   return (
