@@ -9,6 +9,7 @@ import {
   tStructuredChallenge,
   tStructuredMilestone,
 } from "../../../../../../types/challengeStructure.type"
+import RoutineCheckBox from "../RoutineCheckBox"
 
 function ChallengeList() {
   // 유저 아이디 정의
@@ -102,7 +103,6 @@ function ChallengeList() {
             structuredChallengeData[challengeIndex].milestones.sort((a, b) => {
               const numA = parseInt(a.start_at.replace(/-/g, ""))
               const numB = parseInt(b.start_at.replace(/-/g, ""))
-              console.log(numA)
               return numA - numB
             })
           }
@@ -133,6 +133,56 @@ function ChallengeList() {
     return structuredChallengeData
   }
 
+  // routine_done_daily 테이블 데이터 조회하는 함수
+  // 이미 유효한 레코드가 존재하는 경우와 존재하지 않는 경우에 적절히 대응하기 위해서 필요한 과정
+  const GETroutineDoneDaily = async () => {
+    const supabase = createClient()
+    // 현재 유저 아이디를 기반으로 챌린지 정보들 가져오기
+    const { data: currentUserRoutineDoneDaily, error } = await supabase
+      .from("routine_done_daily")
+      .select()
+      .eq("user_id", me?.id || "")
+
+    return currentUserRoutineDoneDaily
+  }
+
+  // routine_done 테이블 데이터 조회하는 함수
+  const GETroutineDone = async () => {
+    const supabase = createClient()
+    // 현재 유저 아이디를 기반으로 챌린지 정보들 가져오기
+    const { data: currentUserRoutineDone, error } = await supabase
+      .from("routine_done")
+      .select()
+    return currentUserRoutineDone
+  }
+
+  const {
+    data: structuredChallengeData,
+    isPending: ChallengeDataPending,
+    isError: ChallengeDataError,
+  } = useQuery({
+    queryKey: ["fetchStructuredChallengeData"],
+    queryFn: GETstructuredChallengeData,
+  })
+
+  const {
+    data: currentUserRoutineDoneDaily,
+    isPending: routineDoneDailyPending,
+    isError: routineDoneDailyError,
+  } = useQuery({
+    queryKey: ["fetchCurrentUserRoutineDoneDaily"],
+    queryFn: GETroutineDoneDaily,
+  })
+
+  const {
+    data: currentUserRoutineDone,
+    isPending: routineDonePending,
+    isError: routineDoneError,
+  } = useQuery({
+    queryKey: ["fetchCurrentUserRoutineDone"],
+    queryFn: GETroutineDone,
+  })
+
   // const date = new Date()
   // date.setHours(0, 0, 0, 0)
   // // 시, 분, 초가 모두 변경 (00시 00분 00초)
@@ -146,27 +196,26 @@ function ChallengeList() {
   const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"]
 
   const CURRENT_DAY_OF_WEEK = "수"
-  const CURRENT_DAY_NUMBER = 3
+  // const CURRENT_DAY_NUMBER = 3
 
-  const {
-    data: fetchedChallengeData,
-    isPending,
-    isError,
-  } = useQuery({
-    queryKey: ["fetchChallengeMilestoneRoutines"],
-    queryFn: GETstructuredChallengeData,
-  })
+  if (!userId) {
+    throw Error("유저 아이디가 가져와지지 않았음")
+  }
 
-  if (isPending) {
+  if (ChallengeDataPending || routineDoneDailyPending || routineDonePending) {
     return <div>로딩 중</div>
   }
 
-  if (isError) {
-    return <div>오류 발생</div>
+  if (ChallengeDataError || routineDoneDailyError || routineDoneError) {
+    return <div>서버에서 데이터 로드 중 오류 발생</div>
   }
 
-  if (fetchedChallengeData) {
-    console.log(fetchedChallengeData)
+  if (
+    structuredChallengeData &&
+    currentUserRoutineDoneDaily &&
+    currentUserRoutineDone
+  ) {
+    // console.log(fetchedChallengeData)
     return (
       <div className="mt-10 flex flex-col gap-y-10">
         <div className="flex gap-4">
@@ -180,7 +229,9 @@ function ChallengeList() {
           </p>
         </div>
         <div className="flex flex-col gap-y-12">
-          {fetchedChallengeData?.map((challenge) => {
+          {/* 유효한 날짜 범위 내 데이터만 보여지도록 하는 부분인데,
+          애초에 유효한 날짜 범위 내 데이터만 가져와지도록 fetch 부분 수정할 필요 있음 */}
+          {structuredChallengeData?.map((challenge) => {
             const challengeStartDate = parseInt(
               challenge.start_at?.replace(/-/g, "") || "0"
             )
@@ -272,11 +323,16 @@ function ChallengeList() {
                                           className="flex justify-between"
                                         >
                                           <p>루틴: {routine.content}</p>
-                                          <input
-                                            type="checkbox"
-                                            id={routine.id}
-                                            className="h-8 w-8 rounded-lg"
-                                            checked={false}
+                                          <RoutineCheckBox
+                                            challengeId={challenge.id}
+                                            createdAt={CURRENT_DATE}
+                                            mileStoneId={milestone.id}
+                                            userId={userId}
+                                            routineId={routine.id}
+                                            routineDoneDaily={
+                                              currentUserRoutineDoneDaily
+                                            }
+                                            routineDone={currentUserRoutineDone}
                                           />
                                         </div>
                                       )
