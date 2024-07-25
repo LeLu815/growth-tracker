@@ -14,14 +14,20 @@ import { DateRange } from "react-day-picker"
 
 import { Calendar } from "@/components/ui/calendar"
 
+import SelectWeek from "./selectWeek"
+
 const PERCENT_FOR_SUCCESS = "50"
 
 function Calender() {
+  const WEEK_DAY_LIST = ["월", "화", "수", "목", "금", "토", "일"]
+  const defaultValue = WEEK_DAY_LIST.map(() => false)
+
   const defaultMonth = new Date()
   const defaultSelected: DateRange = {
     from: defaultMonth,
     to: addDays(defaultMonth, 7),
   }
+  const [dayChecks, setDayChecks] = useState<boolean[]>(defaultValue)
   const [range, setRange] = useState<DateRange | undefined>(defaultSelected)
 
   const today = startOfToday()
@@ -46,10 +52,21 @@ function Calender() {
     return 0
   }
   // 1: 월요일, 2: 화요일, 3: 수요일, 4: 목요일, 5: 금요일, 6: 토요일, 7: 일요일
-  const totalMondaysAndWednesdays = calculateSpecificWeekdays(range, [1, 3])
+  const totalMondaysAndWednesdays = calculateSpecificWeekdays(
+    range,
+    dayChecks
+      .map((dayCheck, index) => {
+        if (dayCheck) {
+          return index + 1
+        }
+        return undefined
+      })
+      .filter((value): value is number => value !== undefined)
+  )
 
   return (
     <>
+      <SelectWeek getDayCheckList={setDayChecks} />
       <div>
         <p>시작 : {formatDate(range?.from)}</p>
         <p>끝 : {formatDate(range?.to)}</p>
