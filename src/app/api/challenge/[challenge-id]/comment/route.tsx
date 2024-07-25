@@ -1,0 +1,84 @@
+import { NextRequest, NextResponse } from "next/server"
+import { createClient } from "@/supabase/client"
+import { createPGClient } from "@/supabase/pgClient"
+
+export async function GET(
+  req: NextRequest,
+  {
+    params,
+  }: {
+    params: {
+      "challenge-id": string
+    }
+  }
+) {
+  const challengeId = params["challenge-id"]
+  const { searchParams } = new URL(req.url)
+  const limit = Number(searchParams.get("limit")) || 10
+  const page = Number(searchParams.get("page")) || 0
+
+  if (!challengeId) {
+    return NextResponse.json({ error: "챌린지 아이디가 없습니다", status: 400 })
+  }
+
+  const pgClient = createPGClient()
+
+  pgClient
+    .connect()
+    .then(() => console.log("Connected to the database"))
+    .catch((err: Error) => console.error("Connection error", err.stack))
+  try {
+    const data = await pgClient.query(
+      "SELECT cc.id, cc.content, CASE WHEN ccl.id IS NOT NULL THEN TRUE ELSE FALSE END AS is_like, u.id as user_id, u.email, u.nickname, u.profile_image_url FROM challenge_comment cc LEFT JOIN challenge_comment_like ccl ON cc.id = ccl.comment_id AND ccl.user_id = $1 INNER JOIN users u ON u.id = cc.user_id WHERE cc.challenge_id = $2 ORDER BY cc.created_at DESC, cc.id DESC LIMIT $3 OFFSET $4;",
+      [
+        "d5202b4f-f60c-4ebe-a9ec-04caf445c763",
+        challengeId,
+        Number(limit),
+        Number(page) * Number(limit),
+      ]
+    )
+
+    return NextResponse.json(data.rows)
+  } catch (error:any) {
+    throw new Error(error.message)
+  } finally {
+    await pgClient.end()
+  }
+}
+
+export async function POST(
+  req: NextRequest,
+  {
+    params,
+  }: {
+    params: {
+      "challenge-id": string
+    }
+  }
+) {
+  const challengeId = params["challenge-id"]
+
+  const body = await req.json()
+  const { content, userId } = body
+
+  if (!challengeId) {
+    return NextResponse.json({ error: "챌린지 아이디가 없습니다", status: 400 })
+  } else if (!content) {
+    return NextResponse.json({ error: "내용이 없습니다", status: 400 })
+  } else if (!userId) {
+    return NextResponse.json({ error: "유저 아이디가 없습니다", status: 400 })
+  }
+
+  const supabase = createClient()
+
+  const { error } = await supabase
+    .from("challenge_comment")
+    .insert([{ challenge_id: challengeId, user_id: userId, content: content }])
+    .select()
+
+  if (error) {
+    return NextResponse.json({ status: 500, error: error.message })
+  }
+
+  return NextResponse.json({ status: 200, error: null })
+}
