@@ -3,12 +3,11 @@
 import React, { ChangeEvent, PropsWithChildren } from "react"
 import queryClient from "@/query/queryClient"
 import { createClient } from "@/supabase/client"
-import { useQuery } from "@tanstack/react-query"
 import { v4 } from "uuid"
 
-import { tRoutine } from "../../../../../../types/challengeStructure.type"
-import { tRoutineDone } from "../../../../../../types/routineDone.type"
-import { tRoutineDoneDaily } from "../../../../../../types/routineDoneDaily.type"
+import { tRoutine } from "../../../../../../../types/challengeStructure.type"
+import { tRoutineDone } from "../../../../../../../types/routineDone.type"
+import { tRoutineDoneDaily } from "../../../../../../../types/routineDoneDaily.type"
 
 interface RoutineCheckBoxProps {
   mileStoneId: string
