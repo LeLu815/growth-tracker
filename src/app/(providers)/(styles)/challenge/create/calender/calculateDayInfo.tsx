@@ -1,13 +1,14 @@
-import { useContext } from "react"
 import {
   differenceInCalendarDays,
   eachDayOfInterval,
   format,
   getDay,
 } from "date-fns"
+import { useContext } from "react"
 import { DateRange } from "react-day-picker"
 
 import { RangeContext } from "./calender"
+import PortionStickBar from "./portionStickBar"
 
 interface CalculateDayInfoType {
   dayChecks: number[]
@@ -44,6 +45,11 @@ function CalculateDayInfo({ dayChecks }: CalculateDayInfoType) {
         성공을 위한 최소 횟수 :{" "}
         {Math.ceil(calculateSpecificWeekdays(range, dayChecks) / 2)}회
       </p>
+      <PortionStickBar
+        currentValue={calculateTotalDays(range)}
+        prevValue={[2,5,3]}
+        nextValue={[20]}
+      />
     </div>
   )
 }
