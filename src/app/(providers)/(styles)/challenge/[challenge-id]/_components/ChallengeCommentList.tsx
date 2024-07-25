@@ -1,6 +1,6 @@
 "use client"
 
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, FormEvent, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
@@ -39,7 +39,8 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   /**
    * 댓글 생성
    * */
-  const createComment = async () => {
+  const createComment = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     if (!me) {
       router.push("/")
       return
@@ -149,9 +150,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
           pageParams: [...prev.pageParams],
           pages: prev.pages.map((comments) => {
             return comments.map((comment) => {
-              debugger
               if (comment.id === commentId) {
-                debugger
                 comment.is_like = !comment.is_like
               }
               return comment
@@ -162,11 +161,9 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
       return { commentList }
     },
     onError: (err, test, context) => {
-      debugger
       queryClient.setQueryData(["challenge_comment"], context?.commentList)
     },
     onSettled: () => {
-      debugger
       queryClient.invalidateQueries({ queryKey: ["challenge_comment"] })
     },
   })
@@ -174,10 +171,9 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   const { mutate: handleCommentDeleteMutate } = useMutation({
     mutationFn: deleteComment,
     onMutate: async (commentId: string) => {
-      debugger
       await queryClient.cancelQueries({ queryKey: ["challenge_comment"] })
       const commentList = queryClient.getQueryData(["challenge_comment"])
-      debugger
+
       queryClient.setQueryData(["challenge_comment"], (prev: ResponseData) => {
         return {
           pageParams: [...prev.pageParams],
@@ -205,7 +201,6 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
       commentId: string
       content: string
     }) => {
-      debugger
       await queryClient.cancelQueries({ queryKey: ["challenge_comment"] })
       const commentList = queryClient.getQueryData(["challenge_comment"])
       queryClient.setQueryData(["challenge_comment"], (prev: ResponseData) => {
@@ -278,12 +273,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   return (
     <div className={"flex-col gap-4"}>
       <div className={"text-2xl"}>댓글 목록</div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          createComment()
-        }}
-      >
+      <form onSubmit={createComment}>
         <input
           className={"w-[500px]"}
           value={content}
@@ -291,14 +281,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
             setContent(e.target.value)
           }
         ></input>
-        <button
-          onClick={(e) => {
-            e.preventDefault()
-            createComment()
-          }}
-        >
-          댓글 작성
-        </button>
+        <button type={"submit"}>댓글 작성</button>
       </form>
       {data?.map((comment, idx) => {
         const isLastItem = data?.length - 1 === idx

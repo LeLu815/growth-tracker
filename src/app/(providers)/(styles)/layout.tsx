@@ -13,7 +13,7 @@ export default function StylesLayout({ children }: PropsWithChildren) {
     },
     {
       name: "마이",
-      path: "#",
+      path: "/my-page/profile",
     },
     {
       name: "챌린지 생성",
