@@ -1,140 +1,23 @@
 "use client"
 
+import { GETstructuredChallengeData } from "@/api/supabase/challenge"
 import { useAuth } from "@/context/auth.context"
 import { createClient } from "@/supabase/client"
 import { useQuery } from "@tanstack/react-query"
 
 import RoutineCheckBox from "@/app/(providers)/(styles)/my-challenge/_components/RoutineCheckBox"
 
-import {
-  tChallenge,
-  tMilestone,
-  tRoutine,
-  tStructuredChallenge,
-  tStructuredMilestone,
-} from "../../../../../../../types/challengeStructure.type"
-
 function ChallengeList() {
   // 유저 아이디 정의
   const { me } = useAuth()
   const userId = me?.id
 
+  if (!userId) {
+    throw Error("유저 아이디가 가져와지지 않음")
+  }
+
   // 빈번한 리렌더링 발생함 => 추후 해결 필요
   // console.log("리렌더링")
-
-  // 챌린지/마일스톤/루틴 테이블 각각에서 데이터를 가져와
-  // 구조화된 형태로 추합해 반환하는 GET 함수
-  const GETstructuredChallengeData = async () => {
-    const supabase = createClient()
-    // 현재 유저 아이디를 기반으로 챌린지 정보들 가져오기
-    const { data: challenges, error: errorChallenge } = await supabase
-      .from("challenge")
-      .select()
-      .eq("user_id", me?.id || "")
-
-    const challengeIds: string[] = []
-    // 마일스톤을 가져오는데 쓸 챌린지id들 따로 저장
-    challenges?.forEach((challenge) => {
-      challengeIds.push(challenge.id)
-    })
-
-    // 위에서 정의한 챌린지id들의 배열을 활용해...
-    // ...현재 유저의 마일스톤 가져오기
-    const { data: milestones, error: milestoneError } = await supabase
-      .from("milestone")
-      .select()
-      .in("challenge_id", challengeIds)
-
-    const milestoneIds: string[] = []
-    // 루틴을 가져오는데 쓸 마일스톤id들 따로 저장
-    milestones?.forEach((milestone) => {
-      milestoneIds.push(milestone.id)
-    })
-
-    // 위에서 정의한 마일스톤id들의 배열을 활용해...
-    // ...현재 유저의 루틴 가져오기
-    const { data: routines, error: routineError } = await supabase
-      .from("routine")
-      .select()
-      .in("milestone_id", milestoneIds)
-
-    // 위에서 가져온 데이터돌을 구조화하는 과정임
-
-    const structuralizeChallenge = (
-      challenges: tChallenge[],
-      milestones: tMilestone[],
-      routines: tRoutine[]
-    ) => {
-      const structuredChallengeData: tStructuredChallenge[] = []
-
-      // 챌린지로 먼저 구조 잡아줌
-      challenges?.forEach((challenge, challengeIndex) => {
-        const new_challenge: tStructuredChallenge = {
-          ...challenge,
-          milestones: [],
-        }
-        structuredChallengeData.push(new_challenge)
-
-        // 마일스톤 구조 잡기
-        milestones?.forEach((milestone) => {
-          if (milestone.challenge_id == challenge.id) {
-            const new_milestone: tStructuredMilestone = {
-              ...milestone,
-              routines: [],
-            }
-            structuredChallengeData[challengeIndex].milestones.push(
-              new_milestone
-            )
-
-            // 루틴 구조 잡기
-            routines?.forEach((routine) => {
-              if (routine.milestone_id == milestone.id) {
-                // 어떤 마일스톤에 속해야하는지 인덱스 계산
-                const currentMilestoneIndex = structuredChallengeData[
-                  challengeIndex
-                ].milestones.findIndex((anotherMilestone) => {
-                  return anotherMilestone.id == milestone.id
-                })
-
-                structuredChallengeData[challengeIndex].milestones[
-                  currentMilestoneIndex
-                ].routines.push(routine)
-              }
-            })
-
-            // 마일스톤 시작일 기준으로 정렬하기
-            structuredChallengeData[challengeIndex].milestones.sort((a, b) => {
-              const numA = parseInt(a.start_at.replace(/-/g, ""))
-              const numB = parseInt(b.start_at.replace(/-/g, ""))
-              return numA - numB
-            })
-          }
-        })
-      })
-
-      return structuredChallengeData
-    }
-
-    if (!challenges) {
-      throw Error()
-    }
-
-    if (!milestones) {
-      throw Error()
-    }
-
-    if (!routines) {
-      throw Error()
-    }
-
-    const structuredChallengeData = structuralizeChallenge(
-      challenges,
-      milestones,
-      routines
-    )
-
-    return structuredChallengeData
-  }
 
   // routine_done_daily 테이블 데이터 조회하는 함수
   // 이미 유효한 레코드가 존재하는 경우와 존재하지 않는 경우에 적절히 대응하기 위해서 필요한 과정
@@ -164,8 +47,8 @@ function ChallengeList() {
     isPending: ChallengeDataPending,
     isError: ChallengeDataError,
   } = useQuery({
-    queryKey: ["fetchStructuredChallengeData"],
-    queryFn: GETstructuredChallengeData,
+    queryKey: ["fetchStructuredChallengeData", userId],
+    queryFn: () => GETstructuredChallengeData(userId),
   })
 
   const {

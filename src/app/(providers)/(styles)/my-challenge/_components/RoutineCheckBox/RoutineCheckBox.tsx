@@ -5,9 +5,9 @@ import queryClient from "@/query/queryClient"
 import { createClient } from "@/supabase/client"
 import { v4 } from "uuid"
 
-import { tRoutine } from "../../../../../../../types/challengeStructure.type"
 import { tRoutineDone } from "../../../../../../../types/routineDone.type"
 import { tRoutineDoneDaily } from "../../../../../../../types/routineDoneDaily.type"
+import { RoutineType } from "../../../../../../../types/supabase.type"
 
 interface RoutineCheckBoxProps {
   mileStoneId: string
@@ -17,7 +17,7 @@ interface RoutineCheckBoxProps {
   routineId: string
   routineDoneDaily: tRoutineDoneDaily[]
   routineDone: tRoutineDone[]
-  routines: tRoutine[]
+  routines: RoutineType[]
 }
 
 function RoutineCheckBox({
