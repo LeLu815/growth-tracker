@@ -11,11 +11,14 @@ import {
 } from "@dnd-kit/core"
 import {
   arrayMove,
+  horizontalListSortingStrategy,
   SortableContext,
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
+
+import Page from "@/components/Page"
 
 type Routine = {
   id: string
@@ -24,14 +27,12 @@ type Routine = {
 
 type Milestone = {
   id: string
-  title: string
   routines: Routine[]
 }
 
 const initialData: Milestone[] = [
   {
     id: "milestone-1",
-    title: "마일스톤 1",
     routines: [
       { id: "routine-1-1", content: "루틴 1-1" },
       { id: "routine-1-2", content: "루틴 1-2" },
@@ -39,19 +40,17 @@ const initialData: Milestone[] = [
   },
   {
     id: "milestone-2",
-    title: "마일스톤 2",
     routines: [
       { id: "routine-2-1", content: "루틴 2-1" },
       { id: "routine-2-2", content: "루틴 2-2" },
     ],
   },
   {
-    id: "mileston",
-    title: "마일스톤 3",
+    id: "milestone-3",
     routines: [
       { id: "routine-3-1", content: "루틴 3-1" },
       { id: "routine-3-2", content: "루틴 3-2" },
-      { id: "routineee", content: "루틴 3-4" },
+      { id: "routine-3-3", content: "루틴 3-3" },
     ],
   },
 ]
@@ -81,12 +80,12 @@ const SortableItem = ({ id, content }: { id: string; content: string }) => {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {content}
+      루틴: {content}
     </div>
   )
 }
 
-const SortableMilestone = ({ id, title, routines }: Milestone) => {
+const SortableMilestone = ({ id, routines }: Milestone) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id })
 
@@ -102,7 +101,6 @@ const SortableMilestone = ({ id, title, routines }: Milestone) => {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <h2>{title}</h2>
       <SortableContext
         items={routines.map((routine) => routine.id)}
         strategy={verticalListSortingStrategy}
@@ -140,32 +138,41 @@ export default function Home() {
           milestone.id === active.id ||
           milestone.routines.some((routine) => routine.id === active.id)
       )
+
       const overMilestoneIndex = items.findIndex(
         (milestone) =>
           milestone.id === over.id ||
+          // 마일스톤의 내부의 루틴일때
           milestone.routines.some((routine) => routine.id === over.id)
       )
 
       if (
+        // 내부에서 이동할 때
         activeMilestoneIndex !== -1 &&
         overMilestoneIndex !== -1 &&
         activeMilestoneIndex === overMilestoneIndex
       ) {
         // 같은 마일스톤 내에서 루틴 이동
-        const milestone = items[activeMilestoneIndex]
+        const milestone = items[activeMilestoneIndex] // 현재 드래그 중인 항목이 속한 마일스톤
+
+        // 드래그 중인 루틴의 인덱스
         const activeIndex = milestone.routines.findIndex(
-          (routine) => routine.id === active.id
+          (routine) => routine.id === active.id // 드래그 중인 루틴의 ID 체크
         )
+
+        // 드래그한 루틴이 놓여질 인덱스
         const overIndex = milestone.routines.findIndex(
           (routine) => routine.id === over.id
         )
 
+        // 배열에서 항목 이동시키는 함수. (activeIndex 위치의 루틴을 overIndex위치로 이동)
         milestone.routines = arrayMove(
           milestone.routines,
           activeIndex,
           overIndex
         )
 
+        // 변경된 상태 업데이트
         return [...items]
       } else if (
         activeMilestoneIndex !== -1 &&
@@ -204,24 +211,27 @@ export default function Home() {
   }, [])
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-    >
-      <SortableContext
-        items={data.map((milestone) => milestone.id)}
-        strategy={verticalListSortingStrategy}
+    <Page title="마일스톤">
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
       >
-        {data.map((milestone) => (
-          <SortableMilestone
-            key={milestone.id}
-            id={milestone.id}
-            title={milestone.title}
-            routines={milestone.routines}
-          />
-        ))}
-      </SortableContext>
-    </DndContext>
+        <SortableContext
+          items={data.map((milestone) => milestone.id)}
+          strategy={horizontalListSortingStrategy} // 가로로 정렬
+        >
+          <div style={{ display: "flex", gap: "16px" }}>
+            {data.map((milestone) => (
+              <SortableMilestone
+                key={milestone.id}
+                id={milestone.id}
+                routines={milestone.routines}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
+    </Page>
   )
 }
