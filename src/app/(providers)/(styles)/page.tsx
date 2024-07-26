@@ -3,6 +3,7 @@
 import { ChangeEventHandler, useState } from "react"
 import { handleSocialLogin } from "@/api/auth/api.auth"
 import { useAuth } from "@/context/auth.context"
+import { useModal } from "@/context/modal.context"
 
 export default function Home() {
   const [nickname, setNickname] = useState<string>("")
@@ -10,6 +11,7 @@ export default function Home() {
   const [password, setPassword] = useState<string>("")
   const [authPage, setAuthPage] = useState<"sign-up" | "log-in">("log-in")
   const { me, isInitialized, isLoggedIn, signUp, logIn, logOut } = useAuth()
+  const { open } = useModal()
 
   const handleChangeNickname: ChangeEventHandler<HTMLInputElement> = (e) => {
     setNickname(e.target.value)
@@ -28,8 +30,9 @@ export default function Home() {
   }
   const handleSignUp = async () => {
     const response = await signUp(email, password, nickname)
-    if (response.status === 422) {
-      return alert("중복된 계정이 존재합니다.")
+    // 에러 발생시 안내
+    if (response.status !== 200) {
+      return open({ content: response.message, type: "alert" })
     }
     setEmail("")
     setPassword("")
@@ -38,7 +41,13 @@ export default function Home() {
   const handleLogIn = async () => {
     setEmail("")
     setPassword("")
-    await logIn(email, password)
+    const { status, message } = await logIn(email, password)
+    if (status !== 200) {
+      return open({
+        content: `${message}\n이메일과 비밀번호를 확인해주세요.`,
+        type: "alert",
+      })
+    }
   }
   return (
     <main className="mx-auto mt-10 flex max-w-[400px] flex-col items-center justify-center gap-10 rounded-[20px] bg-white px-3 py-12 text-black">
