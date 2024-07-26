@@ -82,7 +82,7 @@ function UserInfoPage() {
   }
 
   const { data, isPending, isError, refetch } = useQuery({
-    queryKey: ["user_profile"],
+    queryKey: ["userProfile"],
     queryFn: getUser,
   })
 
@@ -102,7 +102,6 @@ function UserInfoPage() {
   }
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-
     const file = e.target.files?.[0]
     if (file) {
       setSelectedFile(file)

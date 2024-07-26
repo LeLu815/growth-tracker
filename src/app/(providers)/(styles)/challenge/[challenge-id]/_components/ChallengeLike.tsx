@@ -44,26 +44,26 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
     isPending,
     isError,
   } = useQuery({
-    queryKey: ["challenge_like"],
+    queryKey: ["challengeLike"],
     queryFn: isLikedByUserId,
   })
 
   const { mutate: handleLikeMutate } = useMutation({
     mutationFn: createOrDeleteLike,
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["challenge_like"] })
+      await queryClient.cancelQueries({ queryKey: ["challengeLike"] })
       const isChangedLike: boolean | undefined = queryClient.getQueryData([
-        "challenge_like",
+        "challengeLike",
       ])
-      queryClient.setQueryData<boolean>(["challenge_like"], (prev) => !prev)
+      queryClient.setQueryData<boolean>(["challengeLike"], (prev) => !prev)
 
       return isChangedLike
     },
     onError: (err, newTodo, context: boolean | undefined) => {
-      queryClient.setQueryData(["challenge_like"], context) // 변경된 부분
+      queryClient.setQueryData(["challengeLike"], context) // 변경된 부분
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["challenge_like"] })
+      queryClient.invalidateQueries({ queryKey: ["challengeLike"] })
     },
   })
 

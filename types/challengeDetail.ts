@@ -1,10 +1,10 @@
-type RoutineType = {
+export type RoutineType = {
   id: string
   created_at: string
   content: string
 }
 
-type MilestoneType = {
+export type MilestoneType = {
   created_at: string
   start_at: string
   challenge_id: string
@@ -18,7 +18,7 @@ type MilestoneType = {
   routines: RoutineType[]
 }
 
-type ChallengeType = {
+export type ChallengeType = {
   id: string
   created_at: string
   user_id: string
@@ -36,7 +36,7 @@ type ChallengeType = {
   milestones: MilestoneType[]
 }
 
-type ChallengeCommentType = {
+export type ChallengeCommentType = {
   user_id: string
   content: string
   is_like: boolean
@@ -46,7 +46,7 @@ type ChallengeCommentType = {
   id: string
 }
 
-interface ResponseData {
+export type ChallengeCommentPageType = {
   pages: [ChallengeCommentType[]]
   pageParams: number[]
 }
