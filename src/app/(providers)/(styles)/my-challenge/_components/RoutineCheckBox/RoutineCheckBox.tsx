@@ -39,7 +39,6 @@ function RoutineCheckBox({
   routineDone,
 }: PropsWithChildren<RoutineCheckBoxProps>) {
   const routineCount = routines.length
-  const supabase = createClient()
 
   // 전체 routine_done에서 routine_done_daily_id를 통해서
   // 현재 체크한 루틴에 대한 오늘 날짜의 데이터 가져오기 및 존재 여부 확인하며,
@@ -102,6 +101,12 @@ function RoutineCheckBox({
         await DELETEroutineDone({ routineId: targetRD.routine_id })
       }
     }
+    queryClient.invalidateQueries({
+      queryKey: ["fetchRoutineDone"],
+    })
+    queryClient.invalidateQueries({
+      queryKey: ["fetchCurrentUserRoutineDoneDaily"],
+    })
   }
 
   const updateIsSuccess = async () => {

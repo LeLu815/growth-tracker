@@ -26,9 +26,7 @@ export const POSTnewRoutineDone = async (params: POSTnewRoutineDoneProps) => {
       routineDoneId: params.routineDoneId,
     }
   )
-  queryClient.invalidateQueries({
-    queryKey: ["fetchRoutineDone"],
-  })
+
   return postResponse
 }
 
@@ -43,8 +41,4 @@ export const DELETEroutineDone = async (params: DELETEroutineDoneProps) => {
       data: params,
     }
   )
-
-  queryClient.invalidateQueries({
-    queryKey: ["fetchRoutineDone"],
-  })
 }

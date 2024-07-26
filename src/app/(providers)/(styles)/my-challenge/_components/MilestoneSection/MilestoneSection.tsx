@@ -4,6 +4,7 @@ import { GETroutineDoneDaily } from "@/api/supabase/routineDoneDaily"
 import { useQuery } from "@tanstack/react-query"
 
 import { StructuredMilestoneType } from "../../../../../../../types/supabase.type"
+import DiarySection from "../DiarySection"
 import RoutineCheckBox from "../RoutineCheckBox"
 
 interface MilestoneSectionProps {
@@ -30,6 +31,7 @@ function MilestoneSection({
   } = useQuery({
     queryKey: ["fetchCurrentUserRoutineDoneDaily", userId],
     queryFn: () => GETroutineDoneDaily(userId),
+    gcTime: 8 * 60 * 1000, // 8분
   })
 
   const {
@@ -91,6 +93,10 @@ function MilestoneSection({
                 )
               }
             })}
+            <DiarySection
+              milestoneId={milestone.id}
+              currentUserRoutineDoneDaily={currentUserRoutineDoneDaily}
+            />
           </div>
         )}
       </>
