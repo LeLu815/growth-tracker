@@ -9,8 +9,6 @@ export const GET = async (
 
   const userId = params["user-id"]
 
-  console.log(userId)
-
   // 현재 유저 아이디를 기반으로 챌린지 정보들 가져오기
   const { data: currentUserRoutineDoneDaily, error } = await supabase
     .from("routine_done_daily")

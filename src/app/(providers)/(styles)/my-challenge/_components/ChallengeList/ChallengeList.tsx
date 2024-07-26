@@ -30,6 +30,7 @@ function ChallengeList() {
   } = useQuery({
     queryKey: ["fetchStructuredChallengeData", userId],
     queryFn: () => GETstructuredChallengeData(userId),
+    gcTime: 8 * 60 * 1000, // 8분
   })
 
   const {
@@ -39,6 +40,7 @@ function ChallengeList() {
   } = useQuery({
     queryKey: ["fetchCurrentUserRoutineDoneDaily", userId],
     queryFn: () => GETroutineDoneDaily(userId),
+    gcTime: 8 * 60 * 1000, // 8분
   })
 
   const {
@@ -48,6 +50,7 @@ function ChallengeList() {
   } = useQuery({
     queryKey: ["fetchRoutineDone"],
     queryFn: GETroutineDone,
+    gcTime: 8 * 60 * 1000, // 8분
   })
 
   // const date = new Date()
