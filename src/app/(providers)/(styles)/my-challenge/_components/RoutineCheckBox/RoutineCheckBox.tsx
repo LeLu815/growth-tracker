@@ -5,8 +5,8 @@ import queryClient from "@/query/queryClient"
 import { createClient } from "@/supabase/client"
 import { v4 } from "uuid"
 
-import { tRoutineDone } from "../../../../../../../types/routineDone.type"
-import { tRoutineDoneDaily } from "../../../../../../../types/routineDoneDaily.type"
+import { RoutineDoneType } from "../../../../../../../types/routineDone.type"
+import { RoutineDoneDailyType } from "../../../../../../../types/routineDoneDaily.type"
 import { RoutineType } from "../../../../../../../types/supabase.type"
 
 interface RoutineCheckBoxProps {
@@ -15,8 +15,8 @@ interface RoutineCheckBoxProps {
   createdAt: string
   userId: string
   routineId: string
-  routineDoneDaily: tRoutineDoneDaily[]
-  routineDone: tRoutineDone[]
+  routineDoneDaily: RoutineDoneDailyType[]
+  routineDone: RoutineDoneType[]
   routines: RoutineType[]
 }
 
@@ -90,7 +90,7 @@ function RoutineCheckBox({
       ])
       .select()
     queryClient.invalidateQueries({
-      queryKey: ["fetchCurrentUserRoutineDone"],
+      queryKey: ["fetchRoutineDone"],
     })
     return data
   }
@@ -115,7 +115,7 @@ function RoutineCheckBox({
       .delete()
       .eq("routine_id", routineId)
     queryClient.invalidateQueries({
-      queryKey: ["fetchCurrentUserRoutineDone"],
+      queryKey: ["fetchRoutineDone"],
     })
   }
   // 체크박스 체크값 대응 함수

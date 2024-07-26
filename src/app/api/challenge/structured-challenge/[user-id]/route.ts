@@ -7,16 +7,16 @@ import {
   RoutineType,
   StructuredChallengeType,
   StructuredMilestoneType,
-} from "../../../../../types/supabase.type"
+} from "../../../../../../types/supabase.type"
 
 export const GET = async (
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: { "user-id": string } }
 ) => {
   const supabase = createClient()
   // const userId = params.userId
 
-  const userId = params.userId
+  const userId = params["user-id"]
 
   // 현재 유저 아이디를 기반으로 챌린지 정보들 가져오기
   const { data: challenges, error: challengeError } = await supabase
@@ -24,7 +24,6 @@ export const GET = async (
     .select()
     .eq("user_id", userId)
 
-  console.log(challenges)
   const challengeIds: string[] = []
   // 마일스톤을 가져오는데 쓸 챌린지id들 따로 저장
   challenges?.forEach((challenge) => {

@@ -1,6 +1,8 @@
 "use client"
 
-import { GETstructuredChallengeData } from "@/api/supabase/challenge"
+import { GETroutineDone } from "@/api/supabase/routineDone"
+import { GETroutineDoneDaily } from "@/api/supabase/routineDoneDaily"
+import { GETstructuredChallengeData } from "@/api/supabase/structured-challenge"
 import { useAuth } from "@/context/auth.context"
 import { createClient } from "@/supabase/client"
 import { useQuery } from "@tanstack/react-query"
@@ -19,29 +21,6 @@ function ChallengeList() {
   // 빈번한 리렌더링 발생함 => 추후 해결 필요
   // console.log("리렌더링")
 
-  // routine_done_daily 테이블 데이터 조회하는 함수
-  // 이미 유효한 레코드가 존재하는 경우와 존재하지 않는 경우에 적절히 대응하기 위해서 필요한 과정
-  const GETroutineDoneDaily = async () => {
-    const supabase = createClient()
-    // 현재 유저 아이디를 기반으로 챌린지 정보들 가져오기
-    const { data: currentUserRoutineDoneDaily, error } = await supabase
-      .from("routine_done_daily")
-      .select()
-      .eq("user_id", me?.id || "")
-
-    return currentUserRoutineDoneDaily
-  }
-
-  // routine_done 테이블 데이터 조회하는 함수
-  const GETroutineDone = async () => {
-    const supabase = createClient()
-    // 현재 유저 아이디를 기반으로 챌린지 정보들 가져오기
-    const { data: currentUserRoutineDone, error } = await supabase
-      .from("routine_done")
-      .select()
-    return currentUserRoutineDone
-  }
-
   const {
     data: structuredChallengeData,
     isPending: ChallengeDataPending,
@@ -56,16 +35,16 @@ function ChallengeList() {
     isPending: routineDoneDailyPending,
     isError: routineDoneDailyError,
   } = useQuery({
-    queryKey: ["fetchCurrentUserRoutineDoneDaily"],
-    queryFn: GETroutineDoneDaily,
+    queryKey: ["fetchCurrentUserRoutineDoneDaily", userId],
+    queryFn: () => GETroutineDoneDaily(userId),
   })
 
   const {
-    data: currentUserRoutineDone,
+    data: RoutineDone,
     isPending: routineDonePending,
     isError: routineDoneError,
   } = useQuery({
-    queryKey: ["fetchCurrentUserRoutineDone"],
+    queryKey: ["fetchRoutineDone"],
     queryFn: GETroutineDone,
   })
 
@@ -96,12 +75,7 @@ function ChallengeList() {
     return <div>서버에서 데이터 로드 중 오류 발생</div>
   }
 
-  if (
-    structuredChallengeData &&
-    currentUserRoutineDoneDaily &&
-    currentUserRoutineDone
-  ) {
-    // console.log(fetchedChallengeData)
+  if (structuredChallengeData && currentUserRoutineDoneDaily && RoutineDone) {
     return (
       <div className="mt-10 flex flex-col gap-y-10">
         <div className="flex gap-4">
@@ -219,7 +193,7 @@ function ChallengeList() {
                                             routineDoneDaily={
                                               currentUserRoutineDoneDaily
                                             }
-                                            routineDone={currentUserRoutineDone}
+                                            routineDone={RoutineDone}
                                           />
                                         </div>
                                       )

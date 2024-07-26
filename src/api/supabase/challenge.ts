@@ -1,12 +1,9 @@
-import { createClient } from "@/supabase/client"
 import axios from "axios"
 
 import {
   ChallengeType,
   MilestoneType,
   RoutineType,
-  StructuredChallengeType,
-  StructuredMilestoneType,
 } from "../../../types/supabase.type"
 
 // 필요없는 타입 제외한 milestone 타입
@@ -81,11 +78,4 @@ export const PUTchallenge = async (params: PUTchallengeArgumentProps) => {
     }
   )
   return putResponse
-}
-
-// 유저 ID 기반으로 구조화된 챌린지-마일스톤-루틴 데이터 일괄적으로 가져오는 함수
-export const GETstructuredChallengeData = async (userId: string) => {
-  const response = await axios.get(`/api/structured-challenge/${userId}`)
-  const getResponse: StructuredChallengeType[] = response.data
-  return getResponse
 }
