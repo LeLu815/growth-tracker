@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
 import { numberToWeek } from "../_utils/milestoneweekUtils"
+import { ChallengeType } from "../../../../../../../types/challengeDetail"
 
 function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const modal = useModal()
@@ -28,7 +29,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
   }
 
   const { data, isPending, isError } = useQuery<ChallengeType>({
-    queryKey: ["challenge_detail"],
+    queryKey: ["challengeDetail"],
     queryFn: getChallenge,
   })
 

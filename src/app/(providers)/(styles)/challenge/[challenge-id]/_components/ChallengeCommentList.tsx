@@ -1,6 +1,6 @@
 "use client"
 
-import { ChangeEvent, FormEvent, useState } from "react"
+import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
@@ -11,6 +11,11 @@ import {
 } from "@tanstack/react-query"
 import axios from "axios"
 import { useInView } from "react-intersection-observer"
+
+import {
+  ChallengeCommentPageType,
+  ChallengeCommentType,
+} from "../../../../../../../types/challengeDetail"
 
 function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   const { me } = useAuth()
@@ -29,8 +34,9 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   }: {
     pageParam: number
   }): Promise<ChallengeCommentType> => {
+    debugger
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}/comment?limit=3&page=${pageParam}&userId=${me?.id}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}/comment?limit=3&page=${pageParam}&userId=${me ? me?.id : ""}`
     )
 
     return response.data
@@ -143,52 +149,58 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
       isLike: boolean
       commentId: string
     }) => {
-      await queryClient.cancelQueries({ queryKey: ["challenge_comment"] })
-      const commentList = queryClient.getQueryData(["challenge_comment"])
-      queryClient.setQueryData(["challenge_comment"], (prev: ResponseData) => {
-        return {
-          pageParams: [...prev.pageParams],
-          pages: prev.pages.map((comments) => {
-            return comments.map((comment) => {
-              if (comment.id === commentId) {
-                comment.is_like = !comment.is_like
-              }
-              return comment
-            })
-          }),
+      await queryClient.cancelQueries({ queryKey: ["challengeComment"] })
+      const commentList = queryClient.getQueryData(["challengeComment"])
+      queryClient.setQueryData(
+        ["challengeComment"],
+        (prev: ChallengeCommentPageType) => {
+          return {
+            pageParams: [...prev.pageParams],
+            pages: prev.pages.map((comments) => {
+              return comments.map((comment) => {
+                if (comment.id === commentId) {
+                  comment.is_like = !comment.is_like
+                }
+                return comment
+              })
+            }),
+          }
         }
-      })
+      )
       return { commentList }
     },
     onError: (err, test, context) => {
-      queryClient.setQueryData(["challenge_comment"], context?.commentList)
+      queryClient.setQueryData(["challengeComment"], context?.commentList)
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["challenge_comment"] })
+      queryClient.invalidateQueries({ queryKey: ["challengeComment"] })
     },
   })
 
   const { mutate: handleCommentDeleteMutate } = useMutation({
     mutationFn: deleteComment,
     onMutate: async (commentId: string) => {
-      await queryClient.cancelQueries({ queryKey: ["challenge_comment"] })
-      const commentList = queryClient.getQueryData(["challenge_comment"])
+      await queryClient.cancelQueries({ queryKey: ["challengeComment"] })
+      const commentList = queryClient.getQueryData(["challengeComment"])
 
-      queryClient.setQueryData(["challenge_comment"], (prev: ResponseData) => {
-        return {
-          pageParams: [...prev.pageParams],
-          pages: prev.pages.map((comments) => {
-            return comments.filter((comment) => comment.id !== commentId)
-          }),
+      queryClient.setQueryData(
+        ["challengeComment"],
+        (prev: ChallengeCommentPageType) => {
+          return {
+            pageParams: [...prev.pageParams],
+            pages: prev.pages.map((comments) => {
+              return comments.filter((comment) => comment.id !== commentId)
+            }),
+          }
         }
-      })
+      )
       return { commentList }
     },
     onError: (err, _commentId, context) => {
-      queryClient.setQueryData(["challenge_comment"], context?.commentList)
+      queryClient.setQueryData(["challengeComment"], context?.commentList)
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["challenge_comment"] })
+      queryClient.invalidateQueries({ queryKey: ["challengeComment"] })
     },
   })
 
@@ -201,31 +213,34 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
       commentId: string
       content: string
     }) => {
-      await queryClient.cancelQueries({ queryKey: ["challenge_comment"] })
-      const commentList = queryClient.getQueryData(["challenge_comment"])
-      queryClient.setQueryData(["challenge_comment"], (prev: ResponseData) => {
-        return {
-          pageParams: [...prev.pageParams],
-          pages: prev.pages.map((comments) => {
-            return comments.map((comment) => {
-              if (comment.id === commentId) {
-                comment.content = content
-              }
-              return comment
-            })
-          }),
+      await queryClient.cancelQueries({ queryKey: ["challengeComment"] })
+      const commentList = queryClient.getQueryData(["challengeComment"])
+      queryClient.setQueryData(
+        ["challengeComment"],
+        (prev: ChallengeCommentPageType) => {
+          return {
+            pageParams: [...prev.pageParams],
+            pages: prev.pages.map((comments) => {
+              return comments.map((comment) => {
+                if (comment.id === commentId) {
+                  comment.content = content
+                }
+                return comment
+              })
+            }),
+          }
         }
-      })
+      )
       setUpdateContent("")
       setIsUpdate(false)
       setUpdateCommentId("")
       return { commentList }
     },
     onError: (err, _, context) => {
-      queryClient.setQueryData(["challenge_comment"], context?.commentList)
+      queryClient.setQueryData(["challengeComment"], context?.commentList)
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["challenge_comment"] })
+      queryClient.invalidateQueries({ queryKey: ["challengeComment"] })
     },
   })
 
@@ -238,7 +253,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
     refetch,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["challenge_comment"],
+    queryKey: ["challengeComment"],
     initialPageParam: 0,
     queryFn: getChallengeCommentList,
     getNextPageParam: (
@@ -318,10 +333,12 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
               종아요 여부 :{" "}
               <div
                 onClick={() =>
-                  handleCommentLikeMutate({
-                    isLike: comment.is_like,
-                    commentId: comment.id,
-                  })
+                  me
+                    ? handleCommentLikeMutate({
+                        isLike: comment.is_like,
+                        commentId: comment.id,
+                      })
+                    : router.push("/")
                 }
               >
                 {comment.is_like ? <p>❤️</p> : <p>🤍</p>}{" "}

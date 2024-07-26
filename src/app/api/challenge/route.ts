@@ -151,7 +151,6 @@ export async function GET(req: NextRequest) {
     .from("challenge")
     .select(`*, user: users (nickname)`)
     .ilike("goal", `%${keyword}%`)
-
   // 카테고리 필터링
   const categoryQuery = category
     ? baseQuery.eq("category", category)
