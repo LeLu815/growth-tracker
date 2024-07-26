@@ -13,7 +13,7 @@ const Page = ({
   return (
     <main className="container mx-auto p-4 sm:p-8 md:p-12 lg:p-14">
       <h1
-        className={`font-semibold ${isTitleHidden ? "hidden" : ""} text-lg md:text-2xl lg:text-3xl`}
+        className={`mb-6 font-semibold ${isTitleHidden ? "hidden" : ""} text-lg md:text-2xl lg:text-3xl`}
       >
         {title}
       </h1>

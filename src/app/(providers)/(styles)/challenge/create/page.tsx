@@ -1,4 +1,5 @@
 import ChallengeCreate from "./_components/ChallengeCreate"
+import DragDropContainer from "./_components/Milestone/DragDropContainer"
 import Calender from "./calender"
 
 function ChallengeCreatePage() {
@@ -11,6 +12,7 @@ function ChallengeCreatePage() {
           <Calender />
         </div>
       </div>
+      <DragDropContainer />
     </>
   )
 }
