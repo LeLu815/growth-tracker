@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   DragDropContext,
   Draggable,
@@ -10,11 +10,6 @@ import {
 import { nanoid } from "nanoid"
 
 import Page from "@/components/Page"
-
-import { Database } from "../../../../../types/supabase"
-
-type Routine = Database["public"]["Tables"]["routine"]["Row"]
-type Milestone = Database["public"]["Tables"]
 
 type RoutineType = {
   id: string
@@ -26,37 +21,39 @@ type MilestoneType = {
   routines: RoutineType[]
 }
 
-const initialData = {
-  milestone1: {
+const initialData: MilestoneType[] = [
+  {
     id: "milestone1",
     routines: [
       { id: nanoid(), content: "루틴1-1" },
       { id: nanoid(), content: "루틴1-2" },
     ],
   },
-  milestone2: {
+  {
     id: "milestone2",
     routines: [
       { id: nanoid(), content: "루틴2-1" },
       { id: nanoid(), content: "루틴2-2" },
     ],
   },
-  // milestone3: {
+  // {
   //   id: "milestone3",
   //   routines: [
   //     { id: nanoid(), content: "루틴3-1" },
   //     { id: nanoid(), content: "루틴3-2" },
   //   ],
   // },
-}
+]
 
 export default function SecondTestPage() {
-  const [data, setData] = useState<Record<string, MilestoneType>>(initialData)
+  const [data, setData] = useState<MilestoneType[]>(initialData)
 
-  // 여기서 result는 드래그앤드롭 동작이 끝났을때 호출되는 콜백함수의 매개변수 밑의 속성들을 포함.
+  useEffect(() => {
+    console.log(data)
+  }, [data])
+
   // source: 드래그된 항목의 출발지 정보
   // destination: 드롭된 항목의 목적지 정보
-  // draggableId: 드래그된 항목의 ID
   // type: 드래그 앤 드롭 작업의 타입(동일한 드래그 앤 드롭 컨텍스트 내에서 여러 유형의 작업을 구분할 수 있음)
   const onDragEnd = (result: DropResult) => {
     const { source, destination, type } = result
@@ -64,31 +61,29 @@ export default function SecondTestPage() {
     if (!destination) return
 
     if (type === "milestone") {
-      const newMilestonesOrder = Array.from(Object.keys(data))
-
+      // 마일스톤 순서 변경
+      const newMilestonesOrder = Array.from(data)
       const [removed] = newMilestonesOrder.splice(source.index, 1)
-      // removed 된 변수를 destination.index 위치로 이동
       newMilestonesOrder.splice(destination.index, 0, removed)
 
-      // 새로운 데이터를 저장할 빈 객체 생성
-      const newData: Record<string, MilestoneType> = {}
-
-      newMilestonesOrder.forEach((key) => {
-        newData[key] = data[key]
-      })
-
-      setData(newData)
-      console.log(newData)
+      setData(newMilestonesOrder)
       return
     }
 
-    const start = data[source.droppableId]
-    const finish = data[destination.droppableId]
+    const startIndex = data.findIndex(
+      (milestone) => milestone.id === source.droppableId
+    )
+    const finishIndex = data.findIndex(
+      (milestone) => milestone.id === destination.droppableId
+    )
+
+    const start = data[startIndex]
+    const finish = data[finishIndex]
 
     if (start === finish) {
+      // 같은 마일스톤 내에서 루틴 순서 변경
       const newRoutines = Array.from(start.routines)
       const [movedRoutine] = newRoutines.splice(source.index, 1)
-      // 도착위치로 변경하여 루틴 순서 업데이트
       newRoutines.splice(destination.index, 0, movedRoutine)
 
       const newMilestone = {
@@ -96,21 +91,16 @@ export default function SecondTestPage() {
         routines: newRoutines,
       }
 
-      // 기존 start 마일스톤 객체 복사 후 새로운 마일스톤 객체 생성, routines 배열을 newRoutines로 대체
-      setData((prevData) => ({
-        ...prevData,
-        [newMilestone.id]: newMilestone,
-      }))
-    } else {
-      // start.routines 배열을 복사하여 새로운 배열 startRoutines를 생성
-      const startRoutines = Array.from(start.routines)
+      const newData = Array.from(data)
+      newData[startIndex] = newMilestone
 
-      // source.index 위치에 있는 요소를 startRoutines 배열에서 제거하고, movedRoutine 변수에 저장
+      setData(newData)
+    } else {
+      // 다른 마일스톤으로 루틴 이동
+      const startRoutines = Array.from(start.routines)
       const [movedRoutine] = startRoutines.splice(source.index, 1)
 
       const finishRoutines = Array.from(finish.routines)
-
-      // movedRoutine요소를 finishRoutines 배열의 destination.index에 위치시켜 루틴이 다른 마일스톤으로 이동할 수 있게 함
       finishRoutines.splice(destination.index, 0, movedRoutine)
 
       const newStart = {
@@ -122,37 +112,39 @@ export default function SecondTestPage() {
         routines: finishRoutines,
       }
 
-      setData((prevData) => ({
-        ...prevData,
-        [newStart.id]: newStart,
-        [newFinish.id]: newFinish,
-      }))
-    }
+      const newData = Array.from(data)
+      newData[startIndex] = newStart
+      newData[finishIndex] = newFinish
 
-    console.log(data)
+      setData(newData)
+    }
   }
 
+  // 루틴 삭제 함수
   const deleteRoutine = (milestoneId: string, routineId: string) => {
     setData((prevData) => {
-      const newRoutines = prevData[milestoneId].routines.filter(
+      const milestoneIndex = prevData.findIndex(
+        (milestone) => milestone.id === milestoneId
+      )
+      const newRoutines = prevData[milestoneIndex].routines.filter(
         (routine) => routine.id !== routineId
       )
       const newMilestone = {
-        ...prevData[milestoneId],
+        ...prevData[milestoneIndex],
         routines: newRoutines,
       }
-      return {
-        ...prevData,
-        [milestoneId]: newMilestone,
-      }
+      const newData = Array.from(prevData)
+      newData[milestoneIndex] = newMilestone
+      return newData
     })
   }
 
   return (
     <Page title="마일스톤 루틴 드래그 앤 드롭">
       <DragDropContext onDragEnd={onDragEnd}>
+        {/* 전체 마일스톤 Droppable */}
         <Droppable
-          droppableId="all-milestones햐"
+          droppableId="all-milestones"
           direction="horizontal"
           type="milestone"
         >
@@ -162,7 +154,7 @@ export default function SecondTestPage() {
               ref={provided.innerRef}
               className="flex gap-4"
             >
-              {Object.values(data).map((milestone, index) => (
+              {data.map((milestone, index) => (
                 <Draggable
                   key={milestone.id}
                   draggableId={milestone.id}
@@ -175,7 +167,7 @@ export default function SecondTestPage() {
                       {...provided.dragHandleProps}
                       className="mb-4 flex flex-col gap-2 rounded-lg border border-gray-400 bg-gray-100 p-4"
                     >
-                      {/* routine */}
+                      {/* 각 마일스톤 내 루틴 Droppable */}
                       <Droppable droppableId={milestone.id} type="routine">
                         {(provided) => (
                           <div
@@ -186,7 +178,6 @@ export default function SecondTestPage() {
                             <h2 className="mb-2 text-lg font-semibold">
                               마일스톤: {milestone.id}
                             </h2>
-
                             {milestone.routines.map((routine, index) => (
                               <Draggable
                                 key={routine.id}
