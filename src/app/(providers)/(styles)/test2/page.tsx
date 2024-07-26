@@ -19,6 +19,7 @@ type RoutineType = {
 type MilestoneType = {
   id: string
   routines: RoutineType[]
+  name: string
 }
 
 const initialData: MilestoneType[] = [
@@ -28,6 +29,7 @@ const initialData: MilestoneType[] = [
       { id: nanoid(), content: "루틴1-1" },
       { id: nanoid(), content: "루틴1-2" },
     ],
+    name: "이인짱",
   },
   {
     id: "milestone2",
@@ -35,14 +37,16 @@ const initialData: MilestoneType[] = [
       { id: nanoid(), content: "루틴2-1" },
       { id: nanoid(), content: "루틴2-2" },
     ],
+    name: "인짱",
   },
-  // {
-  //   id: "milestone3",
-  //   routines: [
-  //     { id: nanoid(), content: "루틴3-1" },
-  //     { id: nanoid(), content: "루틴3-2" },
-  //   ],
-  // },
+  {
+    id: "milestone3",
+    routines: [
+      { id: nanoid(), content: "루틴3-1" },
+      { id: nanoid(), content: "루틴3-2" },
+    ],
+    name: "이인최고",
+  },
 ]
 
 export default function SecondTestPage() {
@@ -119,6 +123,12 @@ export default function SecondTestPage() {
       setData(newData)
     }
   }
+  // 마일스톤 삭제 함수
+  const deleteMilestone = (milestoneId: string) => {
+    setData((prevData) =>
+      prevData.filter((milestone) => milestone.id !== milestoneId)
+    )
+  }
 
   // 루틴 삭제 함수
   const deleteRoutine = (milestoneId: string, routineId: string) => {
@@ -167,6 +177,9 @@ export default function SecondTestPage() {
                       {...provided.dragHandleProps}
                       className="mb-4 flex flex-col gap-2 rounded-lg border border-gray-400 bg-gray-100 p-4"
                     >
+                      <button onClick={() => deleteMilestone(milestone.id)}>
+                        삭제
+                      </button>
                       {/* 각 마일스톤 내 루틴 Droppable */}
                       <Droppable droppableId={milestone.id} type="routine">
                         {(provided) => (
