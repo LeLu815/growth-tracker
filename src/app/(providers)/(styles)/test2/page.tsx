@@ -11,6 +11,11 @@ import { nanoid } from "nanoid"
 
 import Page from "@/components/Page"
 
+import { Database } from "../../../../../types/supabase"
+
+type Routine = Database["public"]["Tables"]["routine"]["Row"]
+type Milestone = Database["public"]["Tables"]
+
 type RoutineType = {
   id: string
   content: string
@@ -36,13 +41,13 @@ const initialData = {
       { id: nanoid(), content: "루틴2-2" },
     ],
   },
-  milestone3: {
-    id: "milestone3",
-    routines: [
-      { id: nanoid(), content: "루틴3-1" },
-      { id: nanoid(), content: "루틴3-2" },
-    ],
-  },
+  // milestone3: {
+  //   id: "milestone3",
+  //   routines: [
+  //     { id: nanoid(), content: "루틴3-1" },
+  //     { id: nanoid(), content: "루틴3-2" },
+  //   ],
+  // },
 }
 
 export default function SecondTestPage() {
@@ -147,7 +152,7 @@ export default function SecondTestPage() {
     <Page title="마일스톤 루틴 드래그 앤 드롭">
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable
-          droppableId="all-milestones"
+          droppableId="all-milestones햐"
           direction="horizontal"
           type="milestone"
         >
