@@ -1,6 +1,7 @@
 "use client"
 
 import { ChangeEvent, FormEvent, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
 import {
@@ -10,7 +11,6 @@ import {
 } from "@tanstack/react-query"
 import axios from "axios"
 import { useInView } from "react-intersection-observer"
-import {useRouter} from "next/navigation";
 
 function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   const { me } = useAuth()
@@ -41,11 +41,10 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
    * */
   const createComment = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
     if (!me) {
-      router.push("/");
+      router.push("/")
       return
-    }  else if (!content.trim()) {
+    } else if (!content.trim()) {
       alertOpen("댓글 내용을 입력해주세요.")
       return
     }
@@ -79,7 +78,6 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}/comment/${commentId}`
       )
       .then((response) => response.data)
-    debugger
     if (response.error) {
       alertOpen("댓글 삭제에 실패했습니다.")
       throw new Error(response.error)
@@ -90,11 +88,17 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   /**
    * 댓글 수정
    * */
-  const updateComment = async () => {
+  const updateComment = async ({
+    commentId,
+    content,
+  }: {
+    commentId: string
+    content: string
+  }) => {
     const response = await axios
       .put(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}/comment/${updateCommentId}`,
-        JSON.stringify({ content: updateContent }), // JSON 데이터
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}/comment/${commentId}`,
+        JSON.stringify({ content: content }), // JSON 데이터
         {
           headers: {
             "Content-Type": "application/json",
@@ -107,20 +111,38 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
       alertOpen("댓글 작성에 실패했습니다.")
       throw new Error(response.error)
     }
-    setUpdateContent("")
-    setIsUpdate(false)
-    setUpdateCommentId("")
   }
 
   /**
    * 댓글 좋아요
    * */
-  const createOrDeleteCommentLike = async () => {}
+  const createOrDeleteCommentLike = async ({
+    isLike,
+    commentId,
+  }: {
+    isLike: boolean
+    commentId: string
+  }) => {
+    const method = isLike ? "delete" : "post"
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}/comment/${commentId}/like?userId=${me?.id}`
 
-  const { mutate: handleCommentMutate } = useMutation({
-    mutationFn: updateComment,
+    const config = { method, url }
+    const response = await axios(config).then((response) => response.data)
 
-    onMutate: async () => {
+    if (response.error) {
+      throw new Error(response.error.message)
+    }
+  }
+
+  const { mutate: handleCommentLikeMutate } = useMutation({
+    mutationFn: createOrDeleteCommentLike,
+    onMutate: async ({
+      isLike,
+      commentId,
+    }: {
+      isLike: boolean
+      commentId: string
+    }) => {
       await queryClient.cancelQueries({ queryKey: ["challenge_comment"] })
       const commentList = queryClient.getQueryData(["challenge_comment"])
       queryClient.setQueryData(["challenge_comment"], (prev: ResponseData) => {
@@ -128,24 +150,80 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
           pageParams: [...prev.pageParams],
           pages: prev.pages.map((comments) => {
             return comments.map((comment) => {
-              if (comment.id === updateCommentId) {
-                debugger
-                comment.content = updateContent
+              if (comment.id === commentId) {
+                comment.is_like = !comment.is_like
               }
-
               return comment
             })
           }),
         }
       })
-
       return { commentList }
     },
-
-    onError: (err, newTodo, context) => {
+    onError: (err, test, context) => {
       queryClient.setQueryData(["challenge_comment"], context?.commentList)
     },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["challenge_comment"] })
+    },
+  })
 
+  const { mutate: handleCommentDeleteMutate } = useMutation({
+    mutationFn: deleteComment,
+    onMutate: async (commentId: string) => {
+      await queryClient.cancelQueries({ queryKey: ["challenge_comment"] })
+      const commentList = queryClient.getQueryData(["challenge_comment"])
+
+      queryClient.setQueryData(["challenge_comment"], (prev: ResponseData) => {
+        return {
+          pageParams: [...prev.pageParams],
+          pages: prev.pages.map((comments) => {
+            return comments.filter((comment) => comment.id !== commentId)
+          }),
+        }
+      })
+      return { commentList }
+    },
+    onError: (err, _commentId, context) => {
+      queryClient.setQueryData(["challenge_comment"], context?.commentList)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["challenge_comment"] })
+    },
+  })
+
+  const { mutate: handleCommentMutate } = useMutation({
+    mutationFn: updateComment,
+    onMutate: async ({
+      commentId,
+      content,
+    }: {
+      commentId: string
+      content: string
+    }) => {
+      await queryClient.cancelQueries({ queryKey: ["challenge_comment"] })
+      const commentList = queryClient.getQueryData(["challenge_comment"])
+      queryClient.setQueryData(["challenge_comment"], (prev: ResponseData) => {
+        return {
+          pageParams: [...prev.pageParams],
+          pages: prev.pages.map((comments) => {
+            return comments.map((comment) => {
+              if (comment.id === commentId) {
+                comment.content = content
+              }
+              return comment
+            })
+          }),
+        }
+      })
+      setUpdateContent("")
+      setIsUpdate(false)
+      setUpdateCommentId("")
+      return { commentList }
+    },
+    onError: (err, _, context) => {
+      queryClient.setQueryData(["challenge_comment"], context?.commentList)
+    },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["challenge_comment"] })
     },
@@ -203,7 +281,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
             setContent(e.target.value)
           }
         ></input>
-        <button>댓글 작성</button>
+        <button type={"submit"}>댓글 작성</button>
       </form>
       {data?.map((comment, idx) => {
         const isLastItem = data?.length - 1 === idx
@@ -221,7 +299,10 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
               <form
                 onSubmit={(e) => {
                   e.preventDefault()
-                  handleCommentMutate()
+                  handleCommentMutate({
+                    commentId: comment.id,
+                    content: updateContent,
+                  })
                 }}
               >
                 <input
@@ -235,7 +316,16 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
 
             <div className={"flex gap-4"}>
               종아요 여부 :{" "}
-              <div>{comment.is_like ? <p>❤️</p> : <p>🤍</p>} </div>
+              <div
+                onClick={() =>
+                  handleCommentLikeMutate({
+                    isLike: comment.is_like,
+                    commentId: comment.id,
+                  })
+                }
+              >
+                {comment.is_like ? <p>❤️</p> : <p>🤍</p>}{" "}
+              </div>
             </div>
             {comment.user_id === me?.id && (
               <div className={"flex gap-4"}>
@@ -244,7 +334,10 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                     <button
                       onClick={(e) => {
                         e.preventDefault()
-                        handleCommentMutate();
+                        handleCommentMutate({
+                          commentId: comment.id,
+                          content: updateContent,
+                        })
                       }}
                       className={"border border-slate-600"}
                     >
@@ -264,7 +357,6 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                   </>
                 ) : (
                   <>
-                    {" "}
                     <button
                       onClick={(e) => {
                         e.preventDefault()
@@ -277,11 +369,11 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                       수정
                     </button>
                     <button
-                      onClick={() => deleteComment(comment.id)}
+                      onClick={() => handleCommentDeleteMutate(comment.id)}
                       className={"border border-slate-600"}
                     >
                       삭제
-                    </button>{" "}
+                    </button>
                   </>
                 )}
               </div>

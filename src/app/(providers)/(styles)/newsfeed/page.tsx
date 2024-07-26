@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query"
 
 import Page from "@/components/Page"
 
-import { PostType } from "../../../../types/challenge"
+import { PostType } from "../../../../../types/challenge"
 import CategorySelector from "./_components/CategorySelector"
 import ChallengePosts from "./_components/ChallengePosts"
 import SearchFilter from "./_components/SearchFilter"
