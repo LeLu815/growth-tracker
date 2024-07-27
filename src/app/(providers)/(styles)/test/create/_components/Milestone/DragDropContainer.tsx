@@ -162,6 +162,7 @@ function DragDropContainer() {
   return (
     <div className="container mx-auto p-4">
       <DragDropContext onDragEnd={onDragEnd}>
+        {/* 전체 마일스톤 Droppable */}
         <div className="my-5 flex gap-3">
           <Input
             label="마일스톤 생성"
@@ -182,39 +183,33 @@ function DragDropContainer() {
             생성하기
           </button>
         </div>
-
         <Droppable
           droppableId="all-milestones"
           direction="horizontal"
           type="milestone"
         >
           {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
-              <div className="flex gap-4">
-                {data.map((milestone, index) => (
-                  <Draggable
-                    key={milestone.id}
-                    draggableId={milestone.id}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className="mb-4 flex w-[300px] flex-col gap-2 rounded-lg border border-gray-400 bg-gray-100 p-4"
-                      >
-                        <MilestoneComponent
-                          deleteMilestone={deleteMilestone}
-                          milestone={milestone}
-                          provided={provided}
-                          setData={setData}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-              </div>
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className="flex gap-4"
+            >
+              {data.map((milestone, index) => (
+                <Draggable
+                  key={milestone.id}
+                  draggableId={milestone.id}
+                  index={index}
+                >
+                  {(provided) => (
+                    <MilestoneComponent
+                      deleteMilestone={deleteMilestone}
+                      milestone={milestone}
+                      provided={provided}
+                      setData={setData}
+                    />
+                  )}
+                </Draggable>
+              ))}
               {provided.placeholder}
             </div>
           )}
