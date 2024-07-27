@@ -66,6 +66,7 @@ function DragDropContainer() {
 
     if (type === "milestone") {
       // 마일스톤 순서 변경
+      // Array.from : 문자열 등 유사 배열(Array-like) 객체나 이터러블한 객체를 배열로 만들어주는 메서드
       const newMilestonesOrder = Array.from(data)
       const [removed] = newMilestonesOrder.splice(source.index, 1)
       newMilestonesOrder.splice(destination.index, 0, removed)
