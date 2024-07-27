@@ -141,25 +141,6 @@ function DragDropContainer() {
     )
   }
 
-  // 루틴 삭제 함수
-  const deleteRoutine = (milestoneId: string, routineId: string) => {
-    setData((prevData) => {
-      const milestoneIndex = prevData.findIndex(
-        (milestone) => milestone.id === milestoneId
-      )
-      const newRoutines = prevData[milestoneIndex].routines.filter(
-        (routine) => routine.id !== routineId
-      )
-      const newMilestone = {
-        ...prevData[milestoneIndex],
-        routines: newRoutines,
-      }
-      const newData = Array.from(prevData)
-      newData[milestoneIndex] = newMilestone
-      return newData
-    })
-  }
-
   useEffect(() => {
     console.log(data)
   }, [data])
@@ -192,6 +173,7 @@ function DragDropContainer() {
         direction="horizontal"
         type="milestone"
       >
+        {/* provided : 라이브러리에서 제공하는 객체 */}
         {(provided) => (
           <div
             {...provided.droppableProps}
