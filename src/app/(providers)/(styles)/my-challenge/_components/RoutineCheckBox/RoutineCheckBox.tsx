@@ -5,38 +5,30 @@ import {
   DELETEroutineDone,
   POSTnewRoutineDone,
 } from "@/api/supabase/routineDone"
-import {
-  POSTnewRoutineDoneDaily,
-  PUTisSuccessRoutineDoneDaily,
-} from "@/api/supabase/routineDoneDaily"
+import { PUTisSuccessRoutineDoneDaily } from "@/api/supabase/routineDoneDaily"
 import queryClient from "@/query/queryClient"
-import { createClient } from "@/supabase/client"
 import { v4 } from "uuid"
 
 import { RoutineDoneType } from "../../../../../../../types/routineDone.type"
-import { RoutineDoneDailyType } from "../../../../../../../types/routineDoneDaily.type"
 import { RoutineType } from "../../../../../../../types/supabase.type"
 
 interface RoutineCheckBoxProps {
-  mileStoneId: string
+  milestoneId: string
   challengeId: string
   createdAt: string
   userId: string
   routineId: string
-  routineDoneDaily: RoutineDoneDailyType[]
   routineDone: RoutineDoneType[]
   routines: RoutineType[]
+  routineDoneDailyId: string
 }
 
 function RoutineCheckBox({
   routines,
-  mileStoneId: milestoneId,
-  challengeId,
   createdAt,
-  userId,
-  routineDoneDaily,
   routineId,
   routineDone,
+  routineDoneDailyId,
 }: PropsWithChildren<RoutineCheckBoxProps>) {
   const routineCount = routines.length
 
@@ -53,77 +45,57 @@ function RoutineCheckBox({
   const handleCheckboxChange = async (event: ChangeEvent<HTMLInputElement>) => {
     // 체크하는 경우
     if (event.target.checked) {
-      // 전체 routine_done_daily에서 마일스톤 id를 통해서
-      // 현재 체크한 루틴에 대한 데이터가 이미 존재하는지 확인
-      const targetRDD = routineDoneDaily.find((item) => {
-        return (
-          item.milestone_id == milestoneId &&
-          item.created_at.slice(0, 10) == createdAt
-        )
-      })
-
-      const targetRDDId: string[] = []
-
-      // routine_done_daily에 유효한 레코드가 없으므로 새로 생성
-      if (!targetRDD) {
-        const newId = v4()
-        targetRDDId.push(newId)
-        await POSTnewRoutineDoneDaily({
-          challengeId,
-          milestoneId,
-          userId,
-          createdAt,
-          routineDoneId: newId,
-          isSuccess: false,
-        })
-      }
-      // routine_done_daily에 유효한 레코드가 있으므로,
-      // 새로 생성하지 않으면서 해당 레코드의 id값만 가져옴
-      else {
-        targetRDDId.push(targetRDD.id)
-      }
-
-      // routine_done에 유효한 레코드가 없으므로 새로 생성
       if (!targetRD) {
         // routine_done 테이블에 레코드 추가
         const routineDoneId = v4()
         await POSTnewRoutineDone({
-          routineDoneDailyId: targetRDDId[0],
+          routineDoneDailyId,
           routineId,
           createdAt,
           routineDoneId,
         })
       }
     }
+
     // 체크를 해제하는 경우
     else {
       if (targetRD) {
-        await DELETEroutineDone({ routineId: targetRD.routine_id })
+        await DELETEroutineDone({
+          routineId: targetRD.routine_id,
+          routineDoneDailyId: routineDoneDailyId,
+        })
       }
     }
-    queryClient.invalidateQueries({
+    await queryClient.invalidateQueries({
       queryKey: ["fetchRoutineDone"],
     })
     queryClient.invalidateQueries({
       queryKey: ["fetchCurrentUserRoutineDoneDaily"],
     })
   }
-
   const updateIsSuccess = async () => {
-    if (routineDone.length == routineCount) {
+    const todayDoneRoutineNumber = routineDone.filter((item) => {
+      return item.created_at.slice(0, 10) == createdAt
+    })
+
+    if (todayDoneRoutineNumber.length == routineCount) {
       await PUTisSuccessRoutineDoneDaily({
         currentIsSuccess: true,
-        milestoneId: milestoneId,
+        routineDoneDailyId: routineDoneDailyId,
       })
     } else {
       await PUTisSuccessRoutineDoneDaily({
         currentIsSuccess: false,
-        milestoneId: milestoneId,
+        routineDoneDailyId: routineDoneDailyId,
       })
     }
+    queryClient.invalidateQueries({
+      queryKey: ["fetchCurrentUserRoutineDoneDaily"],
+    })
   }
-
-  updateIsSuccess()
+  if (routineDone && routines && routineDoneDailyId) {
+    updateIsSuccess()
+  }
 
   return (
     <>

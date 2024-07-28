@@ -26,12 +26,15 @@ export const POSTnewRoutineDone = async (params: POSTnewRoutineDoneProps) => {
       routineDoneId: params.routineDoneId,
     }
   )
-
+  await queryClient.invalidateQueries({
+    queryKey: ["fetchRoutineDone"],
+  })
   return postResponse
 }
 
 export interface DELETEroutineDoneProps {
   routineId: string
+  routineDoneDailyId: string
 }
 
 export const DELETEroutineDone = async (params: DELETEroutineDoneProps) => {

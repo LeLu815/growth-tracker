@@ -12,6 +12,7 @@ interface DiarySectionProps {
   currentUserRoutineDoneDaily: RoutineDoneDailyType[]
   createdAt: string
   challengeId: string
+  routineDoneDailyId: string
 }
 
 function DiarySection({
@@ -19,6 +20,7 @@ function DiarySection({
   currentUserRoutineDoneDaily,
   createdAt,
   challengeId,
+  routineDoneDailyId,
 }: PropsWithChildren<DiarySectionProps>) {
   // queryClient.invalidateQueries({
   //   queryKey: ["fetchCurrentUserRoutineDoneDaily"],
@@ -36,7 +38,10 @@ function DiarySection({
   })
 
   const targetMilestoneIndex = currentUserRoutineDoneDaily.findIndex((item) => {
-    return item.milestone_id == milestoneId
+    return (
+      item.milestone_id == milestoneId &&
+      item.created_at.slice(0, 10) == createdAt
+    )
   })
 
   if (diaryPending) {
@@ -50,8 +55,8 @@ function DiarySection({
   if (diary) {
     const currentDiary = diary.find((item) => {
       return (
-        item.routine_done_daily_id ==
-        currentUserRoutineDoneDaily[targetMilestoneIndex].id
+        item.routine_done_daily_id == routineDoneDailyId &&
+        item.created_at.slice(0, 10) == createdAt
       )
     })
 
@@ -62,8 +67,7 @@ function DiarySection({
       const newId = v4()
       const diaryToPost: DiaryType = {
         id: newId,
-        routine_done_daily_id:
-          currentUserRoutineDoneDaily[targetMilestoneIndex].id,
+        routine_done_daily_id: routineDoneDailyId,
         created_at: createdAt,
         content: inputText,
         challenge_id: challengeId,
@@ -82,7 +86,7 @@ function DiarySection({
         const postResponse = POSTdiary(diaryToPost)
         postResponse.then((response) => {
           if (response.statusText == "OK") {
-            alert("수정이 완료되었습니다")
+            alert("저장이 완료되었습니다")
           } else {
             alert("오류 발생, 콘솔 확인")
             console.log(response)

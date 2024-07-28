@@ -4,10 +4,7 @@ import { GETroutineDone } from "@/api/supabase/routineDone"
 import { GETroutineDoneDaily } from "@/api/supabase/routineDoneDaily"
 import { GETstructuredChallengeData } from "@/api/supabase/structured-challenge"
 import { useAuth } from "@/context/auth.context"
-import { createClient } from "@/supabase/client"
 import { useQuery } from "@tanstack/react-query"
-
-import RoutineCheckBox from "@/app/(providers)/(styles)/my-challenge/_components/RoutineCheckBox"
 
 import MilestoneSection from "../MilestoneSection"
 
@@ -118,7 +115,7 @@ function ChallengeList() {
                   </h3>
                   <h1>챌린지 시작: {challenge.start_at}</h1>
                   <h1>챌린지 종료: {challenge.end_at}</h1>
-                  {challenge.milestones?.map((milestone) => {
+                  {challenge.milestones?.map((milestone, index) => {
                     // 요일 필터링
                     const milestoneDoDays: string[] = []
                     if (milestone.is_sun) {
@@ -155,15 +152,22 @@ function ChallengeList() {
                         CURRENT_DATE_NUMBER <= milestoneEndDate
                       ) {
                         return (
-                          <MilestoneSection
-                            key={milestone.id}
-                            challengeId={challenge.id}
-                            milestone={milestone}
-                            milestoneDoDays={milestoneDoDays}
-                            CURRENT_DATE={CURRENT_DATE}
-                            CURRENT_DAY_OF_WEEK={CURRENT_DAY_OF_WEEK}
-                            userId={userId}
-                          />
+                          <div key={milestone.id}>
+                            {!milestoneDoDays.find((milestoneDoDay) => {
+                              return milestoneDoDay == CURRENT_DAY_OF_WEEK
+                            }) ? (
+                              <p className="mt-5">오늘은 할 일이 없어요</p>
+                            ) : (
+                              <MilestoneSection
+                                challengeId={challenge.id}
+                                milestone={milestone}
+                                milestoneDoDays={milestoneDoDays}
+                                CURRENT_DATE={CURRENT_DATE}
+                                CURRENT_DAY_OF_WEEK={CURRENT_DAY_OF_WEEK}
+                                userId={userId}
+                              />
+                            )}
+                          </div>
                         )
                       }
                     }

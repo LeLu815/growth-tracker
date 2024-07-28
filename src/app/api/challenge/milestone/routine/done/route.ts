@@ -56,6 +56,7 @@ export const DELETE = async (request: NextRequest) => {
     .from("routine_done")
     .delete()
     .eq("routine_id", params.routineId)
+    .eq("routine_done_daily_id", params.routineDoneDailyId)
 
   if (error) {
     return NextResponse.json(

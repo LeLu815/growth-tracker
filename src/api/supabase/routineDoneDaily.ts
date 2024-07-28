@@ -14,7 +14,7 @@ export interface POSTnewRoutineDoneDailyProps {
 
 export interface PUTisSuccessRoutineDoneDaily {
   currentIsSuccess: boolean
-  milestoneId: string
+  routineDoneDailyId: string
 }
 
 export const GETroutineDoneDaily = async (userId: string) => {
@@ -56,7 +56,7 @@ export const PUTisSuccessRoutineDoneDaily = async (
     `/api/challenge/milestone/routine/done/daily`,
     {
       currentIsSuccess: params.currentIsSuccess,
-      milestoneId: params.milestoneId,
+      routineDoneDailyId: params.routineDoneDailyId,
     }
   )
 

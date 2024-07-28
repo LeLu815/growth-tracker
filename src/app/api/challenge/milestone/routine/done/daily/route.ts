@@ -3,11 +3,9 @@ import { POSTnewRoutineDoneDailyProps } from "@/api/supabase/routineDoneDaily"
 import queryClient from "@/query/queryClient"
 import { createClient } from "@/supabase/server"
 
-export const POST = async (
-  request: NextRequest,
-  { params }: { params: POSTnewRoutineDoneDailyProps }
-) => {
+export const POST = async (request: NextRequest) => {
   const supabase = createClient()
+  const params = await request.json()
   const { data, error } = await supabase
     .from("routine_done_daily")
     .insert([
@@ -32,7 +30,7 @@ export const PUT = async (request: NextRequest) => {
   const { data, error } = await supabase
     .from("routine_done_daily")
     .update({ is_success: params.currentIsSuccess })
-    .eq("milestone_id", params.milestoneId)
+    .eq("id", params.routineDoneDailyId)
     .select()
 
   if (error) {
