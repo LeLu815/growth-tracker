@@ -82,7 +82,7 @@ function UserInfoPage() {
   }
 
   const { data, isPending, isError, refetch } = useQuery({
-    queryKey: ["user_profile"],
+    queryKey: ["userProfile"],
     queryFn: getUser,
   })
 

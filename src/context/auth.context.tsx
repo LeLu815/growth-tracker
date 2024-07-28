@@ -16,13 +16,16 @@ type AuthContextValue = {
   me: User | null
 
   userData: { nickname: string | null; profile_image_url: string | null } | null
-  logIn: (email: string, password: string) => Promise<{ status: number }>
+  logIn: (
+    email: string,
+    password: string
+  ) => Promise<{ status: number; message: string }>
   logOut: () => void
   signUp: (
     email: string,
     password: string,
     nickname: string
-  ) => Promise<{ status: number }>
+  ) => Promise<{ status: number; message: string }>
 }
 
 const initialValue: AuthContextValue = {
@@ -30,9 +33,9 @@ const initialValue: AuthContextValue = {
   isLoggedIn: false,
   me: null,
   userData: null,
-  logIn: async () => ({ status: 0 }),
+  logIn: async () => ({ status: 0, message: "" }),
   logOut: () => {},
-  signUp: async () => ({ status: 0 }),
+  signUp: async () => ({ status: 0, message: "" }),
 }
 
 const AuthContext = createContext<AuthContextValue>(initialValue)
@@ -80,16 +83,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
     if (response.status === 401) {
       setMe(null)
       setUserData(null)
-      return { status: 401, message: "회원가입에 실패했습니다." }
+      return { status: 401, message: "로그인에 실패했습니다." }
     }
     const user = await response.json()
     setMe(user)
     fetchUserData(user.id)
-
-    if (response.status === 401) {
-      return { status: 401, message: "로그인에 실패했습니다." }
-    }
-    return { status: 200 }
+    return { status: 200, message: "" }
   }
 
   // 가입 함수
@@ -116,21 +115,25 @@ export function AuthProvider({ children }: PropsWithChildren) {
         body: JSON.stringify(data),
       }
     )
-    if (response.status === 422) {
-      setMe(null)
-      setUserData(null)
-      return { status: 422, message: "이미 존재하는 이메일입니다." }
+    const responseData = await response.json()
+
+    if (responseData.error) {
+      if (response.status === 401) {
+        setMe(null)
+        setUserData(null)
+        return { status: 401, message: "회원가입에 실패했습니다." }
+      }
+      if (response.status === 422) {
+        setMe(null)
+        setUserData(null)
+        return { status: 422, message: interpretErrorMsg(responseData.error) }
+      }
     }
-    if (response.status === 401) {
-      setMe(null)
-      setUserData(null)
-      return { status: 401, message: "회원가입에 실패했습니다." }
-    }
+
     const user = await response.json()
     setMe(user)
     fetchUserData(user.id)
-
-    return { status: 200 }
+    return { status: 200, message: "" }
   }
 
   // 로그아웃 함수
@@ -145,17 +148,23 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     try {
-      fetch(process.env.NEXT_PUBLIC_DOMAIN + "/api/auth/me")
-        .then(async (response) => {
-          if (response.status === 200) {
-            const user = await response.json()
-            setMe(user)
-            fetchUserData(user.id)
-          }
-          setIsInitialized(true)
-        })
-        .catch(() => setIsInitialized(true))
-    } catch (e) {
+      supabase.auth.getUser().then(({ data, error }) => {
+        const user = data.user
+        if (user) {
+          setMe(user)
+        }
+      })
+      // fetch(process.env.NEXT_PUBLIC_DOMAIN + "/api/auth/me")
+      //   .then(async (response) => {
+      //     if (response.status === 200) {
+      //       const user = await response.json()
+      //       setMe(user)
+      //       fetchUserData(user.id)
+      //     }
+      //     setIsInitialized(true)
+      //   })
+      //   .catch(() => setIsInitialized(true))
+    } finally {
       setIsInitialized(true)
     }
   }, [])
@@ -173,4 +182,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
   if (!isInitialized) return null
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+}
+
+const interpretErrorMsg = (errorMsg: string) => {
+  const obj: { [key: string]: string } = {
+    user_already_exists: "중복된 계정이 존재합니다.",
+    invalid_email: "유효하지 않은 이메일 주소입니다.",
+    weak_password: "잘못된 비밀번호 형식입니다.",
+    network_error: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
+  }
+  return obj[errorMsg] || "회원가입에 실패했습니다."
 }

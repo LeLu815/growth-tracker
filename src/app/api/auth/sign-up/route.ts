@@ -25,9 +25,14 @@ export async function POST(request: NextRequest) {
       },
     },
   })
-  console.log("error :", error)
-  if (error) return NextResponse.json("", { status: 422 })
-  if (!user) return NextResponse.json("", { status: 401 })
+  if (error) {
+    console.log("error :", error)
+    return NextResponse.json({ error: error.code }, { status: 422 })
+  }
+
+  if (!user) {
+    return NextResponse.json({ error: "User creation failed" }, { status: 401 })
+  }
 
   return NextResponse.json(user)
 }
