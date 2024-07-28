@@ -1,6 +1,5 @@
 import React, { PropsWithChildren, useEffect, useState } from "react"
 import { GETdiary, POSTdiary, PUTdiary } from "@/api/supabase/diary"
-import queryClient from "@/query/queryClient"
 import { useQuery } from "@tanstack/react-query"
 import { v4 } from "uuid"
 

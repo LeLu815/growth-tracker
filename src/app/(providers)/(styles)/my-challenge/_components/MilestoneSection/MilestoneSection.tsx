@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { PropsWithChildren, useEffect, useState } from "react"
 import { GETroutineDone } from "@/api/supabase/routineDone"
 import {

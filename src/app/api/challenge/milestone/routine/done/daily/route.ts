@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server"
-import { POSTnewRoutineDoneDailyProps } from "@/api/supabase/routineDoneDaily"
-import queryClient from "@/query/queryClient"
 import { createClient } from "@/supabase/server"
 
 export const POST = async (request: NextRequest) => {
