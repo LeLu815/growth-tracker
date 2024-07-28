@@ -22,7 +22,7 @@ export const POST = async (
     ])
     .select()
 
-  return data
+  return NextResponse.json(data)
 }
 
 export const PUT = async (request: NextRequest) => {
