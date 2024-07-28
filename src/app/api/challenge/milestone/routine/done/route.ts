@@ -52,7 +52,7 @@ export const POST = async (request: NextRequest) => {
 export const DELETE = async (request: NextRequest) => {
   const params: DELETEroutineDoneProps = await request.json()
   const supabase = createClient()
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("routine_done")
     .delete()
     .eq("routine_id", params.routineId)
@@ -67,6 +67,6 @@ export const DELETE = async (request: NextRequest) => {
       { status: 400 }
     )
   } else {
-    return NextResponse.json(data)
+    return NextResponse.json("삭제 완료")
   }
 }
