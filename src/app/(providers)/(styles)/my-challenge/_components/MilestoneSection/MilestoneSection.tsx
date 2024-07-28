@@ -96,6 +96,8 @@ function MilestoneSection({
             <DiarySection
               milestoneId={milestone.id}
               currentUserRoutineDoneDaily={currentUserRoutineDoneDaily}
+              createdAt={CURRENT_DATE}
+              challengeId={challengeId}
             />
           </div>
         )}

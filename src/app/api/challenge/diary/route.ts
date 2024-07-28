@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
-import { DELETEroutineDoneProps } from "@/api/supabase/routineDone"
 import { createClient } from "@/supabase/server"
+
+import { DiaryType } from "../../../../../types/diary.type"
 
 export const GET = async () => {
   const supabase = createClient()
-  const { data: RoutineDone, error } = await supabase
-    .from("routine_done")
-    .select()
+  const { data: diary, error } = await supabase.from("diary").select()
 
   if (error) {
     return NextResponse.json({
@@ -16,21 +15,22 @@ export const GET = async () => {
     })
   }
 
-  return NextResponse.json(RoutineDone)
+  return NextResponse.json(diary)
 }
 
 export const POST = async (request: NextRequest) => {
-  const params = await request.json()
+  const params: DiaryType = await request.json()
   const supabase = createClient()
 
   const { data, error } = await supabase
-    .from("routine_done")
+    .from("diary")
     .insert([
       {
-        routine_done_daily_id: params.routineDoneDailyId,
-        routine_id: params.routineId,
-        created_at: params.createdAt,
-        id: params.routineDoneId,
+        challenge_id: params.challenge_id,
+        content: params.content,
+        routine_done_daily_id: params.routine_done_daily_id,
+        created_at: params.created_at,
+        id: params.id,
       },
     ])
     .select()
@@ -49,13 +49,15 @@ export const POST = async (request: NextRequest) => {
   }
 }
 
-export const DELETE = async (request: NextRequest) => {
-  const params: DELETEroutineDoneProps = await request.json()
+export const PUT = async (request: NextRequest) => {
   const supabase = createClient()
+  const params = await request.json()
+
   const { data, error } = await supabase
-    .from("routine_done")
-    .delete()
-    .eq("routine_id", params.routineId)
+    .from("diary")
+    .update({ content: params.content })
+    .eq("routine_done_daily_id", params.routine_done_daily_id)
+    .select()
 
   if (error) {
     return NextResponse.json(
