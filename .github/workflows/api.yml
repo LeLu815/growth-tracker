@@ -14,7 +14,7 @@ jobs:
         run: |
           echo "Waiting for Vercel deployment..."
           while true; do
-            status=$(curl -s -H "Authorization: Bearer WhiteWisdomAsksMeForTheVecelTokenEFDx4FS5CpqitLlsq7VQ2e2q" https://api.vercel.com/v5/deployments?projectId=prj_TFIiZb4RNr21730nzxwID22q2X6t | jq -r '.deployments[0].state')
+            status=$(curl -s -H "Authorization: Bearer EFDx4FS5CpqitLlsq7VQ2e2q" https://api.vercel.com/v5/deployments?projectId=prj_TFIiZb4RNr21730nzxwID22q2X6t | jq -r '.deployments[0].state')
             if [ "$status" = "READY" ]; then
               echo "Deployment is ready!"
               break
@@ -24,7 +24,7 @@ jobs:
             fi
           done
         env:
-          VERCEL_TOKEN: WhiteWisdomAsksMeForTheVecelTokenEFDx4FS5CpqitLlsq7VQ2e2q
+          VERCEL_TOKEN: EFDx4FS5CpqitLlsq7VQ2e2q
 
   call-api:
     runs-on: ubuntu-latest
@@ -33,4 +33,5 @@ jobs:
     steps:
       - name: Call API
         run: |
+          echo "Calling your API..."
           curl -X GET https://growth-tracker-dev.vercel.app/api/scheduler
