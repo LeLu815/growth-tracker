@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { RoutineType } from "@/api/supabase/challenge"
 
+import { RoutineType } from "../../../../../../../types/supabase.type"
 import RoutineComponent from "./RoutineComponent"
 
 function MileStoneComponent() {

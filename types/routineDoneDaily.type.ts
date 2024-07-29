@@ -1,4 +1,4 @@
 import { Database } from "./supabase"
 
-export type tRoutineDoneDaily =
+export type RoutineDoneDailyType =
   Database["public"]["Tables"]["routine_done_daily"]["Row"]

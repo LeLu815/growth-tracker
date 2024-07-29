@@ -1,171 +1,33 @@
 "use client"
 
+import { GETroutineDone } from "@/api/supabase/routineDone"
+import { GETroutineDoneDaily } from "@/api/supabase/routineDoneDaily"
+import { GETstructuredChallengeData } from "@/api/supabase/structured-challenge"
 import { useAuth } from "@/context/auth.context"
-import { createClient } from "@/supabase/client"
 import { useQuery } from "@tanstack/react-query"
 
-import RoutineCheckBox from "@/app/(providers)/(styles)/my-challenge/_components/RoutineCheckBox"
-
-import {
-  tChallenge,
-  tMilestone,
-  tRoutine,
-  tStructuredChallenge,
-  tStructuredMilestone,
-} from "../../../../../../../types/challengeStructure.type"
+import MilestoneSection from "../MilestoneSection"
 
 function ChallengeList() {
   // 유저 아이디 정의
   const { me } = useAuth()
   const userId = me?.id
 
+  if (!userId) {
+    throw Error("유저 아이디가 가져와지지 않음")
+  }
+
   // 빈번한 리렌더링 발생함 => 추후 해결 필요
   // console.log("리렌더링")
-
-  // 챌린지/마일스톤/루틴 테이블 각각에서 데이터를 가져와
-  // 구조화된 형태로 추합해 반환하는 GET 함수
-  const GETstructuredChallengeData = async () => {
-    const supabase = createClient()
-    // 현재 유저 아이디를 기반으로 챌린지 정보들 가져오기
-    const { data: challenges, error: errorChallenge } = await supabase
-      .from("challenge")
-      .select()
-      .eq("user_id", me?.id || "")
-
-    const challengeIds: string[] = []
-    // 마일스톤을 가져오는데 쓸 챌린지id들 따로 저장
-    challenges?.forEach((challenge) => {
-      challengeIds.push(challenge.id)
-    })
-
-    // 위에서 정의한 챌린지id들의 배열을 활용해...
-    // ...현재 유저의 마일스톤 가져오기
-    const { data: milestones, error: milestoneError } = await supabase
-      .from("milestone")
-      .select()
-      .in("challenge_id", challengeIds)
-
-    const milestoneIds: string[] = []
-    // 루틴을 가져오는데 쓸 마일스톤id들 따로 저장
-    milestones?.forEach((milestone) => {
-      milestoneIds.push(milestone.id)
-    })
-
-    // 위에서 정의한 마일스톤id들의 배열을 활용해...
-    // ...현재 유저의 루틴 가져오기
-    const { data: routines, error: routineError } = await supabase
-      .from("routine")
-      .select()
-      .in("milestone_id", milestoneIds)
-
-    // 위에서 가져온 데이터돌을 구조화하는 과정임
-
-    const structuralizeChallenge = (
-      challenges: tChallenge[],
-      milestones: tMilestone[],
-      routines: tRoutine[]
-    ) => {
-      const structuredChallengeData: tStructuredChallenge[] = []
-
-      // 챌린지로 먼저 구조 잡아줌
-      challenges?.forEach((challenge, challengeIndex) => {
-        const new_challenge: tStructuredChallenge = {
-          ...challenge,
-          milestones: [],
-        }
-        structuredChallengeData.push(new_challenge)
-
-        // 마일스톤 구조 잡기
-        milestones?.forEach((milestone) => {
-          if (milestone.challenge_id == challenge.id) {
-            const new_milestone: tStructuredMilestone = {
-              ...milestone,
-              routines: [],
-            }
-            structuredChallengeData[challengeIndex].milestones.push(
-              new_milestone
-            )
-
-            // 루틴 구조 잡기
-            routines?.forEach((routine) => {
-              if (routine.milestone_id == milestone.id) {
-                // 어떤 마일스톤에 속해야하는지 인덱스 계산
-                const currentMilestoneIndex = structuredChallengeData[
-                  challengeIndex
-                ].milestones.findIndex((anotherMilestone) => {
-                  return anotherMilestone.id == milestone.id
-                })
-
-                structuredChallengeData[challengeIndex].milestones[
-                  currentMilestoneIndex
-                ].routines.push(routine)
-              }
-            })
-
-            // 마일스톤 시작일 기준으로 정렬하기
-            structuredChallengeData[challengeIndex].milestones.sort((a, b) => {
-              const numA = parseInt(a.start_at.replace(/-/g, ""))
-              const numB = parseInt(b.start_at.replace(/-/g, ""))
-              return numA - numB
-            })
-          }
-        })
-      })
-
-      return structuredChallengeData
-    }
-
-    if (!challenges) {
-      throw Error()
-    }
-
-    if (!milestones) {
-      throw Error()
-    }
-
-    if (!routines) {
-      throw Error()
-    }
-
-    const structuredChallengeData = structuralizeChallenge(
-      challenges,
-      milestones,
-      routines
-    )
-
-    return structuredChallengeData
-  }
-
-  // routine_done_daily 테이블 데이터 조회하는 함수
-  // 이미 유효한 레코드가 존재하는 경우와 존재하지 않는 경우에 적절히 대응하기 위해서 필요한 과정
-  const GETroutineDoneDaily = async () => {
-    const supabase = createClient()
-    // 현재 유저 아이디를 기반으로 챌린지 정보들 가져오기
-    const { data: currentUserRoutineDoneDaily, error } = await supabase
-      .from("routine_done_daily")
-      .select()
-      .eq("user_id", me?.id || "")
-
-    return currentUserRoutineDoneDaily
-  }
-
-  // routine_done 테이블 데이터 조회하는 함수
-  const GETroutineDone = async () => {
-    const supabase = createClient()
-    // 현재 유저 아이디를 기반으로 챌린지 정보들 가져오기
-    const { data: currentUserRoutineDone, error } = await supabase
-      .from("routine_done")
-      .select()
-    return currentUserRoutineDone
-  }
 
   const {
     data: structuredChallengeData,
     isPending: ChallengeDataPending,
     isError: ChallengeDataError,
   } = useQuery({
-    queryKey: ["fetchStructuredChallengeData"],
-    queryFn: GETstructuredChallengeData,
+    queryKey: ["fetchStructuredChallengeData", userId],
+    queryFn: () => GETstructuredChallengeData(userId),
+    gcTime: 8 * 60 * 1000, // 8분
   })
 
   const {
@@ -173,25 +35,27 @@ function ChallengeList() {
     isPending: routineDoneDailyPending,
     isError: routineDoneDailyError,
   } = useQuery({
-    queryKey: ["fetchCurrentUserRoutineDoneDaily"],
-    queryFn: GETroutineDoneDaily,
+    queryKey: ["fetchCurrentUserRoutineDoneDaily", userId],
+    queryFn: () => GETroutineDoneDaily(userId),
+    gcTime: 8 * 60 * 1000, // 8분
   })
 
   const {
-    data: currentUserRoutineDone,
+    data: RoutineDone,
     isPending: routineDonePending,
     isError: routineDoneError,
   } = useQuery({
-    queryKey: ["fetchCurrentUserRoutineDone"],
+    queryKey: ["fetchRoutineDone"],
     queryFn: GETroutineDone,
+    gcTime: 8 * 60 * 1000, // 8분
   })
 
   // const date = new Date()
   // date.setHours(0, 0, 0, 0)
   // // 시, 분, 초가 모두 변경 (00시 00분 00초)
 
-  //   const whatDay = date.getDay
-  // // 0(일) ~ 6(토)
+  // const whatDay = date.getDay
+  // 0(일) ~ 6(토)
 
   const CURRENT_DATE = "2024-07-23"
   const CURRENT_DATE_NUMBER = parseInt(CURRENT_DATE.replace(/-/g, ""))
@@ -213,12 +77,7 @@ function ChallengeList() {
     return <div>서버에서 데이터 로드 중 오류 발생</div>
   }
 
-  if (
-    structuredChallengeData &&
-    currentUserRoutineDoneDaily &&
-    currentUserRoutineDone
-  ) {
-    // console.log(fetchedChallengeData)
+  if (structuredChallengeData && currentUserRoutineDoneDaily && RoutineDone) {
     return (
       <div className="mt-10 flex flex-col gap-y-10">
         <div className="flex gap-4">
@@ -256,7 +115,7 @@ function ChallengeList() {
                   </h3>
                   <h1>챌린지 시작: {challenge.start_at}</h1>
                   <h1>챌린지 종료: {challenge.end_at}</h1>
-                  {challenge.milestones?.map((milestone) => {
+                  {challenge.milestones?.map((milestone, index) => {
                     // 요일 필터링
                     const milestoneDoDays: string[] = []
                     if (milestone.is_sun) {
@@ -293,58 +152,21 @@ function ChallengeList() {
                         CURRENT_DATE_NUMBER <= milestoneEndDate
                       ) {
                         return (
-                          <div
-                            key={milestone.id}
-                            className="border-2 border-black px-4 py-10"
-                          >
-                            <div className="mt-3">
-                              <p>마일스톤 시작: {milestone.start_at}</p>
-                              <p>마일스톤의 종료: {milestone.end_at}</p>
-                            </div>
-                            <p className="mt-5">마일스톤을 실행 요일:</p>
-                            <div className="flex gap-x-5">
-                              {milestone.is_mon ? <p>월</p> : <></>}
-                              {milestone.is_tue ? <p>화</p> : <></>}
-                              {milestone.is_wed ? <p>수</p> : <></>}
-                              {milestone.is_thu ? <p>목</p> : <></>}
-                              {milestone.is_fri ? <p>금</p> : <></>}
-                              {milestone.is_sat ? <p>토</p> : <></>}
-                              {milestone.is_sun ? <p>일</p> : <></>}
-                            </div>
-                            <>
-                              {milestoneDoDays.findIndex((milestoneDoDay) => {
-                                return milestoneDoDay == CURRENT_DAY_OF_WEEK
-                              }) == -1 ? (
-                                <p className="mt-5">오늘은 할 일이 없어요</p>
-                              ) : (
-                                <div className="mt-5 flex flex-col gap-y-3">
-                                  {milestone.routines?.map((routine) => {
-                                    if (routine.milestone_id == milestone.id) {
-                                      return (
-                                        <div
-                                          key={routine.id}
-                                          className="flex justify-between"
-                                        >
-                                          <p>루틴: {routine.content}</p>
-                                          <RoutineCheckBox
-                                            routines={milestone.routines}
-                                            challengeId={challenge.id}
-                                            createdAt={CURRENT_DATE}
-                                            mileStoneId={milestone.id}
-                                            userId={userId}
-                                            routineId={routine.id}
-                                            routineDoneDaily={
-                                              currentUserRoutineDoneDaily
-                                            }
-                                            routineDone={currentUserRoutineDone}
-                                          />
-                                        </div>
-                                      )
-                                    }
-                                  })}
-                                </div>
-                              )}
-                            </>
+                          <div key={milestone.id}>
+                            {!milestoneDoDays.find((milestoneDoDay) => {
+                              return milestoneDoDay == CURRENT_DAY_OF_WEEK
+                            }) ? (
+                              <p className="mt-5">오늘은 할 일이 없어요</p>
+                            ) : (
+                              <MilestoneSection
+                                challengeId={challenge.id}
+                                milestone={milestone}
+                                milestoneDoDays={milestoneDoDays}
+                                CURRENT_DATE={CURRENT_DATE}
+                                CURRENT_DAY_OF_WEEK={CURRENT_DAY_OF_WEEK}
+                                userId={userId}
+                              />
+                            )}
                           </div>
                         )
                       }
