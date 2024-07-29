@@ -131,7 +131,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "CHALLENGE_COMMENT_LIKE_comment_id_fkey"
+            foreignKeyName: "challenge_comment_like_comment_id_fkey"
             columns: ["comment_id"]
             isOneToOne: false
             referencedRelation: "challenge_comment"
@@ -149,16 +149,19 @@ export type Database = {
       challenge_like: {
         Row: {
           challenge_id: string
+          created_at: string
           id: string
           user_id: string
         }
         Insert: {
           challenge_id: string
+          created_at?: string
           id?: string
           user_id: string
         }
         Update: {
           challenge_id?: string
+          created_at?: string
           id?: string
           user_id?: string
         }
@@ -432,6 +435,38 @@ export type Database = {
           },
         ]
       }
+      users_notice: {
+        Row: {
+          content: string
+          created_at: string
+          id: number
+          is_view: boolean
+          user_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: number
+          is_view?: boolean
+          user_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: number
+          is_view?: boolean
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "users_alarm_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -470,6 +505,18 @@ export type Database = {
           end_at: string
           milestones: Json
         }[]
+      }
+      increment_challenge_like_cnt: {
+        Args: {
+          request_challenge_id: string
+        }
+        Returns: undefined
+      }
+      increment_like_cnt: {
+        Args: {
+          request_challenge_id: string
+        }
+        Returns: number
       }
     }
     Enums: {

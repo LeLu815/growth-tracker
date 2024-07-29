@@ -21,21 +21,21 @@ export default function StylesLayout({ children }: PropsWithChildren) {
     },
   ]
   return (
-    <div>
-      {children}
-      <div className="h-[80px] w-full"></div>
-      <nav className="fixed bottom-0 h-[60px] w-full bg-white">
-        <ul className="mx-auto flex max-w-[800px] items-center justify-between">
-          {bottomNavItems.map((item) => (
-            <li
-              className="rounded border border-neutral-500 px-6 py-3"
-              key={item.name}
-            >
-              <Link href={item.path}>{item.name}</Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </div>
+      <div>
+        {children}
+        <div className="h-[80px] w-full"></div>
+        <nav className="fixed bottom-0 h-[60px] w-full bg-white">
+          <ul className="mx-auto flex max-w-[800px] items-center justify-between">
+            {bottomNavItems.map((item) => (
+                <li
+                    className="rounded border border-neutral-500 px-6 py-3"
+                    key={item.name}
+                >
+                  <Link href={item.path}>{item.name}</Link>
+                </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
   )
 }
