@@ -10,13 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: wait for vercel deployment
+      - name: Wait for Vercel Deployment
+        id: wait-for-vercel
         run: |
           echo "Waiting for Vercel deployment..."
           while true; do
-            status=$(curl -s -H "Authorization: Bearer EFDx4FS5CpqitLlsq7VQ2e2q" https://api.vercel.com/v5/deployments?projectId=prj_TFIiZb4RNr21730nzxwID22q2X6t | jq -r '.deployments[0].state')
+            response=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" "https://api.vercel.com/v5/deployments?projectId=${{ secrets.VERCEL_PROJECT_ID }}")
+            status=$(echo $response | jq -r '.deployments[0].state')
+            url=$(echo $response | jq -r '.deployments[0].url')
+            echo "API Response: $response"
             if [ "$status" = "READY" ]; then
               echo "Deployment is ready!"
+              echo "::set-output name=deployment_url::$url"
               break
             else
               echo "Deployment status: $status. Waiting..."
@@ -24,7 +29,7 @@ jobs:
             fi
           done
         env:
-          VERCEL_TOKEN: EFDx4FS5CpqitLlsq7VQ2e2q
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
   call-api:
     runs-on: ubuntu-latest
@@ -34,4 +39,5 @@ jobs:
       - name: Call API
         run: |
           echo "Calling your API..."
-          curl -X GET https://growth-tracker-dev.vercel.app/api/scheduler
+          curl -X POST https://your-api-endpoint.com/trigger
+          echo "Deployment URL: ${{ steps.wait-for-vercel.outputs.deployment_url }}"
