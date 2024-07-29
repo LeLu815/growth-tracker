@@ -16,6 +16,7 @@ export async function GET(
   const { searchParams } = new URL(req.url)
   const limit = Number(searchParams.get("limit")) || 10
   const page = Number(searchParams.get("page")) || 0
+  const userId = searchParams.get("userId")
 
   if (!challengeId) {
     return NextResponse.json({ error: "챌린지 아이디가 없습니다", status: 400 })
@@ -28,18 +29,22 @@ export async function GET(
     .then(() => console.log("Connected to the database"))
     .catch((err: Error) => console.error("Connection error", err.stack))
   try {
-    const data = await pgClient.query(
-      "SELECT cc.id, cc.content, CASE WHEN ccl.id IS NOT NULL THEN TRUE ELSE FALSE END AS is_like, u.id as user_id, u.email, u.nickname, u.profile_image_url FROM challenge_comment cc LEFT JOIN challenge_comment_like ccl ON cc.id = ccl.comment_id AND ccl.user_id = $1 INNER JOIN users u ON u.id = cc.user_id WHERE cc.challenge_id = $2 ORDER BY cc.created_at DESC, cc.id DESC LIMIT $3 OFFSET $4;",
-      [
-        "d5202b4f-f60c-4ebe-a9ec-04caf445c763",
-        challengeId,
-        Number(limit),
-        Number(page) * Number(limit),
-      ]
-    )
+    let query = "SELECT cc.id, cc.content, "
+    let params = [challengeId, Number(limit), Number(page) * Number(limit)]
+
+    if (userId) {
+      query +=
+        "CASE WHEN ccl.id IS NOT NULL THEN TRUE ELSE FALSE END AS is_like, u.id as user_id, u.email, u.nickname, u.profile_image_url FROM challenge_comment cc LEFT JOIN challenge_comment_like ccl ON cc.id = ccl.comment_id AND ccl.user_id = $1 INNER JOIN users u ON u.id = cc.user_id WHERE cc.challenge_id = $2 ORDER BY cc.created_at DESC, cc.id DESC LIMIT $3 OFFSET $4;"
+      params.unshift(userId)
+    } else {
+      query +=
+        "false AS is_like, u.id as user_id, u.email, u.nickname, u.profile_image_url FROM challenge_comment cc INNER JOIN users u ON u.id = cc.user_id WHERE cc.challenge_id = $1 ORDER BY cc.created_at DESC, cc.id DESC LIMIT $2 OFFSET $3;"
+    }
+
+    const data = await pgClient.query(query, params)
 
     return NextResponse.json(data.rows)
-  } catch (error:any) {
+  } catch (error: any) {
     throw new Error(error.message)
   } finally {
     await pgClient.end()

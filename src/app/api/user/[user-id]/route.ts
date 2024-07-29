@@ -3,6 +3,7 @@ import { createClient } from "@/supabase/server"
 
 export async function GET(
   req: NextRequest,
+
   {
     params,
   }: {
