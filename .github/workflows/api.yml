@@ -1,0 +1,36 @@
+name: Call API After Vercel Deploy
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  wait-for-vercel:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Wait for Vercel Deployment
+        run: |
+          echo "Waiting for Vercel deployment..."
+          while true; do
+            status=$(curl -s -H "Authorization: Bearer WhiteWisdomAsksMeForTheVecelTokenEFDx4FS5CpqitLlsq7VQ2e2q" https://api.vercel.com/v5/deployments?projectId=prj_TFIiZb4RNr21730nzxwID22q2X6t | jq -r '.deployments[0].state')
+            if [ "$status" = "READY" ]; then
+              echo "Deployment is ready!"
+              break
+            else
+              echo "Deployment status: $status. Waiting..."
+              sleep 10
+            fi
+          done
+        env:
+          VERCEL_TOKEN: WhiteWisdomAsksMeForTheVecelTokenEFDx4FS5CpqitLlsq7VQ2e2q
+
+  call-api:
+    runs-on: ubuntu-latest
+    needs: wait-for-vercel
+
+    steps:
+      - name: Call API
+        run: |
+          curl -X POST https://growth-tracker-dev.vercel.app/api/scheduler
