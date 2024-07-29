@@ -33,4 +33,4 @@ jobs:
     steps:
       - name: Call API
         run: |
-          curl -X POST https://your-api-endpoint.com/trigger
+          curl -X POST https://growth-tracker-dev.vercel.app/api/scheduler
