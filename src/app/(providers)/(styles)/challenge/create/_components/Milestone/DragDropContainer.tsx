@@ -1,6 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
+import useMilestoneCreateStore, {
+  MilestoneType,
+} from "@/store/milestoneCreate.store"
 import {
   DragDropContext,
   Draggable,
@@ -10,51 +13,14 @@ import {
 import { produce } from "immer"
 import { nanoid } from "nanoid"
 
-import Input from "@/components/Input"
-
 import MilestoneComponent from "./MilestoneComponent"
 
-type RoutineType = {
-  id: string
-  content: string
+interface DragDropContainerProps {
+  goal: string
+  challenge_id?: string
 }
-
-type MilestoneType = {
-  id: string
-  routines: RoutineType[]
-  name: string
-}
-
-const initialData: MilestoneType[] = [
-  {
-    id: nanoid(),
-    routines: [
-      { id: nanoid(), content: "루틴1-1" },
-      { id: nanoid(), content: "루틴1-2" },
-    ],
-    name: "이인짱",
-  },
-  {
-    id: nanoid(),
-    routines: [
-      { id: nanoid(), content: "루틴2-1" },
-      { id: nanoid(), content: "루틴2-2" },
-    ],
-    name: "인짱",
-  },
-  {
-    id: nanoid(),
-    routines: [
-      { id: nanoid(), content: "루틴3-1" },
-      { id: nanoid(), content: "루틴3-2" },
-    ],
-    name: "이인최고",
-  },
-]
-
-function DragDropContainer() {
-  const [data, setData] = useState<MilestoneType[]>(initialData)
-  const [milestoneValue, setMilestoneValue] = useState<string>("")
+function DragDropContainer({ goal, challenge_id }: DragDropContainerProps) {
+  const { data, setData } = useMilestoneCreateStore()
 
   // source: 드래그된 항목의 출발지 정보
   // destination: 드롭된 항목의 목적지 정보
@@ -146,61 +112,80 @@ function DragDropContainer() {
   }, [data])
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      {/* 전체 마일스톤 Droppable */}
-      <div className="my-5 flex gap-3">
-        <Input
-          label="마일스톤 생성"
-          value={milestoneValue}
-          onChange={(e) => setMilestoneValue(e.target.value)}
-        />
-        <button
-          onClick={() => {
-            setMilestoneValue("")
-            createMilestone({
-              id: nanoid(),
-              name: milestoneValue,
-              routines: [],
-            })
-          }}
-          className="mt-auto flex h-[45px] items-center justify-center rounded border"
-        >
-          생성하기
-        </button>
-      </div>
-      <Droppable
-        droppableId="all-milestones"
-        direction="horizontal"
-        type="milestone"
-      >
-        {/* provided : 라이브러리에서 제공하는 객체 */}
-        {(provided) => (
-          <div
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            className="flex gap-4"
-          >
-            {data.map((milestone, index) => (
-              <Draggable
-                key={milestone.id}
-                draggableId={milestone.id}
-                index={index}
-              >
-                {(provided) => (
-                  <MilestoneComponent
-                    deleteMilestone={deleteMilestone}
-                    milestone={milestone}
-                    provided={provided}
-                    setData={setData}
-                  />
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
+    <>
+      <div className="rounded-[10px] border border-slate-300 p-4">
+        <div className="flex gap-2">
+          <div>🏁</div>
+          <div>
+            <p>{`<${goal}>에 도전하시는군요.`}</p>
+            <p>목표를 향한 루틴을 작성해보세요</p>
           </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+        </div>
+        <hr />
+        <div className="mt-3 flex gap-3">
+          <button
+            onClick={() => {
+              createMilestone({
+                id: nanoid(),
+                routines: [],
+                challenge_id: challenge_id ? challenge_id : "",
+                start_at: "",
+                end_at: "",
+                total_day: 0,
+                total_cnt: 0,
+                success_requirement_cnt: 0,
+                is_mon: false,
+                is_tue: false,
+                is_wed: false,
+                is_thu: false,
+                is_fri: false,
+                is_sat: false,
+                is_sun: false,
+              })
+            }}
+            className="flex items-center justify-center rounded border px-3 py-1.5"
+          >
+            스스로 작성하기
+          </button>
+          <button className="flex items-center justify-center rounded border px-3 py-1.5">
+            루틴 찾아보기
+          </button>
+        </div>
+      </div>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable
+          droppableId="all-milestones"
+          direction="horizontal"
+          type="milestone"
+        >
+          {(provided) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className="flex gap-4"
+            >
+              {data.map((milestone, index) => (
+                <Draggable
+                  key={milestone.id}
+                  draggableId={milestone.id}
+                  index={index}
+                >
+                  {(provided) => (
+                    <MilestoneComponent
+                      deleteMilestone={deleteMilestone}
+                      milestone={milestone}
+                      provided={provided}
+                      setData={setData}
+                    />
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </>
   )
 }
 

@@ -1,20 +1,19 @@
+import useChallengeCreateStore from "@/store/challengeCreate.store"
 import {
   differenceInCalendarDays,
   eachDayOfInterval,
   format,
   getDay,
 } from "date-fns"
-import { useContext } from "react"
 import { DateRange } from "react-day-picker"
 
-import { RangeContext } from "./calender"
 import PortionStickBar from "./portionStickBar"
 
 interface CalculateDayInfoType {
   dayChecks: number[]
 }
 function CalculateDayInfo({ dayChecks }: CalculateDayInfoType) {
-  const { range } = useContext(RangeContext)
+  const { range } = useChallengeCreateStore()
   const formatDate = (date: Date | undefined) => {
     return date ? format(date, "yyyy-MM-dd") : "날짜 없음"
   }
@@ -47,7 +46,7 @@ function CalculateDayInfo({ dayChecks }: CalculateDayInfoType) {
       </p>
       <PortionStickBar
         currentValue={calculateTotalDays(range)}
-        prevValue={[2,5,3]}
+        prevValue={[2, 5, 3]}
         nextValue={[20]}
       />
     </div>

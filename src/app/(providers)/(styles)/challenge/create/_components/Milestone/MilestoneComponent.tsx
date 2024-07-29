@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react"
+import { MilestoneType } from "@/store/milestoneCreate.store"
 import { Draggable, DraggableProvided, Droppable } from "@hello-pangea/dnd"
 import { produce } from "immer"
 import { nanoid } from "nanoid"
@@ -8,11 +9,6 @@ import Input from "@/components/Input"
 import MilestoneComponetMobile from "./MilestoneComponetMobile"
 import RoutineComponent from "./RoutineComponent"
 
-type MilestoneType = {
-  id: string
-  routines: RoutineType[]
-  name: string
-}
 type RoutineType = {
   id: string
   content: string
@@ -77,9 +73,6 @@ function MilestoneComponent({
               ref={provided.innerRef}
               className="flex h-full flex-col justify-between p-4"
             >
-              <h2 className="mb-2 text-lg font-semibold">
-                마일스톤: {milestone.name}
-              </h2>
               {milestone.routines.map((routine, index) => (
                 <Draggable
                   key={routine.id}
@@ -122,7 +115,10 @@ function MilestoneComponent({
           )}
         </Droppable>
       </div>
-      <MilestoneComponetMobile provided={provided} milestone={milestone} />
+      <div className="flex flex-col">
+        <MilestoneComponetMobile provided={provided} milestone={milestone} />
+        {/* <DragDropContainer /> */}
+      </div>
     </>
   )
 }

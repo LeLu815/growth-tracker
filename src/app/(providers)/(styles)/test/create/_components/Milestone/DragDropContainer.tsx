@@ -160,7 +160,7 @@ function DragDropContainer() {
   }, [data])
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 sm:hidden">
       <DragDropContext onDragEnd={onDragEnd}>
         {/* 전체 마일스톤 Droppable */}
         <div className="my-5 flex gap-3">

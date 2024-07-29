@@ -4,17 +4,40 @@ import { useState } from "react"
 import { POSTchallengeArgumentProps } from "@/api/supabase/challenge"
 import { useAuth } from "@/context/auth.context"
 import useChallengeQuery from "@/query/challenge/userChallengeQuery"
+import useChallengeCreateStore from "@/store/challengeCreate.store"
+
+import Input from "@/components/Input"
+
+import Calender from "../calender"
+import {
+  calculateTotalDays,
+  formatDateYearMonthDate,
+} from "../calender/calender"
+import CategorySelect from "./CategorySelect"
+import ChallengeInfoBox from "./ChallengeInfoBox"
+import CreateStep from "./CreateStep"
+import DragDropContainer from "./Milestone/DragDropContainer"
+
+const CATEOGRIES = ["공부", "건강", "생활"]
 
 function ChallengeCreate() {
   // 챌린지 관련 데이터
+  const [createStep, setCreateStep] = useState<1 | 2>(1)
   const [goal, setGoal] = useState<string>("")
+  const [catetegory, setCatetegory] = useState<string>(CATEOGRIES[0])
+  const { range, setRange } = useChallengeCreateStore()
+
+  // 챌린지 기간 변수
+  const challengePeriod = `${formatDateYearMonthDate(range?.from)} ~ ${formatDateYearMonthDate(range?.to)} (${calculateTotalDays(range)}일)`
+
+  // 민영님이 추후에 모달 올려주시면 열고닫기 함수로 수정될 예정
+  const [isShow, setIsShow] = useState<boolean>(false)
   const [start_at, setStart_at] = useState<string>("")
   const [end_at, setEnd_at] = useState<string>("")
   const [is_secret, setIs_secret] = useState<false>(false)
   const [day_cnt, setDay_cnt] = useState<number>(0)
   const [user_id, setUser_id] = useState<string>("")
   const [state, setState] = useState<"" | "" | "">("")
-  const [catetegory, setCatetegory] = useState<"" | "">("")
 
   // 마일스톤 객체 리스트
   const [milestones, setMilestones] = useState<
@@ -28,7 +51,7 @@ function ChallengeCreate() {
   } = useChallengeQuery()
 
   // auth 데이터
-  const { me } = useAuth()
+  const { me, userData } = useAuth()
 
   const INITIAL_DATA = {
     challenge: {
@@ -163,57 +186,49 @@ function ChallengeCreate() {
   }
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="챌린지 이름"
-        value={goal}
-        onChange={(e) => setGoal(e.target.value)}
+    <>
+      <CreateStep
+        nickname={userData?.nickname || me?.email || "유저"}
+        createStep={createStep}
       />
-      <div>
-        <label htmlFor="">챌린지 시작날짜</label>
-        <input
-          className="text-black"
-          type="date"
-          value={start_at}
-          onChange={(e) => setStart_at(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="">챌린지 종료날짜</label>
-        <input
-          className="text-black"
-          type="date"
-          value={end_at}
-          onChange={(e) => setEnd_at(e.target.value)}
-        />
-      </div>
+      {createStep === 1 && (
+        <div>
+          <h2>카테고리 선택</h2>
+          <CategorySelect
+            categoryList={CATEOGRIES}
+            handleClickList={setCatetegory}
+          />
 
-      <hr />
+          <Input
+            label="챌린지 이름"
+            placeholder="챌린지 이름을 만들어주세요"
+            value={goal}
+            onChange={(e) => setGoal(e.target.value)}
+          />
+          <Input
+            label="목표 기간"
+            placeholder="기간을 설정해 주세요 (시작일 ~ 완료일)"
+            value={challengePeriod}
+            onClick={() => setIsShow(true)}
+            className="caret-transparent"
+          />
+          {isShow && (
+            <div className="flex flex-col">
+              <Calender range={range} setRange={setRange} />
+              <button
+                onClick={() => {
+                  setIsShow(false)
+                }}
+              >
+                챌린지 기간 설정하기
+              </button>
+            </div>
+          )}
 
-      <div>
-        <label htmlFor="">챌린지 시작날짜</label>
-        <input
-          className="text-black"
-          type="date"
-          value={start_at}
-          onChange={(e) => setStart_at(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="">챌린지 종료날짜</label>
-        <input
-          className="text-black"
-          type="date"
-          value={end_at}
-          onChange={(e) => setEnd_at(e.target.value)}
-        />
-      </div>
-
-      <button onClick={() => challengeCreateMutate(INITIAL_DATA)}>
+          {/* <button onClick={() => challengeCreateMutate(INITIAL_DATA)}>
         챌린지 생성하기 버튼
-      </button>
-      <button
+      </button> */}
+          {/* <button
         onClick={() =>
           challengeUpdateMutate({
             "challenge-id": "663d4d24-0d90-4f8e-b5fc-0796d0e9ba5f",
@@ -230,8 +245,46 @@ function ChallengeCreate() {
         className="mt-9 flex items-center justify-center rounded border border-white bg-neutral-600 px-4 py-2 hover:brightness-90 active:brightness-75"
       >
         챌린지 업데이트 버튼
-      </button>
-    </div>
+      </button> */}
+        </div>
+      )}
+      {createStep === 2 && (
+        <div>
+          <ChallengeInfoBox
+            challengePeriod={challengePeriod}
+            goal={goal}
+            catetegory={catetegory}
+          />
+          <div>
+            <h2>마일스톤 만들기 *</h2>
+            <div>
+              <p>목표를 쪼개면 달성이 쉬워져요.</p>
+              <p>마일스톤을 세우고 세부 루틴을 구체화하세요.</p>
+            </div>
+          </div>
+          <DragDropContainer goal={goal} />
+        </div>
+      )}
+      <div>
+        {createStep === 1 && (
+          <button
+            onClick={() => {
+              if (challengePeriod !== "" && goal !== "") {
+                return setCreateStep(2)
+              }
+            }}
+          >
+            다음
+          </button>
+        )}
+        {createStep === 2 && (
+          <div>
+            <button onClick={() => setCreateStep(1)}>이전</button>
+            <button>챌린지 생성</button>
+          </div>
+        )}
+      </div>
+    </>
   )
 }
 

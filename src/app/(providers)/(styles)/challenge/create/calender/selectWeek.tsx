@@ -1,14 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import useChallengeCreateStore from "@/store/challengeCreate.store"
 import { produce } from "immer"
 
 import CalculateDayInfo from "./calculateDayInfo"
 
-function SelectWeek() {
+function SelectWeek({}) {
   const WEEK_DAY_LIST = ["일", "월", "화", "수", "목", "금", "토"]
-  const defaultValue = WEEK_DAY_LIST.map(() => false)
-  const [dayChecks, setDayChecks] = useState<boolean[]>(defaultValue)
+  const { dayChecks, setDayChecks } = useChallengeCreateStore()
 
   const handleCheckDayType = (days: boolean[]) => {
     const selectedDayLength = days.filter((dayCheck) => dayCheck).length

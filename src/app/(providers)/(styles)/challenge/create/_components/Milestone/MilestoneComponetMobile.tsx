@@ -3,7 +3,6 @@ import { DraggableProvided, Droppable } from "@hello-pangea/dnd"
 type MilestoneType = {
   id: string
   routines: RoutineType[]
-  name: string
 }
 type RoutineType = {
   id: string
@@ -23,7 +22,7 @@ function MilestoneComponetMobile({
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
-      className="mb-4 flex flex-col gap-2 rounded-lg border border-gray-400 bg-gray-100 p-4 sm:hidden"
+      className="flex aspect-square max-h-[80px] max-w-[80px] flex-col gap-2 rounded-lg border border-gray-400 bg-gray-100 p-4 sm:hidden"
     >
       <Droppable droppableId={milestone.id} type="routine">
         {(provided) => (
