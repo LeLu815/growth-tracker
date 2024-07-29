@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Wait for Vercel Deployment
+      - name: wait for vercel deployment
         run: |
           echo "Waiting for Vercel deployment..."
           while true; do
