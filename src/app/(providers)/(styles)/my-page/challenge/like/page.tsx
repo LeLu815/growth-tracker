@@ -1,5 +1,7 @@
 "use client"
 
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import axios from "axios"
@@ -10,6 +12,7 @@ import { MyChallengeType } from "../../../../../../../types/myChallengeList"
 
 function Page() {
   const { me } = useAuth()
+  const router = useRouter()
 
   const getMyChallengeList = async ({
     pageParam,
@@ -22,8 +25,12 @@ function Page() {
       )
       .then((response) => response.data)
 
-    debugger
     return response.data
+  }
+
+  const handleMoveDetail = (id: string) => {
+    debugger
+    router.push(`/challenge/${id}`)
   }
 
   const {
@@ -37,6 +44,7 @@ function Page() {
   } = useInfiniteQuery({
     queryKey: ["myChallengeLikeList"],
     initialPageParam: 0,
+    enabled: !!me, // me가 있을 때만 쿼리 실행
     queryFn: getMyChallengeList,
     getNextPageParam: (
       lastPage: any,
@@ -45,7 +53,7 @@ function Page() {
       allPageParams
     ) => {
       const nextPage = lastPageParam + 1
-      return lastPage.length === 10 ? nextPage : undefined
+      return lastPage?.length === 10 ? nextPage : undefined
     },
     select: ({ pages }) => pages.flat(),
   })
@@ -58,7 +66,11 @@ function Page() {
       <p>좋아요 챌린지 목록</p>
       <ul>
         {data?.map((challenge) => (
-          <Challenge key={challenge.id} challenge={challenge}></Challenge>
+          <Challenge
+            key={challenge?.id}
+            challenge={challenge}
+            onMoveDetail={handleMoveDetail}
+          ></Challenge>
         ))}
       </ul>
     </div>
