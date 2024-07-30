@@ -10,7 +10,7 @@ export async function GET() {
   if (!global.isJobScheduled) {
       global.isJobScheduled = true
 
-      const job2 = schedule.scheduleJob("50 6 * * *", async function () {
+      const job2 = schedule.scheduleJob("40 6 * * *", async function () {
         debugger
         const supabase = createClient()
         const pgClient = createPGClient()
@@ -43,7 +43,7 @@ export async function GET() {
       })
 
 
-      const job = schedule.scheduleJob("50 15 * * *", async function () {
+      const job = schedule.scheduleJob("40 15 * * *", async function () {
         debugger
         const supabase = createClient()
         const pgClient = createPGClient()
