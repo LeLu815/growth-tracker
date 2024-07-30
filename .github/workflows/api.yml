@@ -3,7 +3,7 @@ name: Call API After Vercel Deploy
 on:
   push:
     branches:
-      - main
+      - develop
 
 jobs:
   wait-for-vercel:
@@ -39,4 +39,4 @@ jobs:
       - name: Call API
         run: |
           echo "Calling your API..."
-          curl -X GET https://growth-tracker-ecru.vercel.app/api/scheuler
+          curl -X POST https://growth-tracker-dev.vercel.app/api/scheduler
