@@ -27,6 +27,8 @@ export type MilestoneType = {
 interface MilestoneState {
   data: MilestoneType[]
   setData: Dispatch<SetStateAction<MilestoneType[]>>
+  currentSlideId: string
+  setCurrentSlideId: Dispatch<SetStateAction<string>>
 }
 const initialData: MilestoneType[] = []
 export const useMilestoneCreateStore = create<MilestoneState>((set) => ({
@@ -34,6 +36,12 @@ export const useMilestoneCreateStore = create<MilestoneState>((set) => ({
   setData: (setData) =>
     set((state) => ({
       data: typeof setData === "function" ? setData(state.data) : setData,
+    })),
+  currentSlideId: "",
+  setCurrentSlideId: (setData) =>
+    set((state) => ({
+      currentSlideId:
+        typeof setData === "function" ? setData(state.currentSlideId) : setData,
     })),
 }))
 

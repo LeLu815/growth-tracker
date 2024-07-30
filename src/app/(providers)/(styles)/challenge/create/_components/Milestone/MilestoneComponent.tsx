@@ -6,7 +6,6 @@ import { nanoid } from "nanoid"
 
 import Input from "@/components/Input"
 
-import MilestoneComponetMobile from "./MilestoneComponetMobile"
 import RoutineComponent from "./RoutineComponent"
 
 type RoutineType = {
@@ -116,7 +115,7 @@ function MilestoneComponent({
         </Droppable>
       </div>
       <div className="flex flex-col overflow-y-auto">
-        <MilestoneComponetMobile provided={provided} milestone={milestone} />
+        {/* <MilestoneComponetMobile provided={provided} milestone={milestone} /> */}
         {/* <MilestoneCreateInfoController range={range}/> */}
         {/* <DragDropContainer /> */}
       </div>

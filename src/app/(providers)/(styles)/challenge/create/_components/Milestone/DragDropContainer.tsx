@@ -13,6 +13,8 @@ import {
 import { produce } from "immer"
 import { DateRange } from "react-day-picker"
 
+import MilestoneSwiper from "@/app/(providers)/(styles)/test/create/_components/MilestoneSwiper"
+
 import MilestoneComponent from "./MilestoneComponent"
 import MilestoneComponetMobile from "./MilestoneComponetMobile"
 import MilestoneCreateInfoController from "./MilestoneCreateInfoController"
@@ -215,6 +217,7 @@ function DragDropContainer({
           )}
         </Droppable>
       </DragDropContext>
+      <MilestoneSwiper data={data} setData={setData} />
     </>
   )
 }

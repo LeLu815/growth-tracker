@@ -2,24 +2,18 @@ import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
 
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
+import useMilestoneCreateStore, {
+  MilestoneType,
+  RoutineType,
+} from "@/store/milestoneCreate.store"
 import { produce } from "immer"
 import { nanoid } from "nanoid"
+import SwiperCore from "swiper"
 import { Navigation, Pagination } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 
 import Input from "@/components/Input"
-
-type RoutineType = {
-  id: string
-  content: string
-}
-
-type MilestoneType = {
-  id: string
-  routines: RoutineType[]
-  name: string
-}
 
 interface MilestoneSwiperProps {
   data: MilestoneType[]
@@ -30,6 +24,9 @@ const MilestoneSwiper = ({ data, setData }: MilestoneSwiperProps) => {
   const [routineValue, setRoutineValue] = useState<string>("")
   const [editRoutineId, setEditRoutineId] = useState<string | null>(null)
   const [editRoutineValue, setEditRoutineValue] = useState<string>("")
+  const { setCurrentSlideId, currentSlideId } = useMilestoneCreateStore()
+
+  const swiperRef = useRef<SwiperCore | null>(null)
 
   // 루틴 생성함수
   const createRoutine = (milestoneId: string, routineObj: RoutineType) => {
@@ -76,21 +73,38 @@ const MilestoneSwiper = ({ data, setData }: MilestoneSwiperProps) => {
     setEditRoutineId(null)
     setEditRoutineValue("")
   }
+  // 슬라이드 이동 함수
+  const goToSlide = (index: number) => {
+    if (swiperRef.current) {
+      swiperRef.current.slideTo(index)
+    }
+  }
+  useEffect(() => {
+    const changedIndex = data.findIndex(
+      (milestoneObj) => milestoneObj.id === currentSlideId
+    )
+
+    goToSlide(changedIndex)
+  }, [data, currentSlideId])
 
   return (
     <Swiper
+      onSwiper={(swiper) => {
+        swiperRef.current = swiper
+      }}
       slidesPerView="auto"
       spaceBetween={10}
       centeredSlides={true}
       navigation
-      pagination={{ clickable: true }}
+      // pagination={{ clickable: true }}
       modules={[Navigation, Pagination]}
-      className="w-[800px]"
+      onSlideChange={(swiper) => {
+        setCurrentSlideId(swiper.slides[swiper.activeIndex].id)
+      }}
     >
       {data.map((milestone) => (
-        <SwiperSlide key={milestone.id}>
+        <SwiperSlide id={milestone.id} key={milestone.id}>
           <div className="mx-auto mb-4 flex w-[300px] flex-col gap-2 rounded-lg border border-gray-400 bg-gray-100 p-4">
-            <h3 className="text-md font-semibold">{milestone.name}</h3>
             <ul className="flex h-full flex-col justify-between p-4">
               {milestone.routines.map((routine) => (
                 <li

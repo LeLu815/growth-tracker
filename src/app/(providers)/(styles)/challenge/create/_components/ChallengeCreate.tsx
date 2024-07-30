@@ -39,7 +39,7 @@ function ChallengeCreate({ challenge_id }: ChallengeCreateProps) {
   const challengePeriod = `${formatDateYearMonthDate(range?.from)} ~ ${formatDateYearMonthDate(range?.to)} (${calculateTotalDays(range)}일)`
 
   // 마일스톤 생성
-  const { data, setData } = useMilestoneCreateStore()
+  const { data, setData, setCurrentSlideId } = useMilestoneCreateStore()
 
   // 민영님이 추후에 모달 올려주시면 열고닫기 함수로 수정될 예정
   const [isShow, setIsShow] = useState<boolean>(false)
@@ -303,8 +303,9 @@ function ChallengeCreate({ challenge_id }: ChallengeCreateProps) {
               </div>
               <button
                 onClick={() => {
+                  const newMilestoneId = nanoid()
                   createMilestone({
-                    id: nanoid(),
+                    id: newMilestoneId,
                     routines: [],
                     challenge_id: challenge_id ? challenge_id : "",
                     start_at: "",
@@ -320,6 +321,7 @@ function ChallengeCreate({ challenge_id }: ChallengeCreateProps) {
                     is_sat: false,
                     is_sun: false,
                   })
+                  setCurrentSlideId(newMilestoneId)
                 }}
                 className="flex items-center justify-center rounded border bg-white px-2 py-1 hover:brightness-95 active:brightness-75"
               >
@@ -343,7 +345,7 @@ function ChallengeCreate({ challenge_id }: ChallengeCreateProps) {
           </button>
         )}
         {createStep === 2 && (
-          <div>
+          <div className="flex justify-between">
             <button onClick={() => setCreateStep(1)}>이전</button>
             <button>챌린지 생성</button>
           </div>

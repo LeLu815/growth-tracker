@@ -16,7 +16,6 @@ import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
 
-import MilestoneSwiper from "../MilestoneSwiper"
 import MilestoneComponent from "./MilestoneComponent"
 
 type RoutineType = {
@@ -218,8 +217,7 @@ function DragDropContainer() {
 
       <div className="mt-5">
         <h2 className="mb-3 text-lg font-semibold">스와이프 마일스톤</h2>
-
-        <MilestoneSwiper data={data} setData={setData} />
+        {/* <MilestoneSwiper data={data} setData={setData} /> */}
       </div>
     </div>
   )
