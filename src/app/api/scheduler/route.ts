@@ -13,7 +13,7 @@ if (!global.isJobScheduled) {
 function alertJob() {
   global.isJobScheduled = true
 
-  const job = schedule.scheduleJob("40 13 * * *", async function () {
+  const job = schedule.scheduleJob("52 13 * * *", async function () {
     debugger
     const supabase = createClient()
     const pgClient = createPGClient()
@@ -47,9 +47,17 @@ function alertJob() {
 }
 
 export async function POST() {
+  if (!global.isJobScheduled) {
+    return NextResponse.json({
+      status: 200,
+      message: "Schedule job set up successfully",
+      error: null,
+    })
+  }
+
   return NextResponse.json({
     status: 200,
-    message: "Schedule job set up successfully",
+    message: "이미 스케줄러가 생성되었습니다.",
     error: null,
   })
 }
