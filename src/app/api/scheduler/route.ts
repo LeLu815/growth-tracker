@@ -13,7 +13,7 @@ if (!global.isJobScheduled) {
 function alertJob() {
   global.isJobScheduled = true
 
-  const job = schedule.scheduleJob("30 13 * * *", async function () {
+  const job = schedule.scheduleJob("40 13 * * *", async function () {
     debugger
     const supabase = createClient()
     const pgClient = createPGClient()
