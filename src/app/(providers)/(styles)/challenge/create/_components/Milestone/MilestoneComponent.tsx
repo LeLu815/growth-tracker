@@ -115,8 +115,9 @@ function MilestoneComponent({
           )}
         </Droppable>
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col overflow-y-auto">
         <MilestoneComponetMobile provided={provided} milestone={milestone} />
+        {/* <MilestoneCreateInfoController range={range}/> */}
         {/* <DragDropContainer /> */}
       </div>
     </>

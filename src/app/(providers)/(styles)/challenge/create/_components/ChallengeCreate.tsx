@@ -5,6 +5,11 @@ import { POSTchallengeArgumentProps } from "@/api/supabase/challenge"
 import { useAuth } from "@/context/auth.context"
 import useChallengeQuery from "@/query/challenge/userChallengeQuery"
 import useChallengeCreateStore from "@/store/challengeCreate.store"
+import useMilestoneCreateStore, {
+  MilestoneType,
+} from "@/store/milestoneCreate.store"
+import { produce } from "immer"
+import { nanoid } from "nanoid"
 
 import Input from "@/components/Input"
 
@@ -20,7 +25,10 @@ import DragDropContainer from "./Milestone/DragDropContainer"
 
 const CATEOGRIES = ["공부", "건강", "생활"]
 
-function ChallengeCreate() {
+interface ChallengeCreateProps {
+  challenge_id?: string
+}
+function ChallengeCreate({ challenge_id }: ChallengeCreateProps) {
   // 챌린지 관련 데이터
   const [createStep, setCreateStep] = useState<1 | 2>(1)
   const [goal, setGoal] = useState<string>("")
@@ -29,6 +37,9 @@ function ChallengeCreate() {
 
   // 챌린지 기간 변수
   const challengePeriod = `${formatDateYearMonthDate(range?.from)} ~ ${formatDateYearMonthDate(range?.to)} (${calculateTotalDays(range)}일)`
+
+  // 마일스톤 생성
+  const { data, setData } = useMilestoneCreateStore()
 
   // 민영님이 추후에 모달 올려주시면 열고닫기 함수로 수정될 예정
   const [isShow, setIsShow] = useState<boolean>(false)
@@ -185,6 +196,15 @@ function ChallengeCreate() {
     ],
   }
 
+  // 마일스톤 생성함수
+  const createMilestone = (milestoneObj: MilestoneType) => {
+    setData((prev) =>
+      produce(prev, (draft) => {
+        draft.push(milestoneObj)
+      })
+    )
+  }
+
   return (
     <>
       <CreateStep
@@ -212,6 +232,25 @@ function ChallengeCreate() {
             onClick={() => setIsShow(true)}
             className="caret-transparent"
           />
+          <div className="rounded-[10px] border border-slate-300 p-4">
+            <div className="flex gap-2">
+              <div>🏁</div>
+              <div>
+                <p>{`<${goal}>에 도전하시는군요.`}</p>
+                <p>목표를 향한 루틴을 작성해보세요</p>
+              </div>
+            </div>
+            <hr />
+            <div className="mt-3 flex gap-3">
+              <button
+                className="flex items-center justify-center rounded border px-3 py-1.5"
+                onClick={() => alert("준비중입니다.")}
+              >
+                루틴 찾아보기
+              </button>
+            </div>
+          </div>
+
           {isShow && (
             <div className="flex flex-col">
               <Calender range={range} setRange={setRange} />
@@ -257,12 +296,38 @@ function ChallengeCreate() {
           />
           <div>
             <h2>마일스톤 만들기 *</h2>
-            <div>
-              <p>목표를 쪼개면 달성이 쉬워져요.</p>
-              <p>마일스톤을 세우고 세부 루틴을 구체화하세요.</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <p>목표를 쪼개면 달성이 쉬워져요.</p>
+                <p>마일스톤을 세우고 세부 루틴을 구체화하세요.</p>
+              </div>
+              <button
+                onClick={() => {
+                  createMilestone({
+                    id: nanoid(),
+                    routines: [],
+                    challenge_id: challenge_id ? challenge_id : "",
+                    start_at: "",
+                    end_at: "",
+                    total_day: 0,
+                    total_cnt: 0,
+                    success_requirement_cnt: 0,
+                    is_mon: false,
+                    is_tue: false,
+                    is_wed: false,
+                    is_thu: false,
+                    is_fri: false,
+                    is_sat: false,
+                    is_sun: false,
+                  })
+                }}
+                className="flex items-center justify-center rounded border bg-white px-2 py-1 hover:brightness-95 active:brightness-75"
+              >
+                새로 생성하기
+              </button>
             </div>
           </div>
-          <DragDropContainer goal={goal} />
+          <DragDropContainer goal={goal} range={range} />
         </div>
       )}
       <div>

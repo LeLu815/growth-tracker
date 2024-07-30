@@ -1,13 +1,15 @@
 "use client"
 
-import useChallengeCreateStore from "@/store/challengeCreate.store"
+import { Dispatch, SetStateAction } from "react"
 import { produce } from "immer"
 
-import CalculateDayInfo from "./calculateDayInfo"
-
-function SelectWeek({}) {
+interface SelectWeekProps {
+  dayChecks: boolean[]
+  setDayChecks: Dispatch<SetStateAction<boolean[]>>
+}
+function SelectWeek({ dayChecks, setDayChecks }: SelectWeekProps) {
   const WEEK_DAY_LIST = ["일", "월", "화", "수", "목", "금", "토"]
-  const { dayChecks, setDayChecks } = useChallengeCreateStore()
+  // const { dayChecks, setDayChecks } = useChallengeCreateStore()
 
   const handleCheckDayType = (days: boolean[]) => {
     const selectedDayLength = days.filter((dayCheck) => dayCheck).length
@@ -49,20 +51,23 @@ function SelectWeek({}) {
   }
 
   return (
-    <div className="flex w-full max-w-[350px] flex-col gap-2">
-      <div className="flex w-full justify-end gap-4">
-        <button
-          className={`rounded border border-neutral-500 bg-white px-2 py-1 hover:brightness-[0.70] ${handleCheckDayType(dayChecks) === "주중" ? "brightness-[0.75]" : ""}`}
-          onClick={() => handleClickDayGroupType("주중")}
-        >
-          주중
-        </button>
-        <button
-          className={`rounded border border-neutral-500 bg-white px-2 py-1 hover:brightness-[0.70] ${handleCheckDayType(dayChecks) === "전체" ? "brightness-[0.75]" : ""}`}
-          onClick={() => handleClickDayGroupType("전체")}
-        >
-          전체
-        </button>
+    <div className="flex w-full flex-col gap-2 rounded-[10px] border border-slate-300 p-4 sm:hidden">
+      <div className="flex items-center justify-between">
+        <span>🏁 루틴 실행 요일</span>
+        <div className="flex justify-end gap-4">
+          <button
+            className={`rounded border border-neutral-500 bg-white px-2 py-1 hover:brightness-[0.70] ${handleCheckDayType(dayChecks) === "주중" ? "brightness-[0.75]" : ""}`}
+            onClick={() => handleClickDayGroupType("주중")}
+          >
+            주중
+          </button>
+          <button
+            className={`rounded border border-neutral-500 bg-white px-2 py-1 hover:brightness-[0.70] ${handleCheckDayType(dayChecks) === "전체" ? "brightness-[0.75]" : ""}`}
+            onClick={() => handleClickDayGroupType("전체")}
+          >
+            전체
+          </button>
+        </div>
       </div>
       <ul className="flex w-full justify-between">
         {dayChecks.map((dayCheck, index) => (
@@ -76,7 +81,6 @@ function SelectWeek({}) {
           </li>
         ))}
       </ul>
-      <CalculateDayInfo dayChecks={formatingDayList(dayChecks)} />
     </div>
   )
 }

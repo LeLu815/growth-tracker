@@ -11,15 +11,22 @@ import {
   DropResult,
 } from "@hello-pangea/dnd"
 import { produce } from "immer"
-import { nanoid } from "nanoid"
+import { DateRange } from "react-day-picker"
 
 import MilestoneComponent from "./MilestoneComponent"
+import MilestoneComponetMobile from "./MilestoneComponetMobile"
+import MilestoneCreateInfoController from "./MilestoneCreateInfoController"
 
 interface DragDropContainerProps {
+  range: DateRange | undefined
   goal: string
   challenge_id?: string
 }
-function DragDropContainer({ goal, challenge_id }: DragDropContainerProps) {
+function DragDropContainer({
+  goal,
+  challenge_id,
+  range,
+}: DragDropContainerProps) {
   const { data, setData } = useMilestoneCreateStore()
 
   // source: 드래그된 항목의 출발지 정보
@@ -113,7 +120,7 @@ function DragDropContainer({ goal, challenge_id }: DragDropContainerProps) {
 
   return (
     <>
-      <div className="rounded-[10px] border border-slate-300 p-4">
+      {/* <div className="rounded-[10px] border border-slate-300 p-4">
         <div className="flex gap-2">
           <div>🏁</div>
           <div>
@@ -124,25 +131,25 @@ function DragDropContainer({ goal, challenge_id }: DragDropContainerProps) {
         <hr />
         <div className="mt-3 flex gap-3">
           <button
-            onClick={() => {
-              createMilestone({
-                id: nanoid(),
-                routines: [],
-                challenge_id: challenge_id ? challenge_id : "",
-                start_at: "",
-                end_at: "",
-                total_day: 0,
-                total_cnt: 0,
-                success_requirement_cnt: 0,
-                is_mon: false,
-                is_tue: false,
-                is_wed: false,
-                is_thu: false,
-                is_fri: false,
-                is_sat: false,
-                is_sun: false,
-              })
-            }}
+            // onClick={() => {
+            //   createMilestone({
+            //     id: nanoid(),
+            //     routines: [],
+            //     challenge_id: challenge_id ? challenge_id : "",
+            //     start_at: "",
+            //     end_at: "",
+            //     total_day: 0,
+            //     total_cnt: 0,
+            //     success_requirement_cnt: 0,
+            //     is_mon: false,
+            //     is_tue: false,
+            //     is_wed: false,
+            //     is_thu: false,
+            //     is_fri: false,
+            //     is_sat: false,
+            //     is_sun: false,
+            //   })
+            // }}
             className="flex items-center justify-center rounded border px-3 py-1.5"
           >
             스스로 작성하기
@@ -151,7 +158,8 @@ function DragDropContainer({ goal, challenge_id }: DragDropContainerProps) {
             루틴 찾아보기
           </button>
         </div>
-      </div>
+      </div> */}
+      <MilestoneCreateInfoController range={range} />
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable
           droppableId="all-milestones"
@@ -159,29 +167,51 @@ function DragDropContainer({ goal, challenge_id }: DragDropContainerProps) {
           type="milestone"
         >
           {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className="flex gap-4"
-            >
-              {data.map((milestone, index) => (
-                <Draggable
-                  key={milestone.id}
-                  draggableId={milestone.id}
-                  index={index}
-                >
-                  {(provided) => (
-                    <MilestoneComponent
-                      deleteMilestone={deleteMilestone}
-                      milestone={milestone}
-                      provided={provided}
-                      setData={setData}
-                    />
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
+            <>
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className="hidden max-w-full gap-4 overflow-y-auto whitespace-nowrap sm:flex"
+              >
+                {data.map((milestone, index) => (
+                  <Draggable
+                    key={milestone.id}
+                    draggableId={milestone.id}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <MilestoneComponent
+                        deleteMilestone={deleteMilestone}
+                        milestone={milestone}
+                        provided={provided}
+                        setData={setData}
+                      />
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className="flex max-w-full gap-4 overflow-y-auto whitespace-nowrap sm:hidden"
+              >
+                {data.map((milestone, index) => (
+                  <Draggable
+                    key={milestone.id}
+                    draggableId={milestone.id}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <MilestoneComponetMobile
+                        milestone={milestone}
+                        provided={provided}
+                      />
+                    )}
+                  </Draggable>
+                ))}
+              </div>
+            </>
           )}
         </Droppable>
       </DragDropContext>
