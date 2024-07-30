@@ -39,5 +39,4 @@ jobs:
       - name: Call API
         run: |
           echo "Calling your API..."
-          curl -X POST https://your-api-endpoint.com/trigger
-          echo "Deployment URL: ${{ steps.wait-for-vercel.outputs.deployment_url }}"
+          curl -X POST https://growth-tracker-dev.vercel.app/api/scheduler
