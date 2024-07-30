@@ -8,51 +8,71 @@ import BackDrop from "./BackDrop"
 
 interface ModalProps {
   type: "alert" | "confirm" | "calendar"
-  content: string
+  content?: string
   onConfirm?: () => void
+  calendarProps?: {}
 }
 
-function Modal({ type, content, onConfirm }: ModalProps) {
+const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
   const modal = useModal()
-  const [show, setShow] = useState(false)
+  const [isShow, isSetShow] = useState(false)
 
   useEffect(() => {
-    setShow(true)
+    isSetShow(true)
   }, [])
 
   const handleCloseModal = () => {
-    setShow(false)
+    isSetShow(false)
     setTimeout(() => modal.close(), 300)
   }
+
+  const renderButtons = () => (
+    <div className="mt-4 flex justify-around space-x-2">
+      <button
+        onClick={handleCloseModal}
+        className="border border-slate-600 px-6 py-2 text-black"
+      >
+        {type === "alert" ? "확인" : "취소"}
+      </button>
+      {type === "confirm" && (
+        <button
+          onClick={onConfirm}
+          className="border border-slate-600 px-6 py-2 text-black"
+        >
+          확인
+        </button>
+      )}
+    </div>
+  )
+
+  const transitionClasses =
+    type === "calendar"
+      ? {
+          enter: "translate-y-full",
+          enterActive:
+            "translate-y-0 transition-transform duration-300 ease-in-out",
+          exit: "translate-y-0",
+          exitActive:
+            "translate-y-full transition-transform duration-300 ease-in-out",
+        }
+      : {
+          enter: "opacity-0",
+          enterActive:
+            "opacity-100 transition-opacity duration-300 ease-in-out",
+          exit: "opacity-100",
+          exitActive: "opacity-0 transition-opacity duration-300 ease-in-out",
+        }
 
   return (
     <BackDrop>
       <CSSTransition
-        in={show}
-        timeout={300}
-        classNames={
-          type === "calendar"
-            ? {
-                enter: "translate-y-full",
-                enterActive:
-                  "translate-y-0 transition-transform duration-300 ease-in-out",
-                exit: "translate-y-0",
-                exitActive:
-                  "translate-y-full transition-transform duration-300 ease-in-out",
-              }
-            : {
-                enter: "opacity-0",
-                enterActive:
-                  "opacity-100 transition-opacity duration-300 ease-in-out",
-                exit: "opacity-100",
-                exitActive:
-                  "opacity-0 transition-opacity duration-300 ease-in-out",
-              }
-        }
+        in={isShow}
+        timeout={200}
+        classNames={transitionClasses}
         unmountOnExit
       >
         <div
-          className={`fixed left-1/2 w-full max-w-sm -translate-x-1/2 transform rounded bg-white p-4 ${
+          className={`fixed left-1/2 w-full -translate-x-1/2 transform rounded bg-white p-4 sm:w-full ${
             type === "calendar"
               ? "bottom-0 translate-y-full transition"
               : "top-1/2 -translate-y-1/2"
@@ -73,26 +93,11 @@ function Modal({ type, content, onConfirm }: ModalProps) {
 
             {type === "calendar" && (
               <div className="calendar-component mt-4">
-                <Calendar />
+                <Calendar {...calendarProps} />
               </div>
             )}
 
-            <div className="mt-4 flex justify-around space-x-2">
-              <button
-                onClick={handleCloseModal}
-                className="border border-slate-600 px-6 py-2 text-black"
-              >
-                {type === "alert" ? "확인" : "취소"}
-              </button>
-              {type === "confirm" && (
-                <button
-                  onClick={onConfirm}
-                  className="border border-slate-600 px-6 py-2 text-black"
-                >
-                  확인
-                </button>
-              )}
-            </div>
+            {renderButtons()}
           </div>
         </div>
       </CSSTransition>

@@ -40,7 +40,6 @@ function NewsfeedPage() {
   const handleOpenCalendarModal = () => {
     modal.open({
       type: "calendar",
-      content: "이건 확인 모달",
       onConfirm: () => console.log("확인 버튼 클릭 시 적용될 로직 넣어주세요"),
     })
   }

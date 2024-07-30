@@ -6,7 +6,7 @@ import Modal from "@/components/Modal/Modal"
 
 interface ModalProps {
   type: "alert" | "confirm" | "calendar"
-  content: string
+  content?: string
   onConfirm?: () => void
 }
 
