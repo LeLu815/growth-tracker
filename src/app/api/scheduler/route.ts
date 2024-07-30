@@ -13,7 +13,8 @@ if (!global.isJobScheduled) {
 function alertJob() {
   global.isJobScheduled = true
 
-  const job = schedule.scheduleJob("45 11 * * *", async function () {
+  const job = schedule.scheduleJob("10 13 * * *", async function () {
+    debugger
     const supabase = createClient()
     const pgClient = createPGClient()
 
@@ -45,7 +46,7 @@ function alertJob() {
   })
 }
 
-export async function GET() {
+export async function POST() {
   return NextResponse.json({
     status: 200,
     message: "Schedule job set up successfully",
