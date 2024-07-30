@@ -27,18 +27,16 @@ function UserInfoPage() {
    * 유저 정보 조회
    * */
   const getUser = async () => {
-    if (me) {
-      const response = await axios
-        .get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me.id}`)
-        .then((response) => response.data)
+    const response = await axios
+      .get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}`)
+      .then((response) => response.data)
 
-      if (response.data.error) {
-        alertOpen(response.data.error)
-        throw new Error(response.data.error)
-      }
-
-      return response.data
+    if (response.data.error) {
+      alertOpen(response.data.error)
+      throw new Error(response.data.error)
     }
+
+    return response.data
   }
 
   /**
@@ -84,6 +82,7 @@ function UserInfoPage() {
   const { data, isPending, isError, refetch } = useQuery({
     queryKey: ["userProfile"],
     queryFn: getUser,
+    enabled: !!me, // me가 있을 때만 쿼리 실행
   })
 
   useEffect(() => {
@@ -133,7 +132,7 @@ function UserInfoPage() {
                 />
               ) : (
                 <Image
-                  src="/image/profile-Image.png"
+                  src="/image/profileImage.png"
                   alt="Profile"
                   className="h-full w-full object-cover"
                   width={160}
@@ -176,7 +175,7 @@ function UserInfoPage() {
                 이메일
               </label>
               <input
-                value={me?.email}
+                placeholder={me?.email}
                 disabled={true}
                 type="text"
                 id="email"
@@ -190,7 +189,7 @@ function UserInfoPage() {
               닉네임
             </label>
             <input
-              value={nickname}
+              value={nickname || ""}
               type="text"
               onChange={(e) => setNickname(e.target.value)}
               id="nickname"

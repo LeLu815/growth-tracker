@@ -82,7 +82,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
                 </div>
               </div>
               <div>
-                {milestone.routines.map((routine) => {
+                {milestone.routines?.map((routine) => {
                   return (
                     <div className={"border border-black"} key={routine.id}>
                       {routine.content}
