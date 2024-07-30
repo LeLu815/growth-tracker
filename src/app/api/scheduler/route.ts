@@ -46,7 +46,7 @@ function alertJob() {
   })
 }
 
-export async function GET() {
+export async function POST() {
   return NextResponse.json({
     status: 200,
     message: "Schedule job set up successfully",
