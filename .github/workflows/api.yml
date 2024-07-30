@@ -39,4 +39,4 @@ jobs:
       - name: Call API
         run: |
           echo "Calling your API..."
-          curl --location --request POST 'https://growth-tracker-ecru.vercel.app/api/scheduler'
+          curl --request GET 'https://growth-tracker-ecru.vercel.app/api/scheduler'
