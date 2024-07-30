@@ -13,10 +13,6 @@ function ChallengeList() {
   const { me } = useAuth()
   const userId = me?.id
 
-  if (!userId) {
-    throw Error("유저 아이디가 가져와지지 않음")
-  }
-
   // 빈번한 리렌더링 발생함 => 추후 해결 필요
   // console.log("리렌더링")
 
@@ -64,10 +60,6 @@ function ChallengeList() {
 
   const CURRENT_DAY_OF_WEEK = "수"
   // const CURRENT_DAY_NUMBER = 3
-
-  if (!userId) {
-    throw Error("유저 아이디가 가져와지지 않았음")
-  }
 
   if (ChallengeDataPending || routineDoneDailyPending || routineDonePending) {
     return <div>로딩 중</div>
@@ -164,7 +156,7 @@ function ChallengeList() {
                                 milestoneDoDays={milestoneDoDays}
                                 CURRENT_DATE={CURRENT_DATE}
                                 CURRENT_DAY_OF_WEEK={CURRENT_DAY_OF_WEEK}
-                                userId={userId}
+                                userId={userId || ""}
                               />
                             )}
                           </div>
