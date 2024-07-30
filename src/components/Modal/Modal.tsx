@@ -15,14 +15,14 @@ interface ModalProps {
 
 const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
   const modal = useModal()
-  const [isShow, isSetShow] = useState(false)
+  const [isShow, setIsShow] = useState(false)
 
   useEffect(() => {
-    isSetShow(true)
+    setIsShow(true)
   }, [])
 
   const handleCloseModal = () => {
-    isSetShow(false)
+    setIsShow(false)
     setTimeout(() => modal.close(), 300)
   }
 
@@ -72,10 +72,12 @@ const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
         unmountOnExit
       >
         <div
-          className={`fixed left-1/2 w-full -translate-x-1/2 transform rounded bg-white p-4 sm:w-full ${
+          className={`fixed left-1/2 w-full -translate-x-1/2 transform rounded bg-white p-4 ${
             type === "calendar"
-              ? "bottom-0 translate-y-full transition"
-              : "top-1/2 -translate-y-1/2"
+              ? "bottom-0 translate-y-full transition sm:w-full"
+              : "top-1/2 max-w-[320px] -translate-y-1/2"
+          } ${type !== "calendar" && "md:max-w-[320px]"} ${
+            type === "calendar" ? "md:max-w-[300px]" : "md:max-w-[320px]"
           }`}
         >
           <button onClick={handleCloseModal}>
