@@ -1,19 +1,24 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/supabase/client"
 import { createPGClient } from "@/supabase/pgClient"
+import schedule from "node-schedule"
 
-const schedule = require("node-schedule")
+// 전역 객체에 isJobScheduled 상태 저장
+global.isJobScheduled = global.isJobScheduled || false
+if (!global.isJobScheduled) {
+  console.log("job start")
+  alertJob()
+}
 
-export async function GET() {
-  const supabase = createClient()
+function alertJob() {
+  global.isJobScheduled = true
 
-  const job = schedule.scheduleJob("0 0 * * *", async function () {
+  const job = schedule.scheduleJob("45 11 * * *", async function () {
+    const supabase = createClient()
     const pgClient = createPGClient()
 
-    // supabase db 연결
     try {
       await pgClient.connect()
-      console.log("Connected to the database")
 
       const newVar = await pgClient.query(
         "SELECT DATE_PART('day', DATE_TRUNC('day', m.end_at) - DATE_TRUNC('day', now())) + 1 AS days_remaining, m.end_at::date AS end_date, u.nickname, c.user_id, c.id ,c.goal FROM milestone m INNER JOIN challenge c ON c.id = m.challenge_id INNER JOIN users u ON u.id = c.user_id WHERE DATE_TRUNC('day', m.end_at) BETWEEN DATE_TRUNC('day', now()) AND DATE_TRUNC('day', now()) + INTERVAL '3 days' AND m.start_at <= now() AND m.end_at >= now();"
@@ -34,16 +39,16 @@ export async function GET() {
       }
     } catch (error: any) {
       console.error("Error:", error.message)
-      return NextResponse.json({ error: error.message, status: 500 })
     } finally {
       await pgClient.end()
     }
   })
+}
 
-  // 스케줄 작업이 설정됨을 즉시 응답
+export async function GET() {
   return NextResponse.json({
     status: 200,
     message: "Schedule job set up successfully",
-    error: null
+    error: null,
   })
 }
