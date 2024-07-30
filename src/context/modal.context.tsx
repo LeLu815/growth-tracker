@@ -5,7 +5,7 @@ import { createContext, PropsWithChildren, useContext, useState } from "react"
 import Modal from "@/components/Modal/Modal"
 
 interface ModalProps {
-  type: "alert" | "confirm"
+  type: "alert" | "confirm" | "calendar"
   content: string
   onConfirm?: () => void
 }
