@@ -221,6 +221,24 @@ export type Database = {
           },
         ]
       }
+      log_scheduler: {
+        Row: {
+          created_at: string
+          id: number
+          message: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          message?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          message?: string | null
+        }
+        Relationships: []
+      }
       milestone: {
         Row: {
           challenge_id: string
@@ -437,6 +455,7 @@ export type Database = {
       }
       users_notice: {
         Row: {
+          challenge_id: string | null
           content: string
           created_at: string
           id: number
@@ -444,6 +463,7 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          challenge_id?: string | null
           content: string
           created_at?: string
           id?: number
@@ -451,6 +471,7 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          challenge_id?: string | null
           content?: string
           created_at?: string
           id?: number
@@ -463,6 +484,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "users_notice_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenge"
             referencedColumns: ["id"]
           },
         ]
