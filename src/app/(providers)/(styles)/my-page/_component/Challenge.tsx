@@ -1,4 +1,4 @@
-import { MyChallengeType } from "../../../../../../types/myChallengeList"
+import { MyChallengeType } from "../../../../../../types/myChallengeList.type"
 
 interface ChallengeProps {
   challenge: MyChallengeType
@@ -6,7 +6,6 @@ interface ChallengeProps {
 }
 
 function Challenge({ challenge, onMoveDetail }: ChallengeProps) {
-  debugger
   return (
     <li
       key={challenge?.id}

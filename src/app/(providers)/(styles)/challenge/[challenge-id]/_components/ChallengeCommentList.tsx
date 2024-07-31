@@ -15,7 +15,7 @@ import { useInView } from "react-intersection-observer"
 import {
   ChallengeCommentPageType,
   ChallengeCommentType,
-} from "../../../../../../../types/challengeDetail"
+} from "../../../../../../../types/challengeDetail.type"
 
 function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   const { me } = useAuth()
@@ -26,6 +26,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   const [isUpdate, setIsUpdate] = useState(false)
   const [updateCommentId, setUpdateCommentId] = useState("")
   const modal = useModal()
+
   /**
    * 유저정보, 댓글정보, 좋아요정보 조회
    * */
@@ -34,7 +35,6 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   }: {
     pageParam: number
   }): Promise<ChallengeCommentType> => {
-    debugger
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}/comment?limit=3&page=${pageParam}&userId=${me ? me?.id : ""}`
     )

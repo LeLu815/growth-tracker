@@ -3,7 +3,7 @@ name: Call API After Vercel Deploy
 on:
   push:
     branches:
-      - develop
+      - main
 
 jobs:
   wait-for-vercel:
