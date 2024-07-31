@@ -1,14 +1,13 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import useMilestoneCreateStore, {
   MilestoneType,
 } from "@/store/milestoneCreate.store"
+import { addDays, format, parseISO } from "date-fns"
 import { produce } from "immer"
 import { DateRange } from "react-day-picker"
 
-import calculateDayInfo from "../../calender/calculateDayInfo"
-import SelectWeek, { formatingDayList } from "../../calender/selectWeek"
+import SelectWeek from "../../calender/selectWeek"
 
 const milestonePeriods = [
   {
@@ -38,83 +37,80 @@ function MilestoneCreateInfoController({
   range,
   currentMilestoneObj,
 }: MilestoneCreateInfoControllerProps) {
-  const [dayChecks, setDayChecks] = useState<boolean[]>([
-    currentMilestoneObj?.is_sun || false,
-    currentMilestoneObj?.is_mon || false,
-    currentMilestoneObj?.is_tue || false,
-    currentMilestoneObj?.is_wed || false,
-    currentMilestoneObj?.is_thu || false,
-    currentMilestoneObj?.is_fri || false,
-    currentMilestoneObj?.is_sat || false,
-  ])
-  const [selectedPeriod, setSelectedPeriod] = useState<string>(
-    milestonePeriods[0].value
-  )
-  const { setData } = useMilestoneCreateStore()
+  const { data, setData, currentSlideId } = useMilestoneCreateStore()
 
-  // 여기가 문제의 원인
-  const { minCountForSuccess, wholeActualCount, wholePeriod } =
-    calculateDayInfo({
-      dayChecks: formatingDayList(dayChecks),
-      // range: currentMilestoneObj
-      //   ? createDateRange(
-      //       currentMilestoneObj?.start_at,
-      //       currentMilestoneObj?.total_day
-      //     )
-      //   : range,
-      range,
-      minPercentForsuccess: "50",
-    })
-
-  useEffect(() => {
-    if (currentMilestoneObj) {
-      setDayChecks([
-        currentMilestoneObj.is_sun || false,
-        currentMilestoneObj.is_mon || false,
-        currentMilestoneObj.is_tue || false,
-        currentMilestoneObj.is_wed || false,
-        currentMilestoneObj.is_thu || false,
-        currentMilestoneObj.is_fri || false,
-        currentMilestoneObj.is_sat || false,
-      ])
-    }
-  }, [currentMilestoneObj])
-
-  useEffect(() => {
-    setData((datas) =>
-      produce(datas, (drafts) => {
-        const currMilestoneObj = drafts.find(
-          (draft) => draft.id === currentMilestoneObj?.id
-        )
-        if (currMilestoneObj) {
-          currMilestoneObj.is_sun = dayChecks[0]
-          currMilestoneObj.is_mon = dayChecks[1]
-          currMilestoneObj.is_tue = dayChecks[2]
-          currMilestoneObj.is_wed = dayChecks[3]
-          currMilestoneObj.is_thu = dayChecks[4]
-          currMilestoneObj.is_fri = dayChecks[5]
-          currMilestoneObj.is_sat = dayChecks[6]
-
-          currMilestoneObj.success_requirement_cnt = minCountForSuccess
-          currMilestoneObj.total_day = wholePeriod
-          currMilestoneObj.total_cnt = wholeActualCount
+  const selectedPeriod = currentMilestoneObj?.total_day
+    ? (() => {
+        switch (currentMilestoneObj.total_day) {
+          case 7:
+            return milestonePeriods[0]
+          case 14:
+            return milestonePeriods[1]
+          case 21:
+            return milestonePeriods[2]
+          default:
+            return milestonePeriods[3]
         }
-      })
-    )
-  }, [dayChecks, setData])
+      })()
+    : milestonePeriods[3]
 
-  console.log("currentMilestoneObj 업데이트 :", currentMilestoneObj)
+  console.log("currentMilestoneObj :", currentMilestoneObj)
+
+  const handleChangeStartEndPeriod = (milestonePeriod: {
+    name: string
+    value: string
+  }) => {
+    const end_at = changeEndDate(
+      currentMilestoneObj?.start_at || "",
+      +milestonePeriod.value - 1
+    )
+    const currIndex = data.findIndex(
+      (obj) => obj.id === currentMilestoneObj?.id
+    )
+    if (currIndex === data.length - 1 && data.length === 1) {
+      setData((datas) =>
+        produce(datas, (drafts) => {
+          const currMilestone = drafts.find(
+            (draft) => draft.id === currentMilestoneObj?.id
+          )
+          if (currMilestone) {
+            currMilestone.end_at = end_at
+            currMilestone.total_day = +milestonePeriod.value
+          }
+        })
+      )
+    } else {
+      // 도미노 업데이트 함수 (기간 설정시 뒤에 모든 요소들 차례로 업데이트 처리를 한다.)
+      setData((prev) =>
+        produce(prev, (draft) => {
+          const currMilestone = draft[currIndex]
+          currMilestone.end_at = end_at
+          currMilestone.total_day = +milestonePeriod.value
+
+          for (let i = currIndex + 1; i < draft.length; i++) {
+            const previousEndAt = parseISO(draft[i - 1].end_at)
+            const newStartAt = addDays(previousEndAt, 1)
+            const newEndAt = addDays(newStartAt, draft[i].total_day - 1)
+
+            draft[i].start_at = format(newStartAt, "yyyy-MM-dd")
+            draft[i].end_at = format(newEndAt, "yyyy-MM-dd")
+          }
+        })
+      )
+    }
+  }
+
   return (
     <>
-      <SelectWeek dayChecks={dayChecks} setDayChecks={setDayChecks} />
+      <SelectWeek />
       <div className="flex w-full flex-col gap-2 rounded-[10px] border border-slate-300 p-4 sm:hidden">
         <p>🏁 마일스톤 단위를 설정해 주세요</p>
         <ul className="flex justify-around">
           {milestonePeriods.map((milestonePeriod) => (
             <li
-              className={`cursor-pointer ${selectedPeriod === milestonePeriod.value ? "text-red-500" : ""}`}
+              className={`cursor-pointer ${selectedPeriod.value === milestonePeriod.value ? "text-red-500" : ""}`}
               onClick={() => {
-                setSelectedPeriod(milestonePeriod.value)
+                handleChangeStartEndPeriod(milestonePeriod)
               }}
               key={milestonePeriod.name}
             >
@@ -138,3 +134,33 @@ function MilestoneCreateInfoController({
 }
 
 export default MilestoneCreateInfoController
+
+export const changeEndDate = (startDate: string, addDate: number) => {
+  if (startDate === "") {
+    return ""
+  }
+  const start = parseISO(startDate)
+
+  if (addDate > 0) {
+    const newDate = addDays(start, addDate)
+    return format(newDate, "yyyy-MM-dd")
+  }
+  return ""
+}
+
+// 도미노 업데이트 함수 (기간 설정시 뒤에 모든 요소들 차례로 업데이트 처리를 한다.)
+export function updateData(
+  data: MilestoneType[],
+  start_index: number
+): MilestoneType[] {
+  return produce(data, (draft) => {
+    for (let i = start_index; i < draft.length; i++) {
+      const previousEndAt = parseISO(draft[i - 1].end_at)
+      const newStartAt = addDays(previousEndAt, 1)
+      const newEndAt = addDays(newStartAt, draft[i].total_day - 1)
+
+      draft[i].start_at = format(newStartAt, "yyyy-MM-dd")
+      draft[i].end_at = format(newEndAt, "yyyy-MM-dd")
+    }
+  })
+}
