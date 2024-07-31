@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query"
 import { format, startOfDay } from "date-fns"
 import { ko } from "date-fns/locale"
 
+import { StructuredChallengeType } from "../../../../../../../types/supabase.type"
 import { MyChallengePageContext } from "../../context"
 import MilestoneSection from "../MilestoneSection"
 
@@ -50,13 +51,6 @@ function ChallengeList() {
     gcTime: 8 * 60 * 1000, // 8분
   })
 
-  // const date = new Date()
-  // date.setHours(0, 0, 0, 0)
-  // // 시, 분, 초가 모두 변경 (00시 00분 00초)
-
-  // const whatDay = date.getDay
-  // 0(일) ~ 6(토)
-
   const { selectedDate, selectedDayOfWeek } = useContext(MyChallengePageContext)
   const CURRENT_DATE = selectedDate
   const CURRENT_DATE_NUMBER = parseInt(CURRENT_DATE.replace(/-/g, ""))
@@ -64,7 +58,6 @@ function ChallengeList() {
   const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"]
 
   const CURRENT_DAY_OF_WEEK = selectedDayOfWeek
-  // const CURRENT_DAY_NUMBER = 3
 
   if (ChallengeDataPending || routineDoneDailyPending || routineDonePending) {
     return <div>로딩 중</div>
@@ -75,6 +68,91 @@ function ChallengeList() {
   }
 
   if (structuredChallengeData && currentUserRoutineDoneDaily && RoutineDone) {
+    // 마일스톤 생성하는데 필요한 세부 데이터 구성하고 이를 기반으로
+    // 마일스톤을 화면에 표시해주는 함수
+    const displayEachMilestoneItem = (challenge: StructuredChallengeType) => {
+      return challenge.milestones?.map((milestone, index) => {
+        // 요일 필터링
+        const milestoneDoDays: string[] = []
+        if (milestone.is_sun) {
+          milestoneDoDays.push(DAYS_OF_WEEK[0])
+        }
+        if (milestone.is_mon) {
+          milestoneDoDays.push(DAYS_OF_WEEK[1])
+        }
+        if (milestone.is_tue) {
+          milestoneDoDays.push(DAYS_OF_WEEK[2])
+        }
+        if (milestone.is_wed) {
+          milestoneDoDays.push(DAYS_OF_WEEK[3])
+        }
+        if (milestone.is_thu) {
+          milestoneDoDays.push(DAYS_OF_WEEK[4])
+        }
+        if (milestone.is_fri) {
+          milestoneDoDays.push(DAYS_OF_WEEK[5])
+        }
+        if (milestone.is_sat) {
+          milestoneDoDays.push(DAYS_OF_WEEK[6])
+        }
+
+        if (milestone.challenge_id == challenge.id) {
+          const milestoneStartDate = parseInt(
+            milestone.start_at?.replace(/-/g, "") || "0"
+          )
+          const milestoneEndDate = parseInt(
+            milestone.end_at?.replace(/-/g, "") || "0"
+          )
+          if (
+            CURRENT_DATE_NUMBER >= milestoneStartDate &&
+            CURRENT_DATE_NUMBER <= milestoneEndDate
+          ) {
+            return (
+              <div key={milestone.id}>
+                <MilestoneSection
+                  challengeId={challenge.id}
+                  milestone={milestone}
+                  milestoneDoDays={milestoneDoDays}
+                  CURRENT_DATE={CURRENT_DATE}
+                  CURRENT_DAY_OF_WEEK={CURRENT_DAY_OF_WEEK}
+                  userId={userId || ""}
+                />
+              </div>
+            )
+          }
+        }
+      })
+    }
+    // 챌린지 생성하는데 필요한 세부 데이터 구성하고 이를 기반으로
+    // 챌린지를 화면에 표시해주는 함수
+    const displayEachChallengeItem = () => {
+      return structuredChallengeData?.map((challenge) => {
+        const challengeStartDate = parseInt(
+          challenge.start_at?.replace(/-/g, "") || "0"
+        )
+        const challengeEndDate = parseInt(
+          challenge.end_at?.replace(/-/g, "") || "0"
+        )
+
+        if (
+          CURRENT_DATE_NUMBER >= challengeStartDate &&
+          CURRENT_DATE_NUMBER <= challengeEndDate
+        ) {
+          return (
+            <div
+              key={challenge.goal}
+              className="flex flex-col gap-y-5 border-2 border-black px-8 py-10"
+            >
+              <h3 className="text-xl font-bold">챌린지: {challenge.goal}</h3>
+              <h1>챌린지 시작: {challenge.start_at}</h1>
+              <h1>챌린지 종료: {challenge.end_at}</h1>
+              {displayEachMilestoneItem(challenge)}
+            </div>
+          )
+        }
+      })
+    }
+
     return (
       <div className="mt-10 flex flex-col gap-y-10">
         <div className="flex gap-4">
@@ -94,83 +172,7 @@ function ChallengeList() {
         <div className="flex flex-col gap-y-12">
           {/* 유효한 날짜 범위 내 데이터만 보여지도록 하는 부분인데,
           애초에 유효한 날짜 범위 내 데이터만 가져와지도록 fetch 부분 수정할 필요 있음 */}
-          {structuredChallengeData?.map((challenge) => {
-            const challengeStartDate = parseInt(
-              challenge.start_at?.replace(/-/g, "") || "0"
-            )
-            const challengeEndDate = parseInt(
-              challenge.end_at?.replace(/-/g, "") || "0"
-            )
-
-            if (
-              CURRENT_DATE_NUMBER >= challengeStartDate &&
-              CURRENT_DATE_NUMBER <= challengeEndDate
-            ) {
-              return (
-                <div
-                  key={challenge.goal}
-                  className="flex flex-col gap-y-5 border-2 border-black px-8 py-10"
-                >
-                  <h3 className="text-xl font-bold">
-                    챌린지: {challenge.goal}
-                  </h3>
-                  <h1>챌린지 시작: {challenge.start_at}</h1>
-                  <h1>챌린지 종료: {challenge.end_at}</h1>
-                  {challenge.milestones?.map((milestone, index) => {
-                    // 요일 필터링
-                    const milestoneDoDays: string[] = []
-                    if (milestone.is_sun) {
-                      milestoneDoDays.push(DAYS_OF_WEEK[0])
-                    }
-                    if (milestone.is_mon) {
-                      milestoneDoDays.push(DAYS_OF_WEEK[1])
-                    }
-                    if (milestone.is_tue) {
-                      milestoneDoDays.push(DAYS_OF_WEEK[2])
-                    }
-                    if (milestone.is_wed) {
-                      milestoneDoDays.push(DAYS_OF_WEEK[3])
-                    }
-                    if (milestone.is_thu) {
-                      milestoneDoDays.push(DAYS_OF_WEEK[4])
-                    }
-                    if (milestone.is_fri) {
-                      milestoneDoDays.push(DAYS_OF_WEEK[5])
-                    }
-                    if (milestone.is_sat) {
-                      milestoneDoDays.push(DAYS_OF_WEEK[6])
-                    }
-
-                    if (milestone.challenge_id == challenge.id) {
-                      const milestoneStartDate = parseInt(
-                        milestone.start_at?.replace(/-/g, "") || "0"
-                      )
-                      const milestoneEndDate = parseInt(
-                        milestone.end_at?.replace(/-/g, "") || "0"
-                      )
-                      if (
-                        CURRENT_DATE_NUMBER >= milestoneStartDate &&
-                        CURRENT_DATE_NUMBER <= milestoneEndDate
-                      ) {
-                        return (
-                          <div key={milestone.id}>
-                            <MilestoneSection
-                              challengeId={challenge.id}
-                              milestone={milestone}
-                              milestoneDoDays={milestoneDoDays}
-                              CURRENT_DATE={CURRENT_DATE}
-                              CURRENT_DAY_OF_WEEK={CURRENT_DAY_OF_WEEK}
-                              userId={userId || ""}
-                            />
-                          </div>
-                        )
-                      }
-                    }
-                  })}
-                </div>
-              )
-            }
-          })}
+          {displayEachChallengeItem()}
         </div>
       </div>
     )
