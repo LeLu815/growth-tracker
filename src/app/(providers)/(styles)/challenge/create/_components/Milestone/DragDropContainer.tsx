@@ -29,7 +29,7 @@ function DragDropContainer({
   challenge_id,
   range,
 }: DragDropContainerProps) {
-  const { data, setData } = useMilestoneCreateStore()
+  const { data, setData, currentSlideId } = useMilestoneCreateStore()
 
   // source: 드래그된 항목의 출발지 정보
   // destination: 드롭된 항목의 목적지 정보
@@ -117,51 +117,17 @@ function DragDropContainer({
   }
 
   useEffect(() => {
-    console.log(data)
+    // console.log(data)
   }, [data])
 
   return (
     <>
-      {/* <div className="rounded-[10px] border border-slate-300 p-4">
-        <div className="flex gap-2">
-          <div>🏁</div>
-          <div>
-            <p>{`<${goal}>에 도전하시는군요.`}</p>
-            <p>목표를 향한 루틴을 작성해보세요</p>
-          </div>
-        </div>
-        <hr />
-        <div className="mt-3 flex gap-3">
-          <button
-            // onClick={() => {
-            //   createMilestone({
-            //     id: nanoid(),
-            //     routines: [],
-            //     challenge_id: challenge_id ? challenge_id : "",
-            //     start_at: "",
-            //     end_at: "",
-            //     total_day: 0,
-            //     total_cnt: 0,
-            //     success_requirement_cnt: 0,
-            //     is_mon: false,
-            //     is_tue: false,
-            //     is_wed: false,
-            //     is_thu: false,
-            //     is_fri: false,
-            //     is_sat: false,
-            //     is_sun: false,
-            //   })
-            // }}
-            className="flex items-center justify-center rounded border px-3 py-1.5"
-          >
-            스스로 작성하기
-          </button>
-          <button className="flex items-center justify-center rounded border px-3 py-1.5">
-            루틴 찾아보기
-          </button>
-        </div>
-      </div> */}
-      <MilestoneCreateInfoController range={range} />
+      <MilestoneCreateInfoController
+        range={range}
+        currentMilestoneObj={
+          data.find((obj) => obj.id === currentSlideId) || null
+        }
+      />
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable
           droppableId="all-milestones"

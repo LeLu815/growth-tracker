@@ -2,7 +2,6 @@
 
 import { createContext } from "react"
 import {
-  addDays,
   differenceInCalendarDays,
   format,
   isBefore,
@@ -17,16 +16,7 @@ interface CalenderProps {
   setRange: (range: DateRange | undefined) => void
 }
 function Calender({ range, setRange }: CalenderProps) {
-  const defaultMonth = new Date()
-  const defaultSelected: DateRange = {
-    from: defaultMonth,
-    to: addDays(defaultMonth, 7),
-  }
   const today = startOfToday()
-
-  const contextValue = {
-    range,
-  }
 
   return (
     <>

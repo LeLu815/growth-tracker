@@ -28,6 +28,13 @@ const MilestoneSwiper = ({ data, setData }: MilestoneSwiperProps) => {
 
   const swiperRef = useRef<SwiperCore | null>(null)
 
+  // 마일스톤 삭제 함수
+  const deleteMilestone = (milestoneId: string) => {
+    setData((prevData) =>
+      prevData.filter((milestone) => milestone.id !== milestoneId)
+    )
+  }
+
   // 루틴 생성함수
   const createRoutine = (milestoneId: string, routineObj: RoutineType) => {
     setData((prev) =>
@@ -105,6 +112,9 @@ const MilestoneSwiper = ({ data, setData }: MilestoneSwiperProps) => {
       {data.map((milestone) => (
         <SwiperSlide id={milestone.id} key={milestone.id}>
           <div className="mx-auto mb-4 flex w-[300px] flex-col gap-2 rounded-lg border border-gray-400 bg-gray-100 p-4">
+            <h1>
+              {milestone.start_at} ~ {milestone.end_at}
+            </h1>
             <ul className="flex h-full flex-col justify-between p-4">
               {milestone.routines.map((routine) => (
                 <li
@@ -171,6 +181,15 @@ const MilestoneSwiper = ({ data, setData }: MilestoneSwiperProps) => {
                 className="flex h-[45px] items-center justify-center rounded border"
               >
                 생성하기
+              </button>
+              <button
+                onClick={() => {
+                  setRoutineValue("")
+                  deleteMilestone(milestone.id)
+                }}
+                className="flex h-[45px] items-center justify-center rounded border text-red-500"
+              >
+                삭제하기
               </button>
             </div>
           </div>

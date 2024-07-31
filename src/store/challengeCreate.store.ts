@@ -12,7 +12,7 @@ interface RangeState {
 const defaultMonth = new Date()
 const defaultSelected: DateRange = {
   from: defaultMonth,
-  to: addDays(defaultMonth, 7),
+  to: addDays(defaultMonth, 6),
 }
 
 const WEEK_DAY_LIST = ["일", "월", "화", "수", "목", "금", "토"]

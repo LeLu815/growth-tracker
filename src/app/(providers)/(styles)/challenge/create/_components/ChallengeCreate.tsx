@@ -1,15 +1,16 @@
 "use client"
 
 import { useState } from "react"
-import { POSTchallengeArgumentProps } from "@/api/supabase/challenge"
 import { useAuth } from "@/context/auth.context"
 import useChallengeQuery from "@/query/challenge/userChallengeQuery"
 import useChallengeCreateStore from "@/store/challengeCreate.store"
 import useMilestoneCreateStore, {
   MilestoneType,
 } from "@/store/milestoneCreate.store"
+import { addDays, format, isValid, parse, parseISO } from "date-fns"
 import { produce } from "immer"
 import { nanoid } from "nanoid"
+import { DateRange } from "react-day-picker"
 
 import Input from "@/components/Input"
 
@@ -43,17 +44,6 @@ function ChallengeCreate({ challenge_id }: ChallengeCreateProps) {
 
   // 민영님이 추후에 모달 올려주시면 열고닫기 함수로 수정될 예정
   const [isShow, setIsShow] = useState<boolean>(false)
-  const [start_at, setStart_at] = useState<string>("")
-  const [end_at, setEnd_at] = useState<string>("")
-  const [is_secret, setIs_secret] = useState<false>(false)
-  const [day_cnt, setDay_cnt] = useState<number>(0)
-  const [user_id, setUser_id] = useState<string>("")
-  const [state, setState] = useState<"" | "" | "">("")
-
-  // 마일스톤 객체 리스트
-  const [milestones, setMilestones] = useState<
-    POSTchallengeArgumentProps["milestone"]
-  >([])
 
   const {
     challengeCreateMutate,
@@ -304,13 +294,24 @@ function ChallengeCreate({ challenge_id }: ChallengeCreateProps) {
               <button
                 onClick={() => {
                   const newMilestoneId = nanoid()
-                  createMilestone({
+                  const lastMilestone =
+                    data.length === 0 ? null : data[data.length - 1]
+                  const newMilestoneObj = {
                     id: newMilestoneId,
                     routines: [],
                     challenge_id: challenge_id ? challenge_id : "",
-                    start_at: "",
-                    end_at: "",
-                    total_day: 0,
+                    start_at:
+                      (lastMilestone
+                        ? getNextDayString(lastMilestone.end_at)
+                        : range?.from && format(range?.from, "yyyy-MM-dd")) ||
+                      "",
+                    end_at: lastMilestone
+                      ? getNextFewDayString(lastMilestone.end_at, 6)
+                      : (range?.from &&
+                          addDays(range?.from, 6) &&
+                          format(addDays(range?.from, 6), "yyyy-MM-dd")) ||
+                        "",
+                    total_day: 7,
                     total_cnt: 0,
                     success_requirement_cnt: 0,
                     is_mon: false,
@@ -320,7 +321,8 @@ function ChallengeCreate({ challenge_id }: ChallengeCreateProps) {
                     is_fri: false,
                     is_sat: false,
                     is_sun: false,
-                  })
+                  }
+                  createMilestone(newMilestoneObj)
                   setCurrentSlideId(newMilestoneId)
                 }}
                 className="flex items-center justify-center rounded border bg-white px-2 py-1 hover:brightness-95 active:brightness-75"
@@ -329,7 +331,12 @@ function ChallengeCreate({ challenge_id }: ChallengeCreateProps) {
               </button>
             </div>
           </div>
-          <DragDropContainer goal={goal} range={range} />
+          {data.length !== 0 && <DragDropContainer goal={goal} range={range} />}
+          {data.length === 0 && (
+            <div className="flex h-[300px] items-center justify-center text-slate-400">
+              아직 생성된 마일스톤 없어요. 만들어주세요!
+            </div>
+          )}
         </div>
       )}
       <div>
@@ -356,3 +363,38 @@ function ChallengeCreate({ challenge_id }: ChallengeCreateProps) {
 }
 
 export default ChallengeCreate
+
+export function getNextDayString(dateString: string): string {
+  const date = parse(dateString, "yyyy-MM-dd", new Date())
+  const nextDay = addDays(date, 1)
+  return format(nextDay, "yyyy-MM-dd")
+}
+export function getNextFewDayString(
+  dateString: string,
+  addDay: number
+): string {
+  const date = parse(dateString, "yyyy-MM-dd", new Date())
+  const nextDay = addDays(date, addDay)
+  return format(nextDay, "yyyy-MM-dd")
+}
+
+export function createDateRange(
+  startDate: string,
+  duration: number
+): DateRange | undefined {
+  if (!startDate || isNaN(duration) || duration <= 0) {
+    return undefined
+  }
+
+  const start = parseISO(startDate)
+  if (!isValid(start)) {
+    return undefined
+  }
+
+  const end = addDays(start, duration)
+
+  return {
+    from: start,
+    to: end,
+  }
+}

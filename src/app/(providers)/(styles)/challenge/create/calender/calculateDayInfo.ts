@@ -47,23 +47,6 @@ function calculateDayInfo({
         100
     ),
   }
-  // return (
-  //   <div>
-  //     <p>시작 : {formatDate(range?.from)}</p>
-  //     <p>끝 : {formatDate(range?.to)}</p>
-  //     <p>총 기간 : {calculateTotalDays(range)}일</p>
-  //     <p>총 횟수 : {calculateSpecificWeekdays(range, dayChecks)}번</p>
-  //     <p>
-  //       성공을 위한 최소 횟수 :{" "}
-  //       {Math.ceil(calculateSpecificWeekdays(range, dayChecks) / 2)}회
-  //     </p>
-  //     <PortionStickBar
-  //       currentValue={calculateTotalDays(range)}
-  //       prevValue={[2, 5, 3]}
-  //       nextValue={[20]}
-  //     />
-  //   </div>
-  // )
 }
 
 export default calculateDayInfo
