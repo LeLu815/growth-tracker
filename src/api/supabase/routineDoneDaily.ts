@@ -17,12 +17,14 @@ export interface PUTisSuccessRoutineDoneDaily {
   routineDoneDailyId: string
 }
 
-export const GETroutineDoneDaily = async (userId: string) => {
-  const response = await axios.get(
-    `/api/challenge/milestone/routine/done/daily/${userId}`
-  )
-  const getResponse: RoutineDoneDailyType[] = response.data
-  return getResponse
+export const GETroutineDoneDaily = async (userId: string | undefined) => {
+  if (userId) {
+    const response = await axios.get(
+      `/api/challenge/milestone/routine/done/daily/${userId}`
+    )
+    const getResponse: RoutineDoneDailyType[] = response.data
+    return getResponse
+  }
 }
 
 // 개별 마일스톤에 대해서 내부 루틴을 처음 체크할 때,

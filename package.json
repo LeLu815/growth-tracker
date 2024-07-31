@@ -15,6 +15,7 @@
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@hello-pangea/dnd": "^16.6.0",
+    "@meinefinsternis/react-horizontal-date-picker": "^1.0.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@supabase/ssr": "^0.4.0",
     "@supabase/supabase-js": "^2.44.4",
@@ -36,7 +37,9 @@
     "react-dom": "^18",
     "react-intersection-observer": "^9.13.0",
     "react-transition-group": "^4.4.5",
+    "swiper": "^11.1.8",
     "tailwind-merge": "^2.4.0",
+    "tailwind-scrollbar-hide": "^1.1.7",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^10.0.0"
   },
