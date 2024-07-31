@@ -63,7 +63,7 @@ function ChallengeList() {
 
   const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"]
 
-  const CURRENT_DAY_OF_WEEK = "수"
+  const CURRENT_DAY_OF_WEEK = selectedDayOfWeek
   // const CURRENT_DAY_NUMBER = 3
 
   if (ChallengeDataPending || routineDoneDailyPending || routineDonePending) {
@@ -154,20 +154,14 @@ function ChallengeList() {
                       ) {
                         return (
                           <div key={milestone.id}>
-                            {!milestoneDoDays.find((milestoneDoDay) => {
-                              return milestoneDoDay == selectedDayOfWeek
-                            }) ? (
-                              <p className="mt-5">오늘은 할 일이 없어요</p>
-                            ) : (
-                              <MilestoneSection
-                                challengeId={challenge.id}
-                                milestone={milestone}
-                                milestoneDoDays={milestoneDoDays}
-                                CURRENT_DATE={CURRENT_DATE}
-                                CURRENT_DAY_OF_WEEK={CURRENT_DAY_OF_WEEK}
-                                userId={userId || ""}
-                              />
-                            )}
+                            <MilestoneSection
+                              challengeId={challenge.id}
+                              milestone={milestone}
+                              milestoneDoDays={milestoneDoDays}
+                              CURRENT_DATE={CURRENT_DATE}
+                              CURRENT_DAY_OF_WEEK={CURRENT_DAY_OF_WEEK}
+                              userId={userId || ""}
+                            />
                           </div>
                         )
                       }
