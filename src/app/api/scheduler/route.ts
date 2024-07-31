@@ -10,8 +10,19 @@ export async function GET() {
   if (!global.isJobScheduled) {
     global.isJobScheduled = true
 
-    const job2 = schedule.scheduleJob("* * * * *", async function () {
-      const supabase = createClient()
+    const supabase = createClient()
+
+    await supabase
+    .from("log_scheduler")
+    .insert([{ message: global.isJobScheduled.toString()}])
+
+    schedule.scheduleJob("* * * * *", async function () {
+
+      await supabase
+      .from("log_scheduler")
+      .insert([{ message: "스케줄러 시작"}])
+
+
       const pgClient = createPGClient()
 
       try {
@@ -24,23 +35,22 @@ export async function GET() {
         const dataList = newVar.rows
 
         for (const dataListElement of dataList) {
-          const { data, error } = await supabase
-            .from("users_notice")
-            .insert([
-              {
-                challenge_id: dataListElement.id,
-                user_id: dataListElement.user_id,
-                content: `${dataListElement.nickname} 님  ${dataListElement.goal} 챌린지의 다음 마일스톤을 수정 및 생성할 수 있는 기간이  ${dataListElement.days_remaining}일 남았습니다.`,
-              },
-            ])
-            .select()
+          const { error } = await supabase.from("users_notice").insert([
+            {
+              challenge_id: dataListElement.id,
+              user_id: dataListElement.user_id,
+              content: `${dataListElement.nickname} 님  ${dataListElement.goal} 챌린지의 다음 마일스톤을 수정 및 생성할 수 있는 기간이  ${dataListElement.days_remaining}일 남았습니다.`,
+            },
+          ]).select()
 
           if (error) {
             throw new Error(error.message)
           }
         }
       } catch (error: any) {
-        console.error("Error:", error.message)
+        await supabase
+          .from("log_scheduler")
+          .insert([{ message: `스케줄러 에러 : ${error.message}` }])
       } finally {
         await pgClient.end()
       }
