@@ -14,4 +14,4 @@ jobs:
     steps:
       - name: Trigger Vercel API
         run: |
-          curl -X GET "https://growth-tracker-ecru.vercel.app/api/scheduler?token=${{ secrets.VERCEL_SECRET_TOKEN }}"
+          curl -X GET "https://growth-tracker-ecru.vercel.app/api/scheduler"
