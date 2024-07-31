@@ -1,11 +1,15 @@
 "use client"
 
+import { useContext } from "react"
 import { GETroutineDone } from "@/api/supabase/routineDone"
 import { GETroutineDoneDaily } from "@/api/supabase/routineDoneDaily"
 import { GETstructuredChallengeData } from "@/api/supabase/structured-challenge"
 import { useAuth } from "@/context/auth.context"
 import { useQuery } from "@tanstack/react-query"
+import { format, startOfDay } from "date-fns"
+import { ko } from "date-fns/locale"
 
+import { MyChallengePageContext } from "../../context"
 import MilestoneSection from "../MilestoneSection"
 
 function ChallengeList() {
@@ -21,8 +25,8 @@ function ChallengeList() {
     isPending: ChallengeDataPending,
     isError: ChallengeDataError,
   } = useQuery({
-    queryKey: ["fetchStructuredChallengeData", userId],
-    queryFn: () => GETstructuredChallengeData(userId),
+    queryKey: ["fetchStructuredChallengeData", userId || ""],
+    queryFn: () => GETstructuredChallengeData(userId || ""),
     gcTime: 8 * 60 * 1000, // 8분
   })
 
@@ -31,8 +35,8 @@ function ChallengeList() {
     isPending: routineDoneDailyPending,
     isError: routineDoneDailyError,
   } = useQuery({
-    queryKey: ["fetchCurrentUserRoutineDoneDaily", userId],
-    queryFn: () => GETroutineDoneDaily(userId),
+    queryKey: ["fetchCurrentUserRoutineDoneDaily", userId || ""],
+    queryFn: () => GETroutineDoneDaily(userId || ""),
     gcTime: 8 * 60 * 1000, // 8분
   })
 
@@ -53,7 +57,8 @@ function ChallengeList() {
   // const whatDay = date.getDay
   // 0(일) ~ 6(토)
 
-  const CURRENT_DATE = "2024-07-23"
+  const { selectedDate, selectedDayOfWeek } = useContext(MyChallengePageContext)
+  const CURRENT_DATE = selectedDate
   const CURRENT_DATE_NUMBER = parseInt(CURRENT_DATE.replace(/-/g, ""))
 
   const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"]
@@ -76,11 +81,15 @@ function ChallengeList() {
           <p>현재 내 아이디: </p>
           <p>{me?.id}</p>
         </div>
+        <p>테스트는 7월 23일 24일로 해보시면 잘 됩니당</p>
         <div className="flex gap-4">
-          <p>오늘 날짜: </p>
           <p>
-            {CURRENT_DATE} {CURRENT_DAY_OF_WEEK}
+            오늘 날짜:{" "}
+            {format(startOfDay(new Date()), "yyyy-MM-dd", { locale: ko })}
           </p>
+
+          <p>선택한 날짜: {selectedDate}</p>
+          <p>선택한 요일: {selectedDayOfWeek}</p>
         </div>
         <div className="flex flex-col gap-y-12">
           {/* 유효한 날짜 범위 내 데이터만 보여지도록 하는 부분인데,
@@ -146,7 +155,7 @@ function ChallengeList() {
                         return (
                           <div key={milestone.id}>
                             {!milestoneDoDays.find((milestoneDoDay) => {
-                              return milestoneDoDay == CURRENT_DAY_OF_WEEK
+                              return milestoneDoDay == selectedDayOfWeek
                             }) ? (
                               <p className="mt-5">오늘은 할 일이 없어요</p>
                             ) : (

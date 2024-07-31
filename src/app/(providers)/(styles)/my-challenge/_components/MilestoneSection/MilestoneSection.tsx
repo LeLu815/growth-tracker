@@ -31,7 +31,7 @@ function MilestoneSection({
   challengeId,
 }: PropsWithChildren<MilestoneSectionProps>) {
   const {
-    data: currentUserRoutineDoneDaily,
+    data: currentUserRoutineDoneDaily = [],
     isPending: routineDoneDailyPending,
     isError: routineDoneDailyError,
   } = useQuery({
