@@ -43,7 +43,6 @@ export async function GET(req: NextRequest) {
             content: `${dataListElement.nickname} 님  ${dataListElement.goal} 챌린지의 다음 마일스톤을 수정 및 생성할 수 있는 기간이  ${dataListElement.days_remaining}일 남았습니다.`,
           },
         ])
-        .select()
 
       if (error) {
         throw new Error(error.message)
