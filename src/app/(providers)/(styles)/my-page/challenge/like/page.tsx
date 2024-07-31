@@ -8,7 +8,7 @@ import axios from "axios"
 
 import Challenge from "@/app/(providers)/(styles)/my-page/_component/Challenge"
 
-import { MyChallengeType } from "../../../../../../../types/myChallengeList"
+import { MyChallengeType } from "../../../../../../../types/myChallengeList.type"
 
 function Page() {
   const { me } = useAuth()
@@ -29,7 +29,6 @@ function Page() {
   }
 
   const handleMoveDetail = (id: string) => {
-    debugger
     router.push(`/challenge/${id}`)
   }
 

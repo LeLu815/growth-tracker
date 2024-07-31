@@ -49,6 +49,7 @@ export default function Home() {
       })
     }
   }
+
   return (
     <main className="mx-auto mt-10 flex max-w-[400px] flex-col items-center justify-center gap-10 rounded-[20px] bg-white px-3 py-12 text-black">
       {isInitialized && (
