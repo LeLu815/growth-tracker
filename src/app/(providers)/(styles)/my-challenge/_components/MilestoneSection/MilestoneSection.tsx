@@ -120,7 +120,7 @@ function MilestoneSection({
             <p className="mt-5">오늘은 할 일이 없어요</p>
           ) : (
             <div>
-              <button onClick={toggleVisibility} className="mt-5">
+              <button onClick={toggleVisibility} className="mt-5 font-bold">
                 {isVisible ? "숨기기" : "시행할 루틴 확인"}
               </button>
               {isVisible && (
