@@ -3,23 +3,23 @@ import { createClient } from "@/supabase/client"
 import { createPGClient } from "@/supabase/pgClient"
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url)
-  const token = String(searchParams.get("token")) || ""
+  // const { searchParams } = new URL(req.url)
+  // const token = String(searchParams.get("token")) || ""
   const supabase = createClient()
 
-  if (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY !== token) {
-    await supabase.from("log_scheduler").insert([
-      {
-        message: `토큰 불일치 : [${token}]`,
-      },
-    ])
-
-    return NextResponse.json({
-      status: 400,
-      message: "토큰이 불일치합니다.",
-      error: null,
-    })
-  }
+  // if (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY !== token) {
+  //   await supabase.from("log_scheduler").insert([
+  //     {
+  //       message: `토큰 불일치 : [${token}]`,
+  //     },
+  //   ])
+  //
+  //   return NextResponse.json({
+  //     status: 400,
+  //     message: "토큰이 불일치합니다.",
+  //     error: null,
+  //   })
+  // }
 
   const pgClient = createPGClient()
   const userIdList = []
