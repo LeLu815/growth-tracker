@@ -52,6 +52,7 @@ function MilestoneCreateInfoController({
   )
   const { setData } = useMilestoneCreateStore()
 
+  // 여기가 문제의 원인
   const { minCountForSuccess, wholeActualCount, wholePeriod } =
     calculateDayInfo({
       dayChecks: formatingDayList(dayChecks),
