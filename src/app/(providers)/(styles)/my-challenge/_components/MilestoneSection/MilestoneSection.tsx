@@ -53,6 +53,11 @@ function MilestoneSection({
   }, [])
 
   const [targetRDDId, setTargetRDDId] = useState("")
+  const [isVisible, setIsVisible] = useState(false)
+
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible)
+  }
   if (routineDoneDailyPending || routineDonePending) {
     return <div>로딩 중</div>
   }
@@ -114,33 +119,40 @@ function MilestoneSection({
           }) ? (
             <p className="mt-5">오늘은 할 일이 없어요</p>
           ) : (
-            <div className="mt-5 flex flex-col gap-y-3">
-              {milestone.routines?.map((routine) => {
-                if (routine.milestone_id == milestone.id) {
-                  return (
-                    <div key={routine.id} className="flex justify-between">
-                      <p>루틴: {routine.content}</p>
-                      <RoutineCheckBox
-                        routines={milestone.routines}
-                        challengeId={challengeId}
-                        createdAt={CURRENT_DATE}
-                        milestoneId={milestone.id}
-                        userId={userId}
-                        routineId={routine.id}
-                        routineDoneDailyId={targetRDDId}
-                        routineDone={RoutineDone}
-                      />
-                    </div>
-                  )
-                }
-              })}
-              <DiarySection
-                milestoneId={milestone.id}
-                currentUserRoutineDoneDaily={currentUserRoutineDoneDaily}
-                createdAt={CURRENT_DATE}
-                challengeId={challengeId}
-                routineDoneDailyId={targetRDDId}
-              />
+            <div>
+              <button onClick={toggleVisibility} className="mt-5">
+                {isVisible ? "숨기기" : "시행할 루틴 확인"}
+              </button>
+              {isVisible && (
+                <div className="mt-5 flex flex-col gap-y-3">
+                  {milestone.routines?.map((routine) => {
+                    if (routine.milestone_id == milestone.id) {
+                      return (
+                        <div key={routine.id} className="flex justify-between">
+                          <p>루틴: {routine.content}</p>
+                          <RoutineCheckBox
+                            routines={milestone.routines}
+                            challengeId={challengeId}
+                            createdAt={CURRENT_DATE}
+                            milestoneId={milestone.id}
+                            userId={userId}
+                            routineId={routine.id}
+                            routineDoneDailyId={targetRDDId}
+                            routineDone={RoutineDone}
+                          />
+                        </div>
+                      )
+                    }
+                  })}
+                  <DiarySection
+                    milestoneId={milestone.id}
+                    currentUserRoutineDoneDaily={currentUserRoutineDoneDaily}
+                    createdAt={CURRENT_DATE}
+                    challengeId={challengeId}
+                    routineDoneDailyId={targetRDDId}
+                  />
+                </div>
+              )}
             </div>
           )}
         </>

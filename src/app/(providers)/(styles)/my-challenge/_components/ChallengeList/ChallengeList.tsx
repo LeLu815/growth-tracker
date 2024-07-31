@@ -9,7 +9,10 @@ import { useQuery } from "@tanstack/react-query"
 import { format, startOfDay } from "date-fns"
 import { ko } from "date-fns/locale"
 
-import { StructuredChallengeType } from "../../../../../../../types/supabase.type"
+import {
+  StructuredChallengeType,
+  StructuredMilestoneType,
+} from "../../../../../../../types/supabase.type"
 import { MyChallengePageContext } from "../../context"
 import MilestoneSection from "../MilestoneSection"
 
@@ -72,30 +75,36 @@ function ChallengeList() {
     // 마일스톤을 화면에 표시해주는 함수
     const displayEachMilestoneItem = (challenge: StructuredChallengeType) => {
       return challenge.milestones?.map((milestone, index) => {
-        // 요일 필터링
-        const milestoneDoDays: string[] = []
-        if (milestone.is_sun) {
-          milestoneDoDays.push(DAYS_OF_WEEK[0])
-        }
-        if (milestone.is_mon) {
-          milestoneDoDays.push(DAYS_OF_WEEK[1])
-        }
-        if (milestone.is_tue) {
-          milestoneDoDays.push(DAYS_OF_WEEK[2])
-        }
-        if (milestone.is_wed) {
-          milestoneDoDays.push(DAYS_OF_WEEK[3])
-        }
-        if (milestone.is_thu) {
-          milestoneDoDays.push(DAYS_OF_WEEK[4])
-        }
-        if (milestone.is_fri) {
-          milestoneDoDays.push(DAYS_OF_WEEK[5])
-        }
-        if (milestone.is_sat) {
-          milestoneDoDays.push(DAYS_OF_WEEK[6])
-        }
+        // 요일 필터링 작업 위해 마일스톤 시행 요일이 담긴 배열 형성해주는 함수
+        const generatemilestoneDoDaysArray = (
+          milestone: StructuredMilestoneType
+        ) => {
+          const milestoneDoDays: string[] = []
+          if (milestone.is_sun) {
+            milestoneDoDays.push(DAYS_OF_WEEK[0])
+          }
+          if (milestone.is_mon) {
+            milestoneDoDays.push(DAYS_OF_WEEK[1])
+          }
+          if (milestone.is_tue) {
+            milestoneDoDays.push(DAYS_OF_WEEK[2])
+          }
+          if (milestone.is_wed) {
+            milestoneDoDays.push(DAYS_OF_WEEK[3])
+          }
+          if (milestone.is_thu) {
+            milestoneDoDays.push(DAYS_OF_WEEK[4])
+          }
+          if (milestone.is_fri) {
+            milestoneDoDays.push(DAYS_OF_WEEK[5])
+          }
+          if (milestone.is_sat) {
+            milestoneDoDays.push(DAYS_OF_WEEK[6])
+          }
 
+          return milestoneDoDays
+        }
+        const milestoneDoDays = generatemilestoneDoDaysArray(milestone)
         if (milestone.challenge_id == challenge.id) {
           const milestoneStartDate = parseInt(
             milestone.start_at?.replace(/-/g, "") || "0"
@@ -133,7 +142,6 @@ function ChallengeList() {
         const challengeEndDate = parseInt(
           challenge.end_at?.replace(/-/g, "") || "0"
         )
-
         if (
           CURRENT_DATE_NUMBER >= challengeStartDate &&
           CURRENT_DATE_NUMBER <= challengeEndDate
@@ -159,7 +167,6 @@ function ChallengeList() {
           <p>현재 내 아이디: </p>
           <p>{me?.id}</p>
         </div>
-        <p>테스트는 7월 23일 24일로 해보시면 잘 됩니당</p>
         <div className="flex gap-4">
           <p>
             오늘 날짜:{" "}
