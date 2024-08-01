@@ -4,17 +4,18 @@ import {
   format,
   getDay,
 } from "date-fns"
-import { useContext } from "react"
 import { DateRange } from "react-day-picker"
-
-import { RangeContext } from "./calender"
-import PortionStickBar from "./portionStickBar"
 
 interface CalculateDayInfoType {
   dayChecks: number[]
+  minPercentForsuccess: string
+  range: DateRange | undefined
 }
-function CalculateDayInfo({ dayChecks }: CalculateDayInfoType) {
-  const { range } = useContext(RangeContext)
+function calculateDayInfo({
+  dayChecks,
+  minPercentForsuccess,
+  range,
+}: CalculateDayInfoType) {
   const formatDate = (date: Date | undefined) => {
     return date ? format(date, "yyyy-MM-dd") : "날짜 없음"
   }
@@ -35,23 +36,17 @@ function CalculateDayInfo({ dayChecks }: CalculateDayInfoType) {
     return 0
   }
 
-  return (
-    <div>
-      <p>시작 : {formatDate(range?.from)}</p>
-      <p>끝 : {formatDate(range?.to)}</p>
-      <p>총 기간 : {calculateTotalDays(range)}일</p>
-      <p>총 횟수 : {calculateSpecificWeekdays(range, dayChecks)}번</p>
-      <p>
-        성공을 위한 최소 횟수 :{" "}
-        {Math.ceil(calculateSpecificWeekdays(range, dayChecks) / 2)}회
-      </p>
-      <PortionStickBar
-        currentValue={calculateTotalDays(range)}
-        prevValue={[2,5,3]}
-        nextValue={[20]}
-      />
-    </div>
-  )
+  return {
+    start: formatDate(range?.from),
+    end: formatDate(range?.to),
+    wholePeriod: calculateTotalDays(range),
+    wholeActualCount: calculateSpecificWeekdays(range, dayChecks),
+    minCountForSuccess: Math.ceil(
+      (calculateSpecificWeekdays(range, dayChecks) *
+        parseInt(minPercentForsuccess)) /
+        100
+    ),
+  }
 }
 
-export default CalculateDayInfo
+export default calculateDayInfo
