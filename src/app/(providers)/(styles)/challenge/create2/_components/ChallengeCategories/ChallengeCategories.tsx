@@ -1,11 +1,12 @@
 "use client"
 
 import { useState } from "react"
+import useChallengeCreateStore from "@/store/challengeCreate.store"
 
 import Button from "@/components/Button"
 import TrophyIcon from "@/components/Icon/TrophyIcon"
 
-import ChallengeTitle from "../ChallengeTitle"
+import ChallengePageTitle from "../ChallengePageTitle"
 
 interface ChallengeCategoriesProps {
   categories: string[]
@@ -21,13 +22,15 @@ function ChallengeCategories({
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories[0]
   )
+  const { setCategory } = useChallengeCreateStore()
   return (
     <div>
-      <ChallengeTitle
+      <ChallengePageTitle
         title={title}
         step={1}
         allStepCount={4}
         titleHidden={false}
+        handleClickGoBack={() => {}}
       />
       <p>어떤 챌린지에 도전하세요?</p>
       <TrophyIcon width="153" height="152" />
@@ -44,7 +47,14 @@ function ChallengeCategories({
           </li>
         ))}
       </ul>
-      <Button onClick={() => handleChangeStep(2)}>다음</Button>
+      <Button
+        onClick={() => {
+          handleChangeStep(2)
+          setCategory(selectedCategory)
+        }}
+      >
+        다음
+      </Button>
     </div>
   )
 }

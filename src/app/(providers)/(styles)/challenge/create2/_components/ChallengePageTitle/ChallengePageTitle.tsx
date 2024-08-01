@@ -1,21 +1,23 @@
 import ArrowLeftIcon from "@/components/Icon/ArrowLeftIcon"
 
-interface ChallengeTitleProps {
+interface ChallengePageTitleProps {
   title: string
   step: number
   allStepCount: number
   titleHidden: boolean
+  handleClickGoBack: (index?: number) => void
 }
-function ChallengeTitle({
+function ChallengePageTitle({
   title,
   step,
   allStepCount,
   titleHidden,
-}: ChallengeTitleProps) {
+  handleClickGoBack,
+}: ChallengePageTitleProps) {
   return (
     <div>
       <div>
-        <ArrowLeftIcon />
+        <ArrowLeftIcon onClick={() => handleClickGoBack(1)} />
         {!titleHidden && <h1>{title}</h1>}
       </div>
       <ul className="flex">
@@ -24,7 +26,7 @@ function ChallengeTitle({
             .fill(0)
             .map((_, index) => (
               <li
-                className={`h-[14px] w-[14px] rounded-full ${index + 1 === step ? "bg-black" : "bg-slate-300"}`}
+                className={`h-[14px] w-[14px] rounded-full ${index + 1 <= step ? "bg-black" : "bg-slate-300"}`}
                 key={index}
               ></li>
             ))}
@@ -33,4 +35,4 @@ function ChallengeTitle({
   )
 }
 
-export default ChallengeTitle
+export default ChallengePageTitle

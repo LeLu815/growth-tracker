@@ -1,14 +1,20 @@
 "use client"
 
 import { useState } from "react"
+import useChallengeCreateStore, {
+  categories,
+} from "@/store/challengeCreate.store"
+import useMilestoneCreateStore from "@/store/milestoneCreate.store"
 
 import ChallengeCategories from "../ChallengeCategories"
+import ChallengeName from "../ChallengeName/ChallengeName"
 import ChallengeSelectPeriod from "../ChallengeSelectPeriod"
-
-export const categories = ["건강", "생활", "공부", "취미"]
+import MilestoneCreate from "../MilestoneCreate"
 
 function CreateChallenge() {
   const [stepNum, setStepNum] = useState<number>(1)
+  const { data } = useMilestoneCreateStore()
+  const { goal } = useChallengeCreateStore()
   const handleChangeStep = (step: number) => {
     setStepNum(step)
   }
@@ -30,11 +36,30 @@ function CreateChallenge() {
           />
         )
       case 3:
-        return "챌린지 생성"
+        return (
+          <ChallengeName
+            title="챌린지 생성"
+            handleChangeStep={handleChangeStep}
+            challenge_title={goal}
+          />
+        )
       case 4:
-        return "루틴 생성"
+        return (
+          <MilestoneCreate
+            status={data.length === 0 ? "config" : "switch"}
+            handleChangeStep={handleChangeStep}
+            title="루틴 생성"
+          />
+        )
       default:
-        return "Default Title"
+        // 혹시모를 디폴트는 최초 설정으로
+        return (
+          <ChallengeCategories
+            categories={categories}
+            handleChangeStep={handleChangeStep}
+            title="챌린지 생성"
+          />
+        )
     }
   }
 
