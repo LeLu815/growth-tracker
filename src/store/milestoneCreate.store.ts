@@ -30,7 +30,7 @@ interface MilestoneState {
   currentSlideId: string
   setCurrentSlideId: Dispatch<SetStateAction<string>>
 }
-const initialData: MilestoneType[] = []
+export const initialData: MilestoneType[] = []
 export const useMilestoneCreateStore = create<MilestoneState>((set) => ({
   data: initialData,
   setData: (setData) =>

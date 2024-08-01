@@ -222,7 +222,51 @@ function ChallengeCreate({ challenge_id }: ChallengeCreateProps) {
         {createStep === 2 && (
           <div className="flex justify-between">
             <button onClick={() => setCreateStep(1)}>이전</button>
-            <button>챌린지 생성</button>
+            <button
+              disabled={data.length === 0}
+              className={`rounded border bg-white px-2 py-1 active:brightness-75 disabled:bg-slate-500`}
+              onClick={() => {
+                challengeCreateMutate({
+                  challenge: {
+                    category: catetegory,
+                    user_id: me?.id || "",
+                    day_cnt: calculateTotalDays(range),
+                    end_at: convertDateFormat(
+                      formatDateYearMonthDate(range?.to)
+                    ),
+                    goal: goal,
+                    is_secret: false,
+                    start_at: convertDateFormat(
+                      formatDateYearMonthDate(range?.from)
+                    ),
+                  },
+                  milestone: data.map((obj) =>
+                    produce(
+                      obj,
+                      (
+                        draft: Omit<MilestoneType, "routines" | "id"> & {
+                          routines?: MilestoneType["routines"]
+                          id?: MilestoneType["id"]
+                        }
+                      ) => {
+                        draft.start_at = convertDateFormat(draft.start_at)
+                        draft.end_at = convertDateFormat(draft.end_at)
+                        delete draft.routines
+                        delete draft.id
+                      }
+                    )
+                  ),
+                  routine: data.map((obj) =>
+                    obj.routines.map((routine) => ({
+                      content: routine.content,
+                      milestone_id: obj.id,
+                    }))
+                  ),
+                })
+              }}
+            >
+              챌린지 생성
+            </button>
           </div>
         )}
       </div>
@@ -265,4 +309,23 @@ export function createDateRange(
     from: start,
     to: end,
   }
+}
+
+export function convertDateFormat(dateStr: string): string {
+  // 입력이 "YY.MM.DD." 형식인지 확인
+  const datePattern = /^\d{2}\.\d{2}\.\d{2}\.$/
+  if (!datePattern.test(dateStr)) {
+    return dateStr
+  }
+
+  // 날짜 문자열 파싱
+  const [year, month, day] = dateStr
+    .split(".")
+    .map((part) => parseInt(part, 10))
+
+  // 연도를 2000년대 기준으로 변환
+  const fullYear = 2000 + year
+
+  // 원하는 형식으로 변환하여 반환
+  return `${fullYear}-${month}-${day}`
 }

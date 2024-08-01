@@ -40,7 +40,7 @@ export interface POSTchallengeArgumentProps {
     | "day_cnt"
     | "category"
   >
-  milestone: (MilestoneRequiredType & MilestonePartialType)[]
+  milestone: Omit<MilestoneRequiredType & MilestonePartialType, "routines">[]
   routine: Pick<RoutineType, "content" | "milestone_id">[][]
 }
 
@@ -59,6 +59,7 @@ export interface PUTchallengeArgumentProps {
 
 // 챌린지 생성함수
 export const POSTchallenge = async (params: POSTchallengeArgumentProps) => {
+  console.log("params :", params)
   const postResponse = await axios.post("/api/challenge", {
     challenge: params.challenge,
     milestone: params.milestone,

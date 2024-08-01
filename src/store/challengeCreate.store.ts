@@ -10,12 +10,12 @@ interface RangeState {
   setDayChecks: Dispatch<SetStateAction<boolean[]>>
 }
 const defaultMonth = new Date()
-const defaultSelected: DateRange = {
+export const defaultSelected: DateRange = {
   from: defaultMonth,
   to: addDays(defaultMonth, 6),
 }
 
-const WEEK_DAY_LIST = ["일", "월", "화", "수", "목", "금", "토"]
+export const WEEK_DAY_LIST = ["일", "월", "화", "수", "목", "금", "토"]
 export const useChallengeCreateStore = create<RangeState>((set) => ({
   range: defaultSelected,
   setRange: (range) => set({ range }),
