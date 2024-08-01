@@ -131,7 +131,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "CHALLENGE_COMMENT_LIKE_comment_id_fkey"
+            foreignKeyName: "challenge_comment_like_comment_id_fkey"
             columns: ["comment_id"]
             isOneToOne: false
             referencedRelation: "challenge_comment"
@@ -149,16 +149,19 @@ export type Database = {
       challenge_like: {
         Row: {
           challenge_id: string
+          created_at: string
           id: string
           user_id: string
         }
         Insert: {
           challenge_id: string
+          created_at?: string
           id?: string
           user_id: string
         }
         Update: {
           challenge_id?: string
+          created_at?: string
           id?: string
           user_id?: string
         }
@@ -217,6 +220,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      log_scheduler: {
+        Row: {
+          created_at: string
+          id: number
+          message: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          message?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          message?: string | null
+        }
+        Relationships: []
       }
       milestone: {
         Row: {
@@ -432,6 +453,48 @@ export type Database = {
           },
         ]
       }
+      users_notice: {
+        Row: {
+          challenge_id: string | null
+          content: string
+          created_at: string
+          id: number
+          is_view: boolean
+          user_id: string | null
+        }
+        Insert: {
+          challenge_id?: string | null
+          content: string
+          created_at?: string
+          id?: number
+          is_view?: boolean
+          user_id?: string | null
+        }
+        Update: {
+          challenge_id?: string | null
+          content?: string
+          created_at?: string
+          id?: number
+          is_view?: boolean
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "users_alarm_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "users_notice_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenge"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -470,6 +533,18 @@ export type Database = {
           end_at: string
           milestones: Json
         }[]
+      }
+      increment_challenge_like_cnt: {
+        Args: {
+          request_challenge_id: string
+        }
+        Returns: undefined
+      }
+      increment_like_cnt: {
+        Args: {
+          request_challenge_id: string
+        }
+        Returns: number
       }
     }
     Enums: {

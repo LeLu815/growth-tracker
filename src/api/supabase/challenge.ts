@@ -1,11 +1,10 @@
 import axios from "axios"
 
-import { Database } from "../../../types/supabase"
-
-// 테이블 상에 존재하는 데이터 타입
-type ChallengeType = Database["public"]["Tables"]["challenge"]["Row"]
-type MilestoneType = Database["public"]["Tables"]["milestone"]["Row"]
-export type RoutineType = Database["public"]["Tables"]["routine"]["Row"]
+import {
+  ChallengeType,
+  MilestoneType,
+  RoutineType,
+} from "../../../types/supabase.type"
 
 // 필요없는 타입 제외한 milestone 타입
 export type MilestoneDefaultType = Pick<
@@ -44,6 +43,20 @@ export interface POSTchallengeArgumentProps {
   milestone: (MilestoneRequiredType & MilestonePartialType)[]
   routine: Pick<RoutineType, "content" | "milestone_id">[][]
 }
+
+// 구조화 챌린지 가져오기 함수 인자 타입
+export interface GetstructuredChallengeArgumentProps {
+  "user-id": string
+}
+
+// 챌린지 디테일 업데이트 함수 인자 타입
+export interface PUTchallengeArgumentProps {
+  "challenge-id": string
+  milestoneIds: ChallengeType["id"][]
+  milestone: (MilestoneRequiredType & RemainingType)[]
+  routine: Pick<RoutineType, "content" | "milestone_id">[][]
+}
+
 // 챌린지 생성함수
 export const POSTchallenge = async (params: POSTchallengeArgumentProps) => {
   const postResponse = await axios.post("/api/challenge", {
@@ -54,13 +67,6 @@ export const POSTchallenge = async (params: POSTchallengeArgumentProps) => {
   return postResponse
 }
 
-// 챌린지 디테일 업데이트 함수 인자 타입
-export interface PUTchallengeArgumentProps {
-  "challenge-id": string
-  milestoneIds: ChallengeType["id"][]
-  milestone: (MilestoneRequiredType & RemainingType)[]
-  routine: Pick<RoutineType, "content" | "milestone_id">[][]
-}
 // 챌린지 디테일 업데이트 함수
 export const PUTchallenge = async (params: PUTchallengeArgumentProps) => {
   const putResponse = await axios.put(

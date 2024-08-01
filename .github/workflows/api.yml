@@ -1,0 +1,17 @@
+name: Scheduled Vercel Cron Job
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '15 1 * * *'
+
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Vercel API
+        run: |
+          curl -X GET "https://growth-tracker-ecru.vercel.app/api/scheduler"

@@ -37,6 +37,13 @@ function NewsfeedPage() {
     })
   }
 
+  const handleOpenCalendarModal = () => {
+    modal.open({
+      type: "calendar",
+      onConfirm: () => console.log("확인 버튼 클릭 시 적용될 로직 넣어주세요"),
+    })
+  }
+
   const router = useRouter()
 
   const {
@@ -81,6 +88,7 @@ function NewsfeedPage() {
 
       <button onClick={handleOpenAlertModal}>알림 모달 열기</button>
       <button onClick={handleOpenConfirmModal}>확인 모달 열기</button>
+      <button onClick={handleOpenCalendarModal}>캘린더 모달 열기</button>
 
       {/* 검색 필터 */}
       <SearchFilter onSearch={handleSearch} />

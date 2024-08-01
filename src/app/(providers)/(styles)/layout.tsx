@@ -1,6 +1,8 @@
 import { PropsWithChildren } from "react"
 import Link from "next/link"
 
+import Notice from "@/app/(providers)/_components/Notice/Notice"
+
 export default function StylesLayout({ children }: PropsWithChildren) {
   const bottomNavItems = [
     {
@@ -24,6 +26,7 @@ export default function StylesLayout({ children }: PropsWithChildren) {
     <div>
       {children}
       <div className="h-[80px] w-full"></div>
+      <Notice></Notice>
       <nav className="fixed bottom-0 h-[60px] w-full bg-white">
         <ul className="mx-auto flex max-w-[800px] items-center justify-between">
           {bottomNavItems.map((item) => (
