@@ -41,6 +41,7 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { "challenge-id": string } }
 ) {
+
   const challengeId = params["challenge-id"]
   const { searchParams } = new URL(req.url)
   const userId = searchParams.get("userId")

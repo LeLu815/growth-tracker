@@ -22,6 +22,7 @@ export type ChallengeType = {
   id: string
   created_at: string
   user_id: string
+  nickname: string
   goal: string
   like_cnt: number
   template_cnt: number
