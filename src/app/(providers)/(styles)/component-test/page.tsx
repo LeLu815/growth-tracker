@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 
+import BottomNavigation from "@/components/BottomNavigation"
 import Button from "@/components/Button"
 import Chip from "@/components/Chip"
 import Page from "@/components/Page"
@@ -96,6 +97,8 @@ function ComponentTestPage() {
       >
         셀렉트 버튼
       </Button>
+
+      <BottomNavigation />
     </Page>
   )
 }

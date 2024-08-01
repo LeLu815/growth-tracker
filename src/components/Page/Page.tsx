@@ -11,7 +11,7 @@ const Page = ({
   isTitleHidden,
 }: PropsWithChildren<PageProps>) => {
   return (
-    <main className="container mx-auto p-4 sm:p-8 md:max-w-[640px]">
+    <main className="container mx-auto min-w-[320px] p-4 sm:p-8 md:max-w-[640px]">
       <h1
         className={`mb-6 font-semibold ${isTitleHidden ? "hidden" : ""} text-lg md:text-2xl lg:text-3xl xl:text-4xl`}
       >
