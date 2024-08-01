@@ -12,8 +12,8 @@ export type MilestoneType = {
   start_at: string
   end_at: string
   challenge_id: string
-  total_cnt: number
   total_day: number
+  total_cnt: number
   success_requirement_cnt: number
   is_fri: boolean
   is_mon: boolean

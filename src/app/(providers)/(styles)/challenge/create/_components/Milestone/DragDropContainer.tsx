@@ -10,11 +10,11 @@ import {
   Droppable,
   DropResult,
 } from "@hello-pangea/dnd"
+import { addDays, format, parseISO } from "date-fns"
 import { produce } from "immer"
 import { DateRange } from "react-day-picker"
 
-import MilestoneSwiper from "@/app/(providers)/(styles)/test/create/_components/MilestoneSwiper"
-
+import MilestoneSwiper from "../MilestoneSwiper"
 import MilestoneComponent from "./MilestoneComponent"
 import MilestoneComponetMobile from "./MilestoneComponetMobile"
 import MilestoneCreateInfoController from "./MilestoneCreateInfoController"
@@ -31,6 +31,7 @@ function DragDropContainer({
 }: DragDropContainerProps) {
   const { data, setData, currentSlideId } = useMilestoneCreateStore()
 
+  range?.from
   // source: 드래그된 항목의 출발지 정보
   // destination: 드롭된 항목의 목적지 정보
   // type: 드래그 앤 드롭 작업의 타입(동일한 드래그 앤 드롭 컨텍스트 내에서 여러 유형의 작업을 구분할 수 있음)
@@ -46,7 +47,17 @@ function DragDropContainer({
       const [removed] = newMilestonesOrder.splice(source.index, 1)
       newMilestonesOrder.splice(destination.index, 0, removed)
 
-      setData(newMilestonesOrder)
+      // setData(newMilestonesOrder)
+
+      setData(
+        updateDataBetweenSwitchDays(
+          newMilestonesOrder,
+          source.index,
+          destination.index,
+          range?.from
+        )
+      )
+
       return
     }
 
@@ -98,15 +109,6 @@ function DragDropContainer({
 
       setData(newData)
     }
-  }
-
-  // 마일스톤 생성함수
-  const createMilestone = (milestoneObj: MilestoneType) => {
-    setData((prev) =>
-      produce(prev, (draft) => {
-        draft.push(milestoneObj)
-      })
-    )
   }
 
   // 마일스톤 삭제 함수
@@ -189,3 +191,33 @@ function DragDropContainer({
 }
 
 export default DragDropContainer
+
+// 도미노 업데이트 함수 (순서를 변경하면 변경된 시작점부터 끝점까지 날짜를 다시 계산한다.)
+export function updateDataBetweenSwitchDays(
+  data: MilestoneType[],
+  start_index: number,
+  end_index: number,
+  challenge_start: Date | undefined
+): MilestoneType[] {
+  return produce(data, (draft) => {
+    // 순서비교
+    const [first_index, later_index] = [start_index, end_index].sort()
+
+    for (let i = first_index; i <= later_index; i++) {
+      if (i === 0) {
+        if (challenge_start) {
+          const newEndAt = addDays(challenge_start, draft[i].total_day)
+          draft[i].start_at = format(challenge_start, "yyyy-MM-dd")
+          draft[i].end_at = format(newEndAt, "yyyy-MM-dd")
+        }
+      } else {
+        const previousEndAt = parseISO(draft[i - 1].end_at)
+        const newStartAt = addDays(previousEndAt, 1)
+        const newEndAt = addDays(newStartAt, draft[i].total_day - 1)
+
+        draft[i].start_at = format(newStartAt, "yyyy-MM-dd")
+        draft[i].end_at = format(newEndAt, "yyyy-MM-dd")
+      }
+    }
+  })
+}

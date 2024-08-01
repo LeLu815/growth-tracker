@@ -19,8 +19,8 @@ import {
   calculateTotalDays,
   formatDateYearMonthDate,
 } from "../calender/calender"
+import ChallengeInfoBox from "./Cate"
 import CategorySelect from "./CategorySelect"
-import ChallengeInfoBox from "./ChallengeInfoBox"
 import CreateStep from "./CreateStep"
 import DragDropContainer from "./Milestone/DragDropContainer"
 
@@ -53,138 +53,6 @@ function ChallengeCreate({ challenge_id }: ChallengeCreateProps) {
 
   // auth 데이터
   const { me, userData } = useAuth()
-
-  const INITIAL_DATA = {
-    challenge: {
-      category: "",
-      day_cnt: 40,
-      end_at: "2024-7-24",
-      start_at: "2024-7-23",
-      goal: "챌린지 생성 테스트 이인",
-      is_secret: false,
-      user_id: me?.id!,
-    },
-    milestone: [
-      {
-        challenge_id: "",
-        end_at: "2024-7-24",
-        start_at: "2024-7-23",
-        success_requirement_cnt: 10,
-        total_cnt: 10,
-        total_day: 10,
-        is_fri: true,
-        is_mon: true,
-        is_sat: true,
-        is_sun: true,
-        is_thu: true,
-        is_tue: true,
-        is_wed: false,
-      },
-      {
-        challenge_id: "",
-        end_at: "2024-7-24",
-        start_at: "2024-7-23",
-        success_requirement_cnt: 20,
-        total_cnt: 20,
-        total_day: 20,
-        is_fri: true,
-        is_mon: true,
-        is_sat: true,
-        is_sun: true,
-        is_thu: true,
-        is_tue: false,
-        is_wed: false,
-      },
-      {
-        challenge_id: "",
-        end_at: "2024-7-24",
-        start_at: "2024-7-23",
-        success_requirement_cnt: 30,
-        total_cnt: 30,
-        total_day: 30,
-        is_fri: true,
-        is_mon: true,
-        is_sat: true,
-        is_sun: true,
-        is_thu: false,
-        is_tue: false,
-        is_wed: false,
-      },
-      {
-        challenge_id: "",
-        end_at: "2024-7-24",
-        start_at: "2024-7-23",
-        success_requirement_cnt: 40,
-        total_cnt: 40,
-        total_day: 40,
-        is_fri: true,
-        is_mon: true,
-        is_sat: true,
-        is_sun: false,
-        is_thu: false,
-        is_tue: false,
-        is_wed: false,
-      },
-    ],
-    routine: [
-      [
-        {
-          content: "10 - 루틴 생성 테스트 이인 ddlsmaa",
-          milestone_id: "",
-        },
-        {
-          content: "10 - 루틴 생성 테스트 이인 ef;ka;sc",
-          milestone_id: "",
-        },
-        {
-          content: "10 - 루틴 생성 테스트 이인 12r1f4tfe",
-          milestone_id: "",
-        },
-      ],
-      [
-        {
-          content: "20 - 루틴 생성 테스트 이인 ddlsmaa",
-          milestone_id: "",
-        },
-        {
-          content: "20 - 루틴 생성 테스트 이인 ef;ka;sc",
-          milestone_id: "",
-        },
-        {
-          content: "20 - 루틴 생성 테스트 이인 12r1f4tfe",
-          milestone_id: "",
-        },
-      ],
-      [
-        {
-          content: "30 - 루틴 생성 테스트 이인 ddlsmaa",
-          milestone_id: "",
-        },
-        {
-          content: "30 - 루틴 생성 테스트 이인 ef;ka;sc",
-          milestone_id: "",
-        },
-        {
-          content: "30 - 루틴 생성 테스트 이인 12r1f4tfe",
-          milestone_id: "",
-        },
-      ],
-      [
-        {
-          content: "40 - 루틴 생성 테스트 이인 ddlsmaa",
-          milestone_id: "",
-        },
-        {
-          content: "40 - 루틴 생성 테스트 이인 ef;ka;sc",
-          milestone_id: "",
-        },
-        {
-          content: "40 - 루틴 생성 테스트 이인 12r1f4tfe",
-          milestone_id: "",
-        },
-      ],
-    ],
-  }
 
   // 마일스톤 생성함수
   const createMilestone = (milestoneObj: MilestoneType) => {

@@ -54,8 +54,6 @@ function MilestoneCreateInfoController({
       })()
     : milestonePeriods[3]
 
-  console.log("currentMilestoneObj :", currentMilestoneObj)
-
   const handleChangeStartEndPeriod = (milestonePeriod: {
     name: string
     value: string
