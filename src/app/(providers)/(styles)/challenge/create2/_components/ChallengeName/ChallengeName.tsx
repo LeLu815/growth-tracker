@@ -43,7 +43,7 @@ function ChallengeName({
           setGoal(inputValue)
         }}
       >
-        다음
+        완료
       </Button>
     </div>
   )

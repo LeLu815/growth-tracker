@@ -1,21 +1,26 @@
+import { useState } from "react"
+
 import ChallengePageTitle from "../ChallengePageTitle"
 import MilestoneCreateConfig from "./MilestoneCreateConfig"
 import MilestoneCreateSwitch from "./MilestoneCreateSwitch"
 
-interface MilestoneCreateProps {
+export interface MilestoneCreateProps {
   status: "config" | "switch"
   title: string
   handleChangeStep: (step: number) => void
 }
-
 function MilestoneCreate({
   status,
   title,
   handleChangeStep,
 }: MilestoneCreateProps) {
+  const [showComponent, setShowCompoent] =
+    useState<MilestoneCreateProps["status"]>(status)
+
+  console.log("showComponent:", showComponent)
   return (
     <div>
-      {status === "config" && (
+      {showComponent === "config" && (
         <>
           <ChallengePageTitle
             title={title}
@@ -24,10 +29,14 @@ function MilestoneCreate({
             titleHidden={false}
             handleClickGoBack={() => handleChangeStep(3)}
           />
-          <MilestoneCreateConfig />
+          <MilestoneCreateConfig
+            setShowCompoent={(status: MilestoneCreateProps["status"]) =>
+              setShowCompoent(status)
+            }
+          />
         </>
       )}
-      {status === "switch" && (
+      {showComponent === "switch" && (
         <>
           <ChallengePageTitle
             title={title}

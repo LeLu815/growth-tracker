@@ -19,10 +19,10 @@ function ChallengeCategories({
   title,
   handleChangeStep,
 }: ChallengeCategoriesProps) {
+  const { setCategory, category } = useChallengeCreateStore()
   const [selectedCategory, setSelectedCategory] = useState<string>(
-    categories[0]
+    category || categories[0]
   )
-  const { setCategory } = useChallengeCreateStore()
   return (
     <div>
       <ChallengePageTitle
