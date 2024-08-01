@@ -1,12 +1,17 @@
 'use client'
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 function Page() {
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(new Date().toISOString());
+
+
+  useEffect(() => {
+    setDate(new Date().toISOString());
+  }, []);
 
   return (
-      <div>{date.toString()}</div>
+      <div>{date}</div>
   );
 }
 
