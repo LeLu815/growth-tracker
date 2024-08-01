@@ -24,10 +24,12 @@
     "@types/react-transition-group": "^4.4.10",
     "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
+    "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "immer": "^10.1.1",
     "lucide-react": "^0.414.0",
+    "memoize-one": "^6.0.0",
     "next": "14.2.5",
     "node-schedule": "^2.1.1",
     "pg": "^8.12.0",
@@ -41,7 +43,8 @@
     "tailwind-merge": "^2.4.0",
     "tailwind-scrollbar-hide": "^1.1.7",
     "tailwindcss-animate": "^1.0.7",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
