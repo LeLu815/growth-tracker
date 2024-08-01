@@ -13,6 +13,7 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
   const [isLike, setIsLike] = useState(true)
 
   const isLikedByUserId = async (): Promise<boolean> => {
+    debugger
     if (!me) {
       return false
     }
@@ -46,6 +47,7 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
   } = useQuery({
     queryKey: ["challengeLike"],
     queryFn: isLikedByUserId,
+    enabled: !!me, // me가 있을 때만 쿼리 실행
   })
 
   const { mutate: handleLikeMutate } = useMutation({
@@ -64,6 +66,8 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["challengeLike"] })
+      queryClient.invalidateQueries({ queryKey: ["challengeDetail"] })
+
     },
   })
 
@@ -77,8 +81,8 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
   if (isError) return <div>Error loading data</div>
 
   return (
-    <div className={"flex gap-4"}>
-      <div>챌린지 글에 대한 좋아요</div>
+    <div className={"flex w-full justify-end gap-4 pr-10"}>
+      <div>챌린지에 대한 좋아요</div>
       <div onClick={() => (me ? handleLikeMutate() : router.push("/"))}>
         {isLike ? <p>❤️</p> : <p>🤍</p>}
       </div>
