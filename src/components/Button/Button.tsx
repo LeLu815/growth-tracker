@@ -3,12 +3,12 @@ import Link from "next/link"
 import { cva, VariantProps } from "class-variance-authority"
 
 const buttonVariant = cva(
-  "border font-semibold duration-10 transition-all [&+&]:mb-4 box-border sm:hover:pointer-events-none",
+  "border font-semibold duration-10 transition-all [&+&]:mb-4 box-border",
   {
     variants: {
       intent: {
-        primary: "hover:bg-[#2E2E2E] active:bg-[#2E2E2E]",
-        secondary: "text-[#141414] hover:bg-[#E0E0E0] active:bg-[#E0E0E0]",
+        primary: "md:hover:bg-[#2E2E2E] active:bg-[#2E2E2E]",
+        secondary: "text-[#141414] md:hover:bg-[#E0E0E0] active:bg-[#E0E0E0]",
       },
       size: {
         sm: "px-[22px] py-[10px] text-[14px]",
@@ -20,7 +20,7 @@ const buttonVariant = cva(
         contained: "rounded-lg",
         disabled: "text-[#c7c7c7] cursor-not-allowed rounded-lg",
         selected:
-          "bg-[#FFE4D6] text-[#FF7D3D] outline-2 outline-[#FF7D3D] hover:bg-[#FFE4D6] rounded-lg box-border",
+          "bg-[#FFE4D6] text-[#FF7D3D] outline-2 outline-[#FF7D3D] md:hover:bg-[#FFE4D6] rounded-lg box-border",
         rounded: "rounded-full",
         borderless: "border-none",
       },
@@ -74,7 +74,7 @@ const buttonVariant = cva(
       {
         intent: "primary",
         variant: "borderless",
-        className: "hover:bg-white active:bg-white",
+        className: "md:hover:bg-white active:bg-white",
       },
     ],
     defaultVariants: {
