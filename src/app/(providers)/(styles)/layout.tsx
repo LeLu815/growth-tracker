@@ -27,7 +27,7 @@ export default function StylesLayout({ children }: PropsWithChildren) {
       {children}
       <div className="h-[80px] w-full"></div>
       <Notice></Notice>
-      <nav className="fixed bottom-0 h-[60px] w-full bg-white">
+      <nav className="fixed bottom-0 z-50 h-[60px] w-full bg-white">
         <ul className="mx-auto flex max-w-[800px] items-center justify-between">
           {bottomNavItems.map((item) => (
             <li
