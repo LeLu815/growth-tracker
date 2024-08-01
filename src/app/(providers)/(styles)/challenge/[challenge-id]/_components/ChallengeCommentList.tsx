@@ -1,6 +1,7 @@
 "use client"
 
-import { ChangeEvent, FormEvent, useEffect, useState } from "react"
+import { FormEvent, useState } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
@@ -255,6 +256,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   } = useInfiniteQuery({
     queryKey: ["challengeComment"],
     initialPageParam: 0,
+    enabled: !!me, // me가 있을 때만 쿼리 실행
     queryFn: getChallengeCommentList,
     getNextPageParam: (
       lastPage: any,
@@ -286,29 +288,48 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   }
 
   return (
-    <div className={"flex-col gap-4"}>
-      <div className={"text-2xl"}>댓글 목록</div>
-      <form onSubmit={createComment}>
-        <input
-          className={"w-[500px]"}
-          value={content}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setContent(e.target.value)
-          }
-        ></input>
-        <button type={"submit"}>댓글 작성</button>
-      </form>
+    <div className={"flex w-full flex-col items-center gap-4"}>
+      <div className="mx-auto mt-10 w-full rounded-lg border p-4">
+        <form onSubmit={createComment}>
+          <textarea
+            className="w-full resize-none rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="댓글을 입력하세요..."
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          />
+          <div className="mt-2 flex justify-end">
+            <button
+              type="submit"
+              className="rounded-lg bg-[#FFAB81] px-4 py-2 text-white hover:bg-[#FF7D3D]"
+            >
+              댓글 등록
+            </button>
+          </div>
+        </form>
+      </div>
       {data?.map((comment, idx) => {
         const isLastItem = data?.length - 1 === idx
         return (
           <div
-            className={"border border-b-2"}
+            className={
+              "mt-2 flex w-full flex-col gap-4 rounded-lg border p-4 shadow-md"
+            }
             key={comment.id}
             ref={isLastItem ? ref : null}
           >
-            <div className={"flex gap-4"}>
-              <div>유저 이메일 : {comment.email}</div>
-              <div>유저 닉네임 : {comment.nickname}</div>
+            <div className={"flex gap-2"}>
+              <Image
+                width={25}
+                height={25}
+                className={"rounded-full"}
+                alt={"프로필사진"}
+                src={
+                  comment.profile_image_url
+                    ? comment.profile_image_url
+                    : "/image/profileImage.png"
+                }
+              ></Image>
+              <div className={"pt-2"}>{comment.nickname}님</div>
             </div>
             {isUpdate && comment.id === updateCommentId ? (
               <form
@@ -321,16 +342,17 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                 }}
               >
                 <input
+                  className={"border-[1px] border-solid"}
                   value={updateContent}
                   onChange={(e) => setUpdateContent(e.target.value)}
                 />
               </form>
             ) : (
-              <div>내용 : {comment.content}</div>
+              <div>{comment.content}</div>
             )}
 
-            <div className={"flex gap-4"}>
-              종아요 여부 :{" "}
+            <div className={"flex gap-2"}>
+              종아요{" "}
               <div
                 onClick={() =>
                   me
@@ -356,7 +378,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                           content: updateContent,
                         })
                       }}
-                      className={"border border-slate-600"}
+                      className="cursor-pointer rounded-lg bg-[#FFAB81] px-4 py-2 text-white hover:bg-[#FF7D3D]"
                     >
                       수정완료
                     </button>
@@ -367,7 +389,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                         setIsUpdate(false)
                         setUpdateCommentId("")
                       }}
-                      className={"border border-slate-600"}
+                      className="cursor-pointer rounded-lg border bg-white px-4 py-2 text-gray-800 hover:bg-gray-100"
                     >
                       취소
                     </button>
@@ -381,13 +403,13 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                         setIsUpdate(true)
                         setUpdateCommentId(comment.id)
                       }}
-                      className={"border border-slate-600"}
+                      className="cursor-pointer rounded-lg bg-[#FFAB81] px-4 py-2 text-white hover:bg-[#FF7D3D]"
                     >
                       수정
                     </button>
                     <button
                       onClick={() => handleCommentDeleteMutate(comment.id)}
-                      className={"border border-slate-600"}
+                      className="cursor-pointer rounded-lg border bg-white px-4 py-2 text-gray-800 hover:bg-gray-100"
                     >
                       삭제
                     </button>

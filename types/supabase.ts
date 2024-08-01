@@ -423,6 +423,7 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          is_challenge_first_create: boolean
           nickname: string
           profile_image_url: string | null
           social_type: string | null
@@ -431,6 +432,7 @@ export type Database = {
           created_at?: string
           email: string
           id?: string
+          is_challenge_first_create?: boolean
           nickname: string
           profile_image_url?: string | null
           social_type?: string | null
@@ -439,6 +441,7 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
+          is_challenge_first_create?: boolean
           nickname?: string
           profile_image_url?: string | null
           social_type?: string | null
@@ -520,6 +523,7 @@ export type Database = {
           id: string
           created_at: string
           user_id: string
+          nickname: string
           goal: string
           like_cnt: number
           template_cnt: number
