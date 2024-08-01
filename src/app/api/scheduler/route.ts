@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
   } finally {
     await supabase.from("log_scheduler").insert([
       {
-        message: `스케줄러 완료 : ${new Date().toString()}  - [ ${userIdList.join(", ")} }`,
+        message: `스케줄러 완료 : ${new Date().toLocaleString('ko-KR').toString()}  - [ ${userIdList.join(", ")} }`,
       },
     ])
     await pgClient.end()
