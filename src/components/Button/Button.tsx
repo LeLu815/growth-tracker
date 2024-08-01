@@ -1,7 +1,126 @@
-import React from "react"
+import { ComponentProps, PropsWithChildren } from "react"
+import Link from "next/link"
+import { cva, VariantProps } from "class-variance-authority"
 
-function Button() {
-  return <div>Button</div>
+const buttonVariant = cva(
+  "border font-semibold duration-10 transition-all [&+&]:mb-4 box-border sm:hover:pointer-events-none",
+  {
+    variants: {
+      intent: {
+        primary: "hover:bg-[#2E2E2E] active:bg-[#2E2E2E]",
+        secondary: "text-[#141414] hover:bg-[#E0E0E0] active:bg-[#E0E0E0]",
+      },
+      size: {
+        sm: "px-[22px] py-[10px] text-[14px]",
+        md: "px-[24px] py-[12px] w-[calc(50%-6px)] mx-[3px] text-[16px]",
+        lg: "w-full px-[26px] py-[12px] text-[18px]",
+      },
+      variant: {
+        outline: "bg-white rounded-lg",
+        contained: "rounded-lg",
+        disabled: "text-[#c7c7c7] cursor-not-allowed rounded-lg",
+        selected:
+          "bg-[#FFE4D6] text-[#FF7D3D] outline-2 outline-[#FF7D3D] hover:bg-[#FFE4D6] rounded-lg box-border",
+        rounded: "rounded-full",
+        borderless: "border-none",
+      },
+    },
+    compoundVariants: [
+      {
+        intent: "primary",
+        variant: "contained",
+        className: "bg-[#474747] text-white",
+      },
+      {
+        intent: "primary",
+        variant: "outline",
+        className: "text-[#474747] outline-[#474747]",
+      },
+      {
+        intent: "secondary",
+        variant: "contained",
+        className: "bg-white text-[#141414]",
+      },
+      {
+        variant: "selected",
+        className: "text-[#FF7D3D] box-border",
+      },
+      {
+        intent: "secondary",
+        variant: "outline",
+        className: "text-[#141414] outline-[#141414]",
+      },
+      {
+        intent: "primary",
+        variant: "disabled",
+        className: "bg-[#E0E0E0] text-[#7a7a7a] pointer-events-none",
+      },
+      {
+        intent: "secondary",
+        variant: "disabled",
+        className: "text-[#ADADAD] bg-white pointer-events-none",
+      },
+      {
+        intent: "primary",
+        variant: "rounded",
+        className: "px-[20px] py-[8px] bg-[#474747] text-white",
+      },
+      {
+        intent: "secondary",
+        variant: "rounded",
+        className:
+          "px-[20px] py-[8px] rounded-full text-[#141414] outline-[#141414]",
+      },
+      {
+        intent: "primary",
+        variant: "borderless",
+        className: "hover:bg-white active:bg-white",
+      },
+    ],
+    defaultVariants: {
+      intent: "primary",
+      size: "md",
+      variant: "contained",
+    },
+  }
+)
+
+type ButtonVariant = VariantProps<typeof buttonVariant>
+
+type ButtonProps = ButtonVariant &
+  (
+    | ({} & ComponentProps<"button">)
+    | ({ href: string } & ComponentProps<typeof Link>)
+  )
+
+function Button({
+  children,
+  intent,
+  size,
+  variant,
+  disabled,
+  selected,
+  ...props
+}: PropsWithChildren<
+  ButtonProps & { disabled?: boolean; selected?: boolean }
+>) {
+  const finalVariant = disabled ? "disabled" : selected ? "selected" : variant
+
+  const className = buttonVariant({ intent, size, variant: finalVariant })
+
+  if ("href" in props) {
+    return (
+      <Link className={className} {...props}>
+        {children}
+      </Link>
+    )
+  } else {
+    return (
+      <button className={className} disabled={disabled} {...props}>
+        {children}
+      </button>
+    )
+  }
 }
 
 export default Button
