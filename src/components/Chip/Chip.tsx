@@ -42,7 +42,7 @@ const chipVariant = cva(
       },
     ],
     defaultVariants: {
-      intent: "default",
+      intent: "primary",
       size: "md",
     },
   }

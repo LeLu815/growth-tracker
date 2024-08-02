@@ -123,7 +123,7 @@ function Notice() {
   })
 
   useEffect(() => {
-    const usersNoticeChannel = createClient().channel("users_notice")
+    const usersNoticeChannel = createClient().channel("notice")
 
     usersNoticeChannel
       .on(
@@ -131,7 +131,7 @@ function Notice() {
         {
           event: "INSERT",
           schema: "public",
-          table: "users_notice",
+          table: "notice",
           filter: `user_id=eq.${me?.id}`,
         },
         () => refetch()
@@ -141,7 +141,7 @@ function Notice() {
         {
           event: "UPDATE",
           schema: "public",
-          table: "users_notice",
+          table: "notice",
           filter: `user_id=eq.${me?.id}`,
         },
         () => refetch()
