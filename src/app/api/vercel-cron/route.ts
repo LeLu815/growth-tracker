@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
 
     for (const dataListElement of dataList) {
       const { error } = await supabase
-        .from("users_notice")
+        .from("notice")
         .insert([
           {
             challenge_id: dataListElement.id,
@@ -51,13 +51,13 @@ export async function GET(req: NextRequest) {
       userIdList.push(dataListElement.user_id)
     }
   } catch (error: any) {
-    await supabase.from("log_scheduler").insert([
+    await supabase.from("log_cron_scheduler").insert([
       {
         message: `스케줄러 에러 : ${error.message} - [user_id = ${currentUserId}]`,
       },
     ])
   } finally {
-    await supabase.from("log_scheduler").insert([
+    await supabase.from("log_cron_scheduler").insert([
       {
         message: `스케줄러 완료 : ${new Date().toLocaleString('ko-KR').toString()}  - [ ${userIdList.join(", ")} }`,
       },
