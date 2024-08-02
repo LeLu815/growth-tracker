@@ -7,10 +7,7 @@ import axios from "axios"
 
 import Challenge from "@/app/(providers)/(styles)/my-page/_component/Challenge"
 
-import {
-  MyChallengePageType,
-  MyChallengeType,
-} from "../../../../../../types/myChallengeList.type"
+import { MyChallengeType } from "../../../../../../types/myChallengeList.type"
 
 function MyChallengeListPage() {
   const { me } = useAuth()
