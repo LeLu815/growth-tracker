@@ -6,6 +6,7 @@ import Button from "@/components/Button"
 import ChallengeCard from "@/components/ChallengeCard"
 import Chip from "@/components/Chip"
 import DetailPageBottomBar from "@/components/DetailPageBottomBar/DetailPageBottomBar"
+import Input from "@/components/Input"
 import Page from "@/components/Page"
 
 function ComponentTestPage() {
@@ -19,10 +20,11 @@ function ComponentTestPage() {
     <Page title="공통 컴포넌트 테스트">
       <h3 className="pt-4">Chips</h3>
       <Chip label="전체" intent="primary" />
-      <Chip intent="selected" label="운동" />
-      <Chip size="sm" intent="selected" label="공부" />
+      <Chip variant="selected" label="운동" />
+      <Chip size="sm" label="공부" />
       <Chip size="sm" intent="secondary" label="제테크" />
       <Chip size="sm" intent="secondary" label="제테크" variant="outline" />
+      <Chip size="sm" label="제테크" variant="outline" />
 
       <h3 className="pt-4">Buttons</h3>
       {/* default size: md, variant: primary */}
@@ -99,6 +101,8 @@ function ComponentTestPage() {
         셀렉트 버튼
       </Button>
 
+      <Chip label="공부" selected={isSelected} onClick={handleClick} />
+
       <h4>challenge card</h4>
       <ChallengeCard
         title="토익 990점~~"
@@ -113,6 +117,8 @@ function ComponentTestPage() {
         challengeImage="/icon/ic-arrow-right.svg"
       />
 
+      <Input label="인풋테스트" required />
+      <Input label="인풋테스트" />
       <DetailPageBottomBar />
       <div className="h-[100px]"></div>
     </Page>
