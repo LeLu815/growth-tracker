@@ -30,12 +30,12 @@ const buttonVariant = cva(
       {
         intent: "primary",
         variant: "contained",
-        className: "bg-[#474747] text-white",
+        className: "bg-[#FF7D3D] text-white",
       },
       {
         intent: "primary",
         variant: "outline",
-        className: "text-[#474747] outline-[#474747]",
+        className: "text-[#FF7D3D] outline-[#FF7D3D]",
       },
       {
         intent: "secondary",
@@ -64,7 +64,7 @@ const buttonVariant = cva(
       {
         intent: "primary",
         variant: "rounded",
-        className: "px-[20px] py-[8px] bg-[#474747] text-white",
+        className: "px-[20px] py-[8px] bg-[#FF7D3D] text-white",
       },
       {
         intent: "secondary",
