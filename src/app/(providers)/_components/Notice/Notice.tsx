@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Badge, Drawer, Space } from "antd"
 import axios from "axios"
 
-import { NoticeType } from "../../../../../types/notice.type"
+import { NoticeListType, NoticeType } from "../../../../../types/notice.type"
 
 function Notice() {
   const queryClient = useQueryClient()
@@ -25,12 +25,12 @@ function Notice() {
     setOpen(false)
   }
 
-  const getNoticeList = async (): Promise<NoticeType> => {
+  const getNoticeList = async (): Promise<NoticeListType> => {
     const response = await axios
       .get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/notice`)
       .then((response) => response.data)
 
-    const filter = response.data.filter((item) => !item.is_view)
+    const filter = response.data.filter((item: NoticeType) => !item.is_view)
     debugger
     setCount(filter.length)
     return response.data
@@ -53,14 +53,14 @@ function Notice() {
   }) => {
     try {
       if (!isView) {
-       await axios.put(
+        await axios.put(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/notice/${noticeId}`
         )
       }
     } catch (error) {
       console.error(error)
     } finally {
-      setCount(count - 1);
+      setCount(count - 1)
       setOpen(false)
       router.push(`/challenge/${challengeId}`)
     }
@@ -85,7 +85,7 @@ function Notice() {
       await queryClient.cancelQueries({ queryKey: ["noticeList"] })
       const noticeList = queryClient.getQueryData(["noticeList"])
 
-      queryClient.setQueryData(["noticeList"], (prev: NoticeType) => {
+      queryClient.setQueryData(["noticeList"], (prev: NoticeListType) => {
         return prev.filter((notice) => notice.id !== noticeId)
       })
       return { noticeList }

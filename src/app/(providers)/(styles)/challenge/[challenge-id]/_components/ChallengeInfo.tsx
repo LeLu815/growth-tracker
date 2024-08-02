@@ -14,6 +14,7 @@ import BookmarkIcon from "@/components/Icon/BookmarkIcon"
 import ThumbsUpIcon from "@/components/Icon/ThumbsUpIcon"
 
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
+import Image from "next/image";
 
 function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const modal = useModal()
@@ -124,9 +125,9 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
                 </div>
                 <span className="text-2xl">
                   {isOpen ? (
-                    <img src={"/icon/ic-down-arrow.svg"} />
+                    <Image src={"/icon/ic-down-arrow.svg"} width={15} height={15} alt={""}/>
                   ) : (
-                    <img src={"/icon/ic-up-arrow.svg"} />
+                    <Image src={"/icon/ic-up-arrow.svg"} width={15} height={15} alt={""}/>
                   )}
                 </span>
               </button>
