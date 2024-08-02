@@ -14,17 +14,14 @@ import { addDays, format, parseISO } from "date-fns"
 import { produce } from "immer"
 import { DateRange } from "react-day-picker"
 
-import MilestoneSwiper from "../MilestoneSwiper"
-import MilestoneComponent from "./MilestoneComponent"
-import MilestoneCreateInfoController from "./MilestoneCreateInfoController"
+import MilestoneComponent from "../../../create/_components/Milestone/MilestoneComponent"
 
 interface DragDropContainerProps {
   range: DateRange | undefined
-  goal: string
   challenge_id?: string
 }
 function DragDropContainer({ challenge_id, range }: DragDropContainerProps) {
-  const { data, setData, currentSlideId } = useMilestoneCreateStore()
+  const { data, setData } = useMilestoneCreateStore()
 
   range?.from
   // source: 드래그된 항목의 출발지 정보
@@ -41,8 +38,6 @@ function DragDropContainer({ challenge_id, range }: DragDropContainerProps) {
       const newMilestonesOrder = Array.from(data)
       const [removed] = newMilestonesOrder.splice(source.index, 1)
       newMilestonesOrder.splice(destination.index, 0, removed)
-
-      // setData(newMilestonesOrder)
 
       setData(
         updateDataBetweenSwitchDays(
@@ -62,48 +57,6 @@ function DragDropContainer({ challenge_id, range }: DragDropContainerProps) {
     const finishIndex = data.findIndex(
       (milestone) => milestone.id === destination.droppableId
     )
-
-    const start = data[startIndex]
-    const finish = data[finishIndex]
-
-    if (start === finish) {
-      // 같은 마일스톤 내에서 루틴 순서 변경
-      const newRoutines = Array.from(start.routines)
-      const [movedRoutine] = newRoutines.splice(source.index, 1)
-      newRoutines.splice(destination.index, 0, movedRoutine)
-
-      const newMilestone = {
-        ...start,
-        routines: newRoutines,
-      }
-
-      const newData = Array.from(data)
-      newData[startIndex] = newMilestone
-
-      setData(newData)
-    } else {
-      // 다른 마일스톤으로 루틴 이동
-      const startRoutines = Array.from(start.routines)
-      const [movedRoutine] = startRoutines.splice(source.index, 1)
-
-      const finishRoutines = Array.from(finish.routines)
-      finishRoutines.splice(destination.index, 0, movedRoutine)
-
-      const newStart = {
-        ...start,
-        routines: startRoutines,
-      }
-      const newFinish = {
-        ...finish,
-        routines: finishRoutines,
-      }
-
-      const newData = Array.from(data)
-      newData[startIndex] = newStart
-      newData[finishIndex] = newFinish
-
-      setData(newData)
-    }
   }
 
   // 마일스톤 삭제 함수
@@ -119,12 +72,6 @@ function DragDropContainer({ challenge_id, range }: DragDropContainerProps) {
 
   return (
     <>
-      <MilestoneCreateInfoController
-        range={range}
-        currentMilestoneObj={
-          data.find((obj) => obj.id === currentSlideId) || null
-        }
-      />
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable
           droppableId="all-milestones"
@@ -160,7 +107,6 @@ function DragDropContainer({ challenge_id, range }: DragDropContainerProps) {
           )}
         </Droppable>
       </DragDropContext>
-      <MilestoneSwiper data={data} setData={setData} />
     </>
   )
 }
