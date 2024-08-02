@@ -7,7 +7,6 @@ import {
 } from "@/api/supabase/challenge"
 import useChallengeCreateStore, {
   defaultSelected,
-  WEEK_DAY_LIST,
 } from "@/store/challengeCreate.store"
 import useMilestoneCreateStore, {
   initialData,
@@ -19,7 +18,7 @@ import queryClient from "../queryClient"
 const CHALLENGE_QEURY_KEY = "challenge"
 
 function useChallengeQuery() {
-  const { setDayChecks, setRange } = useChallengeCreateStore()
+  const { setRange } = useChallengeCreateStore()
   const { setCurrentSlideId, setData } = useMilestoneCreateStore()
   const router = useRouter() // useRouter 훅 사용
   const { isPending: challengeCreateIsPending, mutate: challengeCreateMutate } =
@@ -31,7 +30,6 @@ function useChallengeQuery() {
         alert("성공했어!")
         queryClient.invalidateQueries({ queryKey: [CHALLENGE_QEURY_KEY] })
         setRange(defaultSelected)
-        setDayChecks(WEEK_DAY_LIST.map(() => false))
         setCurrentSlideId("")
         setData(initialData)
         return router.push("/")
@@ -53,7 +51,6 @@ function useChallengeQuery() {
           queryKey: [CHALLENGE_QEURY_KEY, variables["challenge-id"]],
         })
         setRange(defaultSelected)
-        setDayChecks(WEEK_DAY_LIST.map(() => false))
         setCurrentSlideId("")
         setData(initialData)
         return router.push("/newsfeed")
