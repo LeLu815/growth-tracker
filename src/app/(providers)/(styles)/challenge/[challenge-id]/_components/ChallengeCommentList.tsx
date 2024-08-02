@@ -51,7 +51,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
    * */
   const createComment = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    debugger
+
     if (!me) {
       router.push("/")
       return
