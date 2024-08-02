@@ -20,6 +20,7 @@ import MilestoneCreateInfoController from "./MilestoneCreateInfoController"
 
 interface DragDropContainerProps {
   range: DateRange | undefined
+  goal: string
   challenge_id?: string
 }
 function DragDropContainer({ challenge_id, range }: DragDropContainerProps) {
