@@ -20,10 +20,11 @@ function ComponentTestPage() {
     <Page title="공통 컴포넌트 테스트">
       <h3 className="pt-4">Chips</h3>
       <Chip label="전체" intent="primary" />
-      <Chip intent="selected" label="운동" />
-      <Chip size="sm" intent="selected" label="공부" />
+      <Chip variant="selected" label="운동" />
+      <Chip size="sm" label="공부" />
       <Chip size="sm" intent="secondary" label="제테크" />
       <Chip size="sm" intent="secondary" label="제테크" variant="outline" />
+      <Chip size="sm" label="제테크" variant="outline" />
 
       <h3 className="pt-4">Buttons</h3>
       {/* default size: md, variant: primary */}
@@ -99,6 +100,8 @@ function ComponentTestPage() {
       >
         셀렉트 버튼
       </Button>
+
+      <Chip label="공부" selected={isSelected} onClick={handleClick} />
 
       <h4>challenge card</h4>
       <ChallengeCard
