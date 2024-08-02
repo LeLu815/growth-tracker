@@ -3,7 +3,7 @@ import Link from "next/link"
 import { cva, VariantProps } from "class-variance-authority"
 
 const buttonVariant = cva(
-  "border font-semibold duration-10 transition-all [&+&]:mb-4 box-border",
+  "border font-semibold duration-10 transition-all box-border",
   {
     variants: {
       intent: {

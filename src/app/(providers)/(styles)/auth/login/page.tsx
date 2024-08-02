@@ -1,19 +1,24 @@
 "use client"
 
 import { ChangeEventHandler, useState } from "react"
-import { handleSocialLogin } from "@/api/auth/api.auth"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
 
 import Button from "@/components/Button"
 
-export default function Home() {
+import EmailLoginButton from "./_components/EmailLoginButton"
+import GoogleLoginButton from "./_components/GoogleLoginButton"
+import KakaoLoginButton from "./_components/KakaoLoginButton"
+
+export default function LoginPage() {
   const [nickname, setNickname] = useState<string>("")
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [authPage, setAuthPage] = useState<"sign-up" | "log-in">("log-in")
   const { me, isInitialized, isLoggedIn, signUp, logIn, logOut } = useAuth()
   const { open } = useModal()
+  const router = useRouter()
 
   const handleChangeNickname: ChangeEventHandler<HTMLInputElement> = (e) => {
     setNickname(e.target.value)
@@ -24,12 +29,12 @@ export default function Home() {
   const handleChangePassword: ChangeEventHandler<HTMLInputElement> = (e) => {
     setPassword(e.target.value)
   }
-  const kakaoLogin = () => {
-    handleSocialLogin("kakao")
-  }
-  const googleLogin = () => {
-    handleSocialLogin("google")
-  }
+  // const kakaoLogin = () => {
+  //   handleSocialLogin("kakao")
+  // }
+  // const googleLogin = () => {
+  //   handleSocialLogin("google")
+  // }
   const handleSignUp = async () => {
     const response = await signUp(email, password, nickname)
     // 에러 발생시 안내
@@ -70,29 +75,12 @@ export default function Home() {
       )}
       {!isLoggedIn && (
         <>
-          <div className="flex gap-5">
-            <button
-              onClick={kakaoLogin}
-              className="rounded border border-neutral-500 bg-white px-3 py-1.5 text-neutral-500 hover:brightness-95 active:brightness-75"
-            >
-              카카오 로그인
-            </button>
-
-            <button
-              onClick={googleLogin}
-              className="rounded border border-neutral-500 bg-white px-3 py-1.5 text-neutral-500 hover:brightness-95 active:brightness-75"
-            >
-              구글 로그인
-            </button>
-          </div>
-
-          <div className="flex w-full flex-col [&+&]:mb-[20px]">
-            <Button intent="kakao" size="lg" onClick={kakaoLogin}>
-              카카오톡으로 시작하기
-            </Button>
-            <Button intent="secondary" size="lg" onClick={googleLogin}>
-              Google로 시작하기
-            </Button>
+          <div className="flex w-full flex-col gap-y-[20px]">
+            <KakaoLoginButton />
+            <GoogleLoginButton />
+            <EmailLoginButton
+              onClick={() => router.push("/auth/login-email")}
+            />
             <Button intent="secondary">이메일로 시작하기</Button>
           </div>
 
