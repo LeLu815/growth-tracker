@@ -13,6 +13,9 @@ import {
 import axios from "axios"
 import { useInView } from "react-intersection-observer"
 
+import Button from "@/components/Button"
+import Input from "@/components/Input"
+
 import {
   ChallengeCommentPageType,
   ChallengeCommentType,
@@ -56,6 +59,8 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
       return
     }
 
+    setContent("")
+
     const response = await axios
       .post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}/comment`,
@@ -72,7 +77,6 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
       alertOpen("댓글 작성에 실패했습니다.")
       throw new Error(response.error)
     }
-    setContent("")
     refetch()
   }
 
@@ -291,19 +295,16 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
     <div className={"flex w-full flex-col items-center gap-4"}>
       <div className="mx-auto mt-10 w-full rounded-lg border p-4">
         <form onSubmit={createComment}>
-          <textarea
+          <Input
             className="w-full resize-none rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="댓글을 입력하세요..."
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
           <div className="mt-2 flex justify-end">
-            <button
-              type="submit"
-              className="rounded-lg bg-[#FFAB81] px-4 py-2 text-white hover:bg-[#FF7D3D]"
-            >
+            <Button intent="primary" variant="rounded" size="sm" type="submit">
               댓글 등록
-            </button>
+            </Button>
           </div>
         </form>
       </div>
@@ -369,8 +370,12 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
             {comment.user_id === me?.id && (
               <div className={"flex gap-4"}>
                 {isUpdate && comment.id === updateCommentId ? (
-                  <>
-                    <button
+                  <div>
+                    <Button
+                      intent="primary"
+                      variant="rounded"
+                      size="sm"
+                      type="submit"
                       onClick={(e) => {
                         e.preventDefault()
                         handleCommentMutate({
@@ -378,42 +383,47 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                           content: updateContent,
                         })
                       }}
-                      className="cursor-pointer rounded-lg bg-[#FFAB81] px-4 py-2 text-white hover:bg-[#FF7D3D]"
                     >
-                      수정완료
-                    </button>
-                    <button
+                      완료
+                    </Button>
+                    <Button
+                      intent="secondary"
+                      variant="rounded"
+                      size="sm"
                       onClick={(e) => {
                         e.preventDefault()
                         setUpdateContent("")
                         setIsUpdate(false)
                         setUpdateCommentId("")
                       }}
-                      className="cursor-pointer rounded-lg border bg-white px-4 py-2 text-gray-800 hover:bg-gray-100"
                     >
                       취소
-                    </button>
-                  </>
+                    </Button>
+                  </div>
                 ) : (
-                  <>
-                    <button
+                  <div>
+                    <Button
+                      intent="secondary"
+                      variant="rounded"
+                      size="sm"
                       onClick={(e) => {
                         e.preventDefault()
                         setUpdateContent(comment.content)
                         setIsUpdate(true)
                         setUpdateCommentId(comment.id)
                       }}
-                      className="cursor-pointer rounded-lg bg-[#FFAB81] px-4 py-2 text-white hover:bg-[#FF7D3D]"
                     >
                       수정
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      intent="primary"
+                      variant="rounded"
+                      size="sm"
                       onClick={() => handleCommentDeleteMutate(comment.id)}
-                      className="cursor-pointer rounded-lg border bg-white px-4 py-2 text-gray-800 hover:bg-gray-100"
                     >
                       삭제
-                    </button>
-                  </>
+                    </Button>
+                  </div>
                 )}
               </div>
             )}

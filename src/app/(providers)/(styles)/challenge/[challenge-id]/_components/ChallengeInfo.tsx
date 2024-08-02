@@ -7,6 +7,8 @@ import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
+import ThumbsUpIcon from "@/components/Icon/ThumbsUpIcon";
+import FeedIcon from "@/components/Icon/CopyIcon";
 
 function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const modal = useModal()
@@ -17,7 +19,6 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
     const response = await axios
       .get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}`)
       .then((response) => response.data)
-    debugger
     if (response.error) {
       modal.open({
         type: "alert",
@@ -63,11 +64,15 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
         <div className="mt-2 text-center">
           <div className="text-xl font-semibold">{data?.goal} </div>
           <div className="text-gray-500">{data?.nickname}</div>
-          <div className="mt-2 flex items-center justify-center">
-            <div className="mr-2 text-gray-500">{data.like_cnt}</div>
-            <div className="mr-2 text-gray-500">👍</div>
-            <div className="mr-2 text-gray-500">{data.template_cnt}</div>
-            <div className="text-gray-500">📑</div>
+          <div className="flex items-center justify-center gap-4">
+            <div className={"flex"}>
+              <div className="mt-1 text-gray-500 text-[17px]">{data.like_cnt}</div>
+              <ThumbsUpIcon color={"black"}/>
+            </div>
+            <div className={"flex gap-1"}>
+              <div className="text-gray-500 text-[17px]">{data.template_cnt}</div>
+              <FeedIcon className={"mt-1"}/>
+            </div>
           </div>
         </div>
         <div className="mt-4 flex flex-col items-center border-t pt-4">
@@ -75,7 +80,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
           <div className="text-gray-500">
             {data?.start_at} ~ {data?.end_at} ({data?.day_cnt}일)
           </div>
-          <div className="mt-4">그레프 나와야함 공통 컴포넌트 사용예정</div>
+          {/*<div className="mt-4">그레프 나와야함 공통 컴포넌트 사용예정</div>*/}
         </div>
         <div className={"flex flex-col items-center gap-1"}>
           {data?.milestones?.map((milestone, index) => {
