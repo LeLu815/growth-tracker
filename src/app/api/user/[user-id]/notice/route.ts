@@ -23,7 +23,7 @@ export async function GET(
   const supabase = createClient()
 
   const { data, error } = await supabase
-    .from("users_notice")
+    .from("notice")
     .select(`*`)
     .eq("user_id", userId)
     .range(page * limit, page * limit + (limit - 1))
