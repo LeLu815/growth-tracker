@@ -24,7 +24,7 @@ export async function PUT(
   const supabase = createClient()
 
   const { data, error } = await supabase
-    .from("users_notice")
+    .from("notice")
     .update({ is_view: true })
     .eq("id", noticeId)
     .eq("user_id", userId)
@@ -60,7 +60,7 @@ export async function DELETE(
   const supabase = createClient()
 
   const { error } = await supabase
-    .from("users_notice")
+    .from("notice")
     .delete()
     .eq("id", noticeId)
     .eq("user_id", userId)
