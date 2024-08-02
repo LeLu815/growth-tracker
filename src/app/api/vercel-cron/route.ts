@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/supabase/server"
 import { createPGClient } from "@/supabase/pgClient"
+import { createClient } from "@/supabase/server"
 
 export async function GET(req: NextRequest) {
-
   const supabase = createClient()
 
   const pgClient = createPGClient()
@@ -19,15 +18,13 @@ export async function GET(req: NextRequest) {
     const dataList = newVar.rows
 
     for (const dataListElement of dataList) {
-      const { error } = await supabase
-        .from("notice")
-        .insert([
-          {
-            challenge_id: dataListElement.id,
-            user_id: dataListElement.user_id,
-            content: `${dataListElement.nickname} 님  ${dataListElement.goal} 챌린지의 다음 마일스톤 시작일이 까지  ${dataListElement.days_remaining}일 남았습니다. 다음 마일스톤을 설정했는지 확인해주세요.`,
-          },
-        ])
+      const { error } = await supabase.from("notice").insert([
+        {
+          challenge_id: dataListElement.id,
+          user_id: dataListElement.user_id,
+          content: `${dataListElement.nickname} 님  ${dataListElement.goal} 챌린지의 다음 마일스톤 시작일이 까지  ${dataListElement.days_remaining}일 남았습니다. 다음 마일스톤을 설정했는지 확인해주세요.`,
+        },
+      ])
 
       if (error) {
         throw new Error(error.message)
@@ -44,7 +41,7 @@ export async function GET(req: NextRequest) {
   } finally {
     await supabase.from("log_cron_scheduler").insert([
       {
-        message: `스케줄러 완료 : ${new Date().toLocaleString('ko-KR').toString()}  - [ ${userIdList.join(", ")} }`,
+        message: `스케줄러 완료 : ${new Date().toLocaleString("ko-KR").toString()}  - [ ${userIdList.join(", ")} }`,
       },
     ])
     await pgClient.end()

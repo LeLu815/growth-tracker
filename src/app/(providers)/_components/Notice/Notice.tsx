@@ -86,7 +86,6 @@ function Notice() {
   }
 
   const deleteNotice = async (noticeId: number) => {
-    debugger
     const response = await axios
       .delete(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/notice/${noticeId}`
