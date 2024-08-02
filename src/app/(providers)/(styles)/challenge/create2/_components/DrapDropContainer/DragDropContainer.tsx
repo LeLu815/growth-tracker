@@ -21,7 +21,7 @@ interface DragDropContainerProps {
   challenge_id?: string
 }
 function DragDropContainer({ challenge_id, range }: DragDropContainerProps) {
-  const { data, setData, currentSlideId } = useMilestoneCreateStore()
+  const { data, setData } = useMilestoneCreateStore()
 
   range?.from
   // source: 드래그된 항목의 출발지 정보

@@ -21,8 +21,8 @@ function MilestoneCreateSwitch() {
             : "기간을 선택해주세요."}
         </p>
       </div>
+      <Button>+ 루틴 추가</Button>
       <DragDropContainer range={range} />
-      <button>+ 루틴 추가</button>
       <Button onClick={() => {}} disabled={data.length === 0}>
         완료
       </Button>
