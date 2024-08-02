@@ -2,7 +2,7 @@ name: Call URL every
 
 on:
   schedule:
-    - cron: '30 4 * * *'
+    - cron: '0 15 * * *'
 
 jobs:
   call-url:
