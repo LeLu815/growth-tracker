@@ -65,7 +65,7 @@ function DetailPageBottomBar({ challengeId }: { challengeId: string }) {
   const { mutate: handleLikeMutate } = useMutation({
     mutationFn: createOrDeleteLike,
     onMutate: async () => {
-      debugger
+
       await queryClient.cancelQueries({ queryKey: ["challengeLike"] })
       const isChangedLike: boolean = !!queryClient.getQueryData([
         "challengeLike",
