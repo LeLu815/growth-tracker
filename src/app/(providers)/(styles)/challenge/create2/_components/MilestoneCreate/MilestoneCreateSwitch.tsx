@@ -4,6 +4,8 @@ import { differenceInCalendarDays, format } from "date-fns"
 
 import Button from "@/components/Button"
 
+import DragDropContainer from "../DrapDropContainer/DragDropContainer"
+
 function MilestoneCreateSwitch() {
   const { range, goal } = useChallengeCreateStore()
   const { data } = useMilestoneCreateStore()
@@ -19,7 +21,8 @@ function MilestoneCreateSwitch() {
             : "기간을 선택해주세요."}
         </p>
       </div>
-
+      <DragDropContainer range={range} />
+      <button>+ 루틴 추가</button>
       <Button onClick={() => {}} disabled={data.length === 0}>
         완료
       </Button>
