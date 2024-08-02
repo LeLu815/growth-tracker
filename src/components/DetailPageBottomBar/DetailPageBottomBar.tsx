@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { BookmarkIcon } from "lucide-react"
 
 import Button from "../Button"
 import ThumbsUpIcon from "../Icon/ThumbsUpIcon"
@@ -19,8 +20,8 @@ function DetailPageBottomBar() {
             onClick={handleLikeClick}
           >
             <ThumbsUpIcon
-              color={isLiked ? "black" : "#D9D9D9"}
-              filled={isLiked}
+              color={isLiked ? "#e1e1e1" : "#D9D9D9"}
+              filled={isLiked || undefined}
             />
             <span
               className={`transition-all duration-300 ${isLiked ? "text-black" : "text-[#D9D9D9]"}`}
@@ -31,7 +32,12 @@ function DetailPageBottomBar() {
         </div>
 
         <div className="col-span-4">
-          <Button size="lg">챌린지 가져오기</Button>
+          <Button size="lg">
+            <div className="flex items-center justify-center gap-[6px]">
+              <BookmarkIcon />
+              <span>챌린지 가져오기</span>
+            </div>
+          </Button>
         </div>
       </div>
     </div>
