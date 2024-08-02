@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
+import useChallengeDetailStore from "@/store/challengeDetail.store"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import { BookmarkIcon } from "lucide-react"
@@ -18,6 +19,10 @@ function DetailPageBottomBar({ challengeId }: { challengeId: string }) {
   const queryClient = useQueryClient()
   const { me } = useAuth()
   const modal = useModal()
+
+  const challengeDetail = useChallengeDetailStore(
+    (state) => state.challengeDetail
+  )
 
   const isLikedByUserId = async (): Promise<boolean> => {
     if (!me) {
@@ -43,6 +48,16 @@ function DetailPageBottomBar({ challengeId }: { challengeId: string }) {
   }
 
   const createOrDeleteLike = async () => {
+    if (!isLiked) {
+      debugger
+      const axiosResponse = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/notice?toUserId=${challengeDetail.userId}&goal=${challengeDetail.goal}&challengeId=${challengeId}`
+      )
+
+      console.log(axiosResponse)
+      debugger
+    }
+
     const method = isLiked ? "delete" : "post"
     const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}/like?userId=${me?.id}`
 
@@ -59,13 +74,12 @@ function DetailPageBottomBar({ challengeId }: { challengeId: string }) {
   } = useQuery({
     queryKey: ["challengeLike"],
     queryFn: isLikedByUserId,
-    enabled: !!me, // me가 있을 때만 쿼리 실행
+    enabled: !!me,
   })
 
   const { mutate: handleLikeMutate } = useMutation({
     mutationFn: createOrDeleteLike,
     onMutate: async () => {
-
       await queryClient.cancelQueries({ queryKey: ["challengeLike"] })
       const isChangedLike: boolean = !!queryClient.getQueryData([
         "challengeLike",
@@ -93,7 +107,6 @@ function DetailPageBottomBar({ challengeId }: { challengeId: string }) {
               like_cnt: prev.like_cnt - 1,
             }
           }
-
           return {
             ...prev,
             id: prev?.id || "",

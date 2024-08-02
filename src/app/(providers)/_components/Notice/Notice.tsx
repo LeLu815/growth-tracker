@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
+import useChallengeDetailStore from "@/store/challengeDetail.store"
 import { createClient } from "@/supabase/client"
 import {
   useInfiniteQuery,

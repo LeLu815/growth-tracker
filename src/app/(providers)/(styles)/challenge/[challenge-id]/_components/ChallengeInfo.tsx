@@ -3,6 +3,9 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useModal } from "@/context/modal.context"
+import useChallengeDetailStore, {
+  InitialDataType,
+} from "@/store/challengeDetail.store"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
@@ -16,6 +19,9 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const modal = useModal()
   const router = useRouter()
   const [openIndexes, setOpenIndexes] = useState<number[]>([])
+  const setChallengeDetail = useChallengeDetailStore(
+    (state) => state.setChallengeDetail
+  )
 
   const getChallenge = async (): Promise<ChallengeType> => {
     const response = await axios
@@ -28,7 +34,15 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
       })
       router.push("/newsfeed")
     }
+    debugger
+    const challengeDetail = {
+      id: response.data.id as string,
+      userId: response.data.user_id as string,
+      nickname: response.data.nickname as string,
+      goal: response.data.goal as string,
+    }
 
+    setChallengeDetail(challengeDetail as InitialDataType)
     return response.data
   }
 
