@@ -6,6 +6,7 @@ import Button from "@/components/Button"
 import ChallengeCard from "@/components/ChallengeCard"
 import Chip from "@/components/Chip"
 import DetailPageBottomBar from "@/components/DetailPageBottomBar/DetailPageBottomBar"
+import Input from "@/components/Input"
 import Page from "@/components/Page"
 
 function ComponentTestPage() {
@@ -113,6 +114,8 @@ function ComponentTestPage() {
         challengeImage="/icon/ic-arrow-right.svg"
       />
 
+      <Input label="인풋테스트" required />
+      <Input label="인풋테스트" />
       <DetailPageBottomBar />
       <div className="h-[100px]"></div>
     </Page>
