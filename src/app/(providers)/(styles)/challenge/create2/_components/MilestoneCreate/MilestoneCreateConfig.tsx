@@ -2,8 +2,18 @@ import { FormEventHandler, useState } from "react"
 import useChallengeCreateStore, {
   WEEK_DAY_LIST,
 } from "@/store/challengeCreate.store"
-import { differenceInCalendarDays, format } from "date-fns"
+import useMilestoneCreateStore, {
+  MilestoneType,
+} from "@/store/milestoneCreate.store"
+import {
+  addDays,
+  differenceInCalendarDays,
+  eachDayOfInterval,
+  format,
+  parseISO,
+} from "date-fns"
 import { produce } from "immer"
+import { v4 as uuidv4 } from "uuid"
 
 import Button from "@/components/Button"
 import Chip from "@/components/Chip"
@@ -29,18 +39,66 @@ const initialSelectWeeks = WEEK_DAY_LIST.map((_) => false)
 function MilestoneCreateConfig({
   setShowCompoent,
 }: MilestoneCreateConfigProps) {
+  // 마일스톤 이름 input
   const [milestoneNameInput, setMilestoneNameInput] = useState("")
+  // 루틴 이름 input
   const [routineInpt, setRoutineInput] = useState<string>("")
+  // 루틴 배열
   const [routines, setRoutines] = useState<string[]>([])
+  // 마일스톤 실행 요일 배열
   const [selectWeeks, setSelectWeeks] = useState<boolean[]>(initialSelectWeeks)
+  // 마일스톤 실행 기간
+  const [milestonePeriod, setMilestonePeriod] = useState<string>("0")
+  // 마일스톤 성공 기준 퍼센트
+  const [minPercent, setMinPercent] = useState<string>("50")
+  // 챌린지 기간
   const { range } = useChallengeCreateStore()
+  // 마일스톤, 루틴 전체 데이터 설정
+  const { setData, data } = useMilestoneCreateStore()
 
+  // 마일스톤 시작 날짜
+  const milestone_start_date = range
+    ? data.length === 0
+      ? format(range?.from!, "yyyy-MM-dd")
+      : format(addDays(data[data.length - 1].end_at, 1), "yyyy-MM-dd")
+    : ""
+  // 마일스톤 종료 날짜
+  const milestone_end_date = range
+    ? data.length === 0
+      ? format(addDays(range?.from!, +milestonePeriod), "yyyy-MM-dd")
+      : format(
+          addDays(data[data.length - 1].end_at, parseInt(milestonePeriod)),
+          "yyyy-MM-dd"
+        )
+    : ""
+  // 마일스톤 기간 총 일수
+  const milestone_total_day = (() => {
+    if (range) {
+      if (data.length === 0) {
+        return differenceInCalendarDays(range.to!, range.from!) + 1
+      } else {
+        return (
+          differenceInCalendarDays(data[data.length - 1].end_at, range.from!) +
+          1
+        )
+      }
+    }
+    return 0
+  })()
+  // 마일스톤 기간 실제 일수
+  const milestone_actual_day = countWeekdaysBetweenDates(
+    milestone_start_date,
+    milestone_end_date,
+    selectWeeks
+  )
+
+  // 루틴 이름 제출 폼 함수 => 루틴 배열에 삽입됨
   const hanleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
     setRoutines((prev) => [...prev, routineInpt])
     setRoutineInput("")
   }
-
+  // 마일스톤 실행 요일 주중 주말 매일 상태 표시 함수
   const getCurrentDayGroupType = (days: boolean[]) => {
     const selectedDayLength = days.filter((dayCheck) => dayCheck).length
     switch (selectedDayLength) {
@@ -50,14 +108,17 @@ function MilestoneCreateConfig({
         if (!selectWeeks[5] && !selectWeeks[6]) {
           return "주중"
         }
+        return ""
       case 2:
         if (selectWeeks[5] && selectWeeks[6]) {
           return "주말"
         }
+        return ""
       default:
         return ""
     }
   }
+  // 마일스톤 실행 요일 선택시 마일스톤 실행 요일 배열 값 변경 함수
   const currentDayGroupType = getCurrentDayGroupType(selectWeeks)
   const handleClickDay = (index: number): void => {
     setSelectWeeks((prev) =>
@@ -66,7 +127,7 @@ function MilestoneCreateConfig({
       })
     )
   }
-
+  // 마일스톤 실행 요일 주중 주말 매일 선택시 마일스톤 실행 요일 배열 값 변경 함수
   const handleClickDayGroupType = (text: "주중" | "매일" | "주말") => {
     const selectedDayLength = selectWeeks.filter((dayCheck) => dayCheck).length
     switch (text) {
@@ -91,6 +152,15 @@ function MilestoneCreateConfig({
     }
   }
 
+  // 마일스톤 생성함수
+  const createMilestone = (milestoneObj: MilestoneType) => {
+    setData((prev) =>
+      produce(prev, (draft) => {
+        draft.push(milestoneObj)
+      })
+    )
+  }
+
   return (
     <div>
       <p>선택한 챌린지 기간</p>
@@ -112,7 +182,9 @@ function MilestoneCreateConfig({
             <RangeInput
               thumbColor="#fe7d3d"
               trackColor="#fe7d3d"
-              getValue={() => {}}
+              getValue={(value: string) => {
+                setMilestonePeriod(value)
+              }}
               step={1}
               max={differenceInCalendarDays(range.to!, range.from!) + 1}
             />
@@ -150,7 +222,9 @@ function MilestoneCreateConfig({
           <RangeInput
             thumbColor="#fe7d3d"
             trackColor="#fe7d3d"
-            getValue={() => {}}
+            getValue={(value: string) => {
+              setMinPercent(value)
+            }}
             step={10}
             max={100}
           />
@@ -176,9 +250,7 @@ function MilestoneCreateConfig({
                   text={routine}
                   onClick={() => {
                     setRoutines((prev) =>
-                      produce(prev, (drafts) => {
-                        drafts.filter((draft) => draft !== routine)
-                      })
+                      prev.filter((draft) => draft !== routine)
                     )
                   }}
                 />
@@ -190,6 +262,27 @@ function MilestoneCreateConfig({
       <Button
         onClick={() => {
           setShowCompoent("switch")
+          // 여기에서 그동안 쌓아둔 데이터를 모두 주스탠드에 넣은 작업을 해야함
+          createMilestone({
+            challenge_id: "",
+            id: uuidv4(),
+            start_at: milestone_start_date,
+            end_at: milestone_end_date,
+            is_mon: selectWeeks[0],
+            is_tue: selectWeeks[1],
+            is_wed: selectWeeks[2],
+            is_thu: selectWeeks[3],
+            is_fri: selectWeeks[4],
+            is_sat: selectWeeks[5],
+            is_sun: selectWeeks[6],
+            success_requirement_cnt: (milestone_actual_day * +minPercent) / 100,
+            total_cnt: milestone_actual_day,
+            total_day: milestone_total_day,
+            routines: routines.map((value) => ({
+              id: "",
+              content: value,
+            })),
+          })
         }}
         disabled={routines.length === 0 || milestoneNameInput === ""}
       >
@@ -200,3 +293,37 @@ function MilestoneCreateConfig({
 }
 
 export default MilestoneCreateConfig
+
+// 두 날짜 사이의 불린 리스트를 통한 실 숫자 카운트 함수
+export function countWeekdaysBetweenDates(
+  startDate: string,
+  endDate: string,
+  weekdays: boolean[]
+): number {
+  // 날짜 문자열을 Date 객체로 변환
+  const start = parseISO(startDate)
+  const end = parseISO(endDate)
+
+  // 시작 날짜가 끝 날짜보다 이후일 경우 0 반환
+  if (start > end) {
+    return 0
+  }
+
+  // 시작 날짜부터 끝 날짜까지의 모든 날짜를 배열로 가져옴
+  const allDates = eachDayOfInterval({ start, end })
+
+  let count = 0
+
+  // 각 날짜에 대해 요일을 체크
+  allDates.forEach((date) => {
+    const day = date.getDay() // 0: 일요일, 1: 월요일, ..., 6: 토요일
+
+    // 월요일부터 일요일까지의 배열에 맞게 인덱스 조정
+    const adjustedDay = (day + 6) % 7 // 0: 월요일, 1: 화요일, ..., 6: 일요일
+    if (weekdays[adjustedDay]) {
+      count++
+    }
+  })
+
+  return count
+}

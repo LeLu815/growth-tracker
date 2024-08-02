@@ -129,10 +129,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
         return { status: 422, message: interpretErrorMsg(responseData.error) }
       }
     }
-
-    const user = await response.json()
-    setMe(user)
-    fetchUserData(user.id)
+    setMe(responseData)
+    fetchUserData(responseData.id)
     return { status: 200, message: "" }
   }
 
