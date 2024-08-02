@@ -18,7 +18,7 @@ export const defaultSelected: DateRange = {
   to: addDays(defaultMonth, 6),
 }
 
-export const WEEK_DAY_LIST = ["일", "월", "화", "수", "목", "금", "토"]
+export const WEEK_DAY_LIST = ["월", "화", "수", "목", "금", "토", "일"]
 export const useChallengeCreateStore = create<RangeState>((set) => ({
   range: defaultSelected,
   setRange: (range) => set({ range }),
