@@ -1,6 +1,6 @@
 {
   "crons": [{
     "path": "/api/vercel-cron",
-    "schedule": "47 1 * * *"
+    "schedule": "55 1 * * *"
   }]
 }
