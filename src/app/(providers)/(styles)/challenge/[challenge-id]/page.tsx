@@ -1,3 +1,4 @@
+import Box from "@/components/Box"
 import DetailPageBottomBar from "@/components/DetailPageBottomBar/DetailPageBottomBar"
 import Page from "@/components/Page"
 
@@ -14,7 +15,9 @@ function ChallengeDetailPage({ params }: ChallengeDetailPageProps) {
   return (
     <Page title="상세페이지" isTitleHidden>
       <ChallengeInfo challengeId={challengeId} />
-      <ChallengeCommentList challengeId={challengeId} />
+      <Box>
+        <ChallengeCommentList challengeId={challengeId} />
+      </Box>
       <DetailPageBottomBar challengeId={challengeId} />
     </Page>
   )

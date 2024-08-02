@@ -13,7 +13,7 @@ export const fetchPosts = async (
       userId,
       keyword: searchQuery,
       filter,
-      category: category === "전체보기" ? "" : category,
+      category: category === "전체" ? "" : category,
     },
   })
 
