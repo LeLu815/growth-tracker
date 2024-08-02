@@ -67,7 +67,7 @@ function DetailPageBottomBar({ challengeId }: { challengeId: string }) {
     onMutate: async () => {
       debugger
       await queryClient.cancelQueries({ queryKey: ["challengeLike"] })
-      const isChangedLike: boolean | undefined = queryClient.getQueryData([
+      const isChangedLike: boolean = !!queryClient.getQueryData([
         "challengeLike",
       ])
       queryClient.setQueryData<boolean>(["challengeLike"], (prev) => !prev)
@@ -77,18 +77,44 @@ function DetailPageBottomBar({ challengeId }: { challengeId: string }) {
         ["challengeDetail"]
       )
 
-      queryClient.setQueryData<ChallengeType>(["challengeDetail"], (prev) => {
-        if (isLiked) {
+      if (!challengeInfo) {
+        return {
+          isChangedLike,
+          challengeInfo: {} as ChallengeType, // 빈 객체를 ChallengeType으로 캐스팅하여 반환
+        }
+      }
+
+      queryClient.setQueryData<ChallengeType>(
+        ["challengeDetail"],
+        (prev): ChallengeType => {
+          if (isLiked && prev?.like_cnt !== undefined) {
+            return {
+              ...prev,
+              like_cnt: prev.like_cnt - 1,
+            }
+          }
+
           return {
             ...prev,
-            like_cnt: prev?.like_cnt - 1,
+            id: prev?.id || "",
+            created_at: prev?.created_at || "",
+            user_id: prev?.user_id || "",
+            nickname: prev?.nickname || "",
+            goal: prev?.goal || "",
+            template_cnt: prev?.template_cnt || 0,
+            view_cnt: prev?.view_cnt || 0,
+            is_secret: prev?.is_secret || false,
+            day_cnt: prev?.day_cnt || 0,
+            comment_cnt: prev?.comment_cnt || 0,
+            state: prev?.state || "",
+            category: prev?.category || "",
+            start_at: prev?.start_at || "",
+            end_at: prev?.end_at || "",
+            like_cnt: (prev?.like_cnt || 0) + 1,
+            milestones: prev?.milestones || [],
           }
         }
-        return {
-          ...prev,
-          like_cnt: prev?.like_cnt + 1,
-        }
-      })
+      )
 
       return {
         isChangedLike,
@@ -96,12 +122,14 @@ function DetailPageBottomBar({ challengeId }: { challengeId: string }) {
       }
     },
     onError: (
-      err,
-      newTodo,
-      context: { isChangedLike: boolean; challengeInfo: ChallengeType }
+      err: Error,
+      _: void,
+      context:
+        | { isChangedLike: boolean; challengeInfo: ChallengeType }
+        | undefined
     ) => {
-      queryClient.setQueryData(["challengeLike"], context.isChangedLike)
-      queryClient.setQueryData(["challengeDetail"], context.challengeInfo)
+      queryClient.setQueryData(["challengeLike"], context?.isChangedLike)
+      queryClient.setQueryData(["challengeDetail"], context?.challengeInfo)
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["challengeLike"] })
@@ -115,13 +143,24 @@ function DetailPageBottomBar({ challengeId }: { challengeId: string }) {
     }
   }, [isLikedFromServer])
 
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault() // 이벤트 기본 동작 방지
+
+    if (!me) {
+      router.push("/")
+      return
+    }
+
+    handleLikeMutate() // 이벤트 객체를 무시하고 mutate 호출
+  }
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-20 w-full bg-white">
       <div className="grid grid-cols-5 p-4">
         <div className="col-span-1">
           <button
             className="flex w-full flex-col items-center justify-center transition-all duration-300"
-            onClick={handleLikeMutate}
+            onClick={handleClick}
           >
             <ThumbsUpIcon
               color={isLiked ? "#e1e1e1" : "#D9D9D9"}

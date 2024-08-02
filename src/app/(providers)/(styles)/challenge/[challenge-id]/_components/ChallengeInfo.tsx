@@ -6,9 +6,11 @@ import { useModal } from "@/context/modal.context"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
+import Chip from "@/components/Chip"
+import BookmarkIcon from "@/components/Icon/BookmarkIcon"
+import ThumbsUpIcon from "@/components/Icon/ThumbsUpIcon"
+
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
-import ThumbsUpIcon from "@/components/Icon/ThumbsUpIcon";
-import FeedIcon from "@/components/Icon/CopyIcon";
 
 function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const modal = useModal()
@@ -55,7 +57,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
             }}
           ></div>
           <div className="absolute bottom-0 left-0 p-4 text-lg font-bold text-white">
-            공부(컴포넌트 적용 예정)
+            <Chip size="sm" label={data?.category} variant="outline" />
           </div>
           <div className="absolute bottom-0 right-0 p-4 text-lg font-bold text-white">
             {convertStatusToKorean(data?.state)}
@@ -65,75 +67,79 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
           <div className="text-xl font-semibold">{data?.goal} </div>
           <div className="text-gray-500">{data?.nickname}</div>
           <div className="flex items-center justify-center gap-4">
-            <div className={"flex"}>
-              <div className="mt-1 text-gray-500 text-[17px]">{data.like_cnt}</div>
-              <ThumbsUpIcon color={"black"}/>
+            <div className="flex items-center">
+              <ThumbsUpIcon width={15} height={17} color={"black"} />
+              <span className="ml-1 text-sm text-gray-500">
+                {data.like_cnt}
+              </span>
             </div>
-            <div className={"flex gap-1"}>
-              <div className="text-gray-500 text-[17px]">{data.template_cnt}</div>
-              <FeedIcon className={"mt-1"}/>
+            <div className="flex items-center">
+              <BookmarkIcon width={16} height={18} color={"black"} />
+              <span className="ml-1 text-sm text-gray-500">
+                {data.template_cnt}
+              </span>
             </div>
           </div>
         </div>
-        <div className="mt-4 flex flex-col items-center border-t pt-4">
-          <div className="text-lg font-semibold">챌린지 기간</div>
-          <div className="text-gray-500">
-            {data?.start_at} ~ {data?.end_at} ({data?.day_cnt}일)
-          </div>
-          {/*<div className="mt-4">그레프 나와야함 공통 컴포넌트 사용예정</div>*/}
+      </div>
+      <div className="mt-4 flex flex-col items-center border-t pt-4">
+        <div className="text-lg font-semibold">챌린지 기간</div>
+        <div className="text-gray-500">
+          {data?.start_at} ~ {data?.end_at} ({data?.day_cnt}일)
         </div>
-        <div className={"flex flex-col items-center gap-1"}>
-          {data?.milestones?.map((milestone, index) => {
-            const isOpen = openIndexes.includes(index)
-            return (
-              <div
-                key={milestone.id}
-                className="mt-5 h-auto w-[375px] rounded-[10px] border-[1px]"
+        {/*<div className="mt-4">그레프 나와야함 공통 컴포넌트 사용예정</div>*/}
+      </div>
+      <div className={"flex flex-col items-center gap-1"}>
+        {data?.milestones?.map((milestone, index) => {
+          const isOpen = openIndexes.includes(index)
+          return (
+            <div
+              key={milestone.id}
+              className="mt-5 h-auto w-[375px] rounded-[10px] border-[1px]"
+            >
+              <button
+                className="flex w-full items-center justify-between p-4 text-left focus:outline-none"
+                onClick={() => toggleAccordion(index)}
               >
-                <button
-                  className="flex w-full items-center justify-between p-4 text-left focus:outline-none"
-                  onClick={() => toggleAccordion(index)}
-                >
-                  <div className="text-[16px]">
-                    마일스톤{index + 1}
-                    <div className={"text-[12px] text-[#939393]"}>
-                      {milestone.start_at} ~ {milestone.end_at} (
-                      {milestone.total_day}일)
-                    </div>
+                <div className="text-[16px]">
+                  마일스톤{index + 1}
+                  <div className={"text-[12px] text-[#939393]"}>
+                    {milestone.start_at} ~ {milestone.end_at} (
+                    {milestone.total_day}일)
                   </div>
-                  <span className="text-2xl">
-                    {isOpen ? (
-                      <img src={"/icon/ic-down-arrow.svg"} />
-                    ) : (
-                      <img src={"/icon/ic-up-arrow.svg"} />
-                    )}
-                  </span>
-                </button>
-                <div className={"flex flex-col items-center gap-2 pb-5"}>
-                  {isOpen &&
-                    milestone.routines?.map((routine) => {
-                      return (
-                        <div
-                          className={
-                            "h-[39px] w-[305px] rounded-[4px] bg-[#F5F5F5] pt-2"
-                          }
-                          key={routine.id}
-                        >
-                          <span
-                            className={
-                              "pl-3 text-[12px] font-medium text-[#171717]"
-                            }
-                          >
-                            {routine.content}
-                          </span>
-                        </div>
-                      )
-                    })}
                 </div>
+                <span className="text-2xl">
+                  {isOpen ? (
+                    <img src={"/icon/ic-down-arrow.svg"} />
+                  ) : (
+                    <img src={"/icon/ic-up-arrow.svg"} />
+                  )}
+                </span>
+              </button>
+              <div className={"flex flex-col items-center gap-2 pb-5"}>
+                {isOpen &&
+                  milestone.routines?.map((routine) => {
+                    return (
+                      <div
+                        className={
+                          "h-[39px] w-[305px] rounded-[4px] bg-[#F5F5F5] pt-2"
+                        }
+                        key={routine.id}
+                      >
+                        <span
+                          className={
+                            "pl-3 text-[12px] font-medium text-[#171717]"
+                          }
+                        >
+                          {routine.content}
+                        </span>
+                      </div>
+                    )
+                  })}
               </div>
-            )
-          })}
-        </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

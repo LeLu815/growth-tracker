@@ -51,6 +51,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
    * */
   const createComment = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    debugger
     if (!me) {
       router.push("/")
       return
@@ -260,7 +261,6 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   } = useInfiniteQuery({
     queryKey: ["challengeComment"],
     initialPageParam: 0,
-    enabled: !!me, // me가 있을 때만 쿼리 실행
     queryFn: getChallengeCommentList,
     getNextPageParam: (
       lastPage: any,
@@ -296,7 +296,6 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
       <div className="mx-auto mt-10 w-full rounded-lg border p-4">
         <form onSubmit={createComment}>
           <Input
-            className="w-full resize-none rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="댓글을 입력하세요..."
             value={content}
             onChange={(e) => setContent(e.target.value)}
@@ -376,8 +375,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                       variant="rounded"
                       size="sm"
                       type="submit"
-                      onClick={(e) => {
-                        e.preventDefault()
+                      onClick={() => {
                         handleCommentMutate({
                           commentId: comment.id,
                           content: updateContent,
@@ -390,8 +388,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                       intent="secondary"
                       variant="rounded"
                       size="sm"
-                      onClick={(e) => {
-                        e.preventDefault()
+                      onClick={() => {
                         setUpdateContent("")
                         setIsUpdate(false)
                         setUpdateCommentId("")
@@ -406,8 +403,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                       intent="secondary"
                       variant="rounded"
                       size="sm"
-                      onClick={(e) => {
-                        e.preventDefault()
+                      onClick={() => {
                         setUpdateContent(comment.content)
                         setIsUpdate(true)
                         setUpdateCommentId(comment.id)

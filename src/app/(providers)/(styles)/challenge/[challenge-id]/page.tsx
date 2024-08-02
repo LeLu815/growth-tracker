@@ -1,9 +1,8 @@
+import DetailPageBottomBar from "@/components/DetailPageBottomBar/DetailPageBottomBar"
 import Page from "@/components/Page"
 
 import ChallengeCommentList from "./_components/ChallengeCommentList"
 import ChallengeInfo from "./_components/ChallengeInfo"
-import ChallengeLike from "./_components/ChallengeLike"
-import DetailPageBottomBar from "@/components/DetailPageBottomBar/DetailPageBottomBar";
 
 interface ChallengeDetailPageProps {
   params: { "challenge-id": string }
