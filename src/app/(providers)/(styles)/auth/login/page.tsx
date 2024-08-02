@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 
+import Box from "@/components/Box"
 import Page from "@/components/Page"
 
 import EmailLoginButton from "./_components/EmailLoginButton"
@@ -13,11 +14,11 @@ export default function LoginPage() {
 
   return (
     <Page title="로그인">
-      <div className="flex w-full flex-col gap-y-[20px]">
+      <Box className="flex w-full flex-col gap-y-[20px]">
         <KakaoLoginButton />
         <GoogleLoginButton />
         <EmailLoginButton onClick={() => router.push("/auth/login-email")} />
-      </div>
+      </Box>
     </Page>
   )
 }
