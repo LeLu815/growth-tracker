@@ -12,6 +12,7 @@ import Input from "@/components/Input"
 import RangeInput from "@/components/RangeInput"
 
 import { MilestoneCreateProps } from "./MilestoneCreate"
+import MilestoneCreateComponent from "./MilestoneCreateComponent"
 
 // 객체를 기본으로 받자 => 없으면 걍 생성
 interface MilestoneCreateConfigProps {
@@ -170,7 +171,18 @@ function MilestoneCreateConfig({
           />
           <ul>
             {routines.map((routine) => (
-              <li key={routine}>{routine}</li>
+              <li key={routine}>
+                <MilestoneCreateComponent
+                  text={routine}
+                  onClick={() => {
+                    setRoutines((prev) =>
+                      produce(prev, (drafts) => {
+                        drafts.filter((draft) => draft !== routine)
+                      })
+                    )
+                  }}
+                />
+              </li>
             ))}
           </ul>
         </form>
