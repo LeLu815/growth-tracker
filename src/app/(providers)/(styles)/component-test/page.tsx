@@ -3,6 +3,7 @@
 import { useState } from "react"
 
 import Button from "@/components/Button"
+import ChallengeCard from "@/components/ChallengeCard"
 import Chip from "@/components/Chip"
 import DetailPageBottomBar from "@/components/DetailPageBottomBar/DetailPageBottomBar"
 import Page from "@/components/Page"
@@ -97,6 +98,20 @@ function ComponentTestPage() {
       >
         셀렉트 버튼
       </Button>
+
+      <h4>challenge card</h4>
+      <ChallengeCard
+        title="토익 990점~~"
+        category="공부"
+        likes={3}
+        liked={false}
+        bookmarks={23}
+        userImage="/image/profileImage.png"
+        nickname="닉네임"
+        progress="진행중"
+        bookmarked={false}
+        challengeImage="/icon/ic-arrow-right.svg"
+      />
 
       <DetailPageBottomBar />
       <div className="h-[100px]"></div>
