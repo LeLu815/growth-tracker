@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import "./RangeInput.css"
+import "./RangeInput2.css"
 
 interface RangeInputProps {
   max: number
@@ -18,7 +18,7 @@ function RangeInput({
   step,
 }: RangeInputProps) {
   const [value, setValue] = useState(Math.round(max / 2))
-
+  // 이인
   return (
     <div className="range-container flex h-[50px] flex-col items-end">
       <div className="box-border h-[32px] w-full pl-1 pr-4">
