@@ -5,7 +5,7 @@ import { useAuth } from "@/context/auth.context"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import axios from "axios"
 
-import Challenge from "@/app/(providers)/(styles)/my-page/_component/Challenge"
+import ChallengeCard from "@/components/ChallengeCard"
 
 import { MyChallengeType } from "../../../../../../types/myChallengeList.type"
 
@@ -59,16 +59,33 @@ function MyChallengeListPage() {
   if (isError) return <div>Error loading data</div>
 
   return (
-    <div className={"flex flex-col items-center"}>
-      <p>내 칠린지 목록 (현재는 모든 챌린지가 보임 (테스트용))</p>
-      <ul>
-        {data?.map((myChallenge) => (
-          <Challenge
-            key={myChallenge.id}
-            challenge={myChallenge}
-            onMoveDetail={handleMoveDetail}
-          ></Challenge>
-        ))}
+    <div className={"flex w-full flex-col items-center px-4"}>
+      <h1 className={"text-2xl"}>내 칠린지 목록</h1>
+      <ul className={"w-full"}>
+        {data?.map((myChallenge) => {
+          return (
+            <li
+              key={myChallenge.id}
+              onClick={() => handleMoveDetail(myChallenge.id)}
+              className="mb-[20px] cursor-pointer"
+            >
+              <ChallengeCard
+                title={myChallenge.goal}
+                category={myChallenge.category}
+                likes={myChallenge.like_cnt}
+                bookmarks={myChallenge.template_cnt}
+                liked={me ? (myChallenge.liked || []).includes(me.id) : false}
+                nickname={myChallenge.user.nickname}
+                progress={myChallenge.progress}
+                userImage={myChallenge.user.profile_image_url}
+                bookmarked={
+                  me ? (myChallenge.bookmarked || []).includes(me.id) : false
+                }
+                challengeImage={myChallenge.image}
+              />
+            </li>
+          )
+        })}
       </ul>
     </div>
   )

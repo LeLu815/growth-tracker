@@ -109,7 +109,7 @@ function ComponentTestPage() {
         likes={3}
         liked={false}
         bookmarks={23}
-        userImage="/image/profileImage.png"
+        userImage=""
         nickname="닉네임"
         progress="진행중"
         bookmarked={false}

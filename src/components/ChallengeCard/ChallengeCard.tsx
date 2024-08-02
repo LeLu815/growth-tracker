@@ -1,5 +1,7 @@
 import Image from "next/image"
 
+import NoneProfile from "@/components/Icon/NoneProfile"
+
 import BookmarkIcon from "../Icon/BookmarkIcon"
 import CopyIcon from "../Icon/CopyIcon"
 import LikeIcon from "../Icon/LikeIcon"
@@ -55,12 +57,16 @@ function ChallengeCard({
           </div>
           <div className="mb-4 flex items-center">
             <div className="relative mr-[6px] h-[26px] w-[26px]">
-              <Image
-                src={userImage}
-                alt={nickname}
-                fill
-                className="rounded-full border border-gray-300"
-              />
+              {userImage ? (
+                <Image
+                  src={userImage}
+                  alt={nickname}
+                  fill
+                  className="rounded-full border border-gray-300"
+                />
+              ) : (
+                <NoneProfile width={26} height={26} />
+              )}
             </div>
             <span className="text-xs font-[500] text-gray-500">{nickname}</span>
           </div>

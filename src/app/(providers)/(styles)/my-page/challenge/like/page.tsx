@@ -5,7 +5,7 @@ import { useAuth } from "@/context/auth.context"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import axios from "axios"
 
-import Challenge from "@/app/(providers)/(styles)/my-page/_component/Challenge"
+import ChallengeCard from "@/components/ChallengeCard"
 
 import { MyChallengeType } from "../../../../../../../types/myChallengeList.type"
 
@@ -60,16 +60,33 @@ function Page() {
   if (isError) return <div>Error loading data</div>
 
   return (
-    <div className={"flex flex-col items-center"}>
-      <p>좋아요 챌린지 목록</p>
-      <ul>
-        {data?.map((challenge) => (
-          <Challenge
-            key={challenge?.id}
-            challenge={challenge}
-            onMoveDetail={handleMoveDetail}
-          ></Challenge>
-        ))}
+    <div className={"flex flex-col items-center px-4"}>
+      <h1 className={"text-2xl"}>좋아요 챌린지 목록</h1>
+      <ul className={"w-full"}>
+        {data?.map((myChallenge) => {
+          return (
+            <li
+              key={myChallenge.id}
+              onClick={() => handleMoveDetail(myChallenge.id)}
+              className="mb-[20px] cursor-pointer"
+            >
+              <ChallengeCard
+                title={myChallenge.goal}
+                category={myChallenge.category}
+                likes={myChallenge.like_cnt}
+                bookmarks={myChallenge.template_cnt}
+                liked={me ? (myChallenge.liked || []).includes(me.id) : false}
+                nickname={myChallenge.user.nickname}
+                progress={myChallenge.progress}
+                userImage={myChallenge.user.profile_image_url}
+                bookmarked={
+                  me ? (myChallenge.bookmarked || []).includes(me.id) : false
+                }
+                challengeImage={myChallenge.image}
+              />
+            </li>
+          )
+        })}
       </ul>
     </div>
   )

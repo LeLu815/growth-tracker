@@ -51,7 +51,7 @@ function BottomNavigation() {
     },
     {
       label: "마이",
-      path: "/my-page/profile",
+      path: "/my-page",
       icon: (
         <MyPageIcon
           color={activePath === "/my-page/profile" ? "#FF5C5C" : "#ACACAC"}
