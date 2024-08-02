@@ -13,13 +13,11 @@ export default function LoginPage() {
 
   return (
     <Page title="로그인">
-      <>
-        <div className="flex w-full flex-col gap-y-[20px]">
-          <KakaoLoginButton />
-          <GoogleLoginButton />
-          <EmailLoginButton onClick={() => router.push("/auth/login-email")} />
-        </div>
-      </>
+      <div className="flex w-full flex-col gap-y-[20px]">
+        <KakaoLoginButton />
+        <GoogleLoginButton />
+        <EmailLoginButton onClick={() => router.push("/auth/login-email")} />
+      </div>
     </Page>
   )
 }
