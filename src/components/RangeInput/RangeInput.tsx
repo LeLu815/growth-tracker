@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import "./RangeInput.css"
+import "./RangeInput2.css"
 
 interface RangeInputProps {
   max: number
