@@ -1,87 +1,67 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
-import useChallengeDetailStore from "@/store/challengeDetail.store"
 import { createClient } from "@/supabase/client"
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { Badge, Drawer, Space } from "antd"
 import axios from "axios"
-import { useInView } from "react-intersection-observer"
 
-import { NoticePageType } from "../../../../../types/notice.type"
+import { NoticeListType, NoticeType } from "../../../../../types/notice.type"
 
 function Notice() {
   const queryClient = useQueryClient()
-
   const { me } = useAuth()
-  const [isShowNotice, setIsShowNotice] = useState(false)
   const router = useRouter()
+  const [open, setOpen] = useState(false)
+  const [count, setCount] = useState(0)
+  const showDrawer = () => {
+    setOpen(true)
+  }
 
-  const noticeRef = useRef<HTMLDivElement>(null)
+  const onClose = () => {
+    setOpen(false)
+  }
 
-  const getNoticeList = async ({
-    pageParam,
-  }: {
-    pageParam: number
-  }): Promise<NoticePageType> => {
+  const getNoticeList = async (): Promise<NoticeListType> => {
     const response = await axios
-      .get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/notice?page=${pageParam}&limit=7`
-      )
+      .get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/notice`)
       .then((response) => response.data)
 
+    const filter = response.data.filter((item: NoticeType) => !item.is_view)
+    debugger
+    setCount(filter.length)
     return response.data
   }
 
-  const {
-    data,
-    isPending,
-    isError,
-    fetchNextPage,
-    hasNextPage,
-    refetch,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
+  const { data, isPending, isError, refetch } = useQuery({
     queryKey: ["noticeList"],
-    initialPageParam: 0,
-    enabled: !!me, // me가 있을 때만 쿼리 실행
     queryFn: getNoticeList,
-    getNextPageParam: (
-      lastPage: any,
-      allPages,
-      lastPageParam,
-      allPageParams
-    ) => {
-      const nextPage = lastPageParam + 1
-      return lastPage.length === 7 ? nextPage : undefined
-    },
-    select: ({ pages }) => pages.flat(),
+    enabled: !!me,
   })
-
-  const handleToggleNotice = () => {
-    setIsShowNotice(!isShowNotice)
-  }
 
   const handleMove = async ({
     challengeId,
     noticeId,
+    isView,
   }: {
     challengeId: string
     noticeId: number
+    isView: boolean
   }) => {
     try {
-      axios.put(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/notice/${noticeId}`
-      )
+      if (!isView) {
+        await axios.put(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/notice/${noticeId}`
+        )
+      }
     } catch (error) {
       console.error(error)
     } finally {
-      setIsShowNotice(false)
+      setCount(count - 1)
+      setOpen(false)
       router.push(`/challenge/${challengeId}`)
     }
   }
@@ -101,16 +81,12 @@ function Notice() {
   const { mutate: handleDeleteNoticeMutate } = useMutation({
     mutationFn: deleteNotice,
     onMutate: async (noticeId: number) => {
+      debugger
       await queryClient.cancelQueries({ queryKey: ["noticeList"] })
       const noticeList = queryClient.getQueryData(["noticeList"])
 
-      queryClient.setQueryData(["noticeList"], (prev: NoticePageType) => {
-        return {
-          pageParams: [...prev.pageParams],
-          pages: prev.pages.map((notices) => {
-            return notices.filter((notice) => notice.id !== noticeId)
-          }),
-        }
+      queryClient.setQueryData(["noticeList"], (prev: NoticeListType) => {
+        return prev.filter((notice) => notice.id !== noticeId)
       })
       return { noticeList }
     },
@@ -149,92 +125,61 @@ function Notice() {
       .subscribe()
   }, [me?.id])
 
-  const { ref } = useInView({
-    threshold: 0,
-    onChange: (inView) => {
-      if (inView && hasNextPage && !isFetchingNextPage) {
-        fetchNextPage()
-      }
-    },
-  })
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      noticeRef.current &&
-      !noticeRef.current.contains(event.target as Node)
-    ) {
-      setIsShowNotice(false)
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
-
   return (
     <div className={"fixed right-0 top-0"}>
-      <div
-        className={`fixed right-0 h-12 w-12 rounded-full bg-blue-500 ${isShowNotice ? "hidden" : ""}`}
-        onClick={handleToggleNotice}
-      ></div>
+      <Image
+        src={"/icon/bell.svg"}
+        width={40}
+        height={40}
+        alt="알림"
+        className={`fixed right-1 top-1 rounded-full border-[1px] border-solid bg-white`}
+        onClick={showDrawer}
+      ></Image>
+      {count > 0 && (
+        <Space>
+          <Badge count={count} />
+        </Space>
+      )}
+      <Drawer title="알림" onClose={onClose} open={open}>
+        <div className={"flex flex-col gap-4"}>
+          {data?.map((notice, idx) => {
+            return (
+              <div
+                key={notice.id}
+                className={
+                  "flex w-full transform flex-col rounded-lg border shadow-md hover:cursor-pointer"
+                }
+              >
+                {notice.is_view || (
+                  <Space>
+                    <Badge count={"new"} />
+                  </Space>
+                )}
 
-      <div
-        className={
-          "fixed right-0 top-0 max-h-[300px] w-[500px] overflow-y-auto rounded border-l-4 border-green-400 bg-white"
-        }
-      >
-        <div
-          className={`mb-4 p-4 ${isShowNotice ? "" : "hidden"}`}
-          role="alert"
-        >
-          <span
-            className="absolute bottom-0 right-0 top-0 px-4 py-3"
-            onClick={handleToggleNotice}
-          >
-            <svg
-              className="fixed right-3 h-6 w-6 cursor-pointer fill-current text-gray-500"
-              role="button"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <path d="M14.348 5.652a1 1 0 10-1.414-1.414L10 7.586 7.066 4.652a1 1 0 10-1.414 1.414L8.586 10l-2.934 2.934a1 1 0 101.414 1.414L10 12.414l2.934 2.934a1 1 0 001.414-1.414L11.414 10l2.934-2.934z" />
-            </svg>
-          </span>
-          <div className={"mt-6"} ref={noticeRef}>
-            {data?.map((notice, idx) => {
-              const isLastItem = data?.length - 1 === idx
-              return (
                 <div
-                  key={notice.id}
-                  className={`flex transform border-b-2 border-solid hover:cursor-pointer`}
-                  ref={isLastItem ? ref : null}
+                  className={"absolute right-0 w-[20px] text-[15px]"}
+                  onClick={() => handleDeleteNoticeMutate(notice.id)}
                 >
-                  <div
-                    onClick={() =>
-                      handleMove({
-                        challengeId: notice.challenge_id,
-                        noticeId: notice.id,
-                      })
-                    }
-                    className={`text-[14px] ${notice.is_view ? "text-gray-500" : "text-black-500"}`}
-                  >
-                    {notice.content}
-                  </div>
-                  <div
-                    className={"w-4"}
-                    onClick={() => handleDeleteNoticeMutate(notice.id)}
-                  >
-                    x
-                  </div>
+                  {" "}
+                  X
                 </div>
-              )
-            })}
-          </div>
+                <div
+                  onClick={() =>
+                    handleMove({
+                      challengeId: notice.challenge_id as string,
+                      noticeId: notice.id,
+                      isView: notice.is_view,
+                    })
+                  }
+                  className={`w-[300px] p-4 text-[14px] ${notice.is_view ? "text-gray-500" : "text-black-500"}`}
+                >
+                  {notice.content}
+                </div>
+              </div>
+            )
+          })}
         </div>
-      </div>
+      </Drawer>
     </div>
   )
 }

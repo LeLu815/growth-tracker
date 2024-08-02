@@ -14,6 +14,7 @@ import BookmarkIcon from "@/components/Icon/BookmarkIcon"
 import ThumbsUpIcon from "@/components/Icon/ThumbsUpIcon"
 
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
+import Image from "next/image";
 
 function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const modal = useModal()
@@ -34,7 +35,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
       })
       router.push("/newsfeed")
     }
-    debugger
+
     const challengeDetail = {
       id: response.data.id as string,
       userId: response.data.user_id as string,
@@ -61,7 +62,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
   if (isError) return <div>Error loading data</div>
 
   return (
-    <div className="flex w-full flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center">
       <div className="w-full overflow-hidden bg-white">
         <div className="relative">
           <div
@@ -124,9 +125,9 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
                 </div>
                 <span className="text-2xl">
                   {isOpen ? (
-                    <img src={"/icon/ic-down-arrow.svg"} />
+                    <Image src={"/icon/ic-down-arrow.svg"} width={15} height={15} alt={""}/>
                   ) : (
-                    <img src={"/icon/ic-up-arrow.svg"} />
+                    <Image src={"/icon/ic-up-arrow.svg"} width={15} height={15} alt={""}/>
                   )}
                 </span>
               </button>

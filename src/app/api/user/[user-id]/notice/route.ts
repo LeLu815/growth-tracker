@@ -11,11 +11,7 @@ export async function GET(
     }
   }
 ) {
-  const { searchParams } = new URL(req.url)
-  const limit = Number(searchParams.get("limit")) || 10
-  const page = Number(searchParams.get("page")) || 0
   const userId = params["user-id"]
-
   if (!userId) {
     return NextResponse.json({ error: "유저 아이디가 없습니다", status: 400 })
   }
@@ -26,7 +22,7 @@ export async function GET(
     .from("notice")
     .select(`*`)
     .eq("user_id", userId)
-    .range(page * limit, page * limit + (limit - 1))
+    .order("is_view", )
     .order("created_at", { ascending: false })
     .order("id", { ascending: false })
 

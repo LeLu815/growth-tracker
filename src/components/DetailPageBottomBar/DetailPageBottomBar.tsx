@@ -49,13 +49,13 @@ function DetailPageBottomBar({ challengeId }: { challengeId: string }) {
 
   const createOrDeleteLike = async () => {
     if (!isLiked) {
-      debugger
+
       const axiosResponse = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/notice?toUserId=${challengeDetail.userId}&goal=${challengeDetail.goal}&challengeId=${challengeId}`
       )
 
       console.log(axiosResponse)
-      debugger
+
     }
 
     const method = isLiked ? "delete" : "post"
