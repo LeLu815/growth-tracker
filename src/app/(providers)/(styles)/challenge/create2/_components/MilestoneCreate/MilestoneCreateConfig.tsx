@@ -128,9 +128,8 @@ function MilestoneCreateConfig({
               <li key={value} onClick={() => handleClickDayGroupType(value)}>
                 <Chip
                   label={value}
-                  intent={
-                    currentDayGroupType === value ? "selected" : "primary"
-                  }
+                  selected={currentDayGroupType === value}
+                  intent="secondary"
                   variant="outline"
                 />
               </li>
