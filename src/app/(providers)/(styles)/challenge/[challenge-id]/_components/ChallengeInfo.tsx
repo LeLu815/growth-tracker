@@ -34,7 +34,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
       })
       router.push("/newsfeed")
     }
-    debugger
+
     const challengeDetail = {
       id: response.data.id as string,
       userId: response.data.user_id as string,
@@ -61,7 +61,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
   if (isError) return <div>Error loading data</div>
 
   return (
-    <div className="flex w-full flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center">
       <div className="w-full overflow-hidden bg-white">
         <div className="relative">
           <div
