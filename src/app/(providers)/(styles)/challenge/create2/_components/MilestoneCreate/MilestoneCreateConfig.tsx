@@ -282,7 +282,9 @@ function MilestoneCreateConfig({
             is_fri: selectWeeks[4],
             is_sat: selectWeeks[5],
             is_sun: selectWeeks[6],
-            success_requirement_cnt: (milestone_actual_day * +minPercent) / 100,
+            success_requirement_cnt: Math.ceil(
+              (milestone_actual_day * +minPercent) / 100
+            ),
             total_cnt: milestone_actual_day,
             total_day: +milestonePeriod - prevMilestonesPeriod,
             routines: routines.map((value) => ({

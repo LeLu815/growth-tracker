@@ -13,7 +13,6 @@ import {
   parseISO,
 } from "date-fns"
 import { produce } from "immer"
-import { v4 as uuidv4 } from "uuid"
 
 import Button from "@/components/Button"
 import Chip from "@/components/Chip"
@@ -79,8 +78,8 @@ function MilestoneCreateConfigEdit({
   )
   // 이전 일자 계산
   const prevMilestonesPeriod = differenceInCalendarDays(
-    range?.from!,
-    milestone_start_date
+    milestone_start_date,
+    range?.from!
   )
   // 마일스톤 종료 날짜 *
   const milestone_end_date = format(
@@ -172,7 +171,7 @@ function MilestoneCreateConfigEdit({
   const confirmFunc = () => {
     updateMilestone({
       challenge_id: "",
-      id: uuidv4(),
+      id: currentMilestoneObject?.id!,
       start_at: milestone_start_date,
       end_at: milestone_end_date,
       is_mon: selectWeeks[0],
@@ -182,17 +181,17 @@ function MilestoneCreateConfigEdit({
       is_fri: selectWeeks[4],
       is_sat: selectWeeks[5],
       is_sun: selectWeeks[6],
-      success_requirement_cnt: (milestone_actual_day * +minPercent) / 100,
+      success_requirement_cnt: Math.ceil(
+        (milestone_actual_day * +minPercent) / 100
+      ),
       total_cnt: milestone_actual_day,
-      total_day: +milestonePeriod - prevMilestonesPeriod,
+      total_day: +milestonePeriod,
       routines: routines.map((value) => ({
         id: "",
         content: value,
       })),
     })
   }
-
-  console.log(differenceInCalendarDays(milestone_end_date, range?.from!) + 1)
 
   useEffect(() => {}, [data, range])
   return (
