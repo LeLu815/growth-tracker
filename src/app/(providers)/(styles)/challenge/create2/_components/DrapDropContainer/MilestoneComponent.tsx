@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react"
+import { useModal } from "@/context/modal.context"
 import { MilestoneType } from "@/store/milestoneCreate.store"
 import { DraggableProvided } from "@hello-pangea/dnd"
 
@@ -8,6 +9,7 @@ import ArrowUpIcon from "@/components/Icon/ArrowUpIcon"
 
 import MilestoneCard from "../Card"
 import MilestoneCreateComponent from "../MilestoneCreate/MilestoneCreateComponent"
+import MilestoneCreateConfigEdit from "../MilestoneCreate/MilestoneCreateConfigEdit"
 
 type RoutineType = {
   id: string
@@ -27,8 +29,19 @@ function MilestoneComponent({
   setData,
 }: MilestoneComponentProps) {
   const [showDetail, setShowDetail] = useState<boolean>(false)
+  const modal = useModal()
 
-  console.log("milestone :", milestone)
+  const handleOpenCalendarModal = (id: string) => {
+    modal.open({
+      type: "custom",
+      children: (
+        <MilestoneCreateConfigEdit
+          milestoneId={id}
+          handleClickConfirm={() => modal.close()}
+        />
+      ),
+    })
+  }
   return (
     <MilestoneCard
       ref={provided.innerRef}
@@ -80,6 +93,7 @@ function MilestoneComponent({
               style={{ width: "64%" }}
               onClick={() => {
                 // 수정 모달 띄우기
+                handleOpenCalendarModal(milestone.id)
               }}
             >
               수정

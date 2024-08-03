@@ -9,6 +9,7 @@ interface RangeInputProps {
   trackColor: string // track 색상
   thumbColor: string // thumb 색상
   step: number
+  defaultValue?: number
 }
 
 function RangeInput({
@@ -18,8 +19,15 @@ function RangeInput({
   trackColor,
   thumbColor,
   step,
+  defaultValue,
 }: RangeInputProps) {
-  const [value, setValue] = useState(min === 0 ? Math.round(max / 2) : min)
+  const [value, setValue] = useState(
+    defaultValue || (min === 0 ? Math.round(max / 2) : min)
+  )
+  console.log(
+    "defaultValue || (min === 0 ? Math.round(max / 2) : min) :",
+    defaultValue || (min === 0 ? Math.round(max / 2) : min)
+  )
 
   // 최소값과 현재값에 따라 배경 색상 계산
   const minPercentage = (min / max) * 100

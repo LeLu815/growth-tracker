@@ -1,10 +1,15 @@
 import { useRouter } from "next/navigation"
+import { useAuth } from "@/context/auth.context"
+import useChallengeQuery from "@/query/challenge/userChallengeQuery"
 import useChallengeCreateStore, {
   categories,
   defaultSelected,
 } from "@/store/challengeCreate.store"
-import useMilestoneCreateStore from "@/store/milestoneCreate.store"
+import useMilestoneCreateStore, {
+  MilestoneType,
+} from "@/store/milestoneCreate.store"
 import { differenceInCalendarDays, format } from "date-fns"
+import { produce } from "immer"
 
 import Button from "@/components/Button"
 
@@ -17,10 +22,18 @@ interface MilestoneCreateSwitchProps {
 function MilestoneCreateSwitch({
   setShowCompoent,
 }: MilestoneCreateSwitchProps) {
-  const { range, goal, setRange, setCategory, setGoal } =
+  const { category, range, goal, setRange, setCategory, setGoal } =
     useChallengeCreateStore()
   const { data, setData } = useMilestoneCreateStore()
+  const { me } = useAuth()
   const router = useRouter()
+
+  // 뮤테이션 함수 => db에 생성 저장하는 로직
+  const {
+    challengeCreateMutate,
+    challengeCreateIsPending,
+    challengeUpdateMutate,
+  } = useChallengeQuery()
 
   return (
     <div>
@@ -53,7 +66,39 @@ function MilestoneCreateSwitch({
         className="h-full"
         onClick={() => {
           // 1. 먼저 뮤테이션 돌리고
-
+          challengeCreateMutate({
+            challenge: {
+              category: category,
+              user_id: me?.id || "",
+              day_cnt: differenceInCalendarDays(range?.to!, range?.from!) + 1,
+              end_at: format(range?.to!, "yyyy-MM-dd"),
+              goal: goal,
+              is_secret: false,
+              start_at: format(range?.from!, "yyyy-MM-dd"),
+            },
+            milestone: data.map((obj) =>
+              produce(
+                obj,
+                (
+                  draft: Omit<MilestoneType, "routines" | "id"> & {
+                    routines?: MilestoneType["routines"]
+                    id?: MilestoneType["id"]
+                  }
+                ) => {
+                  draft.start_at = draft.start_at
+                  draft.end_at = draft.end_at
+                  delete draft.routines
+                  delete draft.id
+                }
+              )
+            ),
+            routine: data.map((obj) =>
+              obj.routines.map((routine) => ({
+                content: routine.content,
+                milestone_id: obj.id,
+              }))
+            ),
+          })
           // 2. 주스텐드 싹다 정리하는 함수를 실행하기 (스토어 초기화)
           setData([])
           setRange(defaultSelected)

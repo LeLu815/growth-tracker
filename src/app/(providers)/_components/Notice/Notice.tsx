@@ -31,7 +31,7 @@ function Notice() {
       .then((response) => response.data)
 
     const filter = response.data.filter((item: NoticeType) => !item.is_view)
-    debugger
+
     setCount(filter.length)
     return response.data
   }
@@ -81,7 +81,6 @@ function Notice() {
   const { mutate: handleDeleteNoticeMutate } = useMutation({
     mutationFn: deleteNotice,
     onMutate: async (noticeId: number) => {
-      debugger
       await queryClient.cancelQueries({ queryKey: ["noticeList"] })
       const noticeList = queryClient.getQueryData(["noticeList"])
 
