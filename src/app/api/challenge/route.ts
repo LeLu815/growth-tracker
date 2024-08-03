@@ -14,19 +14,27 @@ type RoutineType = Database["public"]["Tables"]["routine"]["Row"]
 export const POST = async (request: NextRequest) => {
   const supabase = createClient()
   const data = await request.json()
+
   // 마일스톤, 루틴 데이터 받기
   const challengeData: ChallengeType = data.challenge
   const milestoneList: MilestoneType[] = data.milestone
   const routineList: RoutineType[][] = data.routine
 
   // 첼린지 생성
-  const challengeCreateResopose = await supabase
+  const challengeCreateResponse = await supabase
     .from("challenge")
     .insert(challengeData)
     .select()
 
-  // 에러 발생하면 에러 코드는 없음 : 첼린지 생성이 안되서 삭제할 첼린지 id가 없음
-  if (challengeCreateResopose.error) {
+  // *** 수정된 부분 시작 ***
+  console.log("첼린지 생성 응답:", challengeCreateResponse)
+
+  // 응답 데이터 검증
+  if (
+    challengeCreateResponse.error ||
+    !challengeCreateResponse.data ||
+    challengeCreateResponse.data.length === 0
+  ) {
     return NextResponse.json(
       {
         error: {
@@ -36,9 +44,10 @@ export const POST = async (request: NextRequest) => {
       { status: 400 }
     )
   }
+  // *** 수정된 부분 끝 ***
 
   // 첼린지 아이디 추출
-  const newChallengeId = challengeCreateResopose.data[0].id
+  const newChallengeId = challengeCreateResponse.data[0].id
 
   // 추출한 챌린지 아이디 받아온 마일스톤에 주입 :newMilestoneList
   const newMilestoneList = milestoneList.map((milestoneObj) =>
@@ -51,15 +60,17 @@ export const POST = async (request: NextRequest) => {
   const insertMileStonePromises = newMilestoneList.map((obj) =>
     supabase.from("milestone").insert(obj).select()
   )
+
   // try, catch 내부 작업을 외부로 끌어낼 변수
   let milestoneCreateResponses: PostgrestResponse<MilestoneType>[]
   try {
     // 마일스톤 생성
     milestoneCreateResponses = await Promise.all(insertMileStonePromises)
-  } catch {
+    console.log("milestoneCreateResponses :", milestoneCreateResponses)
+  } catch (e) {
+    console.log("마일스톤 생성 에러:", e)
     try {
       // 마일스톤 생성 에러 발생시 첼린지 아이디를 에러로 리턴하여 해당 챌린지 삭제처리
-      // 삭제 로직을 분리하지 말고 여기서 바로 작성, 에러 코드에 메세지를 상세하게 작성해줄 것.
       await supabase.from("challenge").delete().eq("id", newChallengeId)
     } catch {
       console.log(`챌린지 ${newChallengeId} 삭제 오류`)
