@@ -1,7 +1,13 @@
 import { Dispatch, SetStateAction, useState } from "react"
 import { MilestoneType } from "@/store/milestoneCreate.store"
 import { DraggableProvided } from "@hello-pangea/dnd"
-import { produce } from "immer"
+
+import Button from "@/components/Button"
+import ArrowDownIcon from "@/components/Icon/ArrowDownIcon"
+import ArrowUpIcon from "@/components/Icon/ArrowUpIcon"
+
+import MilestoneCard from "../Card"
+import MilestoneCreateComponent from "../MilestoneCreate/MilestoneCreateComponent"
 
 type RoutineType = {
   id: string
@@ -20,53 +26,68 @@ function MilestoneComponent({
   milestone,
   setData,
 }: MilestoneComponentProps) {
-  const [routineValue, setRoutineValue] = useState<string>("")
+  const [showDetail, setShowDetail] = useState<boolean>(false)
 
-  // 루틴 생성함수
-  const createRoutine = (milestoneId: string, routineObj: RoutineType) => {
-    setData((prev) =>
-      produce(prev, (draft) => {
-        const milestoneObj = draft.find((obj) => obj.id === milestoneId)
-        milestoneObj?.routines.push(routineObj)
-      })
-    )
-  }
-
-  // 루틴 삭제 함수
-  const deleteRoutine = (milestoneId: string, routineId: string) => {
-    setData((prevData) => {
-      const milestoneIndex = prevData.findIndex(
-        (milestone) => milestone.id === milestoneId
-      )
-      const newRoutines = prevData[milestoneIndex].routines.filter(
-        (routine) => routine.id !== routineId
-      )
-      const newMilestone = {
-        ...prevData[milestoneIndex],
-        routines: newRoutines,
-      }
-      const newData = Array.from(prevData)
-      newData[milestoneIndex] = newMilestone
-      return newData
-    })
-  }
+  console.log("milestone :", milestone)
   return (
-    <>
-      <div
-        ref={provided.innerRef}
-        {...provided.draggableProps}
-        {...provided.dragHandleProps}
-        className="mb-4 hidden flex-col gap-2 rounded-lg border border-gray-400 bg-gray-100 p-4 sm:flex"
-      >
-        <button onClick={() => deleteMilestone(milestone.id)}>삭제</button>
-        <ul>
-          {milestone.routines.map((obj) => (
-            <li key={obj.content}>{obj.content}</li>
-          ))}
-        </ul>
+    <MilestoneCard
+      ref={provided.innerRef}
+      {...provided.draggableProps}
+      {...provided.dragHandleProps}
+      className="flex flex-col"
+    >
+      <div className="ml-auto">
+        {!showDetail ? (
+          <ArrowDownIcon
+            className="cursor-pointer"
+            onClick={() => setShowDetail((prev) => !prev)}
+          />
+        ) : (
+          <ArrowUpIcon
+            className="cursor-pointer"
+            onClick={() => setShowDetail((prev) => !prev)}
+          />
+        )}
       </div>
-      <div className="flex flex-col overflow-y-auto"></div>
-    </>
+      <div className="flex justify-between">
+        <div>
+          <p>루틴 A</p>
+          <p>{`${milestone.start_at.replace(/-/g, ".")} ~ ${milestone.end_at.replace(/-/g, ".")} (${milestone.total_day}일)`}</p>
+        </div>
+        <div className="flex flex-1 items-center justify-center">
+          <p>달성률 {50}%</p>
+        </div>
+      </div>
+      {showDetail && (
+        <ul className="">
+          {milestone.routines.map((obj) => (
+            <li key={obj.content}>
+              <MilestoneCreateComponent text={obj.content} />
+            </li>
+          ))}
+          <div className="flex justify-between">
+            <Button
+              intent="secondary"
+              className="h-full"
+              style={{ width: "34%" }}
+              onClick={() => deleteMilestone(milestone.id)}
+            >
+              삭제
+            </Button>
+            <Button
+              intent="primary"
+              className="h-full"
+              style={{ width: "64%" }}
+              onClick={() => {
+                // 수정 모달 띄우기
+              }}
+            >
+              수정
+            </Button>
+          </div>
+        </ul>
+      )}
+    </MilestoneCard>
   )
 }
 

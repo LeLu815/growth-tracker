@@ -1,6 +1,7 @@
 import { ComponentProps, PropsWithChildren } from "react"
 import Link from "next/link"
 import { cva, VariantProps } from "class-variance-authority"
+import classNames from "classnames"
 
 const buttonVariant = cva(
   "border font-semibold duration-10 transition-all box-border",
@@ -101,6 +102,7 @@ function Button({
   variant,
   disabled,
   selected,
+  className: customClassName,
   ...props
 }: PropsWithChildren<
   ButtonProps & { disabled?: boolean; selected?: boolean }
@@ -111,13 +113,17 @@ function Button({
 
   if ("href" in props) {
     return (
-      <Link className={className} {...props}>
+      <Link className={classNames(className, customClassName)} {...props}>
         {children}
       </Link>
     )
   } else {
     return (
-      <button className={className} disabled={disabled} {...props}>
+      <button
+        className={classNames(className, customClassName)}
+        disabled={disabled}
+        {...props}
+      >
         {children}
       </button>
     )

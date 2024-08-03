@@ -1,12 +1,11 @@
 import { Dispatch, SetStateAction, useState } from "react"
 import { MilestoneType } from "@/store/milestoneCreate.store"
-import { Draggable, DraggableProvided, Droppable } from "@hello-pangea/dnd"
-import { produce } from "immer"
-import { nanoid } from "nanoid"
+import { DraggableProvided } from "@hello-pangea/dnd"
 
-import Input from "@/components/Input"
+import ArrowDownIcon from "@/components/Icon/ArrowDownIcon"
+import ArrowUpIcon from "@/components/Icon/ArrowUpIcon"
 
-import RoutineComponent from "./RoutineComponent"
+import MilestoneCard from "../../../create2/_components/Card"
 
 type RoutineType = {
   id: string
@@ -25,100 +24,28 @@ function MilestoneComponent({
   milestone,
   setData,
 }: MilestoneComponentProps) {
-  const [routineValue, setRoutineValue] = useState<string>("")
+  const [showDetail, setShowDetail] = useState<boolean>(false)
 
-  // 루틴 생성함수
-  const createRoutine = (milestoneId: string, routineObj: RoutineType) => {
-    setData((prev) =>
-      produce(prev, (draft) => {
-        const milestoneObj = draft.find((obj) => obj.id === milestoneId)
-        milestoneObj?.routines.push(routineObj)
-      })
-    )
-  }
-
-  // 루틴 삭제 함수
-  const deleteRoutine = (milestoneId: string, routineId: string) => {
-    setData((prevData) => {
-      const milestoneIndex = prevData.findIndex(
-        (milestone) => milestone.id === milestoneId
-      )
-      const newRoutines = prevData[milestoneIndex].routines.filter(
-        (routine) => routine.id !== routineId
-      )
-      const newMilestone = {
-        ...prevData[milestoneIndex],
-        routines: newRoutines,
-      }
-      const newData = Array.from(prevData)
-      newData[milestoneIndex] = newMilestone
-      return newData
-    })
-  }
+  console.log("milestone :", milestone)
   return (
     <>
-      <div
+      <MilestoneCard
         ref={provided.innerRef}
         {...provided.draggableProps}
         {...provided.dragHandleProps}
-        className="mb-4 hidden flex-col gap-2 rounded-lg border border-gray-400 bg-gray-100 p-4 sm:flex"
+        className="flex flex-col"
       >
-        <button onClick={() => deleteMilestone(milestone.id)}>삭제</button>
-        {/* 각 마일스톤 내 루틴 Droppable */}
-        <Droppable droppableId={milestone.id} type="routine">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className="flex h-full flex-col justify-between p-4"
-            >
-              {milestone.routines.map((routine, index) => (
-                <Draggable
-                  key={routine.id}
-                  draggableId={routine.id}
-                  index={index}
-                >
-                  {(provided, snapshot) => (
-                    <RoutineComponent
-                      provided={provided}
-                      snapshot={snapshot}
-                      routine={routine}
-                      milestoneId={milestone.id}
-                      deleteRoutine={deleteRoutine}
-                    />
-                  )}
-                </Draggable>
-              ))}
-              <div className="mt-auto flex flex-col gap-2">
-                <Input
-                  label="루틴 생성"
-                  value={routineValue}
-                  onChange={(e) => {
-                    setRoutineValue(e.target.value)
-                  }}
-                />
-                <button
-                  onClick={() => {
-                    setRoutineValue("")
-                    createRoutine(milestone.id, {
-                      id: nanoid(),
-                      content: routineValue,
-                    })
-                  }}
-                  className="flex h-[45px] items-center justify-center rounded border"
-                >
-                  생성하기
-                </button>
-              </div>
-            </div>
+        이인
+        <ArrowDownIcon onClick={() => setShowDetail((prev) => !prev)} />
+        <div className="">
+          {showDetail ? (
+            <ArrowDownIcon onClick={() => setShowDetail((prev) => !prev)} />
+          ) : (
+            <ArrowUpIcon onClick={() => setShowDetail((prev) => !prev)} />
           )}
-        </Droppable>
-      </div>
-      <div className="flex flex-col overflow-y-auto">
-        {/* <MilestoneComponetMobile provided={provided} milestone={milestone} /> */}
-        {/* <MilestoneCreateInfoController range={range}/> */}
-        {/* <DragDropContainer /> */}
-      </div>
+        </div>
+        <button onClick={() => deleteMilestone(milestone.id)}>삭제</button>
+      </MilestoneCard>
     </>
   )
 }

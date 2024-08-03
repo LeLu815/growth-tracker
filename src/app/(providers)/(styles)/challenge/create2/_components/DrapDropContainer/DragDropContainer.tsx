@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect } from "react"
 import useMilestoneCreateStore, {
   MilestoneType,
 } from "@/store/milestoneCreate.store"
@@ -14,7 +13,7 @@ import { addDays, format, parseISO } from "date-fns"
 import { produce } from "immer"
 import { DateRange } from "react-day-picker"
 
-import MilestoneComponent from "../../../create/_components/Milestone/MilestoneComponent"
+import MilestoneComponent from "./MilestoneComponent"
 
 interface DragDropContainerProps {
   range: DateRange | undefined
@@ -23,7 +22,6 @@ interface DragDropContainerProps {
 function DragDropContainer({ challenge_id, range }: DragDropContainerProps) {
   const { data, setData } = useMilestoneCreateStore()
 
-  range?.from
   // source: 드래그된 항목의 출발지 정보
   // destination: 드롭된 항목의 목적지 정보
   // type: 드래그 앤 드롭 작업의 타입(동일한 드래그 앤 드롭 컨텍스트 내에서 여러 유형의 작업을 구분할 수 있음)
@@ -66,10 +64,6 @@ function DragDropContainer({ challenge_id, range }: DragDropContainerProps) {
     )
   }
 
-  useEffect(() => {
-    // console.log(data)
-  }, [data])
-
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -83,7 +77,7 @@ function DragDropContainer({ challenge_id, range }: DragDropContainerProps) {
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className="hidden max-w-full gap-4 overflow-y-auto whitespace-nowrap sm:flex"
+                className="flex w-full flex-col gap-4 overflow-y-auto"
               >
                 {data.map((milestone, index) => (
                   <Draggable
@@ -101,7 +95,6 @@ function DragDropContainer({ challenge_id, range }: DragDropContainerProps) {
                     )}
                   </Draggable>
                 ))}
-                {provided.placeholder}
               </div>
             </>
           )}
