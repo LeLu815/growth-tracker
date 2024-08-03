@@ -42,7 +42,6 @@ function MilestoneComponent({
       ),
     })
   }
-  console.log("milestone :", milestone)
   return (
     <MilestoneCard
       ref={provided.innerRef}

@@ -1,4 +1,4 @@
-import { FormEventHandler, useState } from "react"
+import { FormEventHandler, useEffect, useState } from "react"
 import useChallengeCreateStore, {
   WEEK_DAY_LIST,
 } from "@/store/challengeCreate.store"
@@ -47,22 +47,18 @@ function MilestoneCreateConfigEdit({
 
   // 챌린지 기간
   const { range } = useChallengeCreateStore()
-  // 마일스톤 실행 기간 (챌린지 전체 기간 - 마일스톤 )
-  // 마일스톤 시작 날짜
-  const milestone_start_date = range
-    ? data.length === 0
-      ? format(range?.from!, "yyyy-MM-dd")
-      : format(addDays(data[data.length - 1].end_at, 1), "yyyy-MM-dd")
-    : ""
-  // 마일스톤 이름 input
+
+  // 마일스톤 시작 날짜 *
+  const milestone_start_date = currentMilestoneObject?.start_at!
+  // 마일스톤 이름 input *
   const [milestoneNameInput, setMilestoneNameInput] = useState("이름은 준비 중")
-  // 루틴 이름 input
+  // 루틴 이름 input *
   const [routineInpt, setRoutineInput] = useState<string>("")
-  // 루틴 배열
+  // 루틴 배열 *
   const [routines, setRoutines] = useState<string[]>(
     currentMilestoneObject?.routines!.map((obj) => obj.content) || []
   )
-  // 마일스톤 실행 요일 배열
+  // 마일스톤 실행 요일 배열 *
   const [selectWeeks, setSelectWeeks] = useState<boolean[]>([
     currentMilestoneObject?.is_mon!,
     currentMilestoneObject?.is_tue!,
@@ -72,32 +68,25 @@ function MilestoneCreateConfigEdit({
     currentMilestoneObject?.is_sat!,
     currentMilestoneObject?.is_sun!,
   ])
-  // 마일스톤 성공 기준 퍼센트
+  // 마일스톤 성공 기준 퍼센트 *
   const [minPercent, setMinPercent] = useState<string>("50")
   // 챌린지 토탈 일수
   const challenge_total_day =
     differenceInCalendarDays(range?.to!, range?.from!) + 1
+  // 마일스톤 실행 기간 (챌린지 전체 기간 - 마일스톤 )
   const [milestonePeriod, setMilestonePeriod] = useState<string>(
-    `${data.length === 0 ? Math.round(challenge_total_day / 2) : differenceInCalendarDays(milestone_start_date, range?.from!)}`
+    `${differenceInCalendarDays(new Date(currentMilestoneObject?.end_at!), new Date(currentMilestoneObject?.start_at!)) + 1}`
   )
   // 이전 일자 계산
   const prevMilestonesPeriod = differenceInCalendarDays(
-    milestone_start_date,
-    range?.from!
+    range?.from!,
+    milestone_start_date
   )
-  // 마일스톤 종료 날짜
-  const milestone_end_date = range
-    ? data.length === 0
-      ? format(addDays(range?.from!, +milestonePeriod - 1), "yyyy-MM-dd")
-      : format(
-          addDays(
-            data[data.length - 1].end_at,
-            parseInt(milestonePeriod) - prevMilestonesPeriod
-          ),
-          "yyyy-MM-dd"
-        )
-    : ""
-
+  // 마일스톤 종료 날짜 *
+  const milestone_end_date = format(
+    addDays(new Date(milestone_start_date), +milestonePeriod - 1),
+    "yyyy-MM-dd"
+  )
   // 마일스톤 기간 실제 일수
   const milestone_actual_day = countWeekdaysBetweenDates(
     milestone_start_date,
@@ -168,14 +157,6 @@ function MilestoneCreateConfigEdit({
     }
   }
 
-  // 마일스톤 생성함수
-  const createMilestone = (milestoneObj: MilestoneType) => {
-    setData((prev) =>
-      produce(prev, (draft) => {
-        draft.push(milestoneObj)
-      })
-    )
-  }
   // 마일스톤 수정함수
   const updateMilestone = (milestoneObj: MilestoneType) => {
     setData((prev) =>
@@ -189,7 +170,7 @@ function MilestoneCreateConfigEdit({
   }
 
   const confirmFunc = () => {
-    createMilestone({
+    updateMilestone({
       challenge_id: "",
       id: uuidv4(),
       start_at: milestone_start_date,
@@ -211,6 +192,9 @@ function MilestoneCreateConfigEdit({
     })
   }
 
+  console.log(differenceInCalendarDays(milestone_end_date, range?.from!) + 1)
+
+  useEffect(() => {}, [data, range])
   return (
     <>
       <div className="mb-12">
@@ -218,7 +202,7 @@ function MilestoneCreateConfigEdit({
         <div>
           <p>
             {range
-              ? `${format(range.from!, "yyyy.MM.dd.")} ~ ${format(range.to!, "yyyy.MM.dd.")} (${differenceInCalendarDays(range.to!, range.from!) + 1}일)`
+              ? `${milestone_start_date} ~ ${milestone_end_date} (${differenceInCalendarDays(new Date(milestone_end_date), new Date(milestone_start_date)) + 1}일)`
               : "기간을 선택해주세요."}
           </p>
           <Input
@@ -238,13 +222,12 @@ function MilestoneCreateConfigEdit({
                 }}
                 step={1}
                 max={differenceInCalendarDays(range.to!, range.from!) + 1}
-                min={
-                  data.length === 0
-                    ? 0
-                    : differenceInCalendarDays(
-                        milestone_start_date,
-                        range?.from!
-                      )
+                min={differenceInCalendarDays(
+                  milestone_start_date,
+                  range.from!
+                )}
+                defaultValue={
+                  differenceInCalendarDays(milestone_end_date, range.from!) + 1
                 }
               />
             )}
@@ -319,11 +302,13 @@ function MilestoneCreateConfigEdit({
           </form>
         </div>
       </div>
-      <div className="fixed bottom-0 left-0 z-50 h-[90px] w-full bg-white px-4 pb-4">
+      <div className="bottom-0 left-0 z-50 h-[90px] w-full bg-white pb-2">
         <Button
           onClick={() => {
             // 모달 닫는 함수
             handleClickConfirm && handleClickConfirm()
+            // 업데이트 함수
+            confirmFunc()
           }}
           disabled={
             routines.length === 0 ||
