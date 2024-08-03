@@ -35,7 +35,7 @@ function RangeInput({
               left: `calc(${(value / max) * 100}%)`, // 왼쪽 패딩을 제외한 위치 계산
             }}
           >
-            {value}
+            {value - min}
           </div>
         </div>
       </div>

@@ -39,6 +39,17 @@ const initialSelectWeeks = WEEK_DAY_LIST.map((_) => false)
 function MilestoneCreateConfig({
   setShowCompoent,
 }: MilestoneCreateConfigProps) {
+  // 마일스톤, 루틴 전체 데이터 설정
+  const { setData, data } = useMilestoneCreateStore()
+  // 챌린지 기간
+  const { range } = useChallengeCreateStore()
+  // 마일스톤 실행 기간 (챌린지 전체 기간 - 마일스톤 )
+  // 마일스톤 시작 날짜
+  const milestone_start_date = range
+    ? data.length === 0
+      ? format(range?.from!, "yyyy-MM-dd")
+      : format(addDays(data[data.length - 1].end_at, 1), "yyyy-MM-dd")
+    : ""
   // 마일스톤 이름 input
   const [milestoneNameInput, setMilestoneNameInput] = useState("")
   // 루틴 이름 input
@@ -47,44 +58,32 @@ function MilestoneCreateConfig({
   const [routines, setRoutines] = useState<string[]>([])
   // 마일스톤 실행 요일 배열
   const [selectWeeks, setSelectWeeks] = useState<boolean[]>(initialSelectWeeks)
-  // 마일스톤 실행 기간
-  const [milestonePeriod, setMilestonePeriod] = useState<string>("0")
   // 마일스톤 성공 기준 퍼센트
   const [minPercent, setMinPercent] = useState<string>("50")
-  // 챌린지 기간
-  const { range } = useChallengeCreateStore()
-  // 마일스톤, 루틴 전체 데이터 설정
-  const { setData, data } = useMilestoneCreateStore()
-
-  // 마일스톤 시작 날짜
-  const milestone_start_date = range
-    ? data.length === 0
-      ? format(range?.from!, "yyyy-MM-dd")
-      : format(addDays(data[data.length - 1].end_at, 1), "yyyy-MM-dd")
-    : ""
+  // 챌린지 토탈 일수
+  const challenge_total_day =
+    differenceInCalendarDays(range?.to!, range?.from!) + 1
+  const [milestonePeriod, setMilestonePeriod] = useState<string>(
+    `${data.length === 0 ? Math.round(challenge_total_day / 2) : differenceInCalendarDays(milestone_start_date, range?.from!)}`
+  )
+  // 이전 일자 계산
+  const prevMilestonesPeriod = differenceInCalendarDays(
+    milestone_start_date,
+    range?.from!
+  )
   // 마일스톤 종료 날짜
   const milestone_end_date = range
     ? data.length === 0
-      ? format(addDays(range?.from!, +milestonePeriod), "yyyy-MM-dd")
+      ? format(addDays(range?.from!, +milestonePeriod - 1), "yyyy-MM-dd")
       : format(
-          addDays(data[data.length - 1].end_at, parseInt(milestonePeriod)),
+          addDays(
+            data[data.length - 1].end_at,
+            parseInt(milestonePeriod) - prevMilestonesPeriod
+          ),
           "yyyy-MM-dd"
         )
     : ""
-  // 마일스톤 기간 총 일수
-  const milestone_total_day = (() => {
-    if (range) {
-      if (data.length === 0) {
-        return differenceInCalendarDays(range.to!, range.from!) + 1
-      } else {
-        return (
-          differenceInCalendarDays(data[data.length - 1].end_at, range.from!) +
-          1
-        )
-      }
-    }
-    return 0
-  })()
+
   // 마일스톤 기간 실제 일수
   const milestone_actual_day = countWeekdaysBetweenDates(
     milestone_start_date,
@@ -95,6 +94,9 @@ function MilestoneCreateConfig({
   // 루틴 이름 제출 폼 함수 => 루틴 배열에 삽입됨
   const hanleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
+    if (routineInpt === "") {
+      return
+    }
     setRoutines((prev) => [...prev, routineInpt])
     setRoutineInput("")
   }
@@ -187,6 +189,11 @@ function MilestoneCreateConfig({
               }}
               step={1}
               max={differenceInCalendarDays(range.to!, range.from!) + 1}
+              min={
+                data.length === 0
+                  ? 0
+                  : differenceInCalendarDays(milestone_start_date, range?.from!)
+              }
             />
           )}
           <p>
@@ -277,14 +284,20 @@ function MilestoneCreateConfig({
             is_sun: selectWeeks[6],
             success_requirement_cnt: (milestone_actual_day * +minPercent) / 100,
             total_cnt: milestone_actual_day,
-            total_day: milestone_total_day,
+            total_day: +milestonePeriod - prevMilestonesPeriod,
             routines: routines.map((value) => ({
               id: "",
               content: value,
             })),
           })
         }}
-        disabled={routines.length === 0 || milestoneNameInput === ""}
+        disabled={
+          routines.length === 0 ||
+          milestoneNameInput === "" ||
+          selectWeeks.filter((value) => value).length === 0 ||
+          milestone_actual_day === 0
+        }
+        size="lg"
       >
         완료
       </Button>
