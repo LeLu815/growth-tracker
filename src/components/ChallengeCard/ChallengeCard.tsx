@@ -2,9 +2,8 @@ import Image from "next/image"
 import { CopyIcon } from "lucide-react"
 
 import Chip from "../Chip"
-import BookmarkIcon from "../Icon/BookmarkIcon"
+import LikeIcon from "../Icon/LikeIcon"
 import RightArrowIcon from "../Icon/RightArrowIcon"
-import ThumbsUpIcon from "../Icon/ThumbsUpIcon"
 
 interface ChallengeCardProps {
   title: string
@@ -65,7 +64,7 @@ function ChallengeCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="flex items-center">
-              <ThumbsUpIcon
+              <LikeIcon
                 width={15}
                 height={17}
                 filled={liked}
@@ -74,10 +73,9 @@ function ChallengeCard({
               <span className="ml-1 text-sm text-gray-500">{likes}</span>
             </div>
             <div className="flex items-center">
-              <BookmarkIcon
+              <CopyIcon
                 width={16}
                 height={18}
-                filled={bookmarked}
                 color={bookmarked ? "black" : "#D9D9D9"}
               />
               <span className="ml-1 text-sm text-gray-500">{bookmarks}</span>

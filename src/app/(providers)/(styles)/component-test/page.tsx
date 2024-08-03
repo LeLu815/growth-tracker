@@ -5,7 +5,6 @@ import { useState } from "react"
 import Button from "@/components/Button"
 import ChallengeCard from "@/components/ChallengeCard"
 import Chip from "@/components/Chip"
-import DetailPageBottomBar from "@/components/DetailPageBottomBar/DetailPageBottomBar"
 import Input from "@/components/Input"
 import Page from "@/components/Page"
 
@@ -20,11 +19,11 @@ function ComponentTestPage() {
     <Page title="공통 컴포넌트 테스트">
       <h3 className="pt-4">Chips</h3>
       <Chip label="전체" intent="primary" />
-      <Chip variant="selected" label="운동" />
+      <Chip label="전체" intent="rounded" selected />
       <Chip size="sm" label="공부" />
       <Chip size="sm" intent="secondary" label="제테크" />
       <Chip size="sm" intent="secondary" label="제테크" variant="outline" />
-      <Chip size="sm" label="제테크" variant="outline" />
+      <Chip size="sm" label="제테크" variant="outline" selected />
 
       <h3 className="pt-4">Buttons</h3>
       {/* default size: md, variant: primary */}
@@ -119,7 +118,7 @@ function ComponentTestPage() {
 
       <Input label="인풋테스트" required />
       <Input label="인풋테스트" />
-      <DetailPageBottomBar />
+      {/*<DetailPageBottomBar />*/}
       <div className="h-[100px]"></div>
     </Page>
   )

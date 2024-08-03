@@ -116,7 +116,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
       }
     )
     const responseData = await response.json()
-
     if (responseData.error) {
       if (response.status === 401) {
         setMe(null)
