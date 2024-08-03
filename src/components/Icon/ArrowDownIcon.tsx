@@ -14,7 +14,7 @@ const ArrowDownIcon = (props: SVGProps<SVGSVGElement> & { color?: string }) => (
     <path
       d="M1 0.999999L6.29289 6.29289C6.68342 6.68342 7.31658 6.68342 7.70711 6.29289L13 1"
       stroke={props.color || "#DDDDDD"}
-      stroke-width="2"
+      strokeWidth="2"
       strokeLinecap="round"
     />
   </Icon>

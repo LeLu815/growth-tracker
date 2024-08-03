@@ -14,7 +14,7 @@ const ArrowUpIcon = (props: SVGProps<SVGSVGElement> & { color?: string }) => (
     <path
       d="M13 6.58594L7.70711 1.29304C7.31658 0.90252 6.68342 0.90252 6.29289 1.29304L1 6.58594"
       stroke={props.color || "#DDDDDD"}
-      stroke-width="2"
+      strokeWidth="2"
       strokeLinecap="round"
     />
   </Icon>
