@@ -80,13 +80,11 @@ function RoutineCheckBox({
     })
 
     if (todayDoneRoutineArray.length == routineCount) {
-      console.log("true")
       await PUTisSuccessRoutineDoneDaily({
         currentIsSuccess: true,
         routineDoneDailyId: routineDoneDailyId,
       })
     } else {
-      console.log("false")
       await PUTisSuccessRoutineDoneDaily({
         currentIsSuccess: false,
         routineDoneDailyId: routineDoneDailyId,

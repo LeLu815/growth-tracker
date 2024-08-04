@@ -31,8 +31,9 @@ function MyChallengePage() {
         todayDate: TODAY,
       }}
     >
-      <Page title="내 챌린지">
+      <Page>
         <Box>
+          <h1 className="mb-8 ml-2 text-[20px] font-bold">내 챌린지</h1>
           <div className="flex flex-col items-center">
             <MyChallengeNavBar />
             <DatePickerContainer />
