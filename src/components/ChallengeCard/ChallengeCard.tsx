@@ -54,7 +54,7 @@ function ChallengeCard({
             <p className="text-lg font-semibold">{title}</p>
           </div>
           <div className="mb-4 flex items-center">
-            <div className="relative mr-2 h-[26px] w-[26px]">
+            <div className="relative mr-[6px] h-[26px] w-[26px]">
               <Image
                 src={userImage}
                 alt={nickname}
@@ -62,7 +62,7 @@ function ChallengeCard({
                 className="rounded-full border border-gray-300"
               />
             </div>
-            <span className="text-gray-500">{nickname}</span>
+            <span className="text-xs font-[500] text-gray-500">{nickname}</span>
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -90,12 +90,12 @@ function ChallengeCard({
       {/* 이미지 영역 */}
 
       <div
-        className="w-full border-t-2 border-[#E0E0E0] px-[8px] py-[14px]"
+        className="w-full border-t-2 border-[#393232] px-[8px] py-[14px]"
         style={{ borderTop: "1px solid #E0E0E0" }}
       >
-        <button className="flex w-full items-center justify-center text-sm text-gray-500">
+        <button className="flex w-full items-center justify-center text-sm text-[#474747]">
           <CopyIcon width={24} height={24} />
-          <span className="ml-1">이 챌린지 가져오기</span>
+          <span className="ml-1 font-[500]">이 챌린지 가져오기</span>
         </button>
       </div>
     </div>

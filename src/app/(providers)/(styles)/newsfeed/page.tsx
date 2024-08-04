@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { useChallengeSearchStore } from "@/store/challengeSearch.store"
 import { useQuery } from "@tanstack/react-query"
 
 import Box from "@/components/Box"
@@ -10,7 +11,6 @@ import Page from "@/components/Page"
 import { PostType } from "../../../../../types/challenge"
 import CategorySelector from "./_components/CategorySelector"
 import ChallengePosts from "./_components/ChallengePosts"
-import SearchFilter from "./_components/SearchFilter"
 import SortSelector from "./_components/SortSelector"
 import { fetchPosts } from "./_utils/fetchPosts"
 
@@ -18,7 +18,8 @@ function NewsfeedPage() {
   const [filter, setFilter] = useState<string>("recent")
   const [userId, setUserId] = useState<string>("")
   const [category, setCategory] = useState<string>("전체")
-  const [searchQuery, setSearchQuery] = useState<string>("")
+  // const [searchQuery, setSearchQuery] = useState<string>("")
+  const { searchQuery } = useChallengeSearchStore()
 
   const router = useRouter()
 
@@ -36,10 +37,10 @@ function NewsfeedPage() {
     router.push(`/challenge/${id}`)
   }
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query)
-    refetch()
-  }
+  // const handleSearch = (query: string) => {
+  //   setSearchQuery(query)
+  //   refetch()
+  // }
 
   const handleFilterChange = (selectedFilter: string) => {
     setFilter(selectedFilter)
@@ -63,9 +64,6 @@ function NewsfeedPage() {
           category={category}
           onSelectCategory={handleCategoryClick}
         />
-
-        {/* 검색 필터 */}
-        <SearchFilter onSearch={handleSearch} />
 
         {/* 정렬 */}
         <SortSelector filter={filter} onChangeFilter={handleFilterChange} />
