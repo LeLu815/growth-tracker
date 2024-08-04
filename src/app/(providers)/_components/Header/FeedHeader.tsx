@@ -3,13 +3,12 @@
 import { useState } from "react"
 import { useChallengeSearchStore } from "@/store/challengeSearch.store"
 
-import AlarmIcon from "@/components/Icon/AlarmIcon"
 import CloseWithoutLineIcon from "@/components/Icon/CloseWithoutLineIcon"
 import SearchIcon from "@/components/Icon/SearchIcon"
 import Input from "@/components/Input"
 
+import Notice from "../Notice/Notice"
 import BaseHeader from "./BaseHeader"
-import Notice from "@/app/(providers)/_components/Notice/Notice";
 
 export interface FeedHeaderProps {
   onSearch?: (query: string) => void
