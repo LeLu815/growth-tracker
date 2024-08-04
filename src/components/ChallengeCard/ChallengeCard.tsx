@@ -71,7 +71,7 @@ function ChallengeCard({
                   width={15}
                   height={17}
                   filled={liked}
-                  color={liked ? "black" : "black"}
+                  fill={liked ? "red" : "black"}
                 />
                 <span className="ml-1 text-sm text-gray-500">{likes}</span>
               </div>
