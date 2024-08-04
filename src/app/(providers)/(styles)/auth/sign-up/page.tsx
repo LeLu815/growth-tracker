@@ -36,7 +36,7 @@ function SigninPage() {
   }
 
   return (
-    <Page title="회원가입">
+    <Page>
       <div>
         <div className="flex flex-col">
           <label htmlFor="nickname">닉네임</label>

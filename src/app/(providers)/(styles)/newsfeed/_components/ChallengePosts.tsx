@@ -1,3 +1,9 @@
+"use client"
+
+import { useAuth } from "@/context/auth.context"
+
+import ChallengeCard from "@/components/ChallengeCard"
+
 import { PostType } from "../../../../../../types/challenge"
 
 interface ChallengePostsProps {
@@ -6,23 +12,38 @@ interface ChallengePostsProps {
 }
 
 function ChallengePosts({ posts, onClickPost }: ChallengePostsProps) {
+  const { me } = useAuth()
+
   return (
     <div>
       <ul>
-        {posts.map((post) => (
-          <li
-            key={post.id}
-            className="m-2 border border-slate-400 p-4"
-            onClick={() => onClickPost(post.id)}
-          >
-            <h2>{post.goal}</h2>
-            <p>{post.user.nickname}</p>
-            <p>{post.template_cnt}</p>
-            <p>{post.state}</p>
-            <p>{post.category}</p>
-            <p>❤️ {post.like_cnt}</p>
-          </li>
-        ))}
+        {posts.map((post) => {
+          const userImage =
+            post.user.profile_image_url || "/image/profileImage.png"
+          console.log("User image URL:", userImage) // 이미지 URL 확인
+          return (
+            <li
+              key={post.id}
+              onClick={() => onClickPost(post.id)}
+              className="mb-[20px] cursor-pointer"
+            >
+              <ChallengeCard
+                title={post.goal}
+                category={post.category}
+                likes={post.like_cnt}
+                bookmarks={post.template_cnt}
+                liked={me ? (post.liked || []).includes(me.id) : false}
+                nickname={post.user.nickname}
+                progress={post.progress}
+                userImage={userImage}
+                bookmarked={
+                  me ? (post.bookmarked || []).includes(me.id) : false
+                }
+                challengeImage={post.image}
+              />
+            </li>
+          )
+        })}
       </ul>
     </div>
   )

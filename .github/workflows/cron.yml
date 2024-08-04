@@ -1,0 +1,12 @@
+name: Call URL every 
+
+on:
+  schedule:
+    - cron: '0 15 * * *'
+
+jobs:
+  call-url:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call URL
+        run: curl -X GET "https://growth-tracker-ecru.vercel.app/api/vercel-cron"
