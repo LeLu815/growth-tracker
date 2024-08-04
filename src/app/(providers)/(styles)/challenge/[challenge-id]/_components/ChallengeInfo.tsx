@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useModal } from "@/context/modal.context"
 import useChallengeDetailStore, {
@@ -9,17 +9,17 @@ import useChallengeDetailStore, {
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
-import Chip from "@/components/Chip"
 import BookmarkIcon from "@/components/Icon/BookmarkIcon"
-import ThumbsUpIcon from "@/components/Icon/ThumbsUpIcon"
+import EmptyHart from "@/components/Icon/EmptyHart"
+import NoneProfile from "@/components/Icon/NoneProfile"
+import ChallengeLike from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeLike"
+import MilestoneList from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/MilestoneList"
 
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
-import Image from "next/image";
 
 function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const modal = useModal()
   const router = useRouter()
-  const [openIndexes, setOpenIndexes] = useState<number[]>([])
   const setChallengeDetail = useChallengeDetailStore(
     (state) => state.setChallengeDetail
   )
@@ -28,6 +28,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
     const response = await axios
       .get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}`)
       .then((response) => response.data)
+
     if (response.error) {
       modal.open({
         type: "alert",
@@ -52,110 +53,119 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
     queryFn: getChallenge,
   })
 
-  const toggleAccordion = (index: number) => {
-    setOpenIndexes((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-    )
-  }
-
   if (isPending) return <div>Loading...</div>
   if (isError) return <div>Error loading data</div>
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="w-full overflow-hidden bg-white">
-        <div className="relative">
-          <div
-            className="h-40 bg-[#FF7D3D] bg-cover bg-center"
-            style={{
-              backgroundImage: "url('')",
-            }}
-          ></div>
-          <div className="absolute bottom-0 left-0 p-4 text-lg font-bold text-white">
-            <Chip size="sm" label={data?.category} variant="outline" />
-          </div>
-          <div className="absolute bottom-0 right-0 p-4 text-lg font-bold text-white">
-            {convertStatusToKorean(data?.state)}
-          </div>
-        </div>
-        <div className="mt-2 text-center">
-          <div className="text-xl font-semibold">{data?.goal} </div>
-          <div className="text-gray-500">{data?.nickname}</div>
-          <div className="flex items-center justify-center gap-4">
-            <div className="flex items-center">
-              <ThumbsUpIcon width={15} height={17} color={"black"} />
-              <span className="ml-1 text-sm text-gray-500">
+    <div className={"flex flex-col"}>
+      {/*이미지*/}
+      <div
+        className={"h-[235px] w-full flex-shrink-0 bg-[#EED697]"}
+        style={{
+          backgroundImage: "url('')",
+        }}
+      ></div>
+
+      {/* 상단 */}
+      <div className="flex w-full flex-col items-start rounded-t-[12px] bg-white pt-5">
+        <div className="flex flex-col items-center justify-center gap-[10px] self-stretch p-[10px] pt-0">
+          <div className="gap-[9px]p-[20px_0] flex w-full flex-col items-start">
+            {/*챌린지 및 좋아요*/}
+            <div className="flex items-start justify-between self-stretch">
+              <h2 className="text-xl font-bold">{data?.goal}</h2>
+              <ChallengeLike challengeId={challengeId}></ChallengeLike>
+            </div>
+
+            {/*개수*/}
+            <div className="flex w-full items-center gap-[11px]">
+              <div className="mr-4 flex gap-1 text-gray-600">
+                <EmptyHart width={20} height={20} color={"gray"} />{" "}
                 {data.like_cnt}
-              </span>
-            </div>
-            <div className="flex items-center">
-              <BookmarkIcon width={16} height={18} color={"black"} />
-              <span className="ml-1 text-sm text-gray-500">
+              </div>
+              <div className="flex gap-1 text-gray-600">
+                <BookmarkIcon width={20} height={20} color={"gray"} />{" "}
                 {data.template_cnt}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="mt-4 flex flex-col items-center border-t pt-4">
-        <div className="text-lg font-semibold">챌린지 기간</div>
-        <div className="text-gray-500">
-          {data?.start_at} ~ {data?.end_at} ({data?.day_cnt}일)
-        </div>
-        {/*<div className="mt-4">그레프 나와야함 공통 컴포넌트 사용예정</div>*/}
-      </div>
-      <div className={"flex flex-col items-center gap-1"}>
-        {data?.milestones?.map((milestone, index) => {
-          const isOpen = openIndexes.includes(index)
-          return (
-            <div
-              key={milestone.id}
-              className="mt-5 h-auto w-[375px] rounded-[10px] border-[1px]"
-            >
-              <button
-                className="flex w-full items-center justify-between p-4 text-left focus:outline-none"
-                onClick={() => toggleAccordion(index)}
-              >
-                <div className="text-[16px]">
-                  마일스톤{index + 1}
-                  <div className={"text-[12px] text-[#939393]"}>
-                    {milestone.start_at} ~ {milestone.end_at} (
-                    {milestone.total_day}일)
-                  </div>
-                </div>
-                <span className="text-2xl">
-                  {isOpen ? (
-                    <Image src={"/icon/ic-down-arrow.svg"} width={15} height={15} alt={""}/>
-                  ) : (
-                    <Image src={"/icon/ic-up-arrow.svg"} width={15} height={15} alt={""}/>
-                  )}
-                </span>
-              </button>
-              <div className={"flex flex-col items-center gap-2 pb-5"}>
-                {isOpen &&
-                  milestone.routines?.map((routine) => {
-                    return (
-                      <div
-                        className={
-                          "h-[39px] w-[305px] rounded-[4px] bg-[#F5F5F5] pt-2"
-                        }
-                        key={routine.id}
-                      >
-                        <span
-                          className={
-                            "pl-3 text-[12px] font-medium text-[#171717]"
-                          }
-                        >
-                          {routine.content}
-                        </span>
-                      </div>
-                    )
-                  })}
               </div>
             </div>
-          )
-        })}
+          </div>
+        </div>
+
+        {/*  유저정보*/}
+        <div className="flex h-[91px] flex-col items-start justify-center gap-[10px] self-stretch bg-white px-[20px] pb-[10px]">
+          <div className="flex items-center gap-[8px] self-stretch">
+            {data?.profile_image_url ? (
+              <div className="h-[50px] w-[50px] overflow-hidden rounded-full bg-gray-300">
+                <Image
+                  width={50}
+                  height={50}
+                  src={data.profile_image_url}
+                  alt="Profile Image"
+                  className="object-cover"
+                />
+              </div>
+            ) : (
+              <NoneProfile width={50} height={50}></NoneProfile>
+            )}
+
+            <div className="font-suite text-[20px] font-bold leading-[135%] text-[#717171]">
+              <p className="font-bold text-[#717171]">{data?.nickname}</p>
+              <div className="font-suite w-[195px] text-[12px] font-medium leading-[135%] text-[#717171]">
+                {data?.start_at} ~ {data?.end_at}{" "}
+                {convertStatusToKorean(data?.state)}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <hr className={"mt-5"}></hr>
+
+      {/*  챌린지 정보*/}
+      <div className="flex w-full flex-col items-end gap-[16px] border-b-[10px] border-b-[#E0E0E0] bg-white p-[24px_20px]">
+        <div className="flex flex-col items-start gap-[16px] self-stretch pb-[20px]">
+          <div className="flex w-full flex-col items-start gap-[8px]">
+            <div className="font-suite text-[18px] font-bold leading-[135%] text-[#171717]">
+              챌린지 정보
+            </div>
+            <div className={"flex gap-9"}>
+              <div className="font-suite w-[70px] text-[14px] font-medium leading-[135%] text-[#474747]">
+                챌린지 이름
+              </div>
+              <div className="font-suite text-[14px] font-medium leading-[135%] text-[#141414]">
+                {data?.goal}
+              </div>
+            </div>
+
+            <div className={"flex gap-9"}>
+              <div className="font-suite w-[70px] text-[14px] font-medium leading-[135%] text-[#474747]">
+                구분
+              </div>
+              <div className="font-suite text-[14px] font-medium leading-[135%] text-[#141414]">
+                {data?.category}
+              </div>
+            </div>
+
+            <div className={"flex gap-9"}>
+              <div className="font-suite w-[70px] text-[14px] font-medium leading-[135%] text-[#474747]">
+                챌린지 기간
+              </div>
+              <div className="font-suite text-[14px] font-medium leading-[135%] text-[#141414]">
+                {data?.day_cnt}일
+              </div>
+            </div>
+
+            {/*<div className={"flex gap-9"}>*/}
+            {/*  <div className="font-suite text-[14px] w-[70px] font-medium leading-[135%] text-[#474747]">*/}
+            {/*    총 루틴 횟수*/}
+            {/*  </div>*/}
+            {/*  <div className="font-suite text-[14px] font-medium leading-[135%] text-[#141414]">*/}
+
+            {/*  </div>*/}
+            {/*</div>*/}
+          </div>
+        </div>
+      </div>
+      <MilestoneList milestones={data?.milestones} />
     </div>
   )
 }
@@ -163,7 +173,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
 const convertStatusToKorean = (state: string) => {
   switch (state) {
     case "on_progress":
-      return "진행중"
+      return "진행"
     case "on_complete":
       return "성공"
     case "on_fail":
