@@ -22,7 +22,7 @@ function ChallengePosts({ posts, onClickPost }: ChallengePostsProps) {
             <li
               key={post.id}
               onClick={() => onClickPost(post.id)}
-              className="mb-[20px] cursor-pointer"
+              className="cursor-pointe mb-[20px]"
             >
               <ChallengeCard
                 title={post.goal}

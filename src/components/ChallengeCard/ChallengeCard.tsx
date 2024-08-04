@@ -5,7 +5,6 @@ import NoneProfile from "@/components/Icon/NoneProfile"
 import BookmarkIcon from "../Icon/BookmarkIcon"
 import CopyIcon from "../Icon/CopyIcon"
 import LikeIcon from "../Icon/LikeIcon"
-import ThumbsUpIcon from "../Icon/ThumbsUpIcon"
 
 interface ChallengeCardProps {
   title: string
@@ -33,7 +32,10 @@ function ChallengeCard({
   challengeImage,
 }: ChallengeCardProps) {
   return (
-    <div className="flex flex-col rounded-lg border border-gray-200 bg-white shadow-md">
+    <div
+      className="flex flex-col rounded-lg bg-white shadow-sm"
+      style={{ border: "1px solid #E0E0E0" }}
+    >
       <div className="flex w-full px-[8px] py-[14px]">
         <div className="mr-4 flex w-1/4 min-w-[98px] flex-col">
           <div
@@ -44,10 +46,11 @@ function ChallengeCard({
               backgroundPosition: "center",
             }}
           >
-            <div className="absolute bottom-2 left-2 right-2 flex items-center gap-[3px] rounded-[30px] bg-orange-500 px-2 py-1 text-xs text-white">
+            {/* 인기 챌린지 기준 미정의로 인해 일단 주석 처리~~ */}
+            {/* <div className="absolute bottom-2 left-2 right-2 flex items-center gap-[3px] rounded-[30px] bg-orange-500 px-2 py-1 text-xs text-white">
               <ThumbsUpIcon color="white" width={12} height={12} />
               <span className="text-[10px]">인기 챌린지</span>
-            </div>
+            </div> */}
           </div>
         </div>
         {/* 타이틀, 유저 정보, 좋아요, 북마크 횟수 */}
