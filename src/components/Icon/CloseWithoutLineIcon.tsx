@@ -9,8 +9,8 @@ const CloseWithoutLineIcon = (
     <path
       d="M12.6568 12.657L1.34314 1.34326M12.6568 1.34326L1.34314 12.657"
       stroke="#1B1D1F"
-      stroke-width="2"
-      stroke-linecap="round"
+      strokeWidth="2"
+      strokeLinecap="round"
     />
   </Icon>
 )
