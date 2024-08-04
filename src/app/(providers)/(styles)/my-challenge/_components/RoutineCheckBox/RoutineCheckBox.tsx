@@ -74,29 +74,29 @@ function RoutineCheckBox({
       queryKey: ["fetchCurrentUserRoutineDoneDaily"],
     })
   }
-  const updateIsSuccess = async () => {
-    const todayDoneRoutineArray = routineDone.filter((item) => {
-      return item.created_at.slice(0, 10) == selectedDate
-    })
+  // const updateIsSuccess = async () => {
+  //   const todayDoneRoutineArray = routineDone.filter((item) => {
+  //     return item.created_at.slice(0, 10) == selectedDate
+  //   })
 
-    if (todayDoneRoutineArray.length == routineCount) {
-      await PUTisSuccessRoutineDoneDaily({
-        currentIsSuccess: true,
-        routineDoneDailyId: routineDoneDailyId,
-      })
-    } else {
-      await PUTisSuccessRoutineDoneDaily({
-        currentIsSuccess: false,
-        routineDoneDailyId: routineDoneDailyId,
-      })
-    }
-    queryClient.invalidateQueries({
-      queryKey: ["fetchCurrentUserRoutineDoneDaily"],
-    })
-  }
-  if (routineDone && routines && routineDoneDailyId) {
-    updateIsSuccess()
-  }
+  //   if (todayDoneRoutineArray.length == routineCount) {
+  //     await PUTisSuccessRoutineDoneDaily({
+  //       currentIsSuccess: true,
+  //       routineDoneDailyId: routineDoneDailyId,
+  //     })
+  //   } else {
+  //     await PUTisSuccessRoutineDoneDaily({
+  //       currentIsSuccess: false,
+  //       routineDoneDailyId: routineDoneDailyId,
+  //     })
+  //   }
+  //   queryClient.invalidateQueries({
+  //     queryKey: ["fetchCurrentUserRoutineDoneDaily"],
+  //   })
+  // }
+  // if (routineDone && routines && routineDoneDailyId) {
+  //   updateIsSuccess()
+  // }
 
   return (
     <>

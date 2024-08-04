@@ -60,7 +60,14 @@ function MilestoneSection({
     initializeRDD()
   }, [SELECTED_DATE])
 
-  const [targetRDDId, setTargetRDDId] = useState("")
+  const [targetRDDId, setTargetRDDId] = useState(
+    currentUserRoutineDoneDaily.find((item) => {
+      return (
+        item.milestone_id == milestone.id &&
+        item.created_at.slice(0, 10) == SELECTED_DATE
+      )
+    })?.id || ""
+  )
   const [isVisible, setIsVisible] = useState(false)
   const modal = useModal()
 
@@ -90,9 +97,6 @@ function MilestoneSection({
       item.created_at.slice(0, 10) == SELECTED_DATE
     )
   })
-  useEffect(() => {
-    setTargetRDDId(targetRDD?.id || "")
-  }, [targetRDD])
 
   useEffect(() => {
     setIsVisible(false)
@@ -173,6 +177,7 @@ function MilestoneSection({
               <></>
             ) : (
               <ProgressBar
+                routineDoneDailyId={targetRDDId}
                 routineDone={RoutineDone}
                 selectedDate={SELECTED_DATE}
                 routines={milestone.routines}

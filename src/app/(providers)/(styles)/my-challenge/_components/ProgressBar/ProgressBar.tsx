@@ -1,6 +1,8 @@
-import React, { PropsWithChildren } from "react"
+import React, { PropsWithChildren, useEffect } from "react"
 import { GETroutineDone } from "@/api/supabase/routineDone"
+import { PUTisSuccessRoutineDoneDaily } from "@/api/supabase/routineDoneDaily"
 import { GETstructuredChallengeData } from "@/api/supabase/structured-challenge"
+import queryClient from "@/query/queryClient"
 import { useQuery } from "@tanstack/react-query"
 
 import { RoutineDoneType } from "../../../../../../../types/routineDone.type"
@@ -10,33 +12,47 @@ interface ProgressBar {
   routineDone: RoutineDoneType[]
   selectedDate: string
   routines: RoutineType[]
-}
-
-const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-    width: "100%",
-    height: "20px",
-    backgroundColor: "#d3d3d3",
-    borderRadius: "10px",
-    overflow: "hidden",
-  },
-  progress: {
-    height: "100%",
-    backgroundColor: "#000",
-    transition: "width 0.3s ease-in-out",
-  },
+  routineDoneDailyId: string
 }
 
 function ProgressBar({
   routineDone,
   selectedDate,
   routines,
+  routineDoneDailyId,
 }: PropsWithChildren<ProgressBar>) {
   // 오늘 완료한 루틴의 개수
   const todayDoneRoutineArray = routineDone.filter((item) => {
     return item.created_at.slice(0, 10) == selectedDate
   })
   const progress = (todayDoneRoutineArray.length / routines.length) * 100
+
+  const updateIsSuccess = async () => {
+    if (routineDoneDailyId.length > 0) {
+      const todayDoneRoutineArray = routineDone.filter((item) => {
+        return item.created_at.slice(0, 10) == selectedDate
+      })
+
+      if (todayDoneRoutineArray.length == routines.length) {
+        await PUTisSuccessRoutineDoneDaily({
+          currentIsSuccess: true,
+          routineDoneDailyId: routineDoneDailyId,
+        })
+      } else {
+        await PUTisSuccessRoutineDoneDaily({
+          currentIsSuccess: false,
+          routineDoneDailyId: routineDoneDailyId,
+        })
+      }
+      queryClient.invalidateQueries({
+        queryKey: ["fetchCurrentUserRoutineDoneDaily"],
+      })
+    }
+  }
+  useEffect(() => {
+    updateIsSuccess()
+  }, [todayDoneRoutineArray])
+
   return (
     <div className="mt-3 w-full">
       <div className="flex items-baseline font-bold">
