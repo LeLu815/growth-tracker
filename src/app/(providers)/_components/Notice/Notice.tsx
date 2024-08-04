@@ -127,19 +127,17 @@ function Notice() {
 
   return (
     <div>
-      {count > 0 && (
-        <div onClick={showDrawer}>
-          <Badge count={count}>
-            <Avatar
-              className={"bg-white"}
-              shape="square"
-              icon={
-                <AlarmIcon width={16} height={16} className={"top absolute"} />
-              }
-            />
-          </Badge>
-        </div>
-      )}
+      <div onClick={showDrawer}>
+        <Badge count={count}>
+          <Avatar
+            className={"bg-white"}
+            shape="square"
+            icon={
+              <AlarmIcon width={16} height={16} className={"top absolute"} />
+            }
+          />
+        </Badge>
+      </div>
 
       <Drawer title="알림" onClose={onClose} open={open}>
         <div className={"flex flex-col gap-4"}>
