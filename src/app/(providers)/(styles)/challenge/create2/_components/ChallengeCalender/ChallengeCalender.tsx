@@ -18,6 +18,7 @@ function ChallengeCalender({ range, setRange }: ChallengeCalender) {
       disabled={(date) => isBefore(date, today)}
       formatters={{ formatCaption, formatWeekdayName }}
       fromMonth={today}
+      fromDate={today}
     />
   )
 }

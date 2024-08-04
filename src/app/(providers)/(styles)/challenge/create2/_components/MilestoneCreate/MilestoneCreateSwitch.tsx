@@ -37,7 +37,7 @@ function MilestoneCreateSwitch({
 
   return (
     <div>
-      <div>
+      <div className="flex">
         <p>{goal}</p>
       </div>
       <div>

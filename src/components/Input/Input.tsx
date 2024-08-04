@@ -32,8 +32,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className="flex w-full flex-col gap-y-1.5 [&+&]:mt-4">
-        <label htmlFor={inputId}>
-          <span className="text-[14px] font-semibold">{label}</span>
+        <label className="mb-[14px]" htmlFor={inputId}>
+          <span className="text-[18px] font-[700]">{label}</span>
           {required && (
             <span className="text-sm font-semibold text-red-500">*</span>
           )}

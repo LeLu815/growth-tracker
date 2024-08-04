@@ -38,7 +38,7 @@ const chipVariant = cva("border cursor-pointer text-black", {
     {
       intent: "secondary",
       variant: "outline",
-      className: "text-[#d7d7d7] bg-white",
+      className: "text-slate-500 bg-white border border-solid border-slate-500",
     },
     {
       intent: "rounded",

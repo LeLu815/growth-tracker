@@ -37,7 +37,13 @@ function ChallengeName({
         value={inputValue}
         placeholder="챌린지명을 입력해주세요"
       />
+      {inputValue === "" && (
+        <span className="text-[12px] text-[#B0B0B0]">
+          챌린지명을 입력해주세요
+        </span>
+      )}
       <Button
+        size="lg"
         disabled={inputValue === ""}
         onClick={() => {
           handleChangeStep(4)

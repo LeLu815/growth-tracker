@@ -150,6 +150,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         const user = data.user
         if (user) {
           setMe(user)
+          fetchUserData(user?.id)
         }
       })
     } finally {
