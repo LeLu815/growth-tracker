@@ -10,17 +10,16 @@ interface ChallengeCalender {
 function ChallengeCalender({ range, setRange }: ChallengeCalender) {
   const today = startOfToday()
   return (
-    <div>
-      <Calendar
-        mode="range"
-        min={7}
-        selected={range}
-        onSelect={setRange}
-        disabled={(date) => isBefore(date, today)}
-        formatters={{ formatCaption, formatWeekdayName }}
-        fromMonth={today}
-      />
-    </div>
+    <Calendar
+      mode="range"
+      min={7}
+      selected={range}
+      onSelect={setRange}
+      disabled={(date) => isBefore(date, today)}
+      formatters={{ formatCaption, formatWeekdayName }}
+      fromMonth={today}
+      fromDate={today}
+    />
   )
 }
 

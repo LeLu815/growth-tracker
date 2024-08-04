@@ -19,13 +19,17 @@ const config = {
     },
     extend: {
       backgroundImage: {
-        'challenge-image': "url('https://blog.kakaocdn.net/dn/bcOXTW/btsvdteG3PE/yHP14OhQdgspKPHUKhCY4K/img.png')",
+        "challenge-image":
+          "url('https://blog.kakaocdn.net/dn/bcOXTW/btsvdteG3PE/yHP14OhQdgspKPHUKhCY4K/img.png')",
       },
       screens: {
         sm: "640px",
         md: "768px",
         lg: "1024px",
         xl: "1280px",
+      },
+      fontFamily: {
+        suite: ["SUITE", "sans-serif"], // 기본 sans-serif를 추가
       },
       colors: {
         border: "hsl(var(--border))",
