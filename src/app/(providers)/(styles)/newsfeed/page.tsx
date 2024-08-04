@@ -18,6 +18,7 @@ function NewsfeedPage() {
   const [filter, setFilter] = useState<string>("recent")
   const [userId, setUserId] = useState<string>("")
   const [category, setCategory] = useState<string>("전체")
+  const [showCompleted, setShowCompleted] = useState<boolean>(false)
   // const [searchQuery, setSearchQuery] = useState<string>("")
   const { searchQuery } = useChallengeSearchStore()
 
@@ -29,8 +30,9 @@ function NewsfeedPage() {
     refetch,
     isLoading,
   } = useQuery<PostType[]>({
-    queryKey: ["posts", filter, category, searchQuery],
-    queryFn: () => fetchPosts(filter, category, searchQuery, userId),
+    queryKey: ["posts", filter, category, searchQuery, showCompleted],
+    queryFn: () =>
+      fetchPosts(filter, category, searchQuery, userId, showCompleted),
   })
 
   const handlePostClick = (id: string) => {
@@ -52,6 +54,11 @@ function NewsfeedPage() {
     refetch()
   }
 
+  const handleToggleShowCompleted = () => {
+    setShowCompleted(!showCompleted)
+    refetch()
+  }
+
   if (error) {
     console.error("리스트 페칭 에러", error)
   }
@@ -66,7 +73,12 @@ function NewsfeedPage() {
         />
 
         {/* 정렬 */}
-        <SortSelector filter={filter} onChangeFilter={handleFilterChange} />
+        <SortSelector
+          filter={filter}
+          showCompleted={showCompleted}
+          onChangeFilter={handleFilterChange}
+          onToggleShowComplete={handleToggleShowCompleted}
+        />
 
         {/* 목록 */}
         {isLoading ? (

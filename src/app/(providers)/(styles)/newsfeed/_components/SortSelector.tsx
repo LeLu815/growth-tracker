@@ -2,14 +2,22 @@
 
 import { useState } from "react"
 
-import SortIcon from "@/components/Icon/SortIcon"
+import SortButton from "./SortButton"
+import SortItem from "./SortItem"
 
 interface SortSelectorProps {
   filter: string
   onChangeFilter: (filter: string) => void
+  showCompleted: boolean
+  onToggleShowComplete: () => void
 }
 
-function SortSelector({ filter, onChangeFilter }: SortSelectorProps) {
+function SortSelector({
+  filter,
+  onChangeFilter,
+  onToggleShowComplete,
+  showCompleted,
+}: SortSelectorProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const handleToggle = () => {
@@ -22,60 +30,50 @@ function SortSelector({ filter, onChangeFilter }: SortSelectorProps) {
   }
 
   return (
-    <div className="relative flex justify-end">
-      <div className="relative inline-block text-left">
-        <button
-          type="button"
-          className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none"
-          onClick={handleToggle}
-        >
-          <SortIcon width={16} height={16} />
-          {filter === "recent" && "최신순"}
-          {filter === "popular" && "인기순"}
-          {filter === "followed" && "따라하기 많은 순"}
-          {filter === "complete" && "성공 루틴만 보기"}
-        </button>
+    <div className="flex justify-end gap-[12px]">
+      <div>
+        <label className="ml-4 flex items-center text-sm font-medium text-gray-700">
+          <input
+            type="checkbox"
+            className="form-checkbox"
+            checked={showCompleted}
+            onChange={onToggleShowComplete}
+          />
+          <span className="ml-2">성공 루틴만 보기</span>
+        </label>
       </div>
 
-      {isOpen && (
-        <div className="absolute right-0 top-[60px] z-10 w-56 rounded-md bg-white shadow-lg">
-          <div
-            className="py-1 text-black"
-            role="menu"
-            aria-orientation="vertical"
-            aria-labelledby="options-menu"
-          >
-            <button
-              onClick={() => handleSelect("recent")}
-              className="block w-full px-4 py-2 text-left text-sm text-black hover:text-gray-900"
-              role="menuitem"
+      <div className="relative flex transition">
+        <SortButton
+          isOpen={isOpen}
+          filter={filter}
+          handleToggle={handleToggle}
+        />
+
+        {isOpen && (
+          <div className="absolute right-0 top-[20px] z-10 w-[145px] rounded-md bg-white shadow-lg">
+            <div
+              className="py-1 text-black"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="options-menu"
             >
-              최신순
-            </button>
-            <button
-              onClick={() => handleSelect("popular")}
-              className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-              role="menuitem"
-            >
-              인기순
-            </button>
-            <button
-              onClick={() => handleSelect("followed")}
-              className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-              role="menuitem"
-            >
-              따라하기 많은 순
-            </button>
-            <button
-              onClick={() => handleSelect("complete")}
-              className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-              role="menuitem"
-            >
-              성공 루틴만 보기
-            </button>
+              <SortItem value="recent" onSelect={handleSelect}>
+                최신순
+              </SortItem>
+              <SortItem value="popular" onSelect={handleSelect}>
+                인기순
+              </SortItem>
+              <SortItem value="followed" onSelect={handleSelect}>
+                따라하기 많은 순
+              </SortItem>
+              <SortItem value="complete" onSelect={handleSelect}>
+                성공 루틴만 보기
+              </SortItem>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }
