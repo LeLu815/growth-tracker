@@ -4,7 +4,7 @@ import CreateChallenge from "./_components/CreateChallenge"
 
 function CreatePage() {
   return (
-    <Page title="챌린지생성" isTitleHidden>
+    <Page>
       <CreateChallenge />
     </Page>
   )

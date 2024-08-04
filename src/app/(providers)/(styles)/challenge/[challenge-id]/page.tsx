@@ -13,7 +13,7 @@ function ChallengeDetailPage({ params }: ChallengeDetailPageProps) {
   const challengeId = params["challenge-id"]
 
   return (
-    <Page title="상세페이지" isTitleHidden>
+    <Page>
       <ChallengeInfo challengeId={challengeId} />
       <Box>
         <ChallengeCommentList challengeId={challengeId} />

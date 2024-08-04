@@ -52,7 +52,7 @@ function LoginEmailPage() {
   }
 
   return (
-    <Page title="이메일 로그인 페이지" isTitleHidden>
+    <Page>
       <div className="flex h-screen flex-col items-center justify-center">
         <div className="mb-[26px] flex w-full flex-col">
           <h3 className="mb-10 text-center text-[24px] font-[700]">

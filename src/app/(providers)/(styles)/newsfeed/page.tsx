@@ -57,7 +57,7 @@ function NewsfeedPage() {
   }
 
   return (
-    <Page title="뉴스피드 페이지">
+    <Page>
       <Box>
         {/* 카테고리 */}
         <CategorySelector
