@@ -12,8 +12,11 @@ import { differenceInCalendarDays, format } from "date-fns"
 import { produce } from "immer"
 
 import Button from "@/components/Button"
+import CalenderIcon from "@/components/Icon/CalenderIcon"
+import FlagIcon from "@/components/Icon/FlagIcon"
 
 import DragDropContainer from "../DrapDropContainer/DragDropContainer"
+import SubTitle from "../styles/SubTitle"
 import { MilestoneCreateProps } from "./MilestoneCreate"
 
 interface MilestoneCreateSwitchProps {
@@ -37,17 +40,21 @@ function MilestoneCreateSwitch({
 
   return (
     <div>
-      <div className="flex">
-        <p>{goal}</p>
+      <div className="mt-[12px] flex items-center gap-2">
+        <FlagIcon />
+        <SubTitle>{goal}</SubTitle>
       </div>
-      <div>
-        <p>
+      <div className="mt-[12px] flex items-center gap-2">
+        <CalenderIcon color="#717171" />
+        <p className="text-[18px] font-[500] text-[#717171]">
           {range
             ? `${format(range.from!, "yyyy.MM.dd.")} ~ ${format(range.to!, "yyyy.MM.dd.")} (${differenceInCalendarDays(range.to!, range.from!) + 1}일)`
             : "기간을 선택해주세요."}
         </p>
       </div>
+      <div className="h-[40px]" />
       <Button
+        intent="secondary"
         className="h-full"
         size="lg"
         onClick={() => {
@@ -61,6 +68,7 @@ function MilestoneCreateSwitch({
       >
         + 루틴 추가
       </Button>
+      <div className="h-[20px]" />
       <DragDropContainer range={range} />
       <Button
         className="h-full"

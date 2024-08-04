@@ -46,7 +46,13 @@ const CustomModal = ({
         classNames={transitionClasses}
         unmountOnExit
       >
-        <div className="fixed bottom-0 left-1/2 h-[80vh] w-full -translate-x-1/2 translate-y-full transform overflow-auto rounded bg-white p-4 transition sm:w-full">
+        <div className="fixed bottom-0 left-1/2 h-[80vh] w-full -translate-x-1/2 translate-y-full transform overflow-auto rounded-[20px] bg-white px-4 transition sm:w-full">
+          <div className="sticky top-0 flex h-[40px] justify-center bg-white pt-[10px]">
+            <div
+              onClick={() => handleCloseModal()}
+              className="mt-[5px] h-[5px] w-[120px] flex-shrink-0 cursor-pointer rounded-full bg-slate-300 opacity-90"
+            ></div>
+          </div>
           <div className="mx-auto max-w-[640px]">{children}</div>
         </div>
       </CSSTransition>

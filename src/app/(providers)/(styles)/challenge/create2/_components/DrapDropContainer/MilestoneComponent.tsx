@@ -10,6 +10,7 @@ import ArrowUpIcon from "@/components/Icon/ArrowUpIcon"
 import MilestoneCard from "../Card"
 import MilestoneCreateComponent from "../MilestoneCreate/MilestoneCreateComponent"
 import MilestoneCreateConfigEdit from "../MilestoneCreate/MilestoneCreateConfigEdit"
+import ContentTitle from "../styles/ContentTitle"
 
 type RoutineType = {
   id: string
@@ -62,45 +63,47 @@ function MilestoneComponent({
           />
         )}
       </div>
-      <div className="flex justify-between">
-        <div>
-          <p>루틴 A</p>
-          <p>{`${milestone.start_at.replace(/-/g, ".")} ~ ${milestone.end_at.replace(/-/g, ".")} (${milestone.total_day}일)`}</p>
-        </div>
-        <div className="flex flex-1 items-center justify-center">
-          <p>달성률 {50}%</p>
-        </div>
-      </div>
-      {showDetail && (
-        <ul className="">
-          {milestone.routines.map((obj) => (
-            <li key={obj.content}>
-              <MilestoneCreateComponent text={obj.content} />
-            </li>
-          ))}
-          <div className="flex justify-between">
-            <Button
-              intent="secondary"
-              className="h-full"
-              style={{ width: "34%" }}
-              onClick={() => deleteMilestone(milestone.id)}
-            >
-              삭제
-            </Button>
-            <Button
-              intent="primary"
-              className="h-full"
-              style={{ width: "64%" }}
-              onClick={() => {
-                // 수정 모달 띄우기
-                handleOpenCalendarModal(milestone.id)
-              }}
-            >
-              수정
-            </Button>
+      <div className="pr-[24px]">
+        <div className="flex justify-between">
+          <div className="flex flex-col gap-[10px]">
+            <ContentTitle>루틴 A</ContentTitle>
+            <p className="text-[12px] font-[500] text-[#717171]">{`${milestone.start_at.replace(/-/g, ".")} ~ ${milestone.end_at.replace(/-/g, ".")} (${milestone.total_day}일)`}</p>
           </div>
-        </ul>
-      )}
+          <div className="flex flex-1 items-center justify-center">
+            <ContentTitle>달성률 {50}%</ContentTitle>
+          </div>
+        </div>
+        {showDetail && (
+          <ul className="my-4 flex flex-col gap-2">
+            {milestone.routines.map((obj) => (
+              <li key={obj.content}>
+                <MilestoneCreateComponent text={obj.content} />
+              </li>
+            ))}
+            <div className="mt-[24px] flex justify-between">
+              <Button
+                intent="secondary"
+                className="h-full"
+                style={{ width: "34%" }}
+                onClick={() => deleteMilestone(milestone.id)}
+              >
+                삭제
+              </Button>
+              <Button
+                intent="primary"
+                className="h-full"
+                style={{ width: "64%" }}
+                onClick={() => {
+                  // 수정 모달 띄우기
+                  handleOpenCalendarModal(milestone.id)
+                }}
+              >
+                수정
+              </Button>
+            </div>
+          </ul>
+        )}
+      </div>
     </MilestoneCard>
   )
 }
