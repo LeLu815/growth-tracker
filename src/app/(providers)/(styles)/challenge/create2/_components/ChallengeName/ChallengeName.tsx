@@ -5,6 +5,7 @@ import Button from "@/components/Button"
 import Input from "@/components/Input"
 
 import ChallengePageTitle from "../ChallengePageTitle"
+import SubTitle from "../styles/SubTitle"
 
 interface ChallengeNameProps {
   title: string
@@ -28,7 +29,7 @@ function ChallengeName({
         titleHidden={false}
         handleClickGoBack={() => handleChangeStep(2)}
       />
-      <p>챌린지 명을 입력해주세요.</p>
+      <SubTitle>챌린지 명을 입력해주세요.</SubTitle>
       <Input
         label={"챌린지 명"}
         required
