@@ -1,6 +1,6 @@
 "use client"
 
-import { FormEvent, useState } from "react"
+import { useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
@@ -13,7 +13,9 @@ import {
 import axios from "axios"
 import { useInView } from "react-intersection-observer"
 
-import Button from "@/components/Button"
+import EmptyHart from "@/components/Icon/EmptyHart"
+import NoneProfile from "@/components/Icon/NoneProfile"
+import RedHart from "@/components/Icon/RedHart"
 import Input from "@/components/Input"
 
 import {
@@ -25,7 +27,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   const { me } = useAuth()
   const router = useRouter()
   const queryClient = useQueryClient()
-  const [content, setContent] = useState("")
+
   const [updateContent, setUpdateContent] = useState("")
   const [isUpdate, setIsUpdate] = useState(false)
   const [updateCommentId, setUpdateCommentId] = useState("")
@@ -44,41 +46,6 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
     )
 
     return response.data
-  }
-
-  /**
-   * 댓글 생성
-   * */
-  const createComment = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    if (!me) {
-      router.push("/")
-      return
-    } else if (!content.trim()) {
-      alertOpen("댓글 내용을 입력해주세요.")
-      return
-    }
-
-    setContent("")
-
-    const response = await axios
-      .post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}/comment`,
-        JSON.stringify({ content, userId: me?.id }), // JSON 데이터
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((response) => response.data)
-
-    if (response.error) {
-      alertOpen("댓글 작성에 실패했습니다.")
-      throw new Error(response.error)
-    }
-    refetch()
   }
 
   /**
@@ -120,7 +87,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
       .then((response) => response.data)
 
     if (response.error) {
-      alertOpen("댓글 작성에 실패했습니다.")
+      alertOpen("댓글 수정에 실패했습니다.")
       throw new Error(response.error)
     }
   }
@@ -293,66 +260,56 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
 
   return (
     <div className={"flex w-full flex-col items-center gap-4"}>
-      <div className="mx-auto mt-10 w-full rounded-lg border p-4">
-        <form onSubmit={createComment}>
-          <Input
-            placeholder="댓글을 입력하세요..."
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
-          <div className="mt-2 flex justify-end">
-            <Button intent="primary" variant="rounded" size="sm" type="submit">
-              댓글 등록
-            </Button>
-          </div>
-        </form>
-      </div>
       {data?.map((comment, idx) => {
         const isLastItem = data?.length - 1 === idx
         return (
           <div
             className={
-              "mt-2 flex w-full flex-col gap-4 rounded-lg border p-4 shadow-md"
+              "mt-2 flex w-full gap-[8px] rounded-lg border p-4 shadow-md"
             }
             key={comment.id}
             ref={isLastItem ? ref : null}
           >
-            <div className={"flex gap-2"}>
-              <Image
-                width={25}
-                height={25}
-                className={"rounded-full"}
-                alt={"프로필사진"}
-                src={
-                  comment.profile_image_url
-                    ? comment.profile_image_url
-                    : "/image/profileImage.png"
-                }
-              ></Image>
-              <div className={"pt-2"}>{comment.nickname}님</div>
+            <div>
+              {comment.profile_image_url ? (
+                <div className="relative h-[50px] w-[50px] overflow-hidden rounded-full">
+                  <Image
+                    fill
+                    className="object-cover"
+                    alt="프로필사진"
+                    src={
+                      comment.profile_image_url
+                        ? comment.profile_image_url
+                        : "/image/profileImage.png"
+                    }
+                  />
+                </div>
+              ) : (
+                <NoneProfile width={50} height={50} />
+              )}
             </div>
-            {isUpdate && comment.id === updateCommentId ? (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  handleCommentMutate({
-                    commentId: comment.id,
-                    content: updateContent,
-                  })
-                }}
-              >
-                <input
-                  className={"border-[1px] border-solid"}
-                  value={updateContent}
-                  onChange={(e) => setUpdateContent(e.target.value)}
-                />
-              </form>
-            ) : (
-              <div>{comment.content}</div>
-            )}
+            <div className={"flex w-full flex-col gap-[6px]"}>
+              <div className={"pt-2 text-[#717171]"}>{comment.nickname}</div>
 
-            <div className={"flex gap-2"}>
-              종아요{" "}
+              {isUpdate && comment.id === updateCommentId ? (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    handleCommentMutate({
+                      commentId: comment.id,
+                      content: updateContent,
+                    })
+                  }}
+                >
+                  <Input
+                    className={"border-[1px] border-solid border-[]"}
+                    value={updateContent}
+                    onChange={(e) => setUpdateContent(e.target.value)}
+                  />
+                </form>
+              ) : (
+                <div>{comment.content}</div>
+              )}
               <div
                 onClick={() =>
                   me
@@ -363,18 +320,21 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                     : router.push("/")
                 }
               >
-                {comment.is_like ? <p>❤️</p> : <p>🤍</p>}{" "}
+                {comment.is_like ? (
+                  <RedHart width={20} height={20} />
+                ) : (
+                  <EmptyHart width={20} height={20} color={"#D9D9D9"} />
+                )}
               </div>
             </div>
+
             {comment.user_id === me?.id && (
-              <div className={"flex gap-4"}>
+              <div className={"flex w-[100px] justify-end gap-4"}>
                 {isUpdate && comment.id === updateCommentId ? (
-                  <div>
-                    <Button
-                      intent="primary"
-                      variant="rounded"
-                      size="sm"
+                  <div className={"flex items-start gap-2"}>
+                    <button
                       type="submit"
+                      className="font-suite cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
                       onClick={() => {
                         handleCommentMutate({
                           commentId: comment.id,
@@ -382,12 +342,10 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                         })
                       }}
                     >
-                      완료
-                    </Button>
-                    <Button
-                      intent="secondary"
-                      variant="rounded"
-                      size="sm"
+                      수정완료
+                    </button>
+                    <button
+                      className="font-suite cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
                       onClick={() => {
                         setUpdateContent("")
                         setIsUpdate(false)
@@ -395,14 +353,12 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                       }}
                     >
                       취소
-                    </Button>
+                    </button>
                   </div>
                 ) : (
-                  <div>
-                    <Button
-                      intent="secondary"
-                      variant="rounded"
-                      size="sm"
+                  <div className={"flex w-[100px] items-start gap-2"}>
+                    <button
+                      className="font-suite cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
                       onClick={() => {
                         setUpdateContent(comment.content)
                         setIsUpdate(true)
@@ -410,15 +366,13 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                       }}
                     >
                       수정
-                    </Button>
-                    <Button
-                      intent="primary"
-                      variant="rounded"
-                      size="sm"
+                    </button>
+                    <button
+                      className="font-suite cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
                       onClick={() => handleCommentDeleteMutate(comment.id)}
                     >
                       삭제
-                    </Button>
+                    </button>
                   </div>
                 )}
               </div>

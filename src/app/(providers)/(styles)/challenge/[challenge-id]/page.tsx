@@ -1,6 +1,6 @@
 import Box from "@/components/Box"
-import DetailPageBottomBar from "@/components/DetailPageBottomBar/DetailPageBottomBar"
 import Page from "@/components/Page"
+import BottomBar from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/BottomBar"
 
 import ChallengeCommentList from "./_components/ChallengeCommentList"
 import ChallengeInfo from "./_components/ChallengeInfo"
@@ -15,10 +15,13 @@ function ChallengeDetailPage({ params }: ChallengeDetailPageProps) {
   return (
     <Page>
       <ChallengeInfo challengeId={challengeId} />
+      <hr className={"mt-5"}></hr>
       <Box>
         <ChallengeCommentList challengeId={challengeId} />
       </Box>
-      <DetailPageBottomBar challengeId={challengeId} />
+      <Box>
+        <BottomBar challengeId={challengeId} />
+      </Box>
     </Page>
   )
 }
