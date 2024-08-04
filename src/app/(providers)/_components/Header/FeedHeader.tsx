@@ -34,7 +34,7 @@ function FeedHeader({ onSearch }: FeedHeaderProps) {
   }
 
   return (
-    <BaseHeader>
+    <BaseHeader className="bg-white">
       <div className="flex w-full items-center justify-between">
         <div
           className={`flex transition-all ${isShowSearch ? "hidden" : "block"}`}

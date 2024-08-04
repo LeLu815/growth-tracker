@@ -1,8 +1,21 @@
 import { PropsWithChildren } from "react"
+import classNames from "classnames"
 
-const BaseHeader = ({ children }: PropsWithChildren) => {
+interface BaseHeaderProps {
+  className?: string
+}
+
+const BaseHeader = ({
+  children,
+  className,
+}: PropsWithChildren<BaseHeaderProps>) => {
   return (
-    <header className="sticky top-0 z-10 flex h-[60px] items-center bg-white px-[20px] py-[12px] shadow-sm">
+    <header
+      className={classNames(
+        "fixed top-0 z-10 flex h-[60px] w-full items-center px-[20px] py-[12px]",
+        className
+      )}
+    >
       {children}
     </header>
   )
