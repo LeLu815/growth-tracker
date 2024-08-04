@@ -15,3 +15,5 @@ export type StructuredMilestoneType =
   }
 
 export type RoutineType = Database["public"]["Tables"]["routine"]["Row"]
+
+export type UserType = Database["public"]["Tables"]["users"]["Row"]

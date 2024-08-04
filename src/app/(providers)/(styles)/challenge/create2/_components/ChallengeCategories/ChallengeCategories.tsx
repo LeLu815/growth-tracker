@@ -7,6 +7,7 @@ import Button from "@/components/Button"
 import TrophyIcon from "@/components/Icon/TrophyIcon"
 
 import ChallengePageTitle from "../ChallengePageTitle"
+import SubTitle from "../styles/SubTitle"
 
 interface ChallengeCategoriesProps {
   categories: string[]
@@ -32,22 +33,29 @@ function ChallengeCategories({
         titleHidden={false}
         handleClickGoBack={() => {}}
       />
-      <p>어떤 챌린지에 도전하세요?</p>
-      <TrophyIcon width="153" height="152" />
-      <ul>
+      <SubTitle>어떤 챌린지에 도전하세요?</SubTitle>
+      <div className="my-[20px] flex justify-center">
+        <TrophyIcon width="153" height="152" />
+      </div>
+      <ul className="flex flex-col gap-y-[20px]">
         {categories.map((category) => (
           <li
             className="cursor-pointer"
             key={category}
             onClick={() => setSelectedCategory(category)}
           >
-            <Button selected={selectedCategory === category} intent="secondary">
+            <Button
+              size="lg"
+              selected={selectedCategory === category}
+              intent="secondary"
+            >
               {category}
             </Button>
           </li>
         ))}
       </ul>
       <Button
+        size="lg"
         onClick={() => {
           handleChangeStep(2)
           setCategory(selectedCategory)

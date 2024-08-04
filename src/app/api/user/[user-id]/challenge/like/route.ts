@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createPGClient } from "@/supabase/pgClient"
-import { createClient } from "@/supabase/server"
 
 export async function GET(
   req: NextRequest,

@@ -1,24 +1,9 @@
 import { PropsWithChildren } from "react"
 
-interface PageProps {
-  title: string
-  isTitleHidden?: boolean
-}
-
-const Page = ({
-  children,
-  title,
-  isTitleHidden,
-}: PropsWithChildren<PageProps>) => {
+const Page = ({ children }: PropsWithChildren) => {
   return (
-    <main className="container mx-auto min-w-[320px] max-w-[640px] p-4 sm:p-8">
-      <h1
-        className={`mb-6 font-semibold ${isTitleHidden ? "hidden" : ""} text-lg md:text-2xl lg:text-3xl xl:text-4xl`}
-      >
-        {title}
-      </h1>
-
-      <div className="">{children}</div>
+    <main className="border-box mx-auto min-w-[320px] max-w-[640px]">
+      <div className="w-full">{children}</div>
     </main>
   )
 }

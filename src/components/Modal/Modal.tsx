@@ -7,10 +7,11 @@ import { Calendar } from "../ui/calendar"
 import BackDrop from "./BackDrop"
 
 interface ModalProps {
-  type: "alert" | "confirm" | "calendar"
+  type: "alert" | "confirm" | "calendar" | "custom"
   content?: string
   onConfirm?: () => void
   calendarProps?: {}
+  children?: React.ReactNode // 랜더할 컴포넌트를 위한 prop 추가
 }
 
 const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
@@ -67,7 +68,7 @@ const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
     <BackDrop>
       <CSSTransition
         in={isShow}
-        timeout={200}
+        timeout={300}
         classNames={transitionClasses}
         unmountOnExit
       >
@@ -82,8 +83,8 @@ const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
         >
           <button onClick={handleCloseModal}>
             <Image
-              width={10}
-              height={10}
+              width={20}
+              height={20}
               src="/icon/ic-close.svg"
               alt="Modal close icon"
               className="absolute right-2 top-2 hidden sm:block"

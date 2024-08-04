@@ -2,7 +2,7 @@ import { SVGProps } from "react"
 
 import Icon from "./Icon"
 
-const ThumbsUpIcon = (
+const BookmarkIcon = (
   props: SVGProps<SVGSVGElement> & { color?: string; filled?: boolean }
 ) => {
   const { filled, color, ...svgProps } = props
@@ -19,4 +19,4 @@ const ThumbsUpIcon = (
   )
 }
 
-export default ThumbsUpIcon
+export default BookmarkIcon

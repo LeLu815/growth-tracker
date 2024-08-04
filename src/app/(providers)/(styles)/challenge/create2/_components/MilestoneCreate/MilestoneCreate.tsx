@@ -17,7 +17,6 @@ function MilestoneCreate({
   const [showComponent, setShowCompoent] =
     useState<MilestoneCreateProps["status"]>(status)
 
-  console.log("showComponent:", showComponent)
   return (
     <div>
       {showComponent === "config" && (
@@ -45,7 +44,11 @@ function MilestoneCreate({
             titleHidden={true}
             handleClickGoBack={() => handleChangeStep(3)}
           />
-          <MilestoneCreateSwitch />
+          <MilestoneCreateSwitch
+            setShowCompoent={(status: MilestoneCreateProps["status"]) =>
+              setShowCompoent(status)
+            }
+          />
         </>
       )}
     </div>

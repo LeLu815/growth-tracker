@@ -1,14 +1,16 @@
 import { ComponentProps, PropsWithChildren } from "react"
 import Link from "next/link"
 import { cva, VariantProps } from "class-variance-authority"
+import classNames from "classnames"
 
 const buttonVariant = cva(
-  "border font-semibold duration-10 transition-all [&+&]:mb-4 box-border",
+  "border font-semibold duration-10 transition-all box-border",
   {
     variants: {
       intent: {
         primary: "md:hover:bg-[#2E2E2E] active:bg-[#2E2E2E]",
         secondary: "text-[#141414] md:hover:bg-[#E0E0E0] active:bg-[#E0E0E0]",
+        kakao: "bg-[#FDE500] text-[#1A1A1A]",
       },
       size: {
         sm: "px-[22px] py-[10px] text-[14px]",
@@ -29,12 +31,12 @@ const buttonVariant = cva(
       {
         intent: "primary",
         variant: "contained",
-        className: "bg-[#474747] text-white",
+        className: "bg-[#FF7D3D] text-white",
       },
       {
         intent: "primary",
         variant: "outline",
-        className: "text-[#474747] outline-[#474747]",
+        className: "text-[#FF7D3D] outline-[#FF7D3D]",
       },
       {
         intent: "secondary",
@@ -63,7 +65,7 @@ const buttonVariant = cva(
       {
         intent: "primary",
         variant: "rounded",
-        className: "px-[20px] py-[8px] bg-[#474747] text-white",
+        className: "px-[20px] py-[8px] bg-[#FF7D3D] text-white",
       },
       {
         intent: "secondary",
@@ -100,6 +102,7 @@ function Button({
   variant,
   disabled,
   selected,
+  className: customClassName,
   ...props
 }: PropsWithChildren<
   ButtonProps & { disabled?: boolean; selected?: boolean }
@@ -110,13 +113,17 @@ function Button({
 
   if ("href" in props) {
     return (
-      <Link className={className} {...props}>
+      <Link className={classNames(className, customClassName)} {...props}>
         {children}
       </Link>
     )
   } else {
     return (
-      <button className={className} disabled={disabled} {...props}>
+      <button
+        className={classNames(className, customClassName)}
+        disabled={disabled}
+        {...props}
+      >
         {children}
       </button>
     )

@@ -82,7 +82,7 @@ function SelectWeek() {
             dayChecks.map((value, i) => (i === index ? !value : value))
           )
           currMilestoneObj.total_cnt = total_cnt
-          currMilestoneObj.success_requirement_cnt = Math.round(
+          currMilestoneObj.success_requirement_cnt = Math.ceil(
             (total_cnt / 100) * MIN_PER_SUCCESS
           )
         }
@@ -109,7 +109,7 @@ function SelectWeek() {
             dayBooleans
           )
           currMilestoneObj.total_cnt = total_cnt
-          currMilestoneObj.success_requirement_cnt = Math.round(
+          currMilestoneObj.success_requirement_cnt = Math.ceil(
             (total_cnt / 100) * MIN_PER_SUCCESS
           )
         }

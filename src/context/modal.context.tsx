@@ -2,12 +2,14 @@
 
 import { createContext, PropsWithChildren, useContext, useState } from "react"
 
+import CustomModal from "@/components/Modal/CustomModal"
 import Modal from "@/components/Modal/Modal"
 
 interface ModalProps {
-  type: "alert" | "confirm" | "calendar"
+  type: "alert" | "confirm" | "calendar" | "custom"
   content?: string
   onConfirm?: () => void
+  children?: React.ReactNode
 }
 
 interface ModalContextProps {
@@ -54,7 +56,14 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
   return (
     <ModalContext.Provider value={value}>
       {children}
-      {modalOptions && <Modal {...modalOptions} />}
+
+      {modalOptions ? (
+        modalOptions.type === "custom" ? (
+          <CustomModal {...modalOptions} />
+        ) : (
+          <Modal {...modalOptions} />
+        )
+      ) : null}
     </ModalContext.Provider>
   )
 }

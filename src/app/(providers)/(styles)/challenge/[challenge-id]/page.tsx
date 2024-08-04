@@ -1,5 +1,6 @@
-import DetailPageBottomBar from "@/components/DetailPageBottomBar/DetailPageBottomBar"
+import Box from "@/components/Box"
 import Page from "@/components/Page"
+import BottomBar from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/BottomBar"
 
 import ChallengeCommentList from "./_components/ChallengeCommentList"
 import ChallengeInfo from "./_components/ChallengeInfo"
@@ -12,10 +13,15 @@ function ChallengeDetailPage({ params }: ChallengeDetailPageProps) {
   const challengeId = params["challenge-id"]
 
   return (
-    <Page title="상세페이지" isTitleHidden>
+    <Page>
       <ChallengeInfo challengeId={challengeId} />
-      <ChallengeCommentList challengeId={challengeId} />
-      <DetailPageBottomBar challengeId={challengeId} />
+      <hr className={"mt-5"}></hr>
+      <Box>
+        <ChallengeCommentList challengeId={challengeId} />
+      </Box>
+      <Box>
+        <BottomBar challengeId={challengeId} />
+      </Box>
     </Page>
   )
 }
