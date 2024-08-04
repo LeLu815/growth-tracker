@@ -143,6 +143,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     setUserData(null)
   }
 
+  // setUserData 업데이트 최초로 쳐주기!
   useEffect(() => {
     try {
       supabase.auth.getUser().then(({ data, error }) => {
@@ -151,16 +152,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
           setMe(user)
         }
       })
-      // fetch(process.env.NEXT_PUBLIC_DOMAIN + "/api/auth/me")
-      //   .then(async (response) => {
-      //     if (response.status === 200) {
-      //       const user = await response.json()
-      //       setMe(user)
-      //       fetchUserData(user.id)
-      //     }
-      //     setIsInitialized(true)
-      //   })
-      //   .catch(() => setIsInitialized(true))
     } finally {
       setIsInitialized(true)
     }

@@ -1,11 +1,12 @@
 import useChallengeCreateStore from "@/store/challengeCreate.store"
-import { format } from "date-fns"
+import { differenceInCalendarDays, format } from "date-fns"
 import { DateRange } from "react-day-picker"
 
 import Button from "@/components/Button"
 
 import ChallengeCalender from "../ChallengeCalender/ChallengeCalender"
 import ChallengePageTitle from "../ChallengePageTitle"
+import SubTitle from "../styles/SubTitle"
 
 interface ChallengeSelectPeriod {
   handleChangeStep: (step: number) => void
@@ -17,8 +18,12 @@ function ChallengeSelectPeriod({
   title,
 }: ChallengeSelectPeriod) {
   const { range, setRange } = useChallengeCreateStore()
+  const isOkay =
+    range?.from &&
+    range.to &&
+    differenceInCalendarDays(range?.from!, new Date()) >= 0
   return (
-    <div>
+    <div className="font-suite">
       <ChallengePageTitle
         title={title}
         step={2}
@@ -26,21 +31,31 @@ function ChallengeSelectPeriod({
         titleHidden={false}
         handleClickGoBack={() => handleChangeStep(1)}
       />
-      <p>목표하는 챌린지 기간을 알려주세요.</p>
-      <div>
-        <div>
-          <p>시작일</p>
-          <p>{formatDateRange(range).start}</p>
+      <SubTitle>목표하는 챌린지 기간을 알려주세요.</SubTitle>
+      <div className="mb-[30px] mt-[45px] flex justify-around">
+        <div className="flex flex-col gap-[12px]">
+          <p className="text-center text-[14px] font-[500] text-[#BCBDC2]">
+            시작일
+          </p>
+          <p className="text-[16px] font-[700] text-[#1D1D1D]">
+            {formatDateRange(range).start}
+          </p>
         </div>
-        <div>
-          <p>완료일</p>
-          <p>{formatDateRange(range).end}</p>
+        <div className="flex flex-col gap-[12px]">
+          <p className="text-center text-[14px] font-[500] text-[#BCBDC2]">
+            완료일
+          </p>
+          <p className="text-[16px] font-[700] text-[#1D1D1D]">
+            {formatDateRange(range).end}
+          </p>
         </div>
       </div>
-      <div>
+      <div className="flex justify-center">
         <ChallengeCalender range={range} setRange={setRange} />
       </div>
-      <Button onClick={() => handleChangeStep(3)}>다음</Button>
+      <Button disabled={!isOkay} size="lg" onClick={() => handleChangeStep(3)}>
+        다음
+      </Button>
     </div>
   )
 }

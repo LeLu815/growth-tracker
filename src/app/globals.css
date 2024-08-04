@@ -201,3 +201,10 @@ table {
     flex-grow: 1;
   }
 }
+
+@font-face {
+  font-family: "SUITE";
+  src: url("/fonts/SUITE-Variable-woff2/SUITE-Variable.woff2") format("woff2");
+  font-weight: normal; /* 필요한 경우 다른 굵기를 추가 */
+  font-style: normal; /* 필요한 경우 다른 스타일을 추가 */
+}
