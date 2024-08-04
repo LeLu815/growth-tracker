@@ -7,7 +7,9 @@ interface BoxProps {
 
 function Box({ children, className }: PropsWithChildren<BoxProps>) {
   return (
-    <section className={classNames("p-[20px]", className)}>{children}</section>
+    <section className={classNames("mt-[60px] p-[20px]", className)}>
+      {children}
+    </section>
   )
 }
 

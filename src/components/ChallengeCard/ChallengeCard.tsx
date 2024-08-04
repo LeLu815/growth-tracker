@@ -58,7 +58,7 @@ function ChallengeCard({
               <Image
                 src={userImage}
                 alt={nickname}
-                layout="fill"
+                fill
                 className="rounded-full border border-gray-300"
               />
             </div>

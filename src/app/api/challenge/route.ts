@@ -160,8 +160,17 @@ export async function GET(req: NextRequest) {
 
   const baseQuery = supabase
     .from("challenge")
-    .select(`*, user: users (nickname)`)
+    .select(
+      `
+      *,
+      user:users (
+        nickname,
+        profile_image_url
+      )
+    `
+    )
     .ilike("goal", `%${keyword}%`)
+
   // 카테고리 필터링
   const categoryQuery = category
     ? baseQuery.eq("category", category)
