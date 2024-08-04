@@ -157,15 +157,30 @@ export async function GET(req: NextRequest) {
   const keyword = searchParams.get("keyword") || ""
   const filter = searchParams.get("filter") || ""
   const category = searchParams.get("category") || ""
+  const showCompleted = searchParams.get("showCompleted") === "true"
 
   const baseQuery = supabase
     .from("challenge")
-    .select(`*, user: users (nickname)`)
+    .select(
+      `
+      *,
+      user:users (
+        nickname,
+        profile_image_url
+      )
+    `
+    )
     .ilike("goal", `%${keyword}%`)
+
   // 카테고리 필터링
   const categoryQuery = category
     ? baseQuery.eq("category", category)
     : baseQuery
+
+  // 성공 루틴만 보기 필터링
+  const completeQuery = showCompleted
+    ? categoryQuery.eq("state", "on_complete")
+    : categoryQuery
 
   // 필터링 & 정렬
   const query = (() => {
@@ -176,10 +191,10 @@ export async function GET(req: NextRequest) {
         return baseQuery.order("like_cnt", { ascending: false })
       case "followed":
         return baseQuery.order("template_cnt", { ascending: false })
-      case "complete":
-        return baseQuery.eq("state", "on_complete")
+      // case "complete":
+      //   return baseQuery.eq("state", "on_complete")
       default:
-        return baseQuery
+        return completeQuery
     }
   })()
 

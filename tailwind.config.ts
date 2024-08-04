@@ -22,6 +22,7 @@ const config = {
         "challenge-image":
           "url('https://blog.kakaocdn.net/dn/bcOXTW/btsvdteG3PE/yHP14OhQdgspKPHUKhCY4K/img.png')",
       },
+
       screens: {
         sm: "640px",
         md: "768px",

@@ -6,7 +6,8 @@ export const fetchPosts = async (
   filter: string,
   category: string,
   searchQuery: string,
-  userId: string
+  userId: string,
+  showCompleted: boolean
 ): Promise<PostType[]> => {
   const response = await axios.get("/api/challenge", {
     params: {
@@ -14,6 +15,7 @@ export const fetchPosts = async (
       keyword: searchQuery,
       filter,
       category: category === "전체" ? "" : category,
+      showCompleted,
     },
   })
 

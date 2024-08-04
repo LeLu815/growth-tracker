@@ -15,7 +15,7 @@ import { RoutineType } from "../../../../../../../types/supabase.type"
 interface RoutineCheckBoxProps {
   milestoneId: string
   challengeId: string
-  createdAt: string
+  selectedDate: string
   userId: string
   routineId: string
   routineDone: RoutineDoneType[]
@@ -25,7 +25,7 @@ interface RoutineCheckBoxProps {
 
 function RoutineCheckBox({
   routines,
-  createdAt,
+  selectedDate,
   routineId,
   routineDone,
   routineDoneDailyId,
@@ -37,7 +37,8 @@ function RoutineCheckBox({
   // 이를 활용해 추후 체크박스의 최초값(선택/해제) 부여
   const targetRD = routineDone.find((item) => {
     return (
-      item.created_at.slice(0, 10) == createdAt && item.routine_id == routineId
+      item.created_at.slice(0, 10) == selectedDate &&
+      item.routine_id == routineId
     )
   })
 
@@ -51,7 +52,7 @@ function RoutineCheckBox({
         await POSTnewRoutineDone({
           routineDoneDailyId,
           routineId,
-          createdAt,
+          createdAt: selectedDate,
           routineDoneId,
         })
       }
@@ -73,35 +74,35 @@ function RoutineCheckBox({
       queryKey: ["fetchCurrentUserRoutineDoneDaily"],
     })
   }
-  const updateIsSuccess = async () => {
-    const todayDoneRoutineNumber = routineDone.filter((item) => {
-      return item.created_at.slice(0, 10) == createdAt
-    })
+  // const updateIsSuccess = async () => {
+  //   const todayDoneRoutineArray = routineDone.filter((item) => {
+  //     return item.created_at.slice(0, 10) == selectedDate
+  //   })
 
-    if (todayDoneRoutineNumber.length == routineCount) {
-      await PUTisSuccessRoutineDoneDaily({
-        currentIsSuccess: true,
-        routineDoneDailyId: routineDoneDailyId,
-      })
-    } else {
-      await PUTisSuccessRoutineDoneDaily({
-        currentIsSuccess: false,
-        routineDoneDailyId: routineDoneDailyId,
-      })
-    }
-    queryClient.invalidateQueries({
-      queryKey: ["fetchCurrentUserRoutineDoneDaily"],
-    })
-  }
-  if (routineDone && routines && routineDoneDailyId) {
-    updateIsSuccess()
-  }
+  //   if (todayDoneRoutineArray.length == routineCount) {
+  //     await PUTisSuccessRoutineDoneDaily({
+  //       currentIsSuccess: true,
+  //       routineDoneDailyId: routineDoneDailyId,
+  //     })
+  //   } else {
+  //     await PUTisSuccessRoutineDoneDaily({
+  //       currentIsSuccess: false,
+  //       routineDoneDailyId: routineDoneDailyId,
+  //     })
+  //   }
+  //   queryClient.invalidateQueries({
+  //     queryKey: ["fetchCurrentUserRoutineDoneDaily"],
+  //   })
+  // }
+  // if (routineDone && routines && routineDoneDailyId) {
+  //   updateIsSuccess()
+  // }
 
   return (
     <>
       <input
         type="checkbox"
-        className="h-8 w-8 rounded-lg hover:cursor-pointer"
+        className="h-8 w-8 rounded-lg accent-[#FF7D3D] hover:cursor-pointer"
         onChange={(event) => {
           handleCheckboxChange(event)
         }}
