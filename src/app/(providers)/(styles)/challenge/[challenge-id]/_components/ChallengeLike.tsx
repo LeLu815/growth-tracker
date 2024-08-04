@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
@@ -7,13 +5,13 @@ import { useModal } from "@/context/modal.context"
 import useChallengeDetailStore from "@/store/challengeDetail.store"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
-import { BookmarkIcon } from "lucide-react"
 
-import { ChallengeType } from "../../../types/challengeDetail.type"
-import Button from "../Button"
-import ThumbsUpIcon from "../Icon/ThumbsUpIcon"
+import EmptyHart from "@/components/Icon/EmptyHart"
+import RedHart from "@/components/Icon/RedHart"
 
-function DetailPageBottomBar({ challengeId }: { challengeId: string }) {
+import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
+
+function ChallengeLike({ challengeId }: { challengeId: string }) {
   const router = useRouter()
   const [isLiked, setIsLiked] = useState<boolean>(false)
   const queryClient = useQueryClient()
@@ -49,13 +47,11 @@ function DetailPageBottomBar({ challengeId }: { challengeId: string }) {
 
   const createOrDeleteLike = async () => {
     if (!isLiked) {
-
       const axiosResponse = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/notice?toUserId=${challengeDetail.userId}&goal=${challengeDetail.goal}&challengeId=${challengeId}`
       )
 
       console.log(axiosResponse)
-
     }
 
     const method = isLiked ? "delete" : "post"
@@ -113,6 +109,7 @@ function DetailPageBottomBar({ challengeId }: { challengeId: string }) {
             created_at: prev?.created_at || "",
             user_id: prev?.user_id || "",
             nickname: prev?.nickname || "",
+            profile_image_url: prev?.profile_image_url || "",
             goal: prev?.goal || "",
             template_cnt: prev?.template_cnt || 0,
             view_cnt: prev?.view_cnt || 0,
@@ -157,47 +154,40 @@ function DetailPageBottomBar({ challengeId }: { challengeId: string }) {
   }, [isLikedFromServer])
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault() // 이벤트 기본 동작 방지
-
+    event.preventDefault()
     if (!me) {
       router.push("/")
       return
     }
 
-    handleLikeMutate() // 이벤트 객체를 무시하고 mutate 호출
+    handleLikeMutate()
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-20 w-full bg-white">
-      <div className="grid grid-cols-5 p-4">
-        <div className="col-span-1">
-          <button
-            className="flex w-full flex-col items-center justify-center transition-all duration-300"
-            onClick={handleClick}
-          >
-            <ThumbsUpIcon
-              color={isLiked ? "#e1e1e1" : "#D9D9D9"}
-              filled={isLiked || undefined}
-            />
-            <span
-              className={`transition-all duration-300 ${isLiked ? "text-black" : "text-[#D9D9D9]"}`}
-            >
-              좋아요
-            </span>
-          </button>
-        </div>
-
-        <div className="col-span-4">
-          <Button size="lg" onClick={handleUseChallenge}>
-            <div className="flex items-center justify-center gap-[6px]">
-              <BookmarkIcon />
-              <span>챌린지 가져오기</span>
-            </div>
-          </Button>
-        </div>
-      </div>
+    <div className="col-span-1">
+      <button
+        className="flex w-full flex-col items-center justify-center transition-all duration-300"
+        onClick={handleClick}
+      >
+        {isLiked ? (
+          <RedHart
+            width={32}
+            height={32}
+            color={isLiked ? "#e1e1e1" : "#D9D9D9"}
+          />
+        ) : (
+          <EmptyHart
+            width={32}
+            height={32}
+            color={isLiked ? "#e1e1e1" : "#D9D9D9"}
+          />
+        )}
+        <span
+          className={`transition-all duration-300 ${isLiked ? "text-black" : "text-[#D9D9D9]"}`}
+        ></span>
+      </button>
     </div>
   )
 }
 
-export default DetailPageBottomBar
+export default ChallengeLike
