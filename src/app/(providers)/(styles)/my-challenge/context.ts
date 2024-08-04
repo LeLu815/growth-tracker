@@ -3,6 +3,7 @@ import { format, startOfDay } from "date-fns"
 import { ko } from "date-fns/locale"
 
 const MyChallengePageContext = createContext({
+  todayDate: format(startOfDay(new Date()), "yyyy-MM-dd", { locale: ko }),
   selectedDate: format(startOfDay(new Date()), "yyyy-MM-dd", { locale: ko }),
   setSelectedDate: (date: string) => {},
   selectedDayOfWeek: format(startOfDay(new Date()), "eee", {
@@ -10,7 +11,5 @@ const MyChallengePageContext = createContext({
   }),
   setSelectedDayOfWeek: (date: string) => {},
 })
-
-// format(selectedDate, "yyyy-MM-dd", { locale: ko })
 
 export { MyChallengePageContext }
