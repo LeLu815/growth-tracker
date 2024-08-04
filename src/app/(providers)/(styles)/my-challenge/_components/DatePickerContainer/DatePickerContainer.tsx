@@ -28,6 +28,7 @@ function DatePickerContainer({}) {
     setSelectedDate,
     selectedDayOfWeek,
     setSelectedDayOfWeek,
+    todayDate: today,
   } = useContext(MyChallengePageContext)
   const swiperRef = useRef<any>(null)
 
@@ -58,22 +59,40 @@ function DatePickerContainer({}) {
           setSelectedDate(format(startOfDay(day), "yyyy-MM-dd", { locale: ko }))
           setSelectedDayOfWeek(format(startOfDay(day), "eee", { locale: ko }))
         }}
-        className={`flex cursor-pointer flex-col items-center rounded-md px-3 py-3 ${
-          selectedDate &&
-          format(startOfDay(day), "yyyy-MM-dd", { locale: ko }) === selectedDate
-            ? "bg-teal-200"
-            : "bg-gray-200"
-        }`}
+        className="flex cursor-pointer flex-col items-center justify-center"
       >
-        <p className="text-center">{format(day, "MM.dd", { locale: ko })}</p>
-        <p className="text-center">{format(day, "EEE", { locale: ko })}</p>
+        <p
+          className={`mb-3 text-center ${
+            selectedDate &&
+            format(startOfDay(day), "yyyy-MM-dd", { locale: ko }) ===
+              selectedDate
+              ? "text-[#171717]"
+              : "text-[#DDDDDD]"
+          }`}
+        >
+          {format(day, "EEE", { locale: ko })}
+        </p>
+        <p
+          className={`mx-auto flex h-[34px] w-[34px] items-center justify-center rounded-full text-center text-white ${
+            selectedDate &&
+            format(startOfDay(day), "yyyy-MM-dd", { locale: ko }) ===
+              selectedDate
+              ? "bg-[#FF7D3D]"
+              : "bg-[#717171]"
+          }`}
+        >
+          {format(day, "dd", { locale: ko })}
+        </p>
       </SwiperSlide>
     ))
   }
 
   return (
-    <div className="mt-8 w-[600px] p-4">
-      <div className="mb-4 flex justify-between">
+    <div className="mt-6 w-full">
+      <p className="mb-4 w-full text-center text-[18px] font-bold">
+        {selectedDate.slice(0, 4)}. {selectedDate.slice(5, 7)}
+      </p>
+      {/* <div className="mb-4 flex justify-between">
         <button className="swiper-button-prev cursor-pointer rounded-full bg-gray-300 px-4 py-2">
           <p className="text-xl font-black">{"<<"}</p>
         </button>
@@ -90,19 +109,19 @@ function DatePickerContainer({}) {
         <button className="swiper-button-next cursor-pointer rounded-full bg-gray-300 px-4 py-2">
           <p className="text-xl font-black">{">>"}</p>
         </button>
-      </div>
+      </div> */}
       <Swiper
         slidesPerView={7}
-        spaceBetween={10}
+        spaceBetween={0}
         slidesPerGroup={7}
         mousewheel={true}
-        navigation={{
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        }}
+        // navigation={{
+        //   nextEl: ".swiper-button-next",
+        //   prevEl: ".swiper-button-prev",
+        // }}
         modules={[Mousewheel, Navigation]}
         ref={swiperRef}
-        className="flex justify-between"
+        // className="flex justify-between"
       >
         {renderAllDatesSwiperSlides()}
       </Swiper>

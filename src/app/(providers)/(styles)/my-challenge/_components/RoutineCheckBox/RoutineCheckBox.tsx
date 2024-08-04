@@ -74,11 +74,11 @@ function RoutineCheckBox({
     })
   }
   const updateIsSuccess = async () => {
-    const todayDoneRoutineNumber = routineDone.filter((item) => {
+    const todayDoneRoutineArray = routineDone.filter((item) => {
       return item.created_at.slice(0, 10) == createdAt
     })
 
-    if (todayDoneRoutineNumber.length == routineCount) {
+    if (todayDoneRoutineArray.length == routineCount) {
       await PUTisSuccessRoutineDoneDaily({
         currentIsSuccess: true,
         routineDoneDailyId: routineDoneDailyId,
@@ -101,7 +101,7 @@ function RoutineCheckBox({
     <>
       <input
         type="checkbox"
-        className="h-8 w-8 rounded-lg hover:cursor-pointer"
+        className="h-8 w-8 rounded-lg accent-[#FF7D3D] hover:cursor-pointer"
         onChange={(event) => {
           handleCheckboxChange(event)
         }}

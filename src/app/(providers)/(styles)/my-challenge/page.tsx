@@ -4,8 +4,12 @@ import { useState } from "react"
 import { format, startOfDay } from "date-fns"
 import { ko } from "date-fns/locale"
 
+import Box from "@/components/Box"
+import Page from "@/components/Page"
+
 import ChallengeList from "./_components/ChallengeList"
 import DatePickerContainer from "./_components/DatePickerContainer"
+import MyChallengeNavBar from "./_components/MyChallengeNavBar"
 import { MyChallengePageContext } from "./context"
 
 function MyChallengePage() {
@@ -24,13 +28,18 @@ function MyChallengePage() {
         setSelectedDate,
         selectedDayOfWeek,
         setSelectedDayOfWeek,
+        todayDate: TODAY,
       }}
     >
-      <div className="my-20 flex flex-col items-center">
-        <h1 className="text-center text-5xl font-black">내 챌린지</h1>
-        <DatePickerContainer />
-        <ChallengeList />
-      </div>
+      <Page title="내 챌린지">
+        <Box>
+          <div className="flex flex-col items-center">
+            <MyChallengeNavBar />
+            <DatePickerContainer />
+            <ChallengeList />
+          </div>
+        </Box>
+      </Page>
     </MyChallengePageContext.Provider>
   )
 }

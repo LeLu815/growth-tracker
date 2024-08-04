@@ -35,7 +35,7 @@ function ChallengeList() {
   })
 
   const {
-    data: currentUserRoutineDoneDaily,
+    data: currentUserRoutineDoneDaily = [],
     isPending: routineDoneDailyPending,
     isError: routineDoneDailyError,
   } = useQuery({
@@ -55,8 +55,8 @@ function ChallengeList() {
   })
 
   const { selectedDate, selectedDayOfWeek } = useContext(MyChallengePageContext)
-  const CURRENT_DATE = selectedDate
-  const CURRENT_DATE_NUMBER = parseInt(CURRENT_DATE.replace(/-/g, ""))
+  const SELECTED_DATE = selectedDate
+  const CURRENT_DATE_NUMBER = parseInt(SELECTED_DATE.replace(/-/g, ""))
 
   const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"]
 
@@ -73,7 +73,7 @@ function ChallengeList() {
   if (structuredChallengeData && currentUserRoutineDoneDaily && RoutineDone) {
     // 마일스톤 생성하는데 필요한 세부 데이터 구성하고 이를 기반으로
     // 마일스톤을 화면에 표시해주는 함수
-    const displayEachMilestoneItem = (challenge: StructuredChallengeType) => {
+    const displayTargetMilestoneItem = (challenge: StructuredChallengeType) => {
       return challenge.milestones?.map((milestone, index) => {
         // 요일 필터링 작업 위해 마일스톤 시행 요일이 담긴 배열 형성해주는 함수
         const generatemilestoneDoDaysArray = (
@@ -117,16 +117,16 @@ function ChallengeList() {
             CURRENT_DATE_NUMBER <= milestoneEndDate
           ) {
             return (
-              <div key={milestone.id}>
-                <MilestoneSection
-                  challengeId={challenge.id}
-                  milestone={milestone}
-                  milestoneDoDays={milestoneDoDays}
-                  CURRENT_DATE={CURRENT_DATE}
-                  CURRENT_DAY_OF_WEEK={CURRENT_DAY_OF_WEEK}
-                  userId={userId || ""}
-                />
-              </div>
+              <MilestoneSection
+                key={milestone.id}
+                challengeGoal={challenge.goal}
+                challengeId={challenge.id}
+                milestone={milestone}
+                milestoneDoDays={milestoneDoDays}
+                SELECTED_DATE={SELECTED_DATE}
+                SELECTED_DAY_OF_WEEK={CURRENT_DAY_OF_WEEK}
+                userId={userId || ""}
+              />
             )
           }
         }
@@ -149,12 +149,9 @@ function ChallengeList() {
           return (
             <div
               key={challenge.goal}
-              className="flex flex-col gap-y-5 border-2 border-black px-8 py-10"
+              className="font-suite flex flex-col gap-y-5 rounded-lg border-[1.5px] border-solid border-[#d9d9d9] px-4 py-4"
             >
-              <h3 className="text-xl font-bold">챌린지: {challenge.goal}</h3>
-              <h1>챌린지 시작: {challenge.start_at}</h1>
-              <h1>챌린지 종료: {challenge.end_at}</h1>
-              {displayEachMilestoneItem(challenge)}
+              {displayTargetMilestoneItem(challenge)}
             </div>
           )
         }
@@ -162,20 +159,10 @@ function ChallengeList() {
     }
 
     return (
-      <div className="mt-10 flex flex-col gap-y-10">
-        <div className="flex gap-4">
-          <p>현재 내 아이디: </p>
-          <p>{me?.id}</p>
-        </div>
-        <div className="flex gap-4">
-          <p>
-            오늘 날짜:{" "}
-            {format(startOfDay(new Date()), "yyyy-MM-dd", { locale: ko })}
-          </p>
-
-          <p>선택한 날짜: {selectedDate}</p>
-          <p>선택한 요일: {selectedDayOfWeek}</p>
-        </div>
+      <div className="mt-10 flex w-full flex-col gap-y-4">
+        <p className="font-suite text-[18px] font-bold text-[#333333]">
+          현재 진행중인 루틴
+        </p>
         <div className="flex flex-col gap-y-12">
           {/* 유효한 날짜 범위 내 데이터만 보여지도록 하는 부분인데,
           애초에 유효한 날짜 범위 내 데이터만 가져와지도록 fetch 부분 수정할 필요 있음 */}
