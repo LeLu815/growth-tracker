@@ -13,7 +13,7 @@ export default function LoginPage() {
   const router = useRouter()
 
   return (
-    <Page title="로그인">
+    <Page>
       <Box className="flex w-full flex-col gap-y-[20px]">
         <KakaoLoginButton />
         <GoogleLoginButton />
