@@ -171,8 +171,8 @@ function MilestoneCreateConfig({
       <SubTitle className="justify-start">선택한 챌린지 기간</SubTitle>
       <div>
         <div className="mt-[12px] flex items-center gap-2">
-          <CalenderIcon />
-          <p>
+          <CalenderIcon color="#717171" />
+          <p className="text-[18px] font-[500] text-[#717171]">
             {range
               ? `${format(range.from!, "yyyy.MM.dd.")} ~ ${format(range.to!, "yyyy.MM.dd.")} (${differenceInCalendarDays(range.to!, range.from!) + 1}일)`
               : "기간을 선택해주세요."}

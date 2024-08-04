@@ -17,9 +17,12 @@ import { produce } from "immer"
 import Button from "@/components/Button"
 import Chip from "@/components/Chip"
 import DaysItem from "@/components/DaysItem"
+import CalenderIcon from "@/components/Icon/CalenderIcon"
 import Input from "@/components/Input"
 import RangeInput from "@/components/RangeInput"
 
+import ContentTitle from "../styles/ContentTitle"
+import SubTitle from "../styles/SubTitle"
 import MilestoneCreateComponent from "./MilestoneCreateComponent"
 
 // 객체를 기본으로 받자 => 없으면 걍 생성
@@ -196,14 +199,18 @@ function MilestoneCreateConfigEdit({
   useEffect(() => {}, [data, range])
   return (
     <>
-      <div className="mb-12">
-        <p>루틴 A</p>
+      <div className="mb-14">
+        <SubTitle className="justify-start">루틴 A</SubTitle>
         <div>
-          <p>
-            {range
-              ? `${milestone_start_date} ~ ${milestone_end_date} (${differenceInCalendarDays(new Date(milestone_end_date), new Date(milestone_start_date)) + 1}일)`
-              : "기간을 선택해주세요."}
-          </p>
+          <div className="mt-[12px] flex items-center gap-2">
+            <CalenderIcon color="#717171" />
+            <p className="text-[16px] font-[500] text-[#717171]">
+              {range
+                ? `${milestone_start_date} ~ ${milestone_end_date} (${differenceInCalendarDays(new Date(milestone_end_date), new Date(milestone_start_date)) + 1}일)`
+                : "기간을 선택해주세요."}
+            </p>
+          </div>
+          <div className="h-[40px]" />
           <Input
             label="루틴명"
             placeholder="챌린지명을 입력해주세요"
@@ -211,7 +218,9 @@ function MilestoneCreateConfigEdit({
             onChange={(e) => setMilestoneNameInput(e.target.value)}
           />
           <div>
-            <p>루틴 기간 설정</p>
+            <ContentTitle className="mb-[20px] mt-[44px]">
+              루틴 기간 설정
+            </ContentTitle>
             {range && (
               <RangeInput
                 thumbColor="#fe7d3d"
@@ -230,14 +239,16 @@ function MilestoneCreateConfigEdit({
                 }
               />
             )}
-            <p>
+            <p className="mt-[4px] text-end text-[16px] font-[600]">
               {range &&
                 `총 ${differenceInCalendarDays(range.to!, range.from!) + 1}일`}
             </p>
           </div>
           <div>
-            <p>루틴 설정 요일</p>
-            <ul>
+            <ContentTitle className="mb-[20px] mt-[44px]">
+              루틴 설정 요일
+            </ContentTitle>
+            <ul className="mr-auto flex justify-end gap-2">
               {SELECT_WEEK_BTN_VALUES.map((value) => (
                 <li key={value} onClick={() => handleClickDayGroupType(value)}>
                   <Chip
@@ -249,7 +260,7 @@ function MilestoneCreateConfigEdit({
                 </li>
               ))}
             </ul>
-            <ul className="flex h-[40px]">
+            <ul className="my-[20px] flex h-[36px] justify-end gap-[4px]">
               {WEEK_DAY_LIST.map((value, index) => (
                 <li key={value} onClick={() => handleClickDay(index)}>
                   <DaysItem isSelected={selectWeeks[index]}>{value}</DaysItem>
@@ -258,8 +269,10 @@ function MilestoneCreateConfigEdit({
             </ul>
           </div>
           <div>
-            <p>최소 달성률을 설정해 주세요</p>
-            <p>권장 달성률 50%에요</p>
+            <ContentTitle className="mb-[10px] mt-[44px]">
+              최소 달성률을 설정해 주세요
+            </ContentTitle>
+            <p className="mb-[20px] text-[14px]">권장 달성률 50%에요</p>
             <RangeInput
               thumbColor="#fe7d3d"
               trackColor="#fe7d3d"
@@ -269,14 +282,16 @@ function MilestoneCreateConfigEdit({
               step={10}
               max={100}
             />
-            <div>
-              <p>0%</p>
-              <p>100%</p>
+            <div className="mt-[4px] flex justify-between">
+              <p className="font-[800]">0%</p>
+              <p className="font-[800]">100%</p>
             </div>
           </div>
           <form onSubmit={hanleSubmit}>
-            <p>해야할 루틴</p>
-            <p>무엇을 꾸준히 해볼까요?</p>
+            <ContentTitle className="mb-[10px] mt-[44px]">
+              해야할 루틴
+            </ContentTitle>
+            <p className="mb-[6px] text-[14px]">무엇을 꾸준히 해볼까요?</p>
             <Input
               placeholder="ex. 영단어 100개씩 암기"
               value={routineInpt}
@@ -284,7 +299,7 @@ function MilestoneCreateConfigEdit({
                 setRoutineInput(e.target.value)
               }}
             />
-            <ul>
+            <ul className="mt-[24px] flex flex-col gap-[16px]">
               {routines.map((routine) => (
                 <li key={routine}>
                   <MilestoneCreateComponent
@@ -301,7 +316,7 @@ function MilestoneCreateConfigEdit({
           </form>
         </div>
       </div>
-      <div className="bottom-0 left-0 z-50 h-[90px] w-full bg-white pb-2">
+      <div className="sticky bottom-0 left-0 z-50 h-[90px] w-full bg-white pb-2 pt-2">
         <Button
           onClick={() => {
             // 모달 닫는 함수

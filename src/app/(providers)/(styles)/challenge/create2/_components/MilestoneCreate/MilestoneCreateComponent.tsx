@@ -10,7 +10,7 @@ function MilestoneCreateComponent({
   onClick,
 }: MilestoneCreateComponentProps) {
   return (
-    <div className="flex w-full items-center justify-between rounded-[10px] border border-solid border-slate-300 bg-[#f5f5f5] p-3">
+    <div className="flex w-full items-center justify-between rounded-[8px] border border-solid border-slate-300 bg-[#f5f5f5] p-4">
       <p>{text}</p>
       {onClick && (
         <CloseIcon
