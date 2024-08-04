@@ -16,7 +16,7 @@ function ComponentTestPage() {
   }
 
   return (
-    <Page title="공통 컴포넌트 테스트">
+    <Page>
       <h3 className="pt-4">Chips</h3>
       <Chip label="전체" intent="primary" />
       <Chip label="전체" intent="rounded" selected />

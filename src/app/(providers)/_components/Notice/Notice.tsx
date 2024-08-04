@@ -1,13 +1,14 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { createClient } from "@/supabase/client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { Badge, Drawer, Space } from "antd"
+import { Avatar, Badge, Drawer, Space } from "antd"
 import axios from "axios"
+
+import AlarmIcon from "@/components/Icon/AlarmIcon"
 
 import { NoticeListType, NoticeType } from "../../../../../types/notice.type"
 
@@ -125,20 +126,19 @@ function Notice() {
   }, [me?.id])
 
   return (
-    <div className={"fixed right-0 top-0"}>
-      <Image
-        src={"/icon/bell.svg"}
-        width={40}
-        height={40}
-        alt="알림"
-        className={`fixed right-1 top-1 rounded-full border-[1px] border-solid bg-white`}
-        onClick={showDrawer}
-      ></Image>
-      {count > 0 && (
-        <Space>
-          <Badge count={count} />
-        </Space>
-      )}
+    <div>
+      <div onClick={showDrawer}>
+        <Badge count={count}>
+          <Avatar
+            className={"bg-white"}
+            shape="square"
+            icon={
+              <AlarmIcon width={16} height={16} className={"top absolute"} />
+            }
+          />
+        </Badge>
+      </div>
+
       <Drawer title="알림" onClose={onClose} open={open}>
         <div className={"flex flex-col gap-4"}>
           {data?.map((notice, idx) => {
