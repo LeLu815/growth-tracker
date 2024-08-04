@@ -12,7 +12,6 @@ export default function StylesLayout({ children }: PropsWithChildren) {
       <div>{children}</div>
 
       <div className="h-[80px] w-full"></div>
-      <Notice></Notice>
       <BottomNavigation />
     </div>
   )
