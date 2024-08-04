@@ -58,13 +58,27 @@ function MilestoneSection({
   useEffect(() => {
     // 오늘에 대한 RDD가 없다면 하나 새로 생성해주는 함수 실행
     initializeRDD()
-  }, [])
+  }, [SELECTED_DATE])
 
   const [targetRDDId, setTargetRDDId] = useState("")
   const [isVisible, setIsVisible] = useState(false)
   const modal = useModal()
 
-  const handleRoutineCompleteButtonClick = () => {}
+  const handleRoutineCompleteButtonClick = () => {
+    modal.open({
+      type: "custom",
+      children: (
+        <DiarySection
+          milestoneId={milestone.id}
+          currentUserRoutineDoneDaily={currentUserRoutineDoneDaily}
+          createdAt={SELECTED_DATE}
+          challengeId={challengeId}
+          routineDoneDailyId={targetRDDId}
+          handleClickConfirm={() => modal.close()}
+        />
+      ),
+    })
+  }
 
   const toggleVisibility = () => {
     setIsVisible(!isVisible)
@@ -199,13 +213,6 @@ function MilestoneSection({
           >
             루틴 완료
           </Button>
-          <DiarySection
-            milestoneId={milestone.id}
-            currentUserRoutineDoneDaily={currentUserRoutineDoneDaily}
-            createdAt={SELECTED_DATE}
-            challengeId={challengeId}
-            routineDoneDailyId={targetRDDId}
-          />
         </div>
       )}
     </div>
