@@ -99,11 +99,11 @@ function MilestoneSection({
   }, [SELECTED_DATE])
 
   if (routineDoneDailyPending || routineDonePending) {
-    return <div>로딩 중</div>
+    return <div className="mt-5">로딩 중</div>
   }
 
   if (routineDoneDailyError || routineDoneError) {
-    return <div>서버에서 데이터 로드 중 오류 발생</div>
+    return <div className="mt-5">서버에서 데이터 로드 중 오류 발생</div>
   }
 
   // 선택된 일자의 요일이 해당 마일스톤의 실행 요일인지 확인
@@ -195,7 +195,7 @@ function MilestoneSection({
                   <RoutineCheckBox
                     routines={milestone.routines}
                     challengeId={challengeId}
-                    createdAt={SELECTED_DATE}
+                    selectedDate={SELECTED_DATE}
                     milestoneId={milestone.id}
                     userId={userId}
                     routineId={routine.id}

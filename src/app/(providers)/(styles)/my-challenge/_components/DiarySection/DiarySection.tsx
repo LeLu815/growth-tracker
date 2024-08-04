@@ -43,11 +43,11 @@ function DiarySection({
   })
 
   if (diaryPending) {
-    return <div>로딩 중</div>
+    return <div className="mt-5">로딩 중</div>
   }
 
   if (diaryError) {
-    return <div>서버에서 데이터 로드 중 오류 발생</div>
+    return <div className="mt-5">서버에서 데이터 로드 중 오류 발생</div>
   }
 
   if (diary) {

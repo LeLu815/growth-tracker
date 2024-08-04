@@ -15,7 +15,7 @@ import { RoutineType } from "../../../../../../../types/supabase.type"
 interface RoutineCheckBoxProps {
   milestoneId: string
   challengeId: string
-  createdAt: string
+  selectedDate: string
   userId: string
   routineId: string
   routineDone: RoutineDoneType[]
@@ -25,7 +25,7 @@ interface RoutineCheckBoxProps {
 
 function RoutineCheckBox({
   routines,
-  createdAt,
+  selectedDate,
   routineId,
   routineDone,
   routineDoneDailyId,
@@ -37,7 +37,8 @@ function RoutineCheckBox({
   // 이를 활용해 추후 체크박스의 최초값(선택/해제) 부여
   const targetRD = routineDone.find((item) => {
     return (
-      item.created_at.slice(0, 10) == createdAt && item.routine_id == routineId
+      item.created_at.slice(0, 10) == selectedDate &&
+      item.routine_id == routineId
     )
   })
 
@@ -51,7 +52,7 @@ function RoutineCheckBox({
         await POSTnewRoutineDone({
           routineDoneDailyId,
           routineId,
-          createdAt,
+          createdAt: selectedDate,
           routineDoneId,
         })
       }
@@ -75,15 +76,17 @@ function RoutineCheckBox({
   }
   const updateIsSuccess = async () => {
     const todayDoneRoutineArray = routineDone.filter((item) => {
-      return item.created_at.slice(0, 10) == createdAt
+      return item.created_at.slice(0, 10) == selectedDate
     })
 
     if (todayDoneRoutineArray.length == routineCount) {
+      console.log("true")
       await PUTisSuccessRoutineDoneDaily({
         currentIsSuccess: true,
         routineDoneDailyId: routineDoneDailyId,
       })
     } else {
+      console.log("false")
       await PUTisSuccessRoutineDoneDaily({
         currentIsSuccess: false,
         routineDoneDailyId: routineDoneDailyId,

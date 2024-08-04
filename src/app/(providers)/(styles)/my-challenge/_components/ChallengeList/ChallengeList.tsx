@@ -63,11 +63,11 @@ function ChallengeList() {
   const CURRENT_DAY_OF_WEEK = selectedDayOfWeek
 
   if (ChallengeDataPending || routineDoneDailyPending || routineDonePending) {
-    return <div>로딩 중</div>
+    return <div className="mt-5">로딩 중</div>
   }
 
   if (ChallengeDataError || routineDoneDailyError || routineDoneError) {
-    return <div>서버에서 데이터 로드 중 오류 발생</div>
+    return <div className="mt-5">서버에서 데이터 로드 중 오류 발생</div>
   }
 
   if (structuredChallengeData && currentUserRoutineDoneDaily && RoutineDone) {
