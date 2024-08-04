@@ -2,7 +2,7 @@ import { PropsWithChildren } from "react"
 import classNames from "classnames"
 
 interface BaseHeaderProps {
-  className: string
+  className?: string
 }
 
 const BaseHeader = ({
