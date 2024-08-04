@@ -1,27 +1,88 @@
 import { cva, VariantProps } from "class-variance-authority"
 
-const chipVariant = cva("text-sm border rounded-full px-2.5 py-0.5", {
+const chipVariant = cva("border cursor-pointer text-black", {
   variants: {
     intent: {
-      primary: "bg-blue-500 border-blue-500 text-white",
-      secondary: "bg-gray-500 border-gary-500 text-white",
-      danger: "bg-red-500 border-red-500 text-white",
-      default: "bg-blue-white border-black text-black",
+      primary: "bg-[#D9D9D9] border-[#D9D9D9] text-black",
+      secondary: "bg-[#D8D8D8] border-[#D8D8D8] text-[#050505]",
+      third: "bg-blue-white border-black text-white",
+      rounded:
+        "rounded-[34px] px-5 py-2 border-[#e1e1e1] bg-[#FF7D3D] text-black",
+    },
+    size: {
+      sm: "rounded-[4px] px-2 py-1.5 text-[8px]",
+      md: "rounded-[6px] px-1.5 py-1 text-[12px]",
+    },
+    variant: {
+      outline: "bg-white",
+      contained: "text-white",
+      selected: "bg-[#FF7D3D] border-[#FF7D3D] text-white",
     },
   },
+  compoundVariants: [
+    {
+      intent: "primary",
+      variant: "contained",
+      className: "bg-black",
+    },
+    {
+      intent: "primary",
+      variant: "outline",
+      className: "text-[#d7d7d7] bg-white",
+    },
+    {
+      intent: "secondary",
+      variant: "contained",
+      className: "bg-[#D8D8D8]",
+    },
+    {
+      intent: "secondary",
+      variant: "outline",
+      className: "text-[#d7d7d7] bg-white",
+    },
+    {
+      intent: "rounded",
+      variant: "selected",
+      className: "bg-[#FF7D3D] border-[#FF7D3D] text-white",
+    },
+  ],
   defaultVariants: {
-    intent: "default",
+    intent: "primary",
+    size: "md",
+    variant: "outline",
   },
 })
 
-type chipVariantType = VariantProps<typeof chipVariant>
+type ChipVariantType = VariantProps<typeof chipVariant>
 
-type chipProps = {
+type ChipProps = {
   label: string
-} & chipVariantType
+  selected?: boolean
+  onClick?: () => void
+} & ChipVariantType
 
-function Chip({ label, intent }: chipProps) {
-  return <div className={chipVariant({ intent })}>{label}</div>
+function Chip({
+  label,
+  intent = "primary",
+  variant = "outline",
+  selected = false,
+  size = "md",
+  onClick,
+}: ChipProps) {
+  const finalVariant = selected ? "selected" : variant
+
+  return (
+    <span
+      onClick={onClick}
+      className={chipVariant({
+        intent,
+        variant: finalVariant,
+        size,
+      })}
+    >
+      {label}
+    </span>
+  )
 }
 
 export default Chip

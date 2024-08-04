@@ -1,22 +1,33 @@
 "use client"
 
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useModal } from "@/context/modal.context"
+import useChallengeDetailStore, {
+  InitialDataType,
+} from "@/store/challengeDetail.store"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
-import { numberToWeek } from "../_utils/milestoneweekUtils"
+import Chip from "@/components/Chip"
+import BookmarkIcon from "@/components/Icon/BookmarkIcon"
+import ThumbsUpIcon from "@/components/Icon/ThumbsUpIcon"
+
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
+import Image from "next/image";
 
 function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const modal = useModal()
   const router = useRouter()
+  const [openIndexes, setOpenIndexes] = useState<number[]>([])
+  const setChallengeDetail = useChallengeDetailStore(
+    (state) => state.setChallengeDetail
+  )
 
   const getChallenge = async (): Promise<ChallengeType> => {
     const response = await axios
       .get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}`)
       .then((response) => response.data)
-
     if (response.error) {
       modal.open({
         type: "alert",
@@ -25,6 +36,14 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
       router.push("/newsfeed")
     }
 
+    const challengeDetail = {
+      id: response.data.id as string,
+      userId: response.data.user_id as string,
+      nickname: response.data.nickname as string,
+      goal: response.data.goal as string,
+    }
+
+    setChallengeDetail(challengeDetail as InitialDataType)
     return response.data
   }
 
@@ -33,62 +52,105 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
     queryFn: getChallenge,
   })
 
+  const toggleAccordion = (index: number) => {
+    setOpenIndexes((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+    )
+  }
+
   if (isPending) return <div>Loading...</div>
   if (isError) return <div>Error loading data</div>
 
   return (
-    <div>
-      <div className={"text-2xl"}>
-        {data?.goal} / {data?.state}
+    <div className="flex flex-col items-center justify-center">
+      <div className="w-full overflow-hidden bg-white">
+        <div className="relative">
+          <div
+            className="h-40 bg-[#FF7D3D] bg-cover bg-center"
+            style={{
+              backgroundImage: "url('')",
+            }}
+          ></div>
+          <div className="absolute bottom-0 left-0 p-4 text-lg font-bold text-white">
+            <Chip size="sm" label={data?.category} variant="outline" />
+          </div>
+          <div className="absolute bottom-0 right-0 p-4 text-lg font-bold text-white">
+            {convertStatusToKorean(data?.state)}
+          </div>
+        </div>
+        <div className="mt-2 text-center">
+          <div className="text-xl font-semibold">{data?.goal} </div>
+          <div className="text-gray-500">{data?.nickname}</div>
+          <div className="flex items-center justify-center gap-4">
+            <div className="flex items-center">
+              <ThumbsUpIcon width={15} height={17} color={"black"} />
+              <span className="ml-1 text-sm text-gray-500">
+                {data.like_cnt}
+              </span>
+            </div>
+            <div className="flex items-center">
+              <BookmarkIcon width={16} height={18} color={"black"} />
+              <span className="ml-1 text-sm text-gray-500">
+                {data.template_cnt}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className={"flex justify-between"}>
-        <div>총 {data?.day_cnt} / 계산해야함</div>
-        <div>챌린지 복사하기</div>
+      <div className="mt-4 flex flex-col items-center border-t pt-4">
+        <div className="text-lg font-semibold">챌린지 기간</div>
+        <div className="text-gray-500">
+          {data?.start_at} ~ {data?.end_at} ({data?.day_cnt}일)
+        </div>
+        {/*<div className="mt-4">그레프 나와야함 공통 컴포넌트 사용예정</div>*/}
       </div>
-      <div>그래프나오는 곳</div>
-      <div className={"h-1 w-full bg-black"}></div>
-      <div className={"flex flex-col gap-4"}>
-        <div className={"text-2xl"}>마일스톤 목록</div>
+      <div className={"flex flex-col items-center gap-1"}>
         {data?.milestones?.map((milestone, index) => {
+          const isOpen = openIndexes.includes(index)
           return (
-            <div key={milestone.id} className={"border border-black"}>
-              마일스톤{index + 1}
-              <div>
-                {milestone.start_at} ~ {milestone.end_at} ({milestone.total_day}
-                )
-              </div>
-              <div>
-                <div>루틴 실행 요일</div>
-                <div className={"flex gap-2"}>
-                  {milestone.weeks.map((week, index) => {
+            <div
+              key={milestone.id}
+              className="mt-5 h-auto w-[375px] rounded-[10px] border-[1px]"
+            >
+              <button
+                className="flex w-full items-center justify-between p-4 text-left focus:outline-none"
+                onClick={() => toggleAccordion(index)}
+              >
+                <div className="text-[16px]">
+                  마일스톤{index + 1}
+                  <div className={"text-[12px] text-[#939393]"}>
+                    {milestone.start_at} ~ {milestone.end_at} (
+                    {milestone.total_day}일)
+                  </div>
+                </div>
+                <span className="text-2xl">
+                  {isOpen ? (
+                    <Image src={"/icon/ic-down-arrow.svg"} width={15} height={15} alt={""}/>
+                  ) : (
+                    <Image src={"/icon/ic-up-arrow.svg"} width={15} height={15} alt={""}/>
+                  )}
+                </span>
+              </button>
+              <div className={"flex flex-col items-center gap-2 pb-5"}>
+                {isOpen &&
+                  milestone.routines?.map((routine) => {
                     return (
-                      <div key={index}>
-                        <div
-                          className={`rounded-full border border-black p-4 ${week === "true" ? "bg-gray-500" : ""}`}
+                      <div
+                        className={
+                          "h-[39px] w-[305px] rounded-[4px] bg-[#F5F5F5] pt-2"
+                        }
+                        key={routine.id}
+                      >
+                        <span
+                          className={
+                            "pl-3 text-[12px] font-medium text-[#171717]"
+                          }
                         >
-                          {numberToWeek(index)}
-                        </div>
+                          {routine.content}
+                        </span>
                       </div>
                     )
                   })}
-                </div>
-              </div>
-              <div className={"flex gap-14"}>
-                <div>
-                  {milestone.success_requirement_cnt} 이상 실천시 루틴 성공!
-                </div>
-                <div>
-                  총 루틴 횟수 {milestone.total_cnt}회 | {milestone.total_day}일
-                </div>
-              </div>
-              <div>
-                {milestone.routines?.map((routine) => {
-                  return (
-                    <div className={"border border-black"} key={routine.id}>
-                      {routine.content}
-                    </div>
-                  )
-                })}
               </div>
             </div>
           )
@@ -96,6 +158,17 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
       </div>
     </div>
   )
+}
+
+const convertStatusToKorean = (state: string) => {
+  switch (state) {
+    case "on_progress":
+      return "진행중"
+    case "on_complete":
+      return "성공"
+    case "on_fail":
+      return "실패"
+  }
 }
 
 export default ChallengeInfo

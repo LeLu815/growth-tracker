@@ -11,16 +11,14 @@ const Page = ({
   isTitleHidden,
 }: PropsWithChildren<PageProps>) => {
   return (
-    <main className="container mx-auto p-4 sm:p-8 md:p-12 lg:p-14 xl:p-16">
+    <main className="border-box mx-auto min-w-[320px] max-w-[640px]">
       <h1
-        className={`mb-6 font-semibold ${isTitleHidden ? "hidden" : ""} text-lg md:text-2xl lg:text-3xl xl:text-4xl`}
+        className={`mb-6 ml-[20px] mt-[20px] font-semibold ${isTitleHidden ? "hidden" : ""} text-lg md:text-2xl lg:text-3xl xl:text-4xl`}
       >
         {title}
       </h1>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-none lg:grid-cols-none">
-        {children}
-      </div>
+      <div className="w-full">{children}</div>
     </main>
   )
 }

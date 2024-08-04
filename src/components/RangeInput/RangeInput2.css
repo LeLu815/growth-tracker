@@ -1,0 +1,44 @@
+/* RangeInput.css */
+.custom-range {
+  -webkit-appearance: none; /* 기본 스타일 제거 */
+  appearance: none; /* 기본 스타일 제거 */
+  width: 100%;
+  height: 8px; /* track 높이 */
+  outline: none;
+}
+
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none; /* 기본 스타일 제거 */
+  appearance: none; /* 기본 스타일 제거 */
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.custom-range::-moz-range-thumb {
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.custom-range::-ms-thumb {
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Track의 스타일 */
+.custom-range::-webkit-slider-runnable-track {
+  background: transparent; /* 배경을 투명하게 설정 */
+}
+
+.custom-range::-moz-range-track {
+  background: transparent; /* 배경을 투명하게 설정 */
+}
+
+.custom-range::-ms-track {
+  background: transparent; /* 배경을 투명하게 설정 */
+}

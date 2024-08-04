@@ -2,9 +2,9 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { useModal } from "@/context/modal.context"
 import { useQuery } from "@tanstack/react-query"
 
+import Box from "@/components/Box"
 import Page from "@/components/Page"
 
 import { PostType } from "../../../../../types/challenge"
@@ -17,32 +17,8 @@ import { fetchPosts } from "./_utils/fetchPosts"
 function NewsfeedPage() {
   const [filter, setFilter] = useState<string>("recent")
   const [userId, setUserId] = useState<string>("")
-  const [category, setCategory] = useState<string>("전체보기")
+  const [category, setCategory] = useState<string>("전체")
   const [searchQuery, setSearchQuery] = useState<string>("")
-
-  const modal = useModal()
-
-  const handleOpenAlertModal = () => {
-    modal.open({
-      type: "alert",
-      content: "알림 모달",
-    })
-  }
-
-  const handleOpenConfirmModal = () => {
-    modal.open({
-      type: "confirm",
-      content: "이건 확인 모달",
-      onConfirm: () => console.log("확인 버튼 클릭 시 적용될 로직 넣어주세요"),
-    })
-  }
-
-  const handleOpenCalendarModal = () => {
-    modal.open({
-      type: "calendar",
-      onConfirm: () => console.log("확인 버튼 클릭 시 적용될 로직 넣어주세요"),
-    })
-  }
 
   const router = useRouter()
 
@@ -50,6 +26,7 @@ function NewsfeedPage() {
     data: posts = [],
     error,
     refetch,
+    isLoading,
   } = useQuery<PostType[]>({
     queryKey: ["posts", filter, category, searchQuery],
     queryFn: () => fetchPosts(filter, category, searchQuery, userId),
@@ -80,24 +57,26 @@ function NewsfeedPage() {
 
   return (
     <Page title="뉴스피드 페이지">
-      {/* 카테고리 */}
-      <CategorySelector
-        category={category}
-        onSelectCategory={handleCategoryClick}
-      />
+      <Box>
+        {/* 카테고리 */}
+        <CategorySelector
+          category={category}
+          onSelectCategory={handleCategoryClick}
+        />
 
-      <button onClick={handleOpenAlertModal}>알림 모달 열기</button>
-      <button onClick={handleOpenConfirmModal}>확인 모달 열기</button>
-      <button onClick={handleOpenCalendarModal}>캘린더 모달 열기</button>
+        {/* 검색 필터 */}
+        <SearchFilter onSearch={handleSearch} />
 
-      {/* 검색 필터 */}
-      <SearchFilter onSearch={handleSearch} />
+        {/* 정렬 */}
+        <SortSelector filter={filter} onChangeFilter={handleFilterChange} />
 
-      {/* 정렬 */}
-      <SortSelector filter={filter} onChangeFilter={handleFilterChange} />
-
-      {/* 목록 */}
-      <ChallengePosts posts={posts} onClickPost={handlePostClick} />
+        {/* 목록 */}
+        {isLoading ? (
+          <div>로딩 중</div>
+        ) : (
+          <ChallengePosts posts={posts} onClickPost={handlePostClick} />
+        )}
+      </Box>
     </Page>
   )
 }

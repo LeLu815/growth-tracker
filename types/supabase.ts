@@ -221,7 +221,7 @@ export type Database = {
           },
         ]
       }
-      log_scheduler: {
+      log_cron_scheduler: {
         Row: {
           created_at: string
           id: number
@@ -300,6 +300,48 @@ export type Database = {
             columns: ["challenge_id"]
             isOneToOne: false
             referencedRelation: "challenge"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notice: {
+        Row: {
+          challenge_id: string | null
+          content: string
+          created_at: string
+          id: number
+          is_view: boolean
+          user_id: string | null
+        }
+        Insert: {
+          challenge_id?: string | null
+          content: string
+          created_at?: string
+          id?: number
+          is_view?: boolean
+          user_id?: string | null
+        }
+        Update: {
+          challenge_id?: string | null
+          content?: string
+          created_at?: string
+          id?: number
+          is_view?: boolean
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notice_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenge"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notice_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -423,6 +465,7 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          is_challenge_first_create: boolean
           nickname: string
           profile_image_url: string | null
           social_type: string | null
@@ -431,6 +474,7 @@ export type Database = {
           created_at?: string
           email: string
           id?: string
+          is_challenge_first_create?: boolean
           nickname: string
           profile_image_url?: string | null
           social_type?: string | null
@@ -439,6 +483,7 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
+          is_challenge_first_create?: boolean
           nickname?: string
           profile_image_url?: string | null
           social_type?: string | null
@@ -449,48 +494,6 @@ export type Database = {
             columns: ["id"]
             isOneToOne: true
             referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      users_notice: {
-        Row: {
-          challenge_id: string | null
-          content: string
-          created_at: string
-          id: number
-          is_view: boolean
-          user_id: string | null
-        }
-        Insert: {
-          challenge_id?: string | null
-          content: string
-          created_at?: string
-          id?: number
-          is_view?: boolean
-          user_id?: string | null
-        }
-        Update: {
-          challenge_id?: string | null
-          content?: string
-          created_at?: string
-          id?: number
-          is_view?: boolean
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "users_alarm_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "users_notice_challenge_id_fkey"
-            columns: ["challenge_id"]
-            isOneToOne: false
-            referencedRelation: "challenge"
             referencedColumns: ["id"]
           },
         ]
@@ -520,6 +523,7 @@ export type Database = {
           id: string
           created_at: string
           user_id: string
+          nickname: string
           goal: string
           like_cnt: number
           template_cnt: number

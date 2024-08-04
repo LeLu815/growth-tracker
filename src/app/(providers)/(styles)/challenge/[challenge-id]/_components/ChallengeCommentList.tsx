@@ -1,6 +1,7 @@
 "use client"
 
-import { ChangeEvent, FormEvent, useEffect, useState } from "react"
+import { FormEvent, useState } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
@@ -11,6 +12,9 @@ import {
 } from "@tanstack/react-query"
 import axios from "axios"
 import { useInView } from "react-intersection-observer"
+
+import Button from "@/components/Button"
+import Input from "@/components/Input"
 
 import {
   ChallengeCommentPageType,
@@ -47,6 +51,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
    * */
   const createComment = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
     if (!me) {
       router.push("/")
       return
@@ -54,6 +59,8 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
       alertOpen("댓글 내용을 입력해주세요.")
       return
     }
+
+    setContent("")
 
     const response = await axios
       .post(
@@ -71,7 +78,6 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
       alertOpen("댓글 작성에 실패했습니다.")
       throw new Error(response.error)
     }
-    setContent("")
     refetch()
   }
 
@@ -286,29 +292,44 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   }
 
   return (
-    <div className={"flex-col gap-4"}>
-      <div className={"text-2xl"}>댓글 목록</div>
-      <form onSubmit={createComment}>
-        <input
-          className={"w-[500px]"}
-          value={content}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setContent(e.target.value)
-          }
-        ></input>
-        <button type={"submit"}>댓글 작성</button>
-      </form>
+    <div className={"flex w-full flex-col items-center gap-4"}>
+      <div className="mx-auto mt-10 w-full rounded-lg border p-4">
+        <form onSubmit={createComment}>
+          <Input
+            placeholder="댓글을 입력하세요..."
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          />
+          <div className="mt-2 flex justify-end">
+            <Button intent="primary" variant="rounded" size="sm" type="submit">
+              댓글 등록
+            </Button>
+          </div>
+        </form>
+      </div>
       {data?.map((comment, idx) => {
         const isLastItem = data?.length - 1 === idx
         return (
           <div
-            className={"border border-b-2"}
+            className={
+              "mt-2 flex w-full flex-col gap-4 rounded-lg border p-4 shadow-md"
+            }
             key={comment.id}
             ref={isLastItem ? ref : null}
           >
-            <div className={"flex gap-4"}>
-              <div>유저 이메일 : {comment.email}</div>
-              <div>유저 닉네임 : {comment.nickname}</div>
+            <div className={"flex gap-2"}>
+              <Image
+                width={25}
+                height={25}
+                className={"rounded-full"}
+                alt={"프로필사진"}
+                src={
+                  comment.profile_image_url
+                    ? comment.profile_image_url
+                    : "/image/profileImage.png"
+                }
+              ></Image>
+              <div className={"pt-2"}>{comment.nickname}님</div>
             </div>
             {isUpdate && comment.id === updateCommentId ? (
               <form
@@ -321,16 +342,17 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                 }}
               >
                 <input
+                  className={"border-[1px] border-solid"}
                   value={updateContent}
                   onChange={(e) => setUpdateContent(e.target.value)}
                 />
               </form>
             ) : (
-              <div>내용 : {comment.content}</div>
+              <div>{comment.content}</div>
             )}
 
-            <div className={"flex gap-4"}>
-              종아요 여부 :{" "}
+            <div className={"flex gap-2"}>
+              종아요{" "}
               <div
                 onClick={() =>
                   me
@@ -347,51 +369,57 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
             {comment.user_id === me?.id && (
               <div className={"flex gap-4"}>
                 {isUpdate && comment.id === updateCommentId ? (
-                  <>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault()
+                  <div>
+                    <Button
+                      intent="primary"
+                      variant="rounded"
+                      size="sm"
+                      type="submit"
+                      onClick={() => {
                         handleCommentMutate({
                           commentId: comment.id,
                           content: updateContent,
                         })
                       }}
-                      className={"border border-slate-600"}
                     >
-                      수정완료
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault()
+                      완료
+                    </Button>
+                    <Button
+                      intent="secondary"
+                      variant="rounded"
+                      size="sm"
+                      onClick={() => {
                         setUpdateContent("")
                         setIsUpdate(false)
                         setUpdateCommentId("")
                       }}
-                      className={"border border-slate-600"}
                     >
                       취소
-                    </button>
-                  </>
+                    </Button>
+                  </div>
                 ) : (
-                  <>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault()
+                  <div>
+                    <Button
+                      intent="secondary"
+                      variant="rounded"
+                      size="sm"
+                      onClick={() => {
                         setUpdateContent(comment.content)
                         setIsUpdate(true)
                         setUpdateCommentId(comment.id)
                       }}
-                      className={"border border-slate-600"}
                     >
                       수정
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      intent="primary"
+                      variant="rounded"
+                      size="sm"
                       onClick={() => handleCommentDeleteMutate(comment.id)}
-                      className={"border border-slate-600"}
                     >
                       삭제
-                    </button>
-                  </>
+                    </Button>
+                  </div>
                 )}
               </div>
             )}
