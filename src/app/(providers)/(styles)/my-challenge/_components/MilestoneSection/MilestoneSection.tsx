@@ -64,12 +64,7 @@ function MilestoneSection({
   const [isVisible, setIsVisible] = useState(false)
   const modal = useModal()
 
-  const handleRoutineCompleteButtonClick = () => {
-    modal.open({
-      type: "calendar",
-      content: "준비중입니다.",
-    })
-  }
+  const handleRoutineCompleteButtonClick = () => {}
 
   const toggleVisibility = () => {
     setIsVisible(!isVisible)
