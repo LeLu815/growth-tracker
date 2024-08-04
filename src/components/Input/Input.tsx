@@ -6,15 +6,18 @@ type InputProps = {
   label?: string
   required?: boolean
   className?: string
-  variant?: "default" | "login"
+  variant?: "default" | "login" | "search"
 } & ComponentProps<"input">
 
-const inputVariant = cva("px-4 py-2.5 transition focus:outline-none", {
+const inputVariant = cva("transition focus:outline-none", {
   variants: {
     variant: {
-      default: "rounded border border-gray-400 focus:border-gray-950 ",
+      default:
+        "rounded border border-gray-400 focus:border-gray-950 px-4 py-2.5 ",
       login:
-        "border-b border-t-0 border-l-0 border-r-0  border-red-[#ADADAD] focus:border-b-1 focus:border-[#141414] ",
+        "border-b border-t-0 border-l-0 border-r-0  border-red-[#ADADAD] focus:border-b-1 focus:border-[#141414] px-4 py-2.5 ",
+      search:
+        "border-b border-t-0 border-l-0 border-r-0  border-red-[#ADADAD] focus:border-b-1 focus:border-[#141414] px-2 py-2 transition ",
     },
   },
   defaultVariants: {
