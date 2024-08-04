@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query"
 import { v4 } from "uuid"
 
 import Button from "@/components/Button"
-import CloseIcon from "@/components/Icon/CloseIcon"
 import CloseIcon02 from "@/components/Icon/CloseIcon02"
 
 import { DiaryType } from "../../../../../../../types/diary.type"
