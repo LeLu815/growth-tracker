@@ -9,6 +9,7 @@ import SearchIcon from "@/components/Icon/SearchIcon"
 import Input from "@/components/Input"
 
 import BaseHeader from "./BaseHeader"
+import Notice from "@/app/(providers)/_components/Notice/Notice";
 
 export interface FeedHeaderProps {
   onSearch?: (query: string) => void
@@ -67,7 +68,7 @@ function FeedHeader({ onSearch }: FeedHeaderProps) {
           ) : (
             <SearchIcon onClick={handleSearchClick} />
           )}
-          <AlarmIcon width={16} height={16} />
+          <Notice></Notice>
         </div>
       </div>
     </BaseHeader>
