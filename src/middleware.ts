@@ -2,19 +2,31 @@ import { NextResponse, type NextRequest } from "next/server"
 import { updateSession } from "@/supabase/middleware"
 
 export async function middleware(request: NextRequest) {
+  const isLoggedIn =
+    (request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token.1") &&
+      request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token.0")) ||
+    request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token")
+
+  // 로그인 필요한 경로 확인
   if (
-    request.nextUrl.pathname.includes("/my-page") ||
-    request.nextUrl.pathname.includes("/my-page/**") ||
-    request.nextUrl.pathname.includes("/challenge/create") ||
-    request.nextUrl.pathname.includes("/my-challenge")
+    !isLoggedIn &&
+    (request.nextUrl.pathname.includes("/my-page") ||
+      request.nextUrl.pathname.includes("/my-page/**") ||
+      request.nextUrl.pathname.includes("/challenge/create") ||
+      request.nextUrl.pathname.includes("/my-challenge"))
   ) {
-    const url = request.nextUrl.clone()
-    url.pathname = "/"
-    return (request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token.1") &&
-      request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token.0")) || request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token")
-    ? NextResponse.next()
-      : NextResponse.redirect(url)
+    const loginUrl = request.nextUrl.clone()
+    loginUrl.pathname = "/auth/login"
+    return NextResponse.redirect(loginUrl)
   }
+
+  // 기본 경로를 /newsfeed로 설정
+  if (request.nextUrl.pathname === "/") {
+    const newsfeedUrl = request.nextUrl.clone()
+    newsfeedUrl.pathname = "/newsfeed"
+    return NextResponse.redirect(newsfeedUrl)
+  }
+
   return await updateSession(request)
 }
 
