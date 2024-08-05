@@ -24,8 +24,8 @@ export async function GET(
 
   const { data, error } = await supabase
     .from("challenge")
-    .select(`*, user: users (nickname)`)
-    // .eq("user_id", userId)
+    .select(`*, user: users (nickname, profile_image_url)`)
+    .eq("user_id", userId)
     // .range(page * limit, page * limit + (limit - 1))
     .order("created_at", { ascending: false })
     .order("id", { ascending: false })

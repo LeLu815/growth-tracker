@@ -29,7 +29,7 @@ export async function GET(
 
   try {
     const data = await pgClient.query(
-      "SELECT cc.*, json_build_object('nickname', u.nickname) AS user FROM challenge cc INNER JOIN challenge_like cl ON cc.id = cl.challenge_id INNER JOIN users u ON u.id = cc.user_id WHERE cl.user_id = $1 ORDER BY cl.created_at DESC, cl.id DESC LIMIT $2 OFFSET $3;",
+      "SELECT cc.*, json_build_object('nickname', u.nickname, 'profile_image_url', u.profile_image_url) AS user FROM challenge cc INNER JOIN challenge_like cl ON cc.id = cl.challenge_id INNER JOIN users u ON u.id = cc.user_id WHERE cl.user_id = $1 ORDER BY cl.created_at DESC, cl.id DESC LIMIT $2 OFFSET $3;",
       [userId, Number(limit), Number(page * limit) * Number(limit)]
     )
 

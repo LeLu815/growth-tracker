@@ -19,7 +19,6 @@ function NewsfeedPage() {
   const [userId, setUserId] = useState<string>("")
   const [category, setCategory] = useState<string>("전체")
   const [showCompleted, setShowCompleted] = useState<boolean>(false)
-  // const [searchQuery, setSearchQuery] = useState<string>("")
   const { searchQuery } = useChallengeSearchStore()
 
   const router = useRouter()
@@ -38,11 +37,6 @@ function NewsfeedPage() {
   const handlePostClick = (id: string) => {
     router.push(`/challenge/${id}`)
   }
-
-  // const handleSearch = (query: string) => {
-  //   setSearchQuery(query)
-  //   refetch()
-  // }
 
   const handleFilterChange = (selectedFilter: string) => {
     setFilter(selectedFilter)
@@ -65,7 +59,9 @@ function NewsfeedPage() {
 
   return (
     <Page>
-      <Box>
+      <Box className="">
+        <div className="h-[120px] w-full rounded-md bg-[#D9D9D9]"></div>
+
         {/* 카테고리 */}
         <CategorySelector
           category={category}

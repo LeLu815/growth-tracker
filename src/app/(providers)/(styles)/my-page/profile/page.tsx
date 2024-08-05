@@ -2,11 +2,15 @@
 
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
+import Button from "@/components/Button"
+import NoneProfile from "@/components/Icon/NoneProfile"
+import Input from "@/components/Input"
 import {
   deleteImage,
   PROFILE,
@@ -23,6 +27,9 @@ function UserInfoPage() {
 
   const { me } = useAuth()
   const modal = useModal()
+
+  const router = useRouter()
+
   /**
    * 유저 정보 조회
    * */
@@ -77,6 +84,7 @@ function UserInfoPage() {
     setSelectedFile(null)
     alertOpen("저장되었습니다.")
     refetch()
+    router.push("/my-page")
   }
 
   const { data, isPending, isError, refetch } = useQuery({
@@ -116,88 +124,82 @@ function UserInfoPage() {
   if (isError) return <div>Error loading data</div>
 
   return (
-    <div className="mt-1 flex items-start justify-center">
-      <div className="w-96 bg-white p-6">
-        <div className="flex flex-col items-center">
-          <div className="flex h-48 w-48 items-center justify-center">
-            <div className="relative h-48 w-48 border-2 border-solid">
+    <div className="flex justify-center">
+      <div>
+        <div className="bg-white p-4">
+          <div className="flex flex-col items-center">
+            <div className="mb-3 h-48 w-48">
               {profileImageUrl ? (
                 <Image
                   src={profileImageUrl as string}
                   alt="Profile"
-                  className="h-full w-full object-cover"
-                  width={160}
-                  height={160}
-                  priority
+                  className="h-full w-full rounded-full object-cover"
+                  width={192}
+                  height={192}
                 />
               ) : (
-                <Image
-                  src="/image/profileImage.png"
-                  alt="Profile"
-                  className="h-full w-full object-cover"
-                  width={160}
-                  height={160}
-                  priority
-                />
+                <NoneProfile width={192} height={192}></NoneProfile>
               )}
             </div>
-          </div>
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleImageChange}
-            ref={fileInputRef}
-          />
-          <button
-            className="hover:bg-hover mt-1 h-8 w-48 rounded-md border-2 border-solid text-xs text-gray-600"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            프로필사진 변경
-          </button>
-          <button
-            className="hover:bg-hover mt-1 h-8 w-48 rounded-md border-2 border-solid text-xs text-gray-600"
-            onClick={() => {
-              setProfileImageUrl(null)
-              setSelectedFile(null)
-            }}
-          >
-            기본이미지 적용
-          </button>
-        </div>
-        <form className={"flex flex-col gap-4"} onSubmit={handleUpdateUser}>
-          <div className="mx-auto mt-6 w-full max-w-[12rem] md:max-w-full">
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+            <Input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageChange}
+              ref={fileInputRef}
+            />
+            <div className={"flex flex-col gap-2"}>
+              <Button
+                intent="secondary"
+                size="sm"
+                onClick={() => fileInputRef.current?.click()}
               >
-                이메일
-              </label>
-              <input
-                placeholder={me?.email}
-                disabled={true}
+                프로필사진 변경
+              </Button>
+              <Button
+                intent="secondary"
+                size="sm"
+                onClick={() => {
+                  setProfileImageUrl(null)
+                  setSelectedFile(null)
+                }}
+              >
+                기본이미지 적용
+              </Button>
+            </div>
+          </div>
+          <form className={"flex flex-col gap-4"} onSubmit={handleUpdateUser}>
+            <div className="mt-6">
+              <div className="mb-4">
+                <Input
+                  label={"이메일"}
+                  placeholder={me?.email}
+                  disabled={true}
+                  type="text"
+                  id="email"
+                  className="box-border block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                />
+              </div>
+              <Input
+                label={"닉네임"}
+                value={nickname || ""}
                 type="text"
-                id="email"
-                className="box-border block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                onChange={(e) => setNickname(e.target.value)}
+                id="nickname"
+                className="box-border block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
               />
             </div>
-            <label
-              htmlFor="nickname"
-              className="mb-1 block text-sm font-medium text-gray-700"
+            <Button
+              className={"mt-5"}
+              intent="primary"
+              variant="rounded"
+              size="sm"
+              type={"submit"}
             >
-              닉네임
-            </label>
-            <input
-              value={nickname || ""}
-              type="text"
-              onChange={(e) => setNickname(e.target.value)}
-              id="nickname"
-              className="box-border block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-            />
-          </div>
-          <button type={"submit"}>저장</button>
-        </form>
+              저장
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   )
