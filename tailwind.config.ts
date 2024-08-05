@@ -18,6 +18,9 @@ const config = {
       },
     },
     extend: {
+      boxShadow: {
+        custom: "2px 4px 4px 0 rgba(0, 0, 0, 0.25)",
+      },
       backgroundImage: {
         "challenge-image":
           "url('https://blog.kakaocdn.net/dn/bcOXTW/btsvdteG3PE/yHP14OhQdgspKPHUKhCY4K/img.png')",
