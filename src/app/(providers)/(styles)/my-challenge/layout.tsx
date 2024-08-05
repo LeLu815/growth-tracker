@@ -4,7 +4,7 @@ import BottomNavigation from "@/components/BottomNavigation"
 
 import Header from "../../_components/Header"
 
-function MyPageLayout({ children }: PropsWithChildren) {
+function MyChallengeLayout({ children }: PropsWithChildren) {
   return (
     <div>
       <Header />
@@ -15,4 +15,4 @@ function MyPageLayout({ children }: PropsWithChildren) {
   )
 }
 
-export default MyPageLayout
+export default MyChallengeLayout

@@ -6,8 +6,6 @@ import { GETroutineDoneDaily } from "@/api/supabase/routineDoneDaily"
 import { GETstructuredChallengeData } from "@/api/supabase/structured-challenge"
 import { useAuth } from "@/context/auth.context"
 import { useQuery } from "@tanstack/react-query"
-import { format, startOfDay } from "date-fns"
-import { ko } from "date-fns/locale"
 
 import {
   StructuredChallengeType,
@@ -149,7 +147,7 @@ function ChallengeList() {
           return (
             <div
               key={challenge.goal}
-              className="font-suite flex flex-col gap-y-5 rounded-lg border-[1.5px] border-solid border-[#d9d9d9] px-4 py-4"
+              className="flex flex-col gap-y-5 rounded-lg border-[1.5px] border-solid border-[#d9d9d9] px-4 py-4 font-suite"
             >
               {displayTargetMilestoneItem(challenge)}
             </div>
