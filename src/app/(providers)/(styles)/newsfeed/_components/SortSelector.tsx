@@ -30,7 +30,7 @@ function SortSelector({
   }
 
   return (
-    <div className="flex justify-end gap-[12px]">
+    <div className="my-[24px] flex justify-end gap-[12px]">
       <div>
         <label className="ml-4 flex items-center text-sm font-medium text-gray-700">
           <input

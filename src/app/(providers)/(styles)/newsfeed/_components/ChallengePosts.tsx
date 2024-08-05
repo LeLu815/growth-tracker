@@ -18,14 +18,11 @@ function ChallengePosts({ posts, onClickPost }: ChallengePostsProps) {
     <div>
       <ul>
         {posts.map((post) => {
-          const userImage =
-            post.user.profile_image_url || "/image/profileImage.png"
-          console.log("User image URL:", userImage) // 이미지 URL 확인
           return (
             <li
               key={post.id}
               onClick={() => onClickPost(post.id)}
-              className="mb-[20px] cursor-pointer"
+              className="cursor-pointe mb-[20px]"
             >
               <ChallengeCard
                 title={post.goal}
@@ -35,7 +32,7 @@ function ChallengePosts({ posts, onClickPost }: ChallengePostsProps) {
                 liked={me ? (post.liked || []).includes(me.id) : false}
                 nickname={post.user.nickname}
                 progress={post.progress}
-                userImage={userImage}
+                userImage={post.user.profile_image_url}
                 bookmarked={
                   me ? (post.bookmarked || []).includes(me.id) : false
                 }
