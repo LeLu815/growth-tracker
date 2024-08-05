@@ -73,10 +73,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
       email,
       password,
     }
-    debugger
-    console.log(process.env.NEXT_PUBLIC_DOMAIN )
+    console.log(process.env.NEXT_PUBLIC_DOMAIN+"/api/auth/log-in")
     const response = await fetch(
-      process.env.NEXT_PUBLIC_DOMAIN + "/api/auth/log-in",
+      "/api/auth/log-in",
       {
         method: "POST",
         body: JSON.stringify(data),
