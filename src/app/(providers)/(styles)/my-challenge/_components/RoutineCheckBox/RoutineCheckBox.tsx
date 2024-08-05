@@ -1,6 +1,6 @@
 "use client"
 
-import React, { ChangeEvent, PropsWithChildren } from "react"
+import React, { ChangeEvent, PropsWithChildren, useContext } from "react"
 import {
   DELETEroutineDone,
   POSTnewRoutineDone,
@@ -11,6 +11,7 @@ import { v4 } from "uuid"
 
 import { RoutineDoneType } from "../../../../../../../types/routineDone.type"
 import { RoutineType } from "../../../../../../../types/supabase.type"
+import { MyChallengePageContext } from "../../context"
 
 interface RoutineCheckBoxProps {
   milestoneId: string
@@ -31,7 +32,7 @@ function RoutineCheckBox({
   routineDoneDailyId,
 }: PropsWithChildren<RoutineCheckBoxProps>) {
   const routineCount = routines.length
-
+  const { todayDate } = useContext(MyChallengePageContext)
   // 전체 routine_done에서 routine_done_daily_id를 통해서
   // 현재 체크한 루틴에 대한 오늘 날짜의 데이터 가져오기 및 존재 여부 확인하며,
   // 이를 활용해 추후 체크박스의 최초값(선택/해제) 부여
@@ -107,6 +108,7 @@ function RoutineCheckBox({
           handleCheckboxChange(event)
         }}
         checked={targetRD ? true : false}
+        disabled={selectedDate == todayDate ? false : true}
       />
     </>
   )

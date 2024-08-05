@@ -1,4 +1,9 @@
-import React, { PropsWithChildren, useEffect, useState } from "react"
+import React, {
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 import { GETdiary, POSTdiary, PUTdiary } from "@/api/supabase/diary"
 import { useQuery } from "@tanstack/react-query"
 import { v4 } from "uuid"
@@ -8,11 +13,12 @@ import CloseIcon02 from "@/components/Icon/CloseIcon02"
 
 import { DiaryType } from "../../../../../../../types/diary.type"
 import { RoutineDoneDailyType } from "../../../../../../../types/routineDoneDaily.type"
+import { MyChallengePageContext } from "../../context"
 
 interface DiarySectionProps {
   milestoneId: string
   currentUserRoutineDoneDaily: RoutineDoneDailyType[]
-  createdAt: string
+  selectedDate: string
   challengeId: string
   routineDoneDailyId: string
   handleClickConfirm?: () => void
@@ -21,7 +27,7 @@ interface DiarySectionProps {
 function DiarySection({
   milestoneId,
   currentUserRoutineDoneDaily,
-  createdAt,
+  selectedDate,
   challengeId,
   routineDoneDailyId,
   handleClickConfirm,
@@ -31,7 +37,7 @@ function DiarySection({
   // })
 
   const [inputText, setInputText] = useState("")
-
+  const { todayDate } = useContext(MyChallengePageContext)
   const {
     data: diary,
     isPending: diaryPending,
@@ -53,7 +59,7 @@ function DiarySection({
     const currentDiary = diary.find((item) => {
       return (
         item.routine_done_daily_id == routineDoneDailyId &&
-        item.created_at.slice(0, 10) == createdAt
+        item.created_at.slice(0, 10) == selectedDate
       )
     })
 
@@ -62,7 +68,7 @@ function DiarySection({
       const diaryToPost: DiaryType = {
         id: newId,
         routine_done_daily_id: routineDoneDailyId,
-        created_at: createdAt,
+        created_at: selectedDate,
         content: inputText,
         challenge_id: challengeId,
       }
@@ -94,7 +100,7 @@ function DiarySection({
         <div className="flex">
           <p className="text-[20px] font-bold">루틴 기록하기</p>
           <CloseIcon02
-            className="ml-auto mr-0"
+            className="ml-auto mr-0 cursor-pointer"
             onClick={handleClickConfirm}
           ></CloseIcon02>
         </div>

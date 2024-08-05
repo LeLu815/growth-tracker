@@ -1,5 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { PropsWithChildren, useEffect, useState } from "react"
+import React, {
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 import { GETroutineDone } from "@/api/supabase/routineDone"
 import {
   GETroutineDoneDaily,
@@ -14,6 +19,7 @@ import Button from "@/components/Button"
 import ArrowDownIcon from "@/components/Icon/ArrowDownIcon"
 
 import { StructuredMilestoneType } from "../../../../../../../types/supabase.type"
+import { MyChallengePageContext } from "../../context"
 import DiarySection from "../DiarySection"
 import ProgressBar from "../ProgressBar"
 import RoutineCheckBox from "../RoutineCheckBox"
@@ -55,6 +61,9 @@ function MilestoneSection({
     queryKey: ["fetchRoutineDone"],
     queryFn: GETroutineDone,
   })
+
+  const { todayDate } = useContext(MyChallengePageContext)
+
   useEffect(() => {
     // 오늘에 대한 RDD가 없다면 하나 새로 생성해주는 함수 실행
     initializeRDD()
@@ -78,7 +87,7 @@ function MilestoneSection({
         <DiarySection
           milestoneId={milestone.id}
           currentUserRoutineDoneDaily={currentUserRoutineDoneDaily}
-          createdAt={SELECTED_DATE}
+          selectedDate={SELECTED_DATE}
           challengeId={challengeId}
           routineDoneDailyId={targetRDDId}
           handleClickConfirm={() => modal.close()}
@@ -212,11 +221,12 @@ function MilestoneSection({
             }
           })}
           <Button
+            intent={todayDate == SELECTED_DATE ? "primary" : "secondary"}
             size={"lg"}
             className="mt-3 text-sm"
             onClick={handleRoutineCompleteButtonClick}
           >
-            루틴 완료
+            {"회고 확인하기"}
           </Button>
         </div>
       )}
