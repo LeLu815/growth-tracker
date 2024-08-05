@@ -16,6 +16,7 @@ import ChallengeLike from "@/app/(providers)/(styles)/challenge/[challenge-id]/_
 import MilestoneList from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/MilestoneList"
 
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
+import ArrowLeftIcon from "@/components/Icon/ArrowLeftIcon";
 
 function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const modal = useModal()
@@ -59,12 +60,16 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
   return (
     <div className={"flex flex-col"}>
       {/*이미지*/}
+      <div className={"ml-5 justify-start flex"}>
+        <ArrowLeftIcon className={"absolute mt-5 w-4 cursor-pointer"} onClick={router.back}/>
+      </div>
       <div
         className={"h-[235px] w-full flex-shrink-0 bg-[#EED697]"}
         style={{
           backgroundImage: "url('')",
         }}
-      ></div>
+      >
+      </div>
 
       {/* 상단 */}
       <div className="flex w-full flex-col items-start rounded-t-[12px] bg-white pt-5">
