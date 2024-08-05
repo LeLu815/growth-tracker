@@ -1,9 +1,4 @@
-import React, {
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState,
-} from "react"
+import React, { PropsWithChildren, useState } from "react"
 import { GETdiary, POSTdiary, PUTdiary } from "@/api/supabase/diary"
 import { useQuery } from "@tanstack/react-query"
 import { v4 } from "uuid"
@@ -12,12 +7,8 @@ import Button from "@/components/Button"
 import CloseIcon02 from "@/components/Icon/CloseIcon02"
 
 import { DiaryType } from "../../../../../../../types/diary.type"
-import { RoutineDoneDailyType } from "../../../../../../../types/routineDoneDaily.type"
-import { MyChallengePageContext } from "../../context"
 
 interface DiarySectionProps {
-  milestoneId: string
-  currentUserRoutineDoneDaily: RoutineDoneDailyType[]
   selectedDate: string
   challengeId: string
   routineDoneDailyId: string
@@ -25,19 +16,13 @@ interface DiarySectionProps {
 }
 
 function DiarySection({
-  milestoneId,
-  currentUserRoutineDoneDaily,
   selectedDate,
   challengeId,
   routineDoneDailyId,
   handleClickConfirm,
 }: PropsWithChildren<DiarySectionProps>) {
-  // queryClient.invalidateQueries({
-  //   queryKey: ["fetchCurrentUserRoutineDoneDaily"],
-  // })
-
   const [inputText, setInputText] = useState("")
-  const { todayDate } = useContext(MyChallengePageContext)
+
   const {
     data: diary,
     isPending: diaryPending,

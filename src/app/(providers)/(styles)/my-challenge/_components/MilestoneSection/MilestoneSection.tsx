@@ -85,8 +85,6 @@ function MilestoneSection({
       type: "custom",
       children: (
         <DiarySection
-          milestoneId={milestone.id}
-          currentUserRoutineDoneDaily={currentUserRoutineDoneDaily}
           selectedDate={SELECTED_DATE}
           challengeId={challengeId}
           routineDoneDailyId={targetRDDId}
