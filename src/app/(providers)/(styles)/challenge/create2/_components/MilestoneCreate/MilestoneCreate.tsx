@@ -1,5 +1,8 @@
 import { useState } from "react"
 
+import Box from "@/components/Box"
+import Page from "@/components/Page"
+
 import ChallengePageTitle from "../ChallengePageTitle"
 import MilestoneCreateConfig from "./MilestoneCreateConfig"
 import MilestoneCreateSwitch from "./MilestoneCreateSwitch"
@@ -28,27 +31,35 @@ function MilestoneCreate({
             titleHidden={false}
             handleClickGoBack={() => handleChangeStep(3)}
           />
-          <MilestoneCreateConfig
-            setShowCompoent={(status: MilestoneCreateProps["status"]) =>
-              setShowCompoent(status)
-            }
-          />
+          <Page>
+            <Box>
+              <MilestoneCreateConfig
+                setShowCompoent={(status: MilestoneCreateProps["status"]) =>
+                  setShowCompoent(status)
+                }
+              />
+            </Box>
+          </Page>
         </>
       )}
       {showComponent === "switch" && (
         <>
           <ChallengePageTitle
             title={title}
-            step={3}
+            step={4}
             allStepCount={4}
-            titleHidden={true}
+            titleHidden={false}
             handleClickGoBack={() => handleChangeStep(3)}
           />
-          <MilestoneCreateSwitch
-            setShowCompoent={(status: MilestoneCreateProps["status"]) =>
-              setShowCompoent(status)
-            }
-          />
+          <Page>
+            <Box>
+              <MilestoneCreateSwitch
+                setShowCompoent={(status: MilestoneCreateProps["status"]) =>
+                  setShowCompoent(status)
+                }
+              />
+            </Box>
+          </Page>
         </>
       )}
     </div>

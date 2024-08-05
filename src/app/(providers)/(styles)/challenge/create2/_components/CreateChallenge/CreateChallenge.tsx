@@ -63,7 +63,11 @@ function CreateChallenge() {
     }
   }
 
-  return <>{getStepTitleWords(stepNum)}</>
+  return (
+    <div className="mx-auto flex h-screen max-w-[640px] flex-col">
+      {getStepTitleWords(stepNum)}
+    </div>
+  )
 }
 
 export default CreateChallenge
