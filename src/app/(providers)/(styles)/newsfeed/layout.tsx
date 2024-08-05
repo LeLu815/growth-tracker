@@ -4,7 +4,7 @@ import BottomNavigation from "@/components/BottomNavigation"
 
 import Header from "../../_components/Header"
 
-export function NewsfeedLayout({ children }: PropsWithChildren) {
+export default function NewsfeedLayout({ children }: PropsWithChildren) {
   return (
     <div>
       <Header />
