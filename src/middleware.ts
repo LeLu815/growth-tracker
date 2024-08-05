@@ -10,9 +10,9 @@ export async function middleware(request: NextRequest) {
   ) {
     const url = request.nextUrl.clone()
     url.pathname = "/"
-    return request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token.1") &&
-      request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token.0")
-      ? NextResponse.next()
+    return (request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token.1") &&
+      request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token.0")) || request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token")
+    ? NextResponse.next()
       : NextResponse.redirect(url)
   }
   return await updateSession(request)
