@@ -4,7 +4,7 @@ import BottomNavigation from "@/components/BottomNavigation"
 
 import Header from "../../_components/Header"
 
-function MyPageLayout({ children }: PropsWithChildren) {
+export default function NewsfeedLayout({ children }: PropsWithChildren) {
   return (
     <div>
       <Header />
@@ -14,5 +14,3 @@ function MyPageLayout({ children }: PropsWithChildren) {
     </div>
   )
 }
-
-export default MyPageLayout
