@@ -195,6 +195,8 @@ table {
   }
   body {
     @apply bg-background text-foreground;
+    @apply min-h-screen; /* 최소 높이를 화면 전체로 설정 */
+    margin: 0; /* 기본 여백 제거 */
   }
 }
 @layer utilities {
