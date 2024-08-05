@@ -1,7 +1,10 @@
+import { PropsWithChildren } from "react"
+
 import BaseHeader from "./BaseHeader"
 
-function DefaultHeader() {
-  return <BaseHeader>Header</BaseHeader>
+interface DefaultHeaderProps {}
+function DefaultHeader({ children }: PropsWithChildren<DefaultHeaderProps>) {
+  return <BaseHeader>{children}</BaseHeader>
 }
 
 export default DefaultHeader
