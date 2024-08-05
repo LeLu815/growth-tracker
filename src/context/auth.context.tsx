@@ -109,8 +109,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       password,
       nickname,
     }
-    debugger
-    console.log(process.env.NEXT_PUBLIC_DOMAIN )
+
     const response = await fetch(
       process.env.NEXT_PUBLIC_DOMAIN + "/api/auth/sign-up",
       {
