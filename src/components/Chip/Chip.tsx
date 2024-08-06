@@ -1,6 +1,6 @@
 import { cva, VariantProps } from "class-variance-authority"
 
-const chipVariant = cva("border cursor-pointer text-black", {
+const chipVariant = cva("border cursor-pointer text-black shadow-sm", {
   variants: {
     intent: {
       primary: "bg-[#D8D8D8] border-[#D8D8D8] text-black",
@@ -10,7 +10,7 @@ const chipVariant = cva("border cursor-pointer text-black", {
     size: {
       sm: "rounded-[4px] px-2 py-1.5 text-[8px]",
       md: "rounded-[6px] px-1.5 py-1 text-[12px]",
-      rounded: "rounded-[34px] px-5 py-2 text-[12px]",
+      rounded: "rounded-[34px] px-4 py-2 text-[12px]",
     },
     variant: {
       outline: "bg-white",

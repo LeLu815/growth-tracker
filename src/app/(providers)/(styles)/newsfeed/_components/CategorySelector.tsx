@@ -26,7 +26,6 @@ function CategorySelector({ category, onSelectCategory }: CategoryProps) {
           // className={`mr-2 cursor-pointer rounded-lg border border-white p-2 ${
           //   category === cat ? "bg-slate-600" : ""
           // }`}
-          intent="secondary"
           selected={category == cat.label}
           onClick={() => onSelectCategory(cat.label)}
         />
