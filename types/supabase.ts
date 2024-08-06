@@ -75,6 +75,7 @@ export type Database = {
           created_at: string
           id: string
           like_cnt: number
+          rows: number
           user_id: string
         }
         Insert: {
@@ -83,6 +84,7 @@ export type Database = {
           created_at?: string
           id?: string
           like_cnt?: number
+          rows?: number
           user_id: string
         }
         Update: {
@@ -91,6 +93,7 @@ export type Database = {
           created_at?: string
           id?: string
           like_cnt?: number
+          rows?: number
           user_id?: string
         }
         Relationships: [
@@ -524,6 +527,7 @@ export type Database = {
           created_at: string
           user_id: string
           nickname: string
+          profile_image_url: string
           goal: string
           like_cnt: number
           template_cnt: number

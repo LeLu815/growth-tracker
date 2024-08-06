@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/supabase/server"
 import { createPGClient } from "@/supabase/pgClient"
+import { createClient } from "@/supabase/server"
 
 export async function GET(
   req: NextRequest,
@@ -34,11 +34,11 @@ export async function GET(
 
     if (userId) {
       query +=
-        "CASE WHEN ccl.id IS NOT NULL THEN TRUE ELSE FALSE END AS is_like, u.id as user_id, u.email, u.nickname, u.profile_image_url FROM challenge_comment cc LEFT JOIN challenge_comment_like ccl ON cc.id = ccl.comment_id AND ccl.user_id = $1 INNER JOIN users u ON u.id = cc.user_id WHERE cc.challenge_id = $2 ORDER BY cc.created_at DESC, cc.id DESC LIMIT $3 OFFSET $4;"
+        "CASE WHEN ccl.id IS NOT NULL THEN TRUE ELSE FALSE END AS is_like, u.id as user_id, u.email, u.nickname, u.profile_image_url, cc.rows FROM challenge_comment cc LEFT JOIN challenge_comment_like ccl ON cc.id = ccl.comment_id AND ccl.user_id = $1 INNER JOIN users u ON u.id = cc.user_id WHERE cc.challenge_id = $2 ORDER BY cc.created_at DESC, cc.id DESC LIMIT $3 OFFSET $4;"
       params.unshift(userId)
     } else {
       query +=
-        "false AS is_like, u.id as user_id, u.email, u.nickname, u.profile_image_url FROM challenge_comment cc INNER JOIN users u ON u.id = cc.user_id WHERE cc.challenge_id = $1 ORDER BY cc.created_at DESC, cc.id DESC LIMIT $2 OFFSET $3;"
+        "false AS is_like, u.id as user_id, u.email, u.nickname, u.profile_image_url, cc.rows FROM challenge_comment cc INNER JOIN users u ON u.id = cc.user_id WHERE cc.challenge_id = $1 ORDER BY cc.created_at DESC, cc.id DESC LIMIT $2 OFFSET $3;"
     }
 
     const data = await pgClient.query(query, params)
@@ -64,21 +64,30 @@ export async function POST(
   const challengeId = params["challenge-id"]
 
   const body = await req.json()
-  const { content, userId } = body
-
+  const { content, userId, rows } = body
+  debugger
   if (!challengeId) {
     return NextResponse.json({ error: "챌린지 아이디가 없습니다", status: 400 })
   } else if (!content) {
     return NextResponse.json({ error: "내용이 없습니다", status: 400 })
   } else if (!userId) {
     return NextResponse.json({ error: "유저 아이디가 없습니다", status: 400 })
+  } else if (!userId) {
+    return NextResponse.json({ error: "rows가 없습니다.", status: 400 })
   }
 
   const supabase = createClient()
 
   const { error } = await supabase
     .from("challenge_comment")
-    .insert([{ challenge_id: challengeId, user_id: userId, content: content }])
+    .insert([
+      {
+        challenge_id: challengeId,
+        user_id: userId,
+        content: content,
+        rows: rows,
+      },
+    ])
     .select()
 
   if (error) {
