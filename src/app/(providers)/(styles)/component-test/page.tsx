@@ -19,7 +19,7 @@ function ComponentTestPage() {
     <Page>
       <h3 className="pt-4">Chips</h3>
       <Chip label="전체" intent="primary" />
-      <Chip label="전체" intent="rounded" selected />
+      <Chip label="전체" intent="secondary" selected />
       <Chip size="sm" label="공부" />
       <Chip size="sm" intent="secondary" label="제테크" />
       <Chip size="sm" intent="secondary" label="제테크" variant="outline" />

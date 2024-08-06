@@ -31,7 +31,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const inputId = id || inputUid
 
     return (
-      <div className="flex w-full flex-col gap-y-1.5 [&+&]:mt-4">
+      <div className="flex w-full flex-col [&+&]:mt-4">
         <label className="mb-[14px]" htmlFor={inputId}>
           <span className="text-[18px] font-[700]">{label}</span>
           {required && (
