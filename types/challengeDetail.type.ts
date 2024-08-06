@@ -43,6 +43,7 @@ export type ChallengeCommentType = {
   content: string
   is_like: boolean
   email: string
+  rows: number
   nickname: string
   profile_image_url: string
   id: string

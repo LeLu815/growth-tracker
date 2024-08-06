@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { ChangeEvent, useRef, useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
@@ -16,7 +16,6 @@ import { useInView } from "react-intersection-observer"
 import EmptyHart from "@/components/Icon/EmptyHart"
 import NoneProfile from "@/components/Icon/NoneProfile"
 import RedHart from "@/components/Icon/RedHart"
-import Input from "@/components/Input"
 
 import {
   ChallengeCommentPageType,
@@ -32,6 +31,8 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   const [isUpdate, setIsUpdate] = useState(false)
   const [updateCommentId, setUpdateCommentId] = useState("")
   const modal = useModal()
+
+  const textareaRefs = useRef<HTMLTextAreaElement[]>([])
 
   /**
    * 유저정보, 댓글정보, 좋아요정보 조회
@@ -77,7 +78,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
     const response = await axios
       .put(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}/comment/${commentId}`,
-        JSON.stringify({ content: content }), // JSON 데이터
+        JSON.stringify({ content: content, rows: content.split("\n").length }), // JSON 데이터
         {
           headers: {
             "Content-Type": "application/json",
@@ -258,6 +259,30 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
     return
   }
 
+  const handleOnChangeTextarea = (
+    e: ChangeEvent<HTMLTextAreaElement>,
+    index: number
+  ) => {
+    const newRows = e.target.value.split("\n").length
+    if (textareaRefs) {
+      textareaRefs.current![index].rows = newRows
+    }
+
+    setUpdateContent(e.target.value)
+  }
+
+  const handleChangeIsUpdate = (comment: ChallengeCommentType) => {
+    if (isUpdate) {
+      setUpdateContent("")
+      setIsUpdate(false)
+      setUpdateCommentId("")
+    } else {
+      setUpdateContent(comment.content)
+      setIsUpdate(true)
+      setUpdateCommentId(comment.id)
+    }
+  }
+
   return (
     <div className={"flex w-full flex-col items-center gap-4"}>
       {data?.map((comment, idx) => {
@@ -290,8 +315,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
             </div>
             <div className={"flex w-full flex-col gap-[6px]"}>
               <div className={"pt-2 text-[#717171]"}>{comment.nickname}</div>
-
-              {isUpdate && comment.id === updateCommentId ? (
+              {
                 <form
                   onSubmit={(e) => {
                     e.preventDefault()
@@ -301,15 +325,20 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                     })
                   }}
                 >
-                  <Input
-                    className={"border-[1px] border-solid border-[]"}
-                    value={updateContent}
-                    onChange={(e) => setUpdateContent(e.target.value)}
+                  <textarea
+                    rows={comment.rows}
+                    className={`w-full resize-none p-2 text-gray-700 focus:outline-none ${isUpdate && comment.id === updateCommentId ? `shadow-outline appearance-none overflow-hidden rounded border leading-tight shadow` : "border-none bg-transparent"}`}
+                    value={`${isUpdate && comment.id === updateCommentId ? updateContent : comment.content}`}
+                    ref={(el) => {
+                      if (el) {
+                        textareaRefs.current[idx] = el
+                      }
+                      return // Ensure the callback returns void
+                    }}
+                    onChange={(e) => handleOnChangeTextarea(e, idx)}
                   />
                 </form>
-              ) : (
-                <div>{comment.content}</div>
-              )}
+              }
               <div
                 onClick={() =>
                   me
@@ -330,51 +359,36 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
 
             {comment.user_id === me?.id && (
               <div className={"flex w-[100px] justify-end gap-4"}>
-                {isUpdate && comment.id === updateCommentId ? (
-                  <div className={"flex items-start gap-2"}>
-                    <button
-                      type="submit"
-                      className="font-suite cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
-                      onClick={() => {
-                        handleCommentMutate({
-                          commentId: comment.id,
-                          content: updateContent,
-                        })
-                      }}
-                    >
-                      수정완료
-                    </button>
-                    <button
-                      className="font-suite cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
-                      onClick={() => {
-                        setUpdateContent("")
-                        setIsUpdate(false)
-                        setUpdateCommentId("")
-                      }}
-                    >
-                      취소
-                    </button>
-                  </div>
-                ) : (
-                  <div className={"flex w-[100px] items-start gap-2"}>
-                    <button
-                      className="font-suite cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
-                      onClick={() => {
-                        setUpdateContent(comment.content)
-                        setIsUpdate(true)
-                        setUpdateCommentId(comment.id)
-                      }}
-                    >
-                      수정
-                    </button>
-                    <button
-                      className="font-suite cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
-                      onClick={() => handleCommentDeleteMutate(comment.id)}
-                    >
-                      삭제
-                    </button>
-                  </div>
-                )}
+                <div className={"flex items-start gap-2"}>
+                  <button
+                    type="submit"
+                    className="cursor-pointer text-center font-suite text-[12px] font-medium leading-[135%] text-[#969696]"
+                    onClick={() => {
+                      isUpdate && comment.id === updateCommentId
+                        ? handleCommentMutate({
+                            commentId: comment.id,
+                            content: updateContent,
+                          })
+                        : handleChangeIsUpdate(comment)
+                    }}
+                  >
+                    {isUpdate && comment.id === updateCommentId
+                      ? "수정완료"
+                      : "수정"}
+                  </button>
+                  <button
+                    className="cursor-pointer text-center font-suite text-[12px] font-medium leading-[135%] text-[#969696]"
+                    onClick={() => {
+                      isUpdate && comment.id === updateCommentId
+                        ? handleChangeIsUpdate(comment)
+                        : handleCommentDeleteMutate(comment.id)
+                    }}
+                  >
+                    {isUpdate && comment.id === updateCommentId
+                      ? "취소"
+                      : "삭제"}
+                  </button>
+                </div>
               </div>
             )}
           </div>
