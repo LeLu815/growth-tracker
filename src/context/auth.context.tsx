@@ -73,7 +73,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       email,
       password,
     }
-    console.log(process.env.NEXT_PUBLIC_DOMAIN+"/api/auth/log-in")
+    
     const response = await fetch(
       process.env.NEXT_PUBLIC_DOMAIN + "/api/auth/log-in",
       {
