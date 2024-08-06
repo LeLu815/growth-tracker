@@ -3,15 +3,14 @@ import { cva, VariantProps } from "class-variance-authority"
 const chipVariant = cva("border cursor-pointer text-black", {
   variants: {
     intent: {
-      primary: "bg-[#D9D9D9] border-[#D9D9D9] text-black",
-      secondary: "bg-[#D8D8D8] border-[#D8D8D8] text-[#050505]",
+      primary: "bg-[#D8D8D8] border-[#D8D8D8] text-black",
+      secondary: "bg-[#FF7D3D] border-[#FF7D3D] text-black",
       third: "bg-blue-white border-black text-white",
-      rounded:
-        "rounded-[34px] px-5 py-2 border-[#e1e1e1] bg-[#FF7D3D] text-black",
     },
     size: {
       sm: "rounded-[4px] px-2 py-1.5 text-[8px]",
       md: "rounded-[6px] px-1.5 py-1 text-[12px]",
+      rounded: "rounded-[34px] px-5 py-2 text-[12px]",
     },
     variant: {
       outline: "bg-white",
@@ -38,10 +37,11 @@ const chipVariant = cva("border cursor-pointer text-black", {
     {
       intent: "secondary",
       variant: "outline",
-      className: "text-slate-500 bg-white border border-solid border-slate-500",
+      className:
+        "text-slate-500 bg-white border border-solid border-[#FAFAFA] shadow-sm",
     },
     {
-      intent: "rounded",
+      intent: "secondary",
       variant: "selected",
       className: "bg-[#FF7D3D] border-[#FF7D3D] text-white",
     },

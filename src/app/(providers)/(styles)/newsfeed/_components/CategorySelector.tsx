@@ -22,10 +22,11 @@ function CategorySelector({ category, onSelectCategory }: CategoryProps) {
         <Chip
           key={cat.label}
           label={cat.label}
+          size="rounded"
           // className={`mr-2 cursor-pointer rounded-lg border border-white p-2 ${
           //   category === cat ? "bg-slate-600" : ""
           // }`}
-          intent="rounded"
+          intent="secondary"
           selected={category == cat.label}
           onClick={() => onSelectCategory(cat.label)}
         />

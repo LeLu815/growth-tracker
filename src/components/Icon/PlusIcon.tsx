@@ -15,8 +15,8 @@ const PlusIcon = (props: SVGProps<SVGSVGElement> & { color?: string }) => (
       id="Icon"
       d="M12.0001 4.80005L12 19.2M19.2 12L4.80005 12"
       stroke={props.color || "white"}
-      stroke-width="2"
-      stroke-linecap="round"
+      strokeWidth="2"
+      strokeLinecap="round"
     />
   </Icon>
 )
