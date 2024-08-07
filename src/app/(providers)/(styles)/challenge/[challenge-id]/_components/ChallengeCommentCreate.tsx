@@ -12,7 +12,7 @@ import NoneProfile from "@/components/Icon/NoneProfile"
 
 import Button from "../../../../../../components/Button"
 
-function BottomBar({ challengeId }: { challengeId: string }) {
+function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { me, userData } = useAuth()
@@ -25,7 +25,6 @@ function BottomBar({ challengeId }: { challengeId: string }) {
    * 댓글 생성
    * */
   const createComment = async () => {
-    debugger
     if (!me) {
       router.push("/")
       return
@@ -130,4 +129,4 @@ function BottomBar({ challengeId }: { challengeId: string }) {
   )
 }
 
-export default BottomBar
+export default ChallengeCommentCreate

@@ -1,6 +1,6 @@
 import Box from "@/components/Box"
 import Page from "@/components/Page"
-import BottomBar from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/BottomBar"
+import ChallengeCommentCreate from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeCommentCreate"
 
 import ChallengeCommentList from "./_components/ChallengeCommentList"
 import ChallengeInfo from "./_components/ChallengeInfo"
@@ -20,7 +20,7 @@ function ChallengeDetailPage({ params }: ChallengeDetailPageProps) {
         <ChallengeCommentList challengeId={challengeId} />
       </Box>
       <Box>
-        <BottomBar challengeId={challengeId} />
+        <ChallengeCommentCreate challengeId={challengeId} />
       </Box>
     </Page>
   )
