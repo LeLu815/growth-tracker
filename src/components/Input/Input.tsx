@@ -20,7 +20,7 @@ const inputVariant = cva("transition focus:outline-none", {
       login:
         "border-b border-t-0 border-l-0 border-r-0  border-red-[#ADADAD] focus:border-b-1 focus:border-[#141414] p-4 ",
       search:
-        "border-b border-t-0 border-l-0 border-r-0  border-red-[#ADADAD] focus:border-b-1 focus:border-[#141414] px-2 py-2 transition ",
+        "border-b border-t-0 border-l-0 border-r-0  border-red-[#ADADAD] focus:border-b-1 focus:border-[#141414] mt-5 px-4 py-2 transition ",
     },
   },
   defaultVariants: {
@@ -38,7 +38,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className="flex w-full flex-col">
-        <label className="mb-[16x]" htmlFor={inputId}>
+        <label htmlFor={inputId}>
           <span className="text-[18px] font-[700]">{label}</span>
           {required && (
             <span className="text-sm font-semibold text-red-500">*</span>

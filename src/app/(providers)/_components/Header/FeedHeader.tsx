@@ -61,7 +61,7 @@ function FeedHeader({ onSearch }: FeedHeaderProps) {
                 height={12}
                 onClick={handleSearchClose}
                 color="#000"
-                className="absolute right-2 cursor-pointer"
+                className="absolute right-2 top-[30px] cursor-pointer"
               />
             </div>
           ) : (
