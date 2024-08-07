@@ -22,6 +22,7 @@ const InfiniteDateScroll = () => {
   const overflowRef = useRef<HTMLDivElement>(null)
   // container width 값
   const size = useSize(containerRef)
+  console.log(size)
 
   // 초기 날짜 설정
   useEffect(() => {
@@ -51,7 +52,6 @@ const InfiniteDateScroll = () => {
       }
       setIsInitialRender(false)
     }
-    console.log(dates)
   }, [dates, isInitialRender])
 
   const scrollToElement = (index: number) => {
@@ -63,12 +63,6 @@ const InfiniteDateScroll = () => {
       if (element) {
         const centerOffset = container.clientWidth / 2 - element.clientWidth / 2
         const movePixcel = leftPositon - centerOffset
-        console.log(
-          container.clientWidth / 2,
-          element.clientWidth / 2,
-          container.clientWidth / 2 - element.clientWidth / 2,
-          leftPositon
-        )
         container.scrollBy({ left: movePixcel, behavior: "smooth" })
       }
     }
@@ -86,33 +80,66 @@ const InfiniteDateScroll = () => {
     }
   }
 
-  const gap = size?.width ? `calc((100% - 238px) / 6)` : "0px"
+  const gap = size?.width
+    ? `${(size.width - 238) / 6}px` // 6개의 간격으로 나누기
+    : `calc((100% - 238px) / 6)` // 기본 값
 
+  console.log("size?.width :", size?.width)
+  console.log(containerRef)
+  console.log(containerRef.current)
   return (
-    <div
-      id={containerId}
-      className="flex h-[84px] w-full min-w-[320px] max-w-[640px] snap-x snap-mandatory flex-col gap-[calc((100%-238px)/6)] overflow-x-auto p-[20px]"
-      ref={containerRef}
-    >
-      <div className="flex" style={{ gap: gap }} ref={overflowRef}>
-        {dates.map((date, index) => (
-          <Element
-            id={`${date.toISOString()}`}
-            name={`${date.toISOString()}`}
-            key={format(date, "yyyy-MM-dd")}
-            className="flex snap-center flex-col items-center gap-[4px]"
-            onClick={() => scrollToElement(index)}
-          >
-            <div className="text-[12px]">{getKoreanWeekday(date)}</div>
-            <div
-              className={`flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full text-[12px] ${getDateStyle(date)}`}
-            >
-              {format(date, "dd")}
-            </div>
-          </Element>
-        ))}
+    <>
+      <div ref={containerRef}></div>
+      <div className="flex">
+        <div
+          id={containerId}
+          className="flex h-[84px] w-full min-w-[320px] max-w-[640px] snap-x snap-mandatory flex-col overflow-x-auto"
+        >
+          <div className="flex" style={{ gap: gap }} ref={overflowRef}>
+            {dates.map((date, index) => (
+              <Element
+                id={`${date.toISOString()}`}
+                name={`${date.toISOString()}`}
+                key={format(date, "yyyy-MM-dd")}
+                className="flex snap-center flex-col items-center gap-[4px]"
+                onClick={() => scrollToElement(index)}
+              >
+                <div className="text-[12px]">{getKoreanWeekday(date)}</div>
+                <div
+                  className={`flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full text-[12px] ${getDateStyle(date)}`}
+                >
+                  {format(date, "dd")}
+                </div>
+              </Element>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+      {/* <div
+        id={containerId}
+        className="flex h-[84px] w-full min-w-[320px] max-w-[640px] snap-x snap-mandatory flex-col gap-[calc((100%-238px)/6)] overflow-x-auto p-[20px]"
+        ref={containerRef}
+      >
+        <div className="flex" style={{ gap: gap }} ref={overflowRef}>
+          {dates.map((date, index) => (
+            <Element
+              id={`${date.toISOString()}`}
+              name={`${date.toISOString()}`}
+              key={format(date, "yyyy-MM-dd")}
+              className="flex snap-center flex-col items-center gap-[4px]"
+              onClick={() => scrollToElement(index)}
+            >
+              <div className="text-[12px]">{getKoreanWeekday(date)}</div>
+              <div
+                className={`flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full text-[12px] ${getDateStyle(date)}`}
+              >
+                {format(date, "dd")}
+              </div>
+            </Element>
+          ))}
+        </div>
+      </div> */}
+    </>
   )
 }
 
