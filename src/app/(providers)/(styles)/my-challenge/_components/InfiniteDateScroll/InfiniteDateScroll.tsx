@@ -1,18 +1,6 @@
 "use client"
 
-/**
- * 인피니트 데이트피커 컨트롤러 로직
- *
- * 1. 상단 날짜 네브 바 만들기
- * 현재 날짜를 기준으로 좌우의 날짜 세개가 정렬된다. (요일)
- * 현재 날짜 부분이 가운데가 마킹됨
- * 좌우 1달씩 값이 불러와짐 => 자료구조는 배열, 내부는 date 객체
- *
- * 2. 좌우 스크롤링
- * 유저가 좌 또는 우 방향으로 스크롤링을 진행하면 특정 임계점을 지나게 될 때 인피니트 함수를 불러움
- *
- */
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useId, useRef, useState } from "react"
 import {
   addDays,
   eachDayOfInterval,
@@ -21,6 +9,9 @@ import {
   subDays,
 } from "date-fns"
 import { useInView } from "react-intersection-observer"
+import { Element } from "react-scroll"
+
+import { useSize } from "./useSize"
 
 const InfiniteDateScroll = () => {
   // 상태
@@ -29,7 +20,12 @@ const InfiniteDateScroll = () => {
   // 트리거
   const { ref: prevRef, inView: prevInView } = useInView()
   const { ref: nextRef, inView: nextInView } = useInView()
+  // container id
+  const containerId = useId()
   const containerRef = useRef<HTMLDivElement>(null)
+  const overflowRef = useRef<HTMLDivElement>(null)
+  // container width 값
+  const size = useSize(containerRef)
 
   // 초기 날짜 설정
   useEffect(() => {
@@ -40,20 +36,47 @@ const InfiniteDateScroll = () => {
   }, [])
 
   useEffect(() => {
-    if (isInitialRender && containerRef.current && dates.length > 0) {
+    if (
+      isInitialRender &&
+      containerRef.current &&
+      overflowRef.current &&
+      dates.length > 0
+    ) {
       const container = containerRef.current
-      const middleIndex = Math.floor(dates.length / 2)
-      const middleElement = container.children[middleIndex] as HTMLElement
+      const overflow = overflowRef.current
+      const middleIndex = Math.floor((dates.length + 2) / 2)
+      const middleElement = overflow.children[middleIndex] as HTMLElement
+      console.log(container, middleIndex, middleElement)
       if (middleElement) {
         const middleOffset =
           middleElement.offsetLeft -
-          container.clientWidth / 2 -
-          middleElement.clientWidth / 2
+          (container.clientWidth / 2 - middleElement.clientWidth)
         container.scrollTo({ left: middleOffset, behavior: "smooth" })
       }
       setIsInitialRender(false)
     }
-  }, [isInitialRender])
+    console.log(dates)
+  }, [dates, isInitialRender])
+
+  const scrollToElement = (index: number) => {
+    const container = containerRef.current
+    const overflow = overflowRef.current
+    if (container && overflow) {
+      const element = overflow.children[index] as HTMLElement
+      const leftPositon = Math.round(element.getBoundingClientRect().left)
+      if (element) {
+        const centerOffset = container.clientWidth / 2 - element.clientWidth / 2
+        const movePixcel = leftPositon - centerOffset
+        console.log(
+          container.clientWidth / 2,
+          element.clientWidth / 2,
+          container.clientWidth / 2 - element.clientWidth / 2,
+          leftPositon
+        )
+        container.scrollBy({ left: movePixcel, behavior: "smooth" })
+      }
+    }
+  }
 
   // 날짜 스타일 설정
   const getDateStyle = (date: Date) => {
@@ -67,26 +90,34 @@ const InfiniteDateScroll = () => {
     }
   }
 
+  const gap = size?.width ? `calc((100% - 238px) / 6)` : "0px"
+
   return (
     <div
-      className="relative flex h-[84px] w-full min-w-[320px] max-w-[640px] snap-x snap-mandatory gap-[calc((100%-238px)/6)] overflow-x-auto p-[20px]"
+      id={containerId}
+      className="relative h-[84px] w-full min-w-[320px] max-w-[640px] snap-x snap-mandatory gap-[calc((100%-238px)/6)] overflow-x-auto p-[20px]"
       ref={containerRef}
     >
-      <div className="absolute" ref={prevRef}></div>
-      {dates.map((date) => (
-        <div
-          className="flex snap-center flex-col items-center gap-[4px]"
-          key={format(date, "yyyy-MM-dd")}
-        >
-          <div className="text-[12px]">{getKoreanWeekday(date)}</div>
-          <div
-            className={`flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full text-[12px] ${getDateStyle(date)}`}
+      <div className="relative flex" style={{ gap: gap }} ref={overflowRef}>
+        <div className="absolute" ref={prevRef}></div>
+        {dates.map((date, index) => (
+          <Element
+            id={`${date.toISOString()}`}
+            name={`${date.toISOString()}`}
+            key={format(date, "yyyy-MM-dd")}
+            className="flex snap-center flex-col items-center gap-[4px]"
+            onClick={() => scrollToElement(index + 1)}
           >
-            {format(date, "dd")}
-          </div>
-        </div>
-      ))}
-      <div className="absolute" ref={nextRef}></div>
+            <div className="text-[12px]">{getKoreanWeekday(date)}</div>
+            <div
+              className={`flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full text-[12px] ${getDateStyle(date)}`}
+            >
+              {format(date, "dd")}
+            </div>
+          </Element>
+        ))}
+        <div className="absolute" ref={nextRef}></div>
+      </div>
     </div>
   )
 }
