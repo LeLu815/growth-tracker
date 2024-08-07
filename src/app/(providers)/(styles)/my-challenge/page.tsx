@@ -7,6 +7,7 @@ import { ko } from "date-fns/locale"
 import Box from "@/components/Box"
 import Page from "@/components/Page"
 
+import ChallengeList from "./_components/ChallengeList"
 import InfiniteDateScroll from "./_components/InfiniteDateScroll"
 import { MyChallengePageContext } from "./context"
 
@@ -35,8 +36,8 @@ function MyChallengePage() {
         <InfiniteDateScroll />
         <Box>
           <div className="flex flex-col items-center">
-            {/* <DatePickerContainer />
-            <ChallengeList /> */}
+            {/* <DatePickerContainer /> */}
+            <ChallengeList />
           </div>
         </Box>
       </Page>
