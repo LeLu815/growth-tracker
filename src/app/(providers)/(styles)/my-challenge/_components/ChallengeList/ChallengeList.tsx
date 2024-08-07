@@ -1,11 +1,5 @@
 "use client"
 
-import { GETroutineDone } from "@/api/supabase/routineDone"
-import { GETroutineDoneDaily } from "@/api/supabase/routineDoneDaily"
-import { GETstructuredChallengeData } from "@/api/supabase/structured-challenge"
-import { useAuth } from "@/context/auth.context"
-import { useQuery } from "@tanstack/react-query"
-
 import {
   StructuredChallengeType,
   StructuredMilestoneType,
@@ -14,60 +8,33 @@ import useMyChallengePageContext from "../../context"
 import MilestoneSection from "../MilestoneSection"
 
 function ChallengeList() {
-  // 유저 아이디 정의
-  const { me } = useAuth()
-  const userId = me?.id
-
   // 빈번한 리렌더링 발생함 => 추후 해결 필요
   // console.log("리렌더링")
 
   const {
-    data: structuredChallengeData,
-    isPending: ChallengeDataPending,
-    isError: ChallengeDataError,
-  } = useQuery({
-    queryKey: ["fetchStructuredChallengeData", userId || ""],
-    queryFn: () => GETstructuredChallengeData(userId || ""),
-    gcTime: 8 * 60 * 1000, // 8분
-  })
+    selectedDate,
 
-  const {
-    data: currentUserRoutineDoneDaily = [],
-    isPending: routineDoneDailyPending,
-    isError: routineDoneDailyError,
-  } = useQuery({
-    queryKey: ["fetchCurrentUserRoutineDoneDaily", userId || ""],
-    queryFn: () => GETroutineDoneDaily(userId || ""),
-    gcTime: 8 * 60 * 1000, // 8분
-  })
+    challengeDataError,
+    challengeDataPending,
+    structuredChallengeData,
+    currentUserRoutineDoneDaily,
+    routineDoneDailyPending,
+    routineDoneDailyError,
+  } = useMyChallengePageContext()
 
-  const {
-    data: RoutineDone,
-    isPending: routineDonePending,
-    isError: routineDoneError,
-  } = useQuery({
-    queryKey: ["fetchRoutineDone"],
-    queryFn: GETroutineDone,
-    gcTime: 8 * 60 * 1000, // 8분
-  })
-
-  const { selectedDate, selectedDayOfWeek } = useMyChallengePageContext()
-  const SELECTED_DATE = selectedDate
-  const CURRENT_DATE_NUMBER = parseInt(SELECTED_DATE.replace(/-/g, ""))
+  const CURRENT_DATE_NUMBER = parseInt(selectedDate.replace(/-/g, ""))
 
   const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"]
 
-  const CURRENT_DAY_OF_WEEK = selectedDayOfWeek
-
-  if (ChallengeDataPending || routineDoneDailyPending || routineDonePending) {
+  if (challengeDataPending || routineDoneDailyPending) {
     return <div className="mt-5">로딩 중</div>
   }
 
-  if (ChallengeDataError || routineDoneDailyError || routineDoneError) {
+  if (challengeDataError || routineDoneDailyError) {
     return <div className="mt-5">서버에서 데이터 로드 중 오류 발생</div>
   }
 
-  if (structuredChallengeData && currentUserRoutineDoneDaily && RoutineDone) {
+  if (structuredChallengeData && currentUserRoutineDoneDaily) {
     // 마일스톤 생성하는데 필요한 세부 데이터 구성하고 이를 기반으로
     // 마일스톤을 화면에 표시해주는 함수
     const displayTargetMilestoneItem = (challenge: StructuredChallengeType) => {
@@ -102,6 +69,7 @@ function ChallengeList() {
           return milestoneDoDays
         }
         const milestoneDoDays = generatemilestoneDoDaysArray(milestone)
+
         if (milestone.challenge_id == challenge.id) {
           const milestoneStartDate = parseInt(
             milestone.start_at?.replace(/-/g, "") || "0"
@@ -120,9 +88,6 @@ function ChallengeList() {
                 challengeId={challenge.id}
                 milestone={milestone}
                 milestoneDoDays={milestoneDoDays}
-                SELECTED_DATE={SELECTED_DATE}
-                SELECTED_DAY_OF_WEEK={CURRENT_DAY_OF_WEEK}
-                userId={userId || ""}
               />
             )
           }

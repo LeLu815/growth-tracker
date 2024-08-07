@@ -1,27 +1,17 @@
+"use client"
+
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState,
-} from "react"
-import { GETroutineDone } from "@/api/supabase/routineDone"
-import {
-  GETroutineDoneDaily,
-  POSTnewRoutineDoneDaily,
-} from "@/api/supabase/routineDoneDaily"
+import React, { PropsWithChildren, useEffect, useState } from "react"
+import { POSTnewRoutineDoneDaily } from "@/api/supabase/routineDoneDaily"
 import { useModal } from "@/context/modal.context"
 import queryClient from "@/query/queryClient"
-import { useQuery } from "@tanstack/react-query"
 import { v4 } from "uuid"
 
 import Button from "@/components/Button"
 import ArrowDownIcon from "@/components/Icon/ArrowDownIcon"
 
 import { StructuredMilestoneType } from "../../../../../../../types/supabase.type"
-import useMyChallengePageContext, {
-  MyChallengePageContext,
-} from "../../context"
+import useMyChallengePageContext from "../../context"
 import DiarySection from "../DiarySection"
 import ProgressBar from "../ProgressBar"
 import RoutineCheckBox from "../RoutineCheckBox"
@@ -29,9 +19,6 @@ import RoutineCheckBox from "../RoutineCheckBox"
 interface MilestoneSectionProps {
   milestone: StructuredMilestoneType
   milestoneDoDays: string[]
-  SELECTED_DATE: string
-  SELECTED_DAY_OF_WEEK: string
-  userId: string
   challengeId: string
   challengeGoal: string
 }
@@ -39,47 +26,27 @@ interface MilestoneSectionProps {
 function MilestoneSection({
   milestone,
   milestoneDoDays, // 마일스톤 시행 요일이 담긴 배열
-  SELECTED_DATE,
-  SELECTED_DAY_OF_WEEK,
-  userId,
   challengeId,
   challengeGoal,
 }: PropsWithChildren<MilestoneSectionProps>) {
   const {
-    data: currentUserRoutineDoneDaily = [],
-    isPending: routineDoneDailyPending,
-    isError: routineDoneDailyError,
-  } = useQuery({
-    queryKey: ["fetchCurrentUserRoutineDoneDaily", userId],
-    queryFn: () => GETroutineDoneDaily(userId),
-    gcTime: 8 * 60 * 1000, // 8분
-  })
-
-  const {
-    data: RoutineDone,
-    isPending: routineDonePending,
-    isError: routineDoneError,
-  } = useQuery({
-    queryKey: ["fetchRoutineDone"],
-    queryFn: GETroutineDone,
-  })
-
-  const { todayDate } = useMyChallengePageContext()
-
-  useEffect(() => {
-    // 오늘에 대한 RDD가 없다면 하나 새로 생성해주는 함수 실행
-    initializeRDD()
-  }, [SELECTED_DATE])
+    userId,
+    todayDate,
+    selectedDate,
+    selectedDayOfWeek,
+    currentUserRoutineDoneDaily,
+  } = useMyChallengePageContext()
 
   const [targetRDDId, setTargetRDDId] = useState(
     currentUserRoutineDoneDaily.find((item) => {
       return (
         item.milestone_id == milestone.id &&
-        item.created_at.slice(0, 10) == SELECTED_DATE
+        item.created_at.slice(0, 10) == selectedDate
       )
     })?.id || ""
   )
   const [isVisible, setIsVisible] = useState(false)
+
   const modal = useModal()
 
   const handleRoutineCompleteButtonClick = () => {
@@ -87,7 +54,7 @@ function MilestoneSection({
       type: "custom",
       children: (
         <DiarySection
-          selectedDate={SELECTED_DATE}
+          selectedDate={selectedDate}
           challengeId={challengeId}
           routineDoneDailyId={targetRDDId}
           handleClickConfirm={() => modal.close()}
@@ -103,25 +70,22 @@ function MilestoneSection({
   const targetRDD = currentUserRoutineDoneDaily.find((item) => {
     return (
       item.milestone_id == milestone.id &&
-      item.created_at.slice(0, 10) == SELECTED_DATE
+      item.created_at.slice(0, 10) == selectedDate
     )
   })
 
   useEffect(() => {
+    // 오늘에 대한 RDD가 없다면 하나 새로 생성해주는 함수 실행
+    initializeRDD()
+  }, [selectedDate])
+
+  useEffect(() => {
     setIsVisible(false)
-  }, [SELECTED_DATE])
-
-  if (routineDoneDailyPending || routineDonePending) {
-    return <div className="mt-5">로딩 중</div>
-  }
-
-  if (routineDoneDailyError || routineDoneError) {
-    return <div className="mt-5">서버에서 데이터 로드 중 오류 발생</div>
-  }
+  }, [selectedDate])
 
   // 선택된 일자의 요일이 해당 마일스톤의 실행 요일인지 확인
   const checkMilestoneDayOfWeek = milestoneDoDays.find((milestoneDoDay) => {
-    return milestoneDoDay == SELECTED_DAY_OF_WEEK
+    return milestoneDoDay == selectedDayOfWeek
   })
 
   // 오늘에 대한 RDD가 없다면 하나 새로 생성해주는 함수
@@ -135,7 +99,7 @@ function MilestoneSection({
         challengeId,
         milestoneId: milestone.id,
         userId,
-        createdAt: SELECTED_DATE,
+        createdAt: selectedDate,
         routineDoneId: newId,
         isSuccess: false,
       })
@@ -187,8 +151,6 @@ function MilestoneSection({
             ) : (
               <ProgressBar
                 routineDoneDailyId={targetRDDId}
-                routineDone={RoutineDone}
-                selectedDate={SELECTED_DATE}
                 routines={milestone.routines}
               />
             )}
@@ -209,19 +171,18 @@ function MilestoneSection({
                   <RoutineCheckBox
                     routines={milestone.routines}
                     challengeId={challengeId}
-                    selectedDate={SELECTED_DATE}
+                    selectedDate={selectedDate}
                     milestoneId={milestone.id}
                     userId={userId}
                     routineId={routine.id}
                     routineDoneDailyId={targetRDDId}
-                    routineDone={RoutineDone}
                   />
                 </div>
               )
             }
           })}
           <Button
-            intent={todayDate == SELECTED_DATE ? "primary" : "secondary"}
+            intent={todayDate == selectedDate ? "primary" : "secondary"}
             size={"lg"}
             className="mt-3 text-sm"
             onClick={handleRoutineCompleteButtonClick}

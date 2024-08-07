@@ -1,12 +1,28 @@
+"use client"
+
 import { createContext, useContext } from "react"
+
+import { RoutineDoneType } from "../../../../../types/routineDone.type"
+import { RoutineDoneDailyType } from "../../../../../types/routineDoneDaily.type"
+import { StructuredChallengeType } from "../../../../../types/supabase.type"
 
 // context 타입 지정
 interface MyChallengePageContextType {
+  userId: string
   todayDate: string
   selectedDate: string
   setSelectedDate: (date: string) => void
   selectedDayOfWeek: string
   setSelectedDayOfWeek: (date: string) => void
+  structuredChallengeData: StructuredChallengeType[]
+  challengeDataPending: boolean
+  challengeDataError: boolean
+  currentUserRoutineDoneDaily: RoutineDoneDailyType[]
+  routineDoneDailyPending: boolean
+  routineDoneDailyError: boolean
+  routineDone: RoutineDoneType[]
+  routineDonePending: boolean
+  routineDoneError: boolean
 }
 
 // conetext 생성

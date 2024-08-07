@@ -20,7 +20,7 @@ interface RoutineCheckBoxProps {
   selectedDate: string
   userId: string
   routineId: string
-  routineDone: RoutineDoneType[]
+
   routines: RoutineType[]
   routineDoneDailyId: string
 }
@@ -29,11 +29,11 @@ function RoutineCheckBox({
   routines,
   selectedDate,
   routineId,
-  routineDone,
+
   routineDoneDailyId,
 }: PropsWithChildren<RoutineCheckBoxProps>) {
   const routineCount = routines.length
-  const { todayDate } = useMyChallengePageContext()
+  const { todayDate, routineDone } = useMyChallengePageContext()
   // 전체 routine_done에서 routine_done_daily_id를 통해서
   // 현재 체크한 루틴에 대한 오늘 날짜의 데이터 가져오기 및 존재 여부 확인하며,
   // 이를 활용해 추후 체크박스의 최초값(선택/해제) 부여
