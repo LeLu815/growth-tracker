@@ -1,10 +1,10 @@
-import * as React from "react"
+import { useLayoutEffect, useState } from "react"
 import useResizeObserver from "@react-hook/resize-observer"
 
 export const useSize = (target: React.RefObject<HTMLDivElement>) => {
-  const [size, setSize] = React.useState<DOMRect | null>(null)
+  const [size, setSize] = useState<DOMRect | null>(null)
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (target.current) {
       setSize(target.current.getBoundingClientRect())
     }

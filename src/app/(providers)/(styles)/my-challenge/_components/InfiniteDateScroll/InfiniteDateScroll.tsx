@@ -8,7 +8,6 @@ import {
   startOfDay,
   subDays,
 } from "date-fns"
-import { useInView } from "react-intersection-observer"
 import { Element } from "react-scroll"
 
 import { useSize } from "./useSize"
@@ -17,9 +16,6 @@ const InfiniteDateScroll = () => {
   // 상태
   const [dates, setDates] = useState<Date[]>([])
   const [isInitialRender, setIsInitialRender] = useState(true)
-  // 트리거
-  const { ref: prevRef, inView: prevInView } = useInView()
-  const { ref: nextRef, inView: nextInView } = useInView()
   // container id
   const containerId = useId()
   const containerRef = useRef<HTMLDivElement>(null)
@@ -44,13 +40,13 @@ const InfiniteDateScroll = () => {
     ) {
       const container = containerRef.current
       const overflow = overflowRef.current
-      const middleIndex = Math.floor((dates.length + 2) / 2)
+      const middleIndex = Math.floor(dates.length / 2)
       const middleElement = overflow.children[middleIndex] as HTMLElement
       console.log(container, middleIndex, middleElement)
       if (middleElement) {
         const middleOffset =
           middleElement.offsetLeft -
-          (container.clientWidth / 2 - middleElement.clientWidth)
+          (container.clientWidth / 2 + middleElement.clientWidth / 2)
         container.scrollTo({ left: middleOffset, behavior: "smooth" })
       }
       setIsInitialRender(false)
@@ -95,18 +91,17 @@ const InfiniteDateScroll = () => {
   return (
     <div
       id={containerId}
-      className="relative h-[84px] w-full min-w-[320px] max-w-[640px] snap-x snap-mandatory gap-[calc((100%-238px)/6)] overflow-x-auto p-[20px]"
+      className="flex h-[84px] w-full min-w-[320px] max-w-[640px] snap-x snap-mandatory flex-col gap-[calc((100%-238px)/6)] overflow-x-auto p-[20px]"
       ref={containerRef}
     >
-      <div className="relative flex" style={{ gap: gap }} ref={overflowRef}>
-        <div className="absolute" ref={prevRef}></div>
+      <div className="flex" style={{ gap: gap }} ref={overflowRef}>
         {dates.map((date, index) => (
           <Element
             id={`${date.toISOString()}`}
             name={`${date.toISOString()}`}
             key={format(date, "yyyy-MM-dd")}
             className="flex snap-center flex-col items-center gap-[4px]"
-            onClick={() => scrollToElement(index + 1)}
+            onClick={() => scrollToElement(index)}
           >
             <div className="text-[12px]">{getKoreanWeekday(date)}</div>
             <div
@@ -116,7 +111,6 @@ const InfiniteDateScroll = () => {
             </div>
           </Element>
         ))}
-        <div className="absolute" ref={nextRef}></div>
       </div>
     </div>
   )
