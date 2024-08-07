@@ -39,7 +39,7 @@ function MilestoneCreateSwitch({
   } = useChallengeQuery()
 
   return (
-    <div>
+    <>
       <div className="mt-[12px] flex items-center gap-2">
         <FlagIcon />
         <SubTitle>{goal}</SubTitle>
@@ -70,58 +70,61 @@ function MilestoneCreateSwitch({
       </Button>
       <div className="h-[20px]" />
       <DragDropContainer range={range} />
-      <Button
-        className="h-full"
-        onClick={() => {
-          // 1. 먼저 뮤테이션 돌리고
-          challengeCreateMutate({
-            challenge: {
-              category: category,
-              user_id: me?.id || "",
-              day_cnt: differenceInCalendarDays(range?.to!, range?.from!) + 1,
-              end_at: format(range?.to!, "yyyy-MM-dd"),
-              goal: goal,
-              is_secret: false,
-              start_at: format(range?.from!, "yyyy-MM-dd"),
-            },
-            milestone: data.map((obj) =>
-              produce(
-                obj,
-                (
-                  draft: Omit<MilestoneType, "routines" | "id"> & {
-                    routines?: MilestoneType["routines"]
-                    id?: MilestoneType["id"]
-                  }
-                ) => {
-                  draft.start_at = draft.start_at
-                  draft.end_at = draft.end_at
-                  delete draft.routines
-                  delete draft.id
-                }
-              )
-            ),
-            routine: data.map((obj) =>
-              obj.routines.map((routine) => ({
-                content: routine.content,
-                milestone_id: obj.id,
-              }))
-            ),
-          })
-          // 2. 주스텐드 싹다 정리하는 함수를 실행하기 (스토어 초기화)
-          setData([])
-          setRange(defaultSelected)
-          setCategory(categories[0])
-          setGoal("")
+      <div className="h-[100px]"></div>
+      <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
+        <Button
+          className="h-full"
+          onClick={() => {
+            // 1. 홈으로 네비게이션 돌리기
+            router.push("/")
 
-          // 3. 홈으로 네비게이션 돌리기
-          return router.push("/")
-        }}
-        disabled={data.length === 0}
-        size="lg"
-      >
-        완료
-      </Button>
-    </div>
+            // 2. 먼저 뮤테이션 돌리고
+            challengeCreateMutate({
+              challenge: {
+                category: category,
+                user_id: me?.id || "",
+                day_cnt: differenceInCalendarDays(range?.to!, range?.from!) + 1,
+                end_at: format(range?.to!, "yyyy-MM-dd"),
+                goal: goal,
+                is_secret: false,
+                start_at: format(range?.from!, "yyyy-MM-dd"),
+              },
+              milestone: data.map((obj) =>
+                produce(
+                  obj,
+                  (
+                    draft: Omit<MilestoneType, "routines" | "id"> & {
+                      routines?: MilestoneType["routines"]
+                      id?: MilestoneType["id"]
+                    }
+                  ) => {
+                    draft.start_at = draft.start_at
+                    draft.end_at = draft.end_at
+                    delete draft.routines
+                    delete draft.id
+                  }
+                )
+              ),
+              routine: data.map((obj) =>
+                obj.routines.map((routine) => ({
+                  content: routine.content,
+                  milestone_id: obj.id,
+                }))
+              ),
+            })
+            // 3. 주스텐드 싹다 정리하는 함수를 실행하기 (스토어 초기화)
+            setData([])
+            setRange(defaultSelected)
+            setCategory(categories[0])
+            setGoal("")
+          }}
+          disabled={data.length === 0}
+          size="lg"
+        >
+          완료
+        </Button>
+      </div>
+    </>
   )
 }
 

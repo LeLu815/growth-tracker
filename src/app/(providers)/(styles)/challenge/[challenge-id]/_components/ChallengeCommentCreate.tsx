@@ -1,6 +1,6 @@
 "use client"
 
-import { FormEvent, useState } from "react"
+import { ChangeEvent, useRef, useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
@@ -9,23 +9,22 @@ import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 
 import NoneProfile from "@/components/Icon/NoneProfile"
-import Input from "@/components/Input"
 
 import Button from "../../../../../../components/Button"
 
-function BottomBar({ challengeId }: { challengeId: string }) {
+function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { me, userData } = useAuth()
   const modal = useModal()
   const [content, setContent] = useState("")
+  const [isFocused, setIsFocused] = useState(false)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   /**
    * 댓글 생성
    * */
-  const createComment = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
+  const createComment = async () => {
     if (!me) {
       router.push("/")
       return
@@ -35,11 +34,16 @@ function BottomBar({ challengeId }: { challengeId: string }) {
     }
 
     setContent("")
+    textareaRef.current!.rows = 1
 
     const response = await axios
       .post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}/comment`,
-        JSON.stringify({ content, userId: me?.id }), // JSON 데이터
+        JSON.stringify({
+          content,
+          userId: me?.id,
+          rows: content.split("\n").length,
+        }), // JSON 데이터
         {
           headers: {
             "Content-Type": "application/json",
@@ -63,6 +67,20 @@ function BottomBar({ challengeId }: { challengeId: string }) {
     return
   }
 
+  const handleBlur = () => {
+    setTimeout(() => {
+      setIsFocused(false)
+    }, 100)
+  }
+
+  const handleOnChangeTextarea = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const newRows = e.target.value.split("\n").length
+    if (textareaRef.current !== null) {
+      textareaRef.current.rows = newRows
+    }
+    setContent(e.target.value)
+  }
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-20 w-full">
       <div className="flex items-center gap-[9px] self-stretch bg-white px-[20px] py-[10px]">
@@ -80,28 +98,35 @@ function BottomBar({ challengeId }: { challengeId: string }) {
           )}
         </div>
 
-        <form onSubmit={createComment} className={"w-full"}>
-          <Input
-            className={
-              "flex h-[50px] items-center gap-[10px] rounded-[8px] p-[10px]"
-            }
-            placeholder="댓글을 입력해주세요..."
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
-          <Button
-            intent="primary"
-            variant="rounded"
-            size="sm"
-            type="submit"
-            hidden
-          >
-            댓글 등록
-          </Button>
+        <form className="flex w-full items-center">
+          <div className="flex flex-1 p-2">
+            <textarea
+              className={`w-full resize-none p-2 text-gray-700 ${isFocused ? "" : "border-[1px]"}`}
+              placeholder="댓글을 입력해주세요..."
+              value={content}
+              ref={textareaRef}
+              rows={1}
+              onFocus={() => setIsFocused(true)}
+              onBlur={handleBlur}
+              onChange={handleOnChangeTextarea}
+            />
+          </div>
+          {isFocused && (
+            <Button
+              type="button"
+              intent="primary"
+              variant="rounded"
+              size="sm"
+              className="flex-shrink-0 bg-blue-500 px-4 py-2 text-white"
+              onClick={createComment}
+            >
+              Send
+            </Button>
+          )}
         </form>
       </div>
     </div>
   )
 }
 
-export default BottomBar
+export default ChallengeCommentCreate

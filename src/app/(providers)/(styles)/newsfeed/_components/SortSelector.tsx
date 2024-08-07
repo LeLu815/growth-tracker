@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 
+import CheckIcon from "@/components/Icon/CheckIcon"
+
 import SortButton from "./SortButton"
 import SortItem from "./SortItem"
 
@@ -51,25 +53,37 @@ function SortSelector({
         />
 
         {isOpen && (
-          <div className="absolute right-0 top-[20px] z-10 w-[145px] rounded-md bg-white shadow-lg">
+          <div className="absolute right-0 top-[20px] z-10 w-[172px] rounded-md bg-white shadow-lg">
             <div
-              className="py-1 text-black"
+              className="text-black"
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="options-menu"
             >
               <SortItem value="recent" onSelect={handleSelect}>
-                최신순
+                <span>최신순</span>
+                <span>
+                  {filter === "recent" && <CheckIcon className="mr-2" />}
+                </span>
               </SortItem>
               <SortItem value="popular" onSelect={handleSelect}>
-                인기순
+                <span>인기순</span>
+                <span>
+                  {filter === "popular" && <CheckIcon className="mr-2" />}
+                </span>
               </SortItem>
               <SortItem value="followed" onSelect={handleSelect}>
-                따라하기 많은 순
+                <span>따라하기 많은 순</span>
+                <span>
+                  {filter === "followed" && <CheckIcon className="mr-2" />}
+                </span>
               </SortItem>
-              <SortItem value="complete" onSelect={handleSelect}>
-                성공 루틴만 보기
-              </SortItem>
+              {/* <SortItem value="complete" onSelect={handleSelect}>
+                <span>성공 루틴만 보기</span>
+                <span>
+                  {filter === "complete" && <CheckIcon className="mr-2" />}
+                </span>
+              </SortItem> */}
             </div>
           </div>
         )}

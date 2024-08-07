@@ -199,7 +199,7 @@ function MilestoneCreateConfigEdit({
   useEffect(() => {}, [data, range])
   return (
     <>
-      <div className="mb-14">
+      <div className="mb-16">
         <SubTitle className="justify-start">루틴 A</SubTitle>
         <div>
           <div className="mt-[12px] flex items-center gap-2">
@@ -316,7 +316,7 @@ function MilestoneCreateConfigEdit({
           </form>
         </div>
       </div>
-      <div className="sticky bottom-0 left-0 z-50 h-[90px] w-full bg-white pb-2 pt-2">
+      <div className="sticky bottom-0 left-0 z-50 h-[100px] w-full bg-gradient-to-t from-white from-70% via-white to-transparent pb-2 pt-[20px]">
         <Button
           onClick={() => {
             // 모달 닫는 함수

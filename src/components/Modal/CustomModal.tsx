@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
 import { useModal } from "@/context/modal.context"
+import { useEffect, useState } from "react"
 import { CSSTransition } from "react-transition-group"
 
 import BackDrop from "./BackDrop"
@@ -46,8 +46,8 @@ const CustomModal = ({
         classNames={transitionClasses}
         unmountOnExit
       >
-        <div className="fixed bottom-0 left-1/2 h-[80vh] w-full -translate-x-1/2 translate-y-full transform overflow-auto rounded-[20px] bg-white px-4 transition sm:w-full">
-          <div className="sticky top-0 flex h-[40px] justify-center bg-white pt-[10px]">
+        <div className="fixed bottom-0 left-1/2 h-[80vh] w-full -translate-x-1/2 translate-y-full transform overflow-auto rounded-t-[20px] bg-white px-4 transition sm:w-full">
+          <div className="sticky top-0 z-50 flex h-[50px] justify-center bg-gradient-to-t from-transparent via-white to-white pt-[10px]">
             <div
               onClick={() => handleCloseModal()}
               className="mt-[5px] h-[5px] w-[120px] flex-shrink-0 cursor-pointer rounded-full bg-slate-300 opacity-90"

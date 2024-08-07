@@ -1,7 +1,20 @@
+import { PropsWithChildren } from "react"
+import classNames from "classnames"
+
 import BaseHeader from "./BaseHeader"
 
-function DefaultHeader() {
-  return <BaseHeader>Header</BaseHeader>
+interface DefaultHeaderProps {
+  className?: string
+}
+function DefaultHeader({
+  children,
+  className,
+}: PropsWithChildren<DefaultHeaderProps>) {
+  return (
+    <BaseHeader className={classNames(className, "mx-auto max-w-[640px]")}>
+      {children}
+    </BaseHeader>
+  )
 }
 
 export default DefaultHeader

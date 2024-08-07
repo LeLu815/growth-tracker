@@ -2,7 +2,9 @@ import useChallengeCreateStore from "@/store/challengeCreate.store"
 import { differenceInCalendarDays, format } from "date-fns"
 import { DateRange } from "react-day-picker"
 
+import Box from "@/components/Box"
 import Button from "@/components/Button"
+import Page from "@/components/Page"
 
 import ChallengeCalender from "../ChallengeCalender/ChallengeCalender"
 import ChallengePageTitle from "../ChallengePageTitle"
@@ -23,7 +25,7 @@ function ChallengeSelectPeriod({
     range.to &&
     differenceInCalendarDays(range?.from!, new Date()) >= 0
   return (
-    <div className="font-suite">
+    <>
       <ChallengePageTitle
         title={title}
         step={2}
@@ -31,32 +33,44 @@ function ChallengeSelectPeriod({
         titleHidden={false}
         handleClickGoBack={() => handleChangeStep(1)}
       />
-      <SubTitle>목표하는 챌린지 기간을 알려주세요.</SubTitle>
-      <div className="mb-[30px] mt-[45px] flex justify-around">
-        <div className="flex flex-col gap-[12px]">
-          <p className="text-center text-[14px] font-[500] text-[#BCBDC2]">
-            시작일
-          </p>
-          <p className="text-[16px] font-[700] text-[#1D1D1D]">
-            {formatDateRange(range).start}
-          </p>
-        </div>
-        <div className="flex flex-col gap-[12px]">
-          <p className="text-center text-[14px] font-[500] text-[#BCBDC2]">
-            완료일
-          </p>
-          <p className="text-[16px] font-[700] text-[#1D1D1D]">
-            {formatDateRange(range).end}
-          </p>
-        </div>
-      </div>
-      <div className="flex justify-center">
-        <ChallengeCalender range={range} setRange={setRange} />
-      </div>
-      <Button disabled={!isOkay} size="lg" onClick={() => handleChangeStep(3)}>
-        다음
-      </Button>
-    </div>
+      <Page>
+        <Box className="flex-1">
+          <SubTitle className="justify-center">
+            목표하는 챌린지 기간을 알려주세요.
+          </SubTitle>
+          <div className="mb-[30px] mt-[45px] flex justify-around">
+            <div className="flex flex-col gap-[12px]">
+              <p className="text-center text-[14px] font-[500] text-[#BCBDC2]">
+                시작일
+              </p>
+              <p className="text-[16px] font-[700] text-[#1D1D1D]">
+                {formatDateRange(range).start}
+              </p>
+            </div>
+            <div className="flex flex-col gap-[12px]">
+              <p className="text-center text-[14px] font-[500] text-[#BCBDC2]">
+                완료일
+              </p>
+              <p className="text-[16px] font-[700] text-[#1D1D1D]">
+                {formatDateRange(range).end}
+              </p>
+            </div>
+          </div>
+          <div className="flex justify-center">
+            <ChallengeCalender range={range} setRange={setRange} />
+          </div>
+          <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
+            <Button
+              disabled={!isOkay}
+              size="lg"
+              onClick={() => handleChangeStep(3)}
+            >
+              다음
+            </Button>
+          </div>
+        </Box>
+      </Page>
+    </>
   )
 }
 

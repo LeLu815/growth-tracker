@@ -1,10 +1,13 @@
 "use client"
 
 import { useState } from "react"
+import { useModal } from "@/context/modal.context"
+import { useToast } from "@/context/toast.context"
 
 import Button from "@/components/Button"
 import ChallengeCard from "@/components/ChallengeCard"
 import Chip from "@/components/Chip"
+import CheckIcon from "@/components/Icon/CheckIcon"
 import Input from "@/components/Input"
 import Page from "@/components/Page"
 
@@ -15,11 +18,26 @@ function ComponentTestPage() {
     setIsSelected(!isSelected)
   }
 
+  const { open } = useModal()
+  const { showToast } = useToast()
+
+  const handleToastClick = () => {
+    showToast("토스트 테스트 해보자~")
+  }
+
+  const handleModalClick = () => {
+    open({
+      type: "alert",
+      content: "안녕",
+      onConfirm: () => console.log("dd"),
+    })
+  }
+
   return (
     <Page>
       <h3 className="pt-4">Chips</h3>
       <Chip label="전체" intent="primary" />
-      <Chip label="전체" intent="rounded" selected />
+      <Chip label="전체" intent="secondary" selected />
       <Chip size="sm" label="공부" />
       <Chip size="sm" intent="secondary" label="제테크" />
       <Chip size="sm" intent="secondary" label="제테크" variant="outline" />
@@ -116,10 +134,19 @@ function ComponentTestPage() {
         challengeImage="/icon/ic-arrow-right.svg"
       />
 
+      <h4>토스트 테스트</h4>
+      <div>
+        <button onClick={handleToastClick}>토스트 나와</button>
+      </div>
+
       <Input label="인풋테스트" required />
       <Input label="인풋테스트" />
-      {/*<BottomBar />*/}
+
+      <CheckIcon />
+      {/*<ChallengeCommentCreate />*/}
       <div className="h-[100px]"></div>
+
+      <Button onClick={handleModalClick}> 모달 테스 </Button>
     </Page>
   )
 }

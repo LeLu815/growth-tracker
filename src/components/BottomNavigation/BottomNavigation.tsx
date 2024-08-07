@@ -12,7 +12,7 @@ import MyPageIcon from "../Icon/MyPageIcon"
 interface NavItem {
   label: string
   path: string
-  icon: React.ReactElement
+  icon: (isActive: boolean) => React.ReactElement
 }
 
 const navItemClasses = cva("flex flex-col items-center text-xs", {
@@ -36,40 +36,37 @@ function BottomNavigation() {
     {
       label: "피드",
       path: "/newsfeed",
-      icon: (
-        <FeedIcon color={activePath === "/newsfeed" ? "#FF5C5C" : "#ACACAC"} />
-      ),
+      icon: (isActive) => <FeedIcon color={isActive ? "#FF5C5C" : "#ACACAC"} />,
     },
     {
       label: "챌린지",
       path: "/my-challenge",
-      icon: (
-        <ChallengeIcon
-          color={activePath === "/my-challenge" ? "#FF5C5C" : "#ACACAC"}
-        />
+      icon: (isActive) => (
+        <ChallengeIcon color={isActive ? "#FF5C5C" : "#ACACAC"} />
       ),
     },
     {
       label: "마이",
       path: "/my-page",
-      icon: (
-        <MyPageIcon
-          color={activePath === "/my-page/profile" ? "#FF5C5C" : "#ACACAC"}
-        />
+      icon: (isActive) => (
+        <MyPageIcon color={isActive ? "#FF5C5C" : "#ACACAC"} />
       ),
     },
   ]
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-10 flex justify-around bg-white py-2 shadow-md">
-      {navItems.map((item, index) => (
-        <Link href={item.path} key={index}>
-          <div className={navItemClasses({ active: activePath === item.path })}>
-            {item.icon}
-            <span>{item.label}</span>
-          </div>
-        </Link>
-      ))}
+      {navItems.map((item, index) => {
+        const isActive = activePath.startsWith(item.path)
+        return (
+          <Link href={item.path} key={index}>
+            <div className={navItemClasses({ active: isActive })}>
+              {item.icon(isActive)}
+              <span>{item.label}</span>
+            </div>
+          </Link>
+        )
+      })}
     </div>
   )
 }

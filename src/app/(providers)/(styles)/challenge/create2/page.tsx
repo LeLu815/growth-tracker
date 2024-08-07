@@ -1,13 +1,7 @@
-import Page from "@/components/Page"
-
 import CreateChallenge from "./_components/CreateChallenge"
 
 function CreatePage() {
-  return (
-    <Page>
-      <CreateChallenge />
-    </Page>
-  )
+  return <CreateChallenge />
 }
 
 export default CreatePage

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
-import Image from "next/image"
 import { useModal } from "@/context/modal.context"
 import { CSSTransition } from "react-transition-group"
 
+import CloseIcon02 from "../Icon/CloseIcon02"
 import { Calendar } from "../ui/calendar"
 import BackDrop from "./BackDrop"
 
@@ -82,12 +82,10 @@ const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
           }`}
         >
           <button onClick={handleCloseModal}>
-            <Image
-              width={20}
-              height={20}
-              src="/icon/ic-close.svg"
-              alt="Modal close icon"
-              className="absolute right-2 top-2 hidden sm:block"
+            <CloseIcon02
+              width={12}
+              height={12}
+              className="absolute right-[15px] top-[15px]"
             />
           </button>
 

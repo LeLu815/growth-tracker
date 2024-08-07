@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { ChangeEvent, useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
@@ -16,7 +16,6 @@ import { useInView } from "react-intersection-observer"
 import EmptyHart from "@/components/Icon/EmptyHart"
 import NoneProfile from "@/components/Icon/NoneProfile"
 import RedHart from "@/components/Icon/RedHart"
-import Input from "@/components/Input"
 
 import {
   ChallengeCommentPageType,
@@ -33,6 +32,9 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   const [updateCommentId, setUpdateCommentId] = useState("")
   const modal = useModal()
 
+  const textareaRefs = useRef<HTMLTextAreaElement[]>([])
+  const [sortField, setSortField] = useState("")
+
   /**
    * 유저정보, 댓글정보, 좋아요정보 조회
    * */
@@ -42,7 +44,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
     pageParam: number
   }): Promise<ChallengeCommentType> => {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}/comment?limit=3&page=${pageParam}&userId=${me ? me?.id : ""}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}/comment?limit=20&page=${pageParam}&userId=${me ? me?.id : ""}&sortField=${sortField}`
     )
 
     return response.data
@@ -77,7 +79,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
     const response = await axios
       .put(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}/comment/${commentId}`,
-        JSON.stringify({ content: content }), // JSON 데이터
+        JSON.stringify({ content: content, rows: content.split("\n").length }), // JSON 데이터
         {
           headers: {
             "Content-Type": "application/json",
@@ -133,6 +135,9 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
               return comments.map((comment) => {
                 if (comment.id === commentId) {
                   comment.is_like = !comment.is_like
+                  comment.like_cnt = comment.is_like
+                    ? comment.like_cnt + 1
+                    : comment.like_cnt - 1
                 }
                 return comment
               })
@@ -144,9 +149,6 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
     },
     onError: (err, test, context) => {
       queryClient.setQueryData(["challengeComment"], context?.commentList)
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["challengeComment"] })
     },
   })
 
@@ -236,7 +238,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
       allPageParams
     ) => {
       const nextPage = lastPageParam + 1
-      return lastPage.length === 3 ? nextPage : undefined
+      return lastPage.length === 20 ? nextPage : undefined
     },
     select: ({ pages }) => pages.flat(),
   })
@@ -258,128 +260,208 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
     return
   }
 
+  const handleOnChangeTextarea = (
+    e: ChangeEvent<HTMLTextAreaElement>,
+    index: number
+  ) => {
+    const newRows = e.target.value.split("\n").length
+    if (textareaRefs) {
+      textareaRefs.current![index].rows = newRows
+    }
+
+    setUpdateContent(e.target.value)
+  }
+
+  const handleChangeIsUpdate = (comment: ChallengeCommentType) => {
+    if (isUpdate) {
+      setUpdateContent("")
+      setIsUpdate(false)
+      setUpdateCommentId("")
+    } else {
+      setUpdateContent(comment.content)
+      setIsUpdate(true)
+      setUpdateCommentId(comment.id)
+    }
+  }
+
+  useEffect(() => {
+    if (me?.id) {
+      refetch()
+    }
+  }, [me?.id && !isPending])
+
+  useEffect(() => {
+    if (sortField) {
+      refetch()
+    }
+  }, [sortField])
+
+  const handleChangeSortField = (sortField: string) => {
+    setSortField((sorted) => (sorted = sortField))
+  }
+
   return (
     <div className={"flex w-full flex-col items-center gap-4"}>
-      {data?.map((comment, idx) => {
-        const isLastItem = data?.length - 1 === idx
-        return (
+      <div className={"flex w-full justify-between p-2"}>
+        <div className={"text-[14px] font-bold text-[#141414]"}>
+          댓글 {data?.[0] ? data?.[0].total_count : 0}
+        </div>
+        <div className={"flex cursor-pointer gap-3"}>
           <div
-            className={
-              "mt-2 flex w-full gap-[8px] rounded-lg border p-4 shadow-md"
-            }
-            key={comment.id}
-            ref={isLastItem ? ref : null}
+            onClick={() => handleChangeSortField("like_cnt")}
+            className={`text-[14px] ${sortField === "like_cnt" || !sortField ? "font-bold text-black" : "font-medium text-[#474747]"} `}
           >
-            <div>
-              {comment.profile_image_url ? (
-                <div className="relative h-[50px] w-[50px] overflow-hidden rounded-full">
-                  <Image
-                    fill
-                    className="object-cover"
-                    alt="프로필사진"
-                    src={
-                      comment.profile_image_url
-                        ? comment.profile_image_url
-                        : "/image/profileImage.png"
-                    }
-                  />
-                </div>
-              ) : (
-                <NoneProfile width={50} height={50} />
-              )}
-            </div>
-            <div className={"flex w-full flex-col gap-[6px]"}>
-              <div className={"pt-2 text-[#717171]"}>{comment.nickname}</div>
-
-              {isUpdate && comment.id === updateCommentId ? (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault()
-                    handleCommentMutate({
-                      commentId: comment.id,
-                      content: updateContent,
-                    })
-                  }}
-                >
-                  <Input
-                    className={"border-[1px] border-solid border-[]"}
-                    value={updateContent}
-                    onChange={(e) => setUpdateContent(e.target.value)}
-                  />
-                </form>
-              ) : (
-                <div>{comment.content}</div>
-              )}
+            인기순
+          </div>
+          <div
+            onClick={() => handleChangeSortField("created_at")}
+            className={`text-[14px] ${sortField === "created_at" ? "font-bold text-black" : "font-medium text-[#474747]"} `}
+          >
+            최신순
+          </div>
+        </div>
+      </div>
+      {data?.length === 0 ? (
+        <div
+          className={
+            "text-gray-custom p-24 text-center font-suite text-[14px] font-medium leading-[18.9px]"
+          }
+        >
+          아직 댓글이 없어요.
+          <br />
+          댓글을 제일 먼저 남겨보세요.
+        </div>
+      ) : (
+        <div>
+          {data?.map((comment, idx) => {
+            const isLastItem = data?.length - 1 === idx
+            return (
               <div
-                onClick={() =>
-                  me
-                    ? handleCommentLikeMutate({
-                        isLike: comment.is_like,
-                        commentId: comment.id,
-                      })
-                    : router.push("/")
+                className={
+                  "mt-2 flex w-full gap-[8px] rounded-lg border p-4 shadow-md"
                 }
+                key={comment.id}
+                ref={isLastItem ? ref : null}
               >
-                {comment.is_like ? (
-                  <RedHart width={20} height={20} />
-                ) : (
-                  <EmptyHart width={20} height={20} color={"#D9D9D9"} />
-                )}
-              </div>
-            </div>
-
-            {comment.user_id === me?.id && (
-              <div className={"flex w-[100px] justify-end gap-4"}>
-                {isUpdate && comment.id === updateCommentId ? (
-                  <div className={"flex items-start gap-2"}>
-                    <button
-                      type="submit"
-                      className="font-suite cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
-                      onClick={() => {
+                <div>
+                  {comment.profile_image_url ? (
+                    <div className="relative h-[50px] w-[50px] overflow-hidden rounded-full">
+                      <Image
+                        fill
+                        className="object-cover"
+                        alt="프로필사진"
+                        src={
+                          comment.profile_image_url
+                            ? comment.profile_image_url
+                            : "/image/profileImage.png"
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <NoneProfile width={50} height={50} />
+                  )}
+                </div>
+                <div className={"flex w-full flex-col gap-[6px] pt-2"}>
+                  <div className={"text-[#717171]"}>{comment.nickname}</div>
+                  <div
+                    className={
+                      "font-suite text-xs font-normal leading-[1.35] text-gray-600"
+                    }
+                  >
+                    {comment.created_at}
+                  </div>
+                  {
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault()
                         handleCommentMutate({
                           commentId: comment.id,
                           content: updateContent,
                         })
                       }}
                     >
-                      수정완료
-                    </button>
-                    <button
-                      className="font-suite cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
-                      onClick={() => {
-                        setUpdateContent("")
-                        setIsUpdate(false)
-                        setUpdateCommentId("")
-                      }}
+                      <textarea
+                        style={{ overflow: "hidden" }}
+                        rows={comment.rows}
+                        className={`h-full w-full resize-none text-gray-700 focus:outline-none ${isUpdate && comment.id === updateCommentId ? `shadow-outline appearance-none overflow-hidden rounded border leading-tight shadow` : "border-none bg-transparent"}`}
+                        value={`${isUpdate && comment.id === updateCommentId ? updateContent : comment.content}`}
+                        ref={(el) => {
+                          if (el) {
+                            textareaRefs.current[idx] = el
+                          }
+                          return // Ensure the callback returns void
+                        }}
+                        onChange={(e) => handleOnChangeTextarea(e, idx)}
+                      />
+                    </form>
+                  }
+                  <div
+                    className={"flex gap-1"}
+                    onClick={() =>
+                      me
+                        ? handleCommentLikeMutate({
+                            isLike: comment.is_like,
+                            commentId: comment.id,
+                          })
+                        : router.push("/")
+                    }
+                  >
+                    <div>
+                      {comment.is_like ? (
+                        <RedHart width={20} height={20} />
+                      ) : (
+                        <EmptyHart width={20} height={20} color={"#D9D9D9"} />
+                      )}
+                    </div>
+                    <div
+                      className={
+                        "pt-[2px] font-suite text-[15px] font-normal leading-none text-gray-600"
+                      }
                     >
-                      취소
-                    </button>
+                      {comment.like_cnt}
+                    </div>
                   </div>
-                ) : (
-                  <div className={"flex w-[100px] items-start gap-2"}>
-                    <button
-                      className="font-suite cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
-                      onClick={() => {
-                        setUpdateContent(comment.content)
-                        setIsUpdate(true)
-                        setUpdateCommentId(comment.id)
-                      }}
-                    >
-                      수정
-                    </button>
-                    <button
-                      className="font-suite cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
-                      onClick={() => handleCommentDeleteMutate(comment.id)}
-                    >
-                      삭제
-                    </button>
+                </div>
+
+                {comment.user_id === me?.id && (
+                  <div className={"flex w-[100px] justify-end gap-4"}>
+                    <div className={"flex items-start gap-2"}>
+                      <button
+                        type="submit"
+                        className="cursor-pointer text-center font-suite text-[12px] font-medium leading-[135%] text-[#969696]"
+                        onClick={() => {
+                          isUpdate && comment.id === updateCommentId
+                            ? handleCommentMutate({
+                                commentId: comment.id,
+                                content: updateContent,
+                              })
+                            : handleChangeIsUpdate(comment)
+                        }}
+                      >
+                        {isUpdate && comment.id === updateCommentId
+                          ? "수정완료"
+                          : "수정"}
+                      </button>
+                      <button
+                        className="cursor-pointer text-center font-suite text-[12px] font-medium leading-[135%] text-[#969696]"
+                        onClick={() => {
+                          isUpdate && comment.id === updateCommentId
+                            ? handleChangeIsUpdate(comment)
+                            : handleCommentDeleteMutate(comment.id)
+                        }}
+                      >
+                        {isUpdate && comment.id === updateCommentId
+                          ? "취소"
+                          : "삭제"}
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
-            )}
-          </div>
-        )
-      })}
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

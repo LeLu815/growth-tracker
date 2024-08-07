@@ -10,7 +10,7 @@ const SortItem = ({ value, onSelect, children }: SortItemProps) => {
   return (
     <button
       onClick={() => onSelect(value)}
-      className="block w-full px-4 py-2 text-left text-sm text-black hover:bg-gray-100 hover:text-gray-900"
+      className="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-black hover:bg-gray-100 hover:text-gray-900"
       role="menuitem"
     >
       {children}

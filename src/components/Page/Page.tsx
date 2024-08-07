@@ -2,8 +2,8 @@ import { PropsWithChildren } from "react"
 
 const Page = ({ children }: PropsWithChildren) => {
   return (
-    <main className="border-box mx-auto min-w-[320px] max-w-[640px]">
-      <div className="w-full">{children}</div>
+    <main className="border-box h-auro flex min-w-[320px] flex-1 flex-col overflow-y-auto">
+      <div className="flex flex-1 flex-col">{children}</div>
     </main>
   )
 }

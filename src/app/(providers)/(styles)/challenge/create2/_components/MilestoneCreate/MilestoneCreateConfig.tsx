@@ -167,7 +167,7 @@ function MilestoneCreateConfig({
   }
 
   return (
-    <div className="font-suite">
+    <>
       <SubTitle className="justify-start">선택한 챌린지 기간</SubTitle>
       <div>
         <div className="mt-[12px] flex items-center gap-2">
@@ -281,44 +281,47 @@ function MilestoneCreateConfig({
           </ul>
         </form>
       </div>
-      <Button
-        onClick={() => {
-          setShowCompoent("switch")
-          // 여기에서 그동안 쌓아둔 데이터를 모두 주스탠드에 넣은 작업을 해야함
-          createMilestone({
-            challenge_id: "",
-            id: uuidv4(),
-            start_at: milestone_start_date,
-            end_at: milestone_end_date,
-            is_mon: selectWeeks[0],
-            is_tue: selectWeeks[1],
-            is_wed: selectWeeks[2],
-            is_thu: selectWeeks[3],
-            is_fri: selectWeeks[4],
-            is_sat: selectWeeks[5],
-            is_sun: selectWeeks[6],
-            success_requirement_cnt: Math.ceil(
-              (milestone_actual_day * +minPercent) / 100
-            ),
-            total_cnt: milestone_actual_day,
-            total_day: +milestonePeriod - prevMilestonesPeriod,
-            routines: routines.map((value) => ({
-              id: "",
-              content: value,
-            })),
-          })
-        }}
-        disabled={
-          routines.length === 0 ||
-          milestoneNameInput === "" ||
-          selectWeeks.filter((value) => value).length === 0 ||
-          milestone_actual_day === 0
-        }
-        size="lg"
-      >
-        완료
-      </Button>
-    </div>
+      <div className="h-[100px]"></div>
+      <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
+        <Button
+          onClick={() => {
+            setShowCompoent("switch")
+            // 여기에서 그동안 쌓아둔 데이터를 모두 주스탠드에 넣은 작업을 해야함
+            createMilestone({
+              challenge_id: "",
+              id: uuidv4(),
+              start_at: milestone_start_date,
+              end_at: milestone_end_date,
+              is_mon: selectWeeks[0],
+              is_tue: selectWeeks[1],
+              is_wed: selectWeeks[2],
+              is_thu: selectWeeks[3],
+              is_fri: selectWeeks[4],
+              is_sat: selectWeeks[5],
+              is_sun: selectWeeks[6],
+              success_requirement_cnt: Math.ceil(
+                (milestone_actual_day * +minPercent) / 100
+              ),
+              total_cnt: milestone_actual_day,
+              total_day: +milestonePeriod - prevMilestonesPeriod,
+              routines: routines.map((value) => ({
+                id: "",
+                content: value,
+              })),
+            })
+          }}
+          disabled={
+            routines.length === 0 ||
+            milestoneNameInput === "" ||
+            selectWeeks.filter((value) => value).length === 0 ||
+            milestone_actual_day === 0
+          }
+          size="lg"
+        >
+          완료
+        </Button>
+      </div>
+    </>
   )
 }
 
