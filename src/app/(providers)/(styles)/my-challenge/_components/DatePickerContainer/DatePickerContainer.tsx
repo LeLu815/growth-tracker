@@ -1,14 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
-import React, {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import React, { useEffect, useRef } from "react"
 import { eachDayOfInterval, format, startOfDay, subMonths } from "date-fns"
 import { ko } from "date-fns/locale"
 import { Mousewheel, Navigation } from "swiper/modules"
@@ -17,7 +10,7 @@ import { Swiper, SwiperSlide } from "swiper/react"
 // Import Swiper styles and navigations
 import "swiper/css"
 
-import { MyChallengePageContext } from "../../context"
+import useMyChallengePageContext from "../../context"
 
 function DatePickerContainer({}) {
   const TODAY = startOfDay(new Date())
@@ -26,10 +19,9 @@ function DatePickerContainer({}) {
   const {
     selectedDate,
     setSelectedDate,
-    selectedDayOfWeek,
     setSelectedDayOfWeek,
     todayDate: today,
-  } = useContext(MyChallengePageContext)
+  } = useMyChallengePageContext()
   const swiperRef = useRef<any>(null)
 
   const allDates = eachDayOfInterval({

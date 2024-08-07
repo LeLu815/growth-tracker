@@ -3,9 +3,24 @@ import { createClient } from "@/supabase/server"
 
 import { DiaryType } from "../../../../../types/diary.type"
 
-export const GET = async () => {
+export const GET = async (request: NextRequest) => {
+  const { searchParams } = new URL(request.url)
+  const routineDoneDailyId = searchParams.get("routineDoneDailyId")
+  const selectedDate = searchParams.get("selectedDate")
   const supabase = createClient()
-  const { data: diary, error } = await supabase.from("diary").select()
+
+  if (!routineDoneDailyId || !selectedDate) {
+    return NextResponse.json(
+      { error: "Missing required parameters" },
+      { status: 400 }
+    )
+  }
+
+  const { data: diary, error } = await supabase
+    .from("diary")
+    .select()
+    .eq("routine_done_daily_id", routineDoneDailyId)
+    .eq("created_at", selectedDate)
 
   if (error) {
     return NextResponse.json({
