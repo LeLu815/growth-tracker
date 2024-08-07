@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useModal } from "@/context/modal.context"
 import { useToast } from "@/context/toast.context"
 
 import Button from "@/components/Button"
@@ -16,10 +17,19 @@ function ComponentTestPage() {
     setIsSelected(!isSelected)
   }
 
+  const { open } = useModal()
   const { showToast } = useToast()
 
   const handleToastClick = () => {
     showToast("토스트 테스트 해보자~")
+  }
+
+  const handleModalClick = () => {
+    open({
+      type: "alert",
+      content: "안녕",
+      onConfirm: () => console.log("dd"),
+    })
   }
 
   return (
@@ -132,6 +142,8 @@ function ComponentTestPage() {
       <Input label="인풋테스트" />
       {/*<ChallengeCommentCreate />*/}
       <div className="h-[100px]"></div>
+
+      <Button onClick={handleModalClick}> 모달 테스 </Button>
     </Page>
   )
 }
