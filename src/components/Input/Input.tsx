@@ -2,11 +2,14 @@ import { ComponentProps, forwardRef, useId } from "react"
 import { cva } from "class-variance-authority"
 import classNames from "classnames"
 
+import ErrorMessage from "../ErrorMessage"
+
 type InputProps = {
   label?: string
   required?: boolean
   className?: string
   variant?: "default" | "login" | "search"
+  errorMessage?: string
 } & ComponentProps<"input">
 
 const inputVariant = cva("transition focus:outline-none", {
@@ -15,7 +18,7 @@ const inputVariant = cva("transition focus:outline-none", {
       default:
         "rounded border border-gray-400 focus:border-gray-950 px-4 py-2.5 ",
       login:
-        "border-b border-t-0 border-l-0 border-r-0  border-red-[#ADADAD] focus:border-b-1 focus:border-[#141414] px-4 py-2.5 ",
+        "border-b border-t-0 border-l-0 border-r-0  border-red-[#ADADAD] focus:border-b-1 focus:border-[#141414] p-4 ",
       search:
         "border-b border-t-0 border-l-0 border-r-0  border-red-[#ADADAD] focus:border-b-1 focus:border-[#141414] px-2 py-2 transition ",
     },
@@ -26,25 +29,35 @@ const inputVariant = cva("transition focus:outline-none", {
 })
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, required, id, className, variant, ...props }, ref) => {
+  (
+    { label, required, id, className, variant, errorMessage, ...props },
+    ref
+  ) => {
     const inputUid = useId()
     const inputId = id || inputUid
 
     return (
-      <div className="flex w-full flex-col [&+&]:mt-4">
-        <label className="mb-[14px]" htmlFor={inputId}>
+      <div className="flex w-full flex-col">
+        <label className="mb-[16x]" htmlFor={inputId}>
           <span className="text-[18px] font-[700]">{label}</span>
           {required && (
             <span className="text-sm font-semibold text-red-500">*</span>
           )}
         </label>
         <input
-          className={classNames(inputVariant({ variant }), className)}
+          className={classNames(
+            inputVariant({ variant }),
+            className,
+            errorMessage ? "border-red-500" : "border-black"
+          )}
           type="text"
           id={inputId}
           ref={ref}
           {...props}
         />
+        <div className="flex h-6 w-full items-center">
+          {errorMessage && <ErrorMessage message={errorMessage} />}
+        </div>
       </div>
     )
   }

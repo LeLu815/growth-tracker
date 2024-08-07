@@ -9,7 +9,7 @@ const buttonVariant = cva(
     variants: {
       intent: {
         primary: "md:hover:bg-[#2E2E2E] active:bg-[#2E2E2E]",
-        secondary: "text-[#141414] md:hover:bg-[#E0E0E0] active:bg-[#E0E0E0]",
+        secondary: "text-gray-50 md:hover:bg-gray-800 active:bg-gray-800",
         kakao: "bg-[#FDE500] text-[#1A1A1A]",
       },
       size: {

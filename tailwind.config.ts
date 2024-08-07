@@ -36,6 +36,19 @@ const config = {
         suite: ["SUITE", "sans-serif"], // 기본 sans-serif를 추가
       },
       colors: {
+        grey: {
+          50: "#141414",
+          100: "#2E2E2E",
+          200: "#474747",
+          300: "#616161",
+          400: "#7A7A7A",
+          500: "#949494",
+          600: "#ADADAD",
+          700: "#C7C7C7",
+          800: "#E0E0E0",
+          900: "#FAFAFA",
+        },
+
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -70,11 +83,13 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
