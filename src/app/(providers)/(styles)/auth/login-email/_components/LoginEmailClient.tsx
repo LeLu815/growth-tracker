@@ -107,7 +107,7 @@ function LoginEmailClient() {
           <button
             type="button"
             onClick={toggleShowPassword}
-            className="absolute right-2 top-[66px] -translate-y-1/2 px-2 transition-all"
+            className="absolute right-2 top-[80px] -translate-y-1/2 px-2 transition-all"
           >
             {showPassword ? (
               <VisibilityIcon width={24} height={24} />
