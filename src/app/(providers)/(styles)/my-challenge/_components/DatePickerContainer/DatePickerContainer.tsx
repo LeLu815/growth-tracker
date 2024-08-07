@@ -28,7 +28,6 @@ function DatePickerContainer({}) {
   const {
     selectedDate,
     setSelectedDate,
-    selectedDayOfWeek,
     setSelectedDayOfWeek,
     todayDate: today,
   } = useMyChallengePageContext()

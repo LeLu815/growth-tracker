@@ -1,6 +1,5 @@
 "use client"
 
-import { useContext } from "react"
 import { GETroutineDone } from "@/api/supabase/routineDone"
 import { GETroutineDoneDaily } from "@/api/supabase/routineDoneDaily"
 import { GETstructuredChallengeData } from "@/api/supabase/structured-challenge"
@@ -11,7 +10,7 @@ import {
   StructuredChallengeType,
   StructuredMilestoneType,
 } from "../../../../../../../types/supabase.type"
-import { MyChallengePageContext } from "../../context"
+import useMyChallengePageContext from "../../context"
 import MilestoneSection from "../MilestoneSection"
 
 function ChallengeList() {
@@ -52,7 +51,7 @@ function ChallengeList() {
     gcTime: 8 * 60 * 1000, // 8분
   })
 
-  const { selectedDate, selectedDayOfWeek } = useContext(MyChallengePageContext)
+  const { selectedDate, selectedDayOfWeek } = useMyChallengePageContext()
   const SELECTED_DATE = selectedDate
   const CURRENT_DATE_NUMBER = parseInt(SELECTED_DATE.replace(/-/g, ""))
 

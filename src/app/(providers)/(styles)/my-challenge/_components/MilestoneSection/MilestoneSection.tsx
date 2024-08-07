@@ -19,7 +19,9 @@ import Button from "@/components/Button"
 import ArrowDownIcon from "@/components/Icon/ArrowDownIcon"
 
 import { StructuredMilestoneType } from "../../../../../../../types/supabase.type"
-import { MyChallengePageContext } from "../../context"
+import useMyChallengePageContext, {
+  MyChallengePageContext,
+} from "../../context"
 import DiarySection from "../DiarySection"
 import ProgressBar from "../ProgressBar"
 import RoutineCheckBox from "../RoutineCheckBox"
@@ -62,7 +64,7 @@ function MilestoneSection({
     queryFn: GETroutineDone,
   })
 
-  const { todayDate } = useContext(MyChallengePageContext)
+  const { todayDate } = useMyChallengePageContext()
 
   useEffect(() => {
     // 오늘에 대한 RDD가 없다면 하나 새로 생성해주는 함수 실행
