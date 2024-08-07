@@ -82,7 +82,11 @@ const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
           }`}
         >
           <button onClick={handleCloseModal}>
-            <CloseIcon02 className="absolute right-[15px] top-[15px]" />
+            <CloseIcon02
+              width={12}
+              height={12}
+              className="absolute right-[15px] top-[15px]"
+            />
           </button>
 
           <div className="flex flex-col items-center justify-center">

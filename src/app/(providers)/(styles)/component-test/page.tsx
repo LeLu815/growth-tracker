@@ -7,6 +7,7 @@ import { useToast } from "@/context/toast.context"
 import Button from "@/components/Button"
 import ChallengeCard from "@/components/ChallengeCard"
 import Chip from "@/components/Chip"
+import CheckIcon from "@/components/Icon/CheckIcon"
 import Input from "@/components/Input"
 import Page from "@/components/Page"
 
@@ -140,6 +141,8 @@ function ComponentTestPage() {
 
       <Input label="인풋테스트" required />
       <Input label="인풋테스트" />
+
+      <CheckIcon />
       {/*<ChallengeCommentCreate />*/}
       <div className="h-[100px]"></div>
 
