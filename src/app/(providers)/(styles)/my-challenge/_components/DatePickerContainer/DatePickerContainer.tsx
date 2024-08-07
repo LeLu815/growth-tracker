@@ -17,7 +17,9 @@ import { Swiper, SwiperSlide } from "swiper/react"
 // Import Swiper styles and navigations
 import "swiper/css"
 
-import { MyChallengePageContext } from "../../context"
+import useMyChallengePageContext, {
+  MyChallengePageContext,
+} from "../../context"
 
 function DatePickerContainer({}) {
   const TODAY = startOfDay(new Date())
@@ -29,7 +31,7 @@ function DatePickerContainer({}) {
     selectedDayOfWeek,
     setSelectedDayOfWeek,
     todayDate: today,
-  } = useContext(MyChallengePageContext)
+  } = useMyChallengePageContext()
   const swiperRef = useRef<any>(null)
 
   const allDates = eachDayOfInterval({

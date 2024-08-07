@@ -21,16 +21,17 @@ function MyChallengePage() {
   const [selectedDayOfWeek, setSelectedDayOfWeek] =
     useState<string>(TODAY_DAY_OF_WEEK)
 
+  // context 초기값 설정
+  const contextValue = {
+    todayDate: TODAY,
+    selectedDate,
+    setSelectedDate,
+    selectedDayOfWeek,
+    setSelectedDayOfWeek,
+  }
+
   return (
-    <MyChallengePageContext.Provider
-      value={{
-        selectedDate,
-        setSelectedDate,
-        selectedDayOfWeek,
-        setSelectedDayOfWeek,
-        todayDate: TODAY,
-      }}
-    >
+    <MyChallengePageContext.Provider value={contextValue}>
       <Page>
         <Box>
           <h1 className="mb-8 ml-2 text-[20px] font-bold">내 챌린지</h1>
