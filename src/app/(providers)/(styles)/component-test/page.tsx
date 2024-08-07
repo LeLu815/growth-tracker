@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useToast } from "@/context/toast.context"
 
 import Button from "@/components/Button"
 import ChallengeCard from "@/components/ChallengeCard"
@@ -13,6 +14,12 @@ function ComponentTestPage() {
 
   const handleClick = () => {
     setIsSelected(!isSelected)
+  }
+
+  const { showToast } = useToast()
+
+  const handleToastClick = () => {
+    showToast("토스트 테스트 해보자~")
   }
 
   return (
@@ -115,6 +122,11 @@ function ComponentTestPage() {
         bookmarked={false}
         challengeImage="/icon/ic-arrow-right.svg"
       />
+
+      <h4>토스트 테스트</h4>
+      <div>
+        <button onClick={handleToastClick}>토스트 나와</button>
+      </div>
 
       <Input label="인풋테스트" required />
       <Input label="인풋테스트" />

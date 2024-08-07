@@ -40,11 +40,11 @@ function ChallengeCard({
         <div className="mr-4 flex w-1/4 min-w-[98px] flex-col">
           <div
             className="align-start relative mb-2 flex h-full w-full flex-col items-start justify-between rounded-lg bg-gray-200"
-            style={{
-              backgroundImage: `url(${challengeImage})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
+            // style={{
+            //   backgroundImage: `url(${challengeImage})`,
+            //   backgroundSize: "cover",
+            //   backgroundPosition: "center",
+            // }}
           >
             {/* 인기 챌린지 기준 미정의로 인해 일단 주석 처리~~ */}
             {/* <div className="absolute bottom-2 left-2 right-2 flex items-center gap-[3px] rounded-[30px] bg-orange-500 px-2 py-1 text-xs text-white">
