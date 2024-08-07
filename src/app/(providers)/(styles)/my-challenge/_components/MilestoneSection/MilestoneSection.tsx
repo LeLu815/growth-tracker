@@ -5,6 +5,7 @@ import React, { PropsWithChildren, useEffect, useState } from "react"
 import { POSTnewRoutineDoneDaily } from "@/api/supabase/routineDoneDaily"
 import { useModal } from "@/context/modal.context"
 import queryClient from "@/query/queryClient"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { v4 } from "uuid"
 
 import Button from "@/components/Button"
@@ -75,17 +76,32 @@ function MilestoneSection({
   })
 
   useEffect(() => {
-    // 오늘에 대한 RDD가 없다면 하나 새로 생성해주는 함수 실행
-    initializeRDD()
-  }, [selectedDate])
-
-  useEffect(() => {
     setIsVisible(false)
+    initializeRDD()
   }, [selectedDate])
 
   // 선택된 일자의 요일이 해당 마일스톤의 실행 요일인지 확인
   const checkMilestoneDayOfWeek = milestoneDoDays.find((milestoneDoDay) => {
     return milestoneDoDay == selectedDayOfWeek
+  })
+
+  const queryClient = useQueryClient()
+
+  const postRDDmutation = useMutation({
+    mutationFn: async (newId: string) =>
+      POSTnewRoutineDoneDaily({
+        challengeId,
+        milestoneId: milestone.id,
+        userId,
+        createdAt: selectedDate,
+        routineDoneId: newId,
+        isSuccess: false,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["fetchCurrentUserRoutineDoneDaily"],
+      })
+    },
   })
 
   // 오늘에 대한 RDD가 없다면 하나 새로 생성해주는 함수
@@ -95,17 +111,7 @@ function MilestoneSection({
     if (checkMilestoneDayOfWeek && !targetRDD) {
       const newId = v4()
 
-      POSTnewRoutineDoneDaily({
-        challengeId,
-        milestoneId: milestone.id,
-        userId,
-        createdAt: selectedDate,
-        routineDoneId: newId,
-        isSuccess: false,
-      })
-      queryClient.invalidateQueries({
-        queryKey: ["fetchCurrentUserRoutineDoneDaily"],
-      })
+      postRDDmutation.mutate(newId)
 
       setTargetRDDId(newId)
     }
