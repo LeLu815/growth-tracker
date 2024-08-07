@@ -41,12 +41,15 @@ export type ChallengeType = {
 export type ChallengeCommentType = {
   user_id: string
   content: string
+  total_cnt: number
+  like_cnt: number
   is_like: boolean
   email: string
   rows: number
   nickname: string
   profile_image_url: string
   id: string
+  created_at: string
 }
 
 export type ChallengeCommentPageType = {

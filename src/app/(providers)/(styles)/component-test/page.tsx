@@ -118,7 +118,7 @@ function ComponentTestPage() {
 
       <Input label="인풋테스트" required />
       <Input label="인풋테스트" />
-      {/*<BottomBar />*/}
+      {/*<ChallengeCommentCreate />*/}
       <div className="h-[100px]"></div>
     </Page>
   )
