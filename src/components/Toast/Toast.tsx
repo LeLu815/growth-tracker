@@ -41,7 +41,7 @@ function Toast({ content, duration = 3000, onClose }: ToastProps) {
       }}
       unmountOnExit
     >
-      <div className="fixed bottom-10 left-1/2 -translate-x-1/2 transform rounded bg-black/80 px-8 py-6 text-white">
+      <div className="fixed bottom-80 left-1/2 w-[calc(100%-40px)] -translate-x-1/2 transform rounded bg-black/80 px-8 py-6 text-center text-white">
         {content}
       </div>
     </CSSTransition>
