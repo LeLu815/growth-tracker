@@ -64,21 +64,13 @@ function DatePickerContainer({}) {
   }
 
   const getDateStyle = (date: string) => {
-    if (date === todayDate) {
-      if (date === selectedDate) {
-        return "bg-teal-500 text-white"
-      }
-      return "bg-orange-500 text-white" // 오늘 날짜는 주황색 배경
-    } else if (date < todayDate) {
-      if (date === selectedDate) {
-        return "bg-teal-500 text-white"
-      }
-      return "bg-neutral-700 text-white" // 오늘 이전 날짜는 진한 회색 배경
+    if (date === selectedDate) {
+      return "bg-[#FC5A6B] text-white"
     } else {
-      if (date === selectedDate) {
-        return "bg-teal-500 text-white"
+      if (date === todayDate) {
+        return "border-solid border-[1px] border-[#FC5A6B] text-[#FF5B0A]"
       }
-      return "bg-gray-300 text-black" // 오늘 이후 날짜는 연한 회색 배경
+      return "text-black" // 나머지 날짜는 모두 연한 회색 배경
     }
   }
 
@@ -93,18 +85,18 @@ function DatePickerContainer({}) {
         className="flex cursor-pointer flex-col items-center justify-center"
       >
         <p
-          className={`mb-3 text-center ${
+          className={`mb-3 text-center text-[12px] font-[500] leading-[135%] ${
             selectedDate &&
             format(startOfDay(day), "yyyy-MM-dd", { locale: ko }) ===
               selectedDate
-              ? "text-[#171717]"
-              : "text-[#DDDDDD]"
+              ? "text-[#949494]"
+              : "text-[#949494]"
           }`}
         >
           {format(day, "EEE", { locale: ko })}
         </p>
         <p
-          className={`mx-auto flex h-[34px] w-[34px] items-center justify-center rounded-full text-center text-white ${getDateStyle(
+          className={`mx-auto flex h-[34px] w-[34px] items-center justify-center rounded-full text-center ${getDateStyle(
             format(startOfDay(day), "yyyy-MM-dd", { locale: ko })
           )}`}
         >
@@ -116,7 +108,7 @@ function DatePickerContainer({}) {
 
   return (
     <div className="mt-6 w-full">
-      <p className="mb-4 w-full text-center text-[18px] font-bold">
+      <p className="mb-4 w-full text-center text-[18px] font-[700] leading-[134%]">
         {visibleMonth.replace("-", ". ")}
       </p>
       <Swiper

@@ -140,7 +140,7 @@ function MilestoneSection({
                 </p>
               ) : (
                 <p
-                  className={`w-max rounded-[30px] px-[8px] py-[4px] text-center text-[12px] leading-[135%] text-white ${targetRDD?.is_success ? "bg-[#FF7D3D]" : "bg-[#FF7D3D]"}`}
+                  className={`w-max rounded-[30px] px-[8px] py-[4px] text-center text-[12px] leading-[135%] text-white ${targetRDD?.is_success ? "bg-[#82D0DC]" : "bg-[#82D0DC]"}`}
                 >
                   {targetRDD?.is_success ? "루틴 완료" : "루틴 실행중"}
                 </p>
