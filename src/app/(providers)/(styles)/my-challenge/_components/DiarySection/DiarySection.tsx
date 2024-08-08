@@ -18,6 +18,7 @@ interface DiarySectionProps {
   routineDoneDailyId: string
   handleClickConfirm?: () => void
   selectedDate: string
+  isDiaryToday: boolean
 }
 
 function DiarySection({
@@ -25,9 +26,10 @@ function DiarySection({
   routineDoneDailyId,
   handleClickConfirm,
   selectedDate,
+  isDiaryToday,
 }: PropsWithChildren<DiarySectionProps>) {
   const [inputText, setInputText] = useState("")
-
+  const [diaryReadOnly, setDiaryReadOnly] = useState(!isDiaryToday)
   const {
     data: currentDiary,
     isPending: diaryPending,
@@ -92,14 +94,19 @@ function DiarySection({
           className="h-[150px] w-full resize-none rounded-lg border-[1.5px] border-solid border-[#CBC9CF] bg-[#FAFAFA] px-2 py-2"
           onChange={(event) => setInputText(event.target.value)}
           defaultValue={currentDiary[0]?.content || ""}
+          readOnly={diaryReadOnly}
         />
         <div className="mt-5 flex w-full">
-          <Button onClick={handleDiarySubmit}>
-            {currentDiary[0] ? "수정하기" : "저장하기"}
-          </Button>
           <Button intent="secondary" onClick={handleClickConfirm}>
             취소
-          </Button>
+          </Button>{" "}
+          {isDiaryToday ? (
+            <Button onClick={handleDiarySubmit}>
+              {currentDiary[0] ? "수정 완료" : "작성 완료"}
+            </Button>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>

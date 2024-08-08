@@ -128,7 +128,6 @@ function ChallengeList() {
           )
         })
       } else {
-        console.log("응애")
         return (
           <div className="mt-10 flex flex-col items-center justify-center">
             <NoChallengeFlagsIcon />

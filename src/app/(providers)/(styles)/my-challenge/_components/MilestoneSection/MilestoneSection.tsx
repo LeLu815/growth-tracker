@@ -43,8 +43,6 @@ function MilestoneSection({
       (1000 * 60 * 60 * 24) +
     1
 
-  console.log(leftDays)
-
   const [targetRDDId, setTargetRDDId] = useState(
     currentUserRoutineDoneDaily.find((item) => {
       return (
@@ -57,11 +55,12 @@ function MilestoneSection({
 
   const modal = useModal()
 
-  const handleRoutineCompleteButtonClick = () => {
+  const handleRoutineCompleteButtonClick = (isTodayDiary: boolean) => {
     modal.open({
       type: "custom",
       children: (
         <DiarySection
+          isDiaryToday={isTodayDiary}
           selectedDate={selectedDate}
           challengeId={challengeId}
           routineDoneDailyId={targetRDDId}
@@ -196,12 +195,14 @@ function MilestoneSection({
             }
           })}
           <Button
-            intent={todayDate == selectedDate ? "primary" : "secondary"}
+            intent={todayDate == selectedDate ? "primary" : "primary"}
             size={"lg"}
             className="mt-3 text-sm"
-            onClick={handleRoutineCompleteButtonClick}
+            onClick={() =>
+              handleRoutineCompleteButtonClick(todayDate == selectedDate)
+            }
           >
-            {"회고 확인하기"}
+            {selectedDate == todayDate ? "하루 일기 쓰기" : "오늘의 일기"}
           </Button>
         </div>
       )}
