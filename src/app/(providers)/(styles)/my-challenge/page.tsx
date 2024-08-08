@@ -13,8 +13,8 @@ function MyChallengePage() {
         <h1 className="mb-8 ml-2 text-[20px] font-bold">내 챌린지</h1>
 
         <MyChallengeNavBar />
-        <InfiniteDateScroll />
-        {/* <DatePickerContainer /> */}
+        {/* <InfiniteDateScroll /> */}
+        <DatePickerContainer />
         <ChallengeList />
       </Box>
     </Page>

@@ -1,34 +1,41 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
-import React, { useEffect, useRef } from "react"
-import { eachDayOfInterval, format, startOfDay, subMonths } from "date-fns"
+import React, { useCallback, useEffect, useRef, useState } from "react"
+import {
+  addMonths,
+  eachDayOfInterval,
+  format,
+  startOfDay,
+  subMonths,
+} from "date-fns"
 import { ko } from "date-fns/locale"
 import { Mousewheel, Navigation } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 
-// Import Swiper styles and navigations
 import "swiper/css"
 
 import useMyChallengePageContext from "../../context"
 
 function DatePickerContainer({}) {
   const TODAY = startOfDay(new Date())
-  const THREE_MONTHS_AGO = startOfDay(subMonths(TODAY, 3))
+  const INITIAL_START_DATE = startOfDay(subMonths(TODAY, 12))
+  const INITIAL_END_DATE = startOfDay(addMonths(TODAY, 12))
 
-  const {
-    selectedDate,
-    setSelectedDate,
-    setSelectedDayOfWeek,
-    todayDate: today,
-  } = useMyChallengePageContext()
+  const { selectedDate, setSelectedDate, setSelectedDayOfWeek, todayDate } =
+    useMyChallengePageContext()
+
   const swiperRef = useRef<any>(null)
-
   const allDates = eachDayOfInterval({
-    start: THREE_MONTHS_AGO,
-    end: TODAY,
+    start: INITIAL_START_DATE,
+    end: INITIAL_END_DATE,
   })
-  // swiper의 포커스가 가장 마지막(오늘날짜)로 설정되도록 해주는 useEffect
+
+  const [visibleMonth, setVisibleMonth] = useState(
+    format(TODAY, "yyyy-MM", { locale: ko })
+  )
+
+  // selectedDate가 위치한 곳으로 자동으로 slide되도록 해줌
   useEffect(() => {
     if (swiperRef.current && selectedDate) {
       const selectedDateIndex = allDates.findIndex(
@@ -37,12 +44,44 @@ function DatePickerContainer({}) {
           selectedDate
       )
       if (selectedDateIndex >= 0) {
-        swiperRef.current.swiper.slideTo(Math.floor(selectedDateIndex))
+        swiperRef.current.swiper.slideTo(selectedDateIndex)
       }
     }
   }, [selectedDate])
 
-  // swiper 각 요소 생성해주는 함수
+  const handleSlideChange = () => {
+    const swiper = swiperRef.current.swiper
+
+    updateVisibleMonth(swiper.activeIndex)
+  }
+
+  const updateVisibleMonth = (index: number) => {
+    const firstVisibleDate = allDates[index]
+    const lastVisibleDate = allDates[Math.min(index + 6, allDates.length - 1)]
+    const firstMonth = format(firstVisibleDate, "yyyy-MM", { locale: ko })
+    const lastMonth = format(lastVisibleDate, "yyyy-MM", { locale: ko })
+    setVisibleMonth(lastMonth > firstMonth ? lastMonth : firstMonth)
+  }
+
+  const getDateStyle = (date: string) => {
+    if (date === todayDate) {
+      if (date === selectedDate) {
+        return "bg-teal-500 text-white"
+      }
+      return "bg-orange-500 text-white" // 오늘 날짜는 주황색 배경
+    } else if (date < todayDate) {
+      if (date === selectedDate) {
+        return "bg-teal-500 text-white"
+      }
+      return "bg-neutral-700 text-white" // 오늘 이전 날짜는 진한 회색 배경
+    } else {
+      if (date === selectedDate) {
+        return "bg-teal-500 text-white"
+      }
+      return "bg-gray-300 text-black" // 오늘 이후 날짜는 연한 회색 배경
+    }
+  }
+
   const renderAllDatesSwiperSlides = () => {
     return allDates.map((day, index) => (
       <SwiperSlide
@@ -65,13 +104,9 @@ function DatePickerContainer({}) {
           {format(day, "EEE", { locale: ko })}
         </p>
         <p
-          className={`mx-auto flex h-[34px] w-[34px] items-center justify-center rounded-full text-center text-white ${
-            selectedDate &&
-            format(startOfDay(day), "yyyy-MM-dd", { locale: ko }) ===
-              selectedDate
-              ? "bg-[#FF7D3D]"
-              : "bg-[#717171]"
-          }`}
+          className={`mx-auto flex h-[34px] w-[34px] items-center justify-center rounded-full text-center text-white ${getDateStyle(
+            format(startOfDay(day), "yyyy-MM-dd", { locale: ko })
+          )}`}
         >
           {format(day, "dd", { locale: ko })}
         </p>
@@ -82,38 +117,16 @@ function DatePickerContainer({}) {
   return (
     <div className="mt-6 w-full">
       <p className="mb-4 w-full text-center text-[18px] font-bold">
-        {selectedDate.slice(0, 4)}. {selectedDate.slice(5, 7)}
+        {visibleMonth.replace("-", ". ")}
       </p>
-      {/* <div className="mb-4 flex justify-between">
-        <button className="swiper-button-prev cursor-pointer rounded-full bg-gray-300 px-4 py-2">
-          <p className="text-xl font-black">{"<<"}</p>
-        </button>
-        <button
-          className="cursor-pointer rounded-full bg-gray-300 px-4 py-2"
-          onClick={() => {
-            setSelectedDate(
-              format(startOfDay(TODAY), "yyyy-MM-dd", { locale: ko })
-            )
-          }}
-        >
-          <p className="text-xl font-black">오늘</p>
-        </button>
-        <button className="swiper-button-next cursor-pointer rounded-full bg-gray-300 px-4 py-2">
-          <p className="text-xl font-black">{">>"}</p>
-        </button>
-      </div> */}
       <Swiper
         slidesPerView={7}
         spaceBetween={0}
         slidesPerGroup={7}
         mousewheel={true}
-        // navigation={{
-        //   nextEl: ".swiper-button-next",
-        //   prevEl: ".swiper-button-prev",
-        // }}
         modules={[Mousewheel, Navigation]}
         ref={swiperRef}
-        // className="flex justify-between"
+        onSlideChange={handleSlideChange}
       >
         {renderAllDatesSwiperSlides()}
       </Swiper>

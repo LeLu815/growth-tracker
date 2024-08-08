@@ -108,10 +108,19 @@ const InfiniteDateScroll = () => {
   const getDateStyle = (date: Date) => {
     const today = startOfDay(new Date())
     if (date.getTime() === today.getTime()) {
+      if (date.getTime() === currDate.getTime()) {
+        return "bg-teal-500 text-white"
+      }
       return "bg-orange-500 text-white" // 오늘 날짜는 주황색 배경
     } else if (date.getTime() < today.getTime()) {
+      if (date.getTime() === currDate.getTime()) {
+        return "bg-teal-500 text-white"
+      }
       return "bg-neutral-700 text-white" // 오늘 이전 날짜는 진한 회색 배경
     } else {
+      if (date.getTime() === currDate.getTime()) {
+        return "bg-teal-500 text-white"
+      }
       return "bg-gray-300 text-black" // 오늘 이후 날짜는 연한 회색 배경
     }
   }
@@ -155,7 +164,6 @@ const InfiniteDateScroll = () => {
 
   useEffect(() => {
     setSelectedDate(format(startOfDay(currDate), "yyyy-MM-dd", { locale: ko }))
-    console.log("여기서 함수 실행", currDate)
   }, [currDate])
 
   const isScrolling = useRef<any>(null)
