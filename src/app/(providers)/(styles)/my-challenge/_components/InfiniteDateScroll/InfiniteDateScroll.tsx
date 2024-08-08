@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
 import { useEffect, useId, useRef, useState } from "react"
@@ -8,13 +9,22 @@ import {
   startOfDay,
   subDays,
 } from "date-fns"
+import { ko } from "date-fns/locale"
 import { produce } from "immer"
 import { useInView } from "react-intersection-observer"
 import { Element } from "react-scroll"
 
+import useMyChallengePageContext from "../../context"
 import { useSize } from "./useSize"
 
 const InfiniteDateScroll = () => {
+  const {
+    selectedDate,
+    setSelectedDate,
+    setSelectedDayOfWeek,
+    todayDate: today,
+  } = useMyChallengePageContext()
+
   // 현재 날짜 객체
   const [currDate, setCurrDate] = useState<Date>(new Date())
   // 상태
@@ -139,11 +149,15 @@ const InfiniteDateScroll = () => {
       if (closestElement) {
         // 오늘 날짜 설정
         setCurrDate(new Date(closestElement.id))
-        // 날짜 객체를 바탕으로 첼린지 데이터 불러오기
-        console.log("여기서 함수 실행", new Date(closestElement.id))
       }
     }
   }
+
+  useEffect(() => {
+    setSelectedDate(format(startOfDay(currDate), "yyyy-MM-dd", { locale: ko }))
+    console.log("여기서 함수 실행", currDate)
+  }, [currDate])
+
   const isScrolling = useRef<any>(null)
   const handleScroll: React.UIEventHandler<HTMLDivElement> = (e) => {
     clearTimeout(isScrolling.current)
@@ -189,35 +203,39 @@ const InfiniteDateScroll = () => {
 
   return (
     <>
-      <div className="text-center">{format(currDate, "yyyy.MM")}</div>
-      <div ref={indicatorRef} className="h-1 w-full"></div>
-      <div className="flex">
-        <div
-          id={containerId}
-          ref={containerRef}
-          className="w-full snap-x snap-mandatory overflow-x-scroll scrollbar-hide"
-          onScroll={handleScroll}
-        >
-          <div className="flex whitespace-nowrap" ref={overflowRef}>
-            <div ref={prevRef}>앞</div>
-            {dates.map((date, index) => (
-              <Element
-                id={`${date.toISOString()}`}
-                name={`${date.toISOString()}`}
-                key={format(date, "yyyy-MM-dd")}
-                className="inline-flex shrink-0 snap-center flex-col items-center gap-[4px]"
-                onClick={() => scrollToElement(index)}
-                style={{ marginRight: gap }}
-              >
-                <div className="text-[12px]">{getKoreanWeekday(date)}</div>
-                <div
-                  className={`flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full text-[12px] ${getDateStyle(date)}`}
+      <div className="mt-6 flex flex-1 flex-col">
+        <div className="mb-4 text-center text-[18px] font-bold">
+          {format(currDate, "yyyy.MM")}
+        </div>
+        <div ref={indicatorRef} className="h-1 w-full"></div>
+        <div className="flex">
+          <div
+            id={containerId}
+            ref={containerRef}
+            className="w-full snap-x snap-mandatory overflow-x-scroll scrollbar-hide"
+            onScroll={handleScroll}
+          >
+            <div className="flex whitespace-nowrap" ref={overflowRef}>
+              <div ref={prevRef}>앞</div>
+              {dates.map((date, index) => (
+                <Element
+                  id={`${date.toISOString()}`}
+                  name={`${date.toISOString()}`}
+                  key={format(date, "yyyy-MM-dd")}
+                  className="inline-flex shrink-0 snap-center flex-col items-center gap-[4px]"
+                  onClick={() => scrollToElement(index)}
+                  style={{ marginRight: gap }}
                 >
-                  {format(date, "dd")}
-                </div>
-              </Element>
-            ))}
-            <div ref={nextRef}>뒤</div>
+                  <div className="text-[12px]">{getKoreanWeekday(date)}</div>
+                  <div
+                    className={`flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full text-[12px] ${getDateStyle(date)}`}
+                  >
+                    {format(date, "dd")}
+                  </div>
+                </Element>
+              ))}
+              <div ref={nextRef}>뒤</div>
+            </div>
           </div>
         </div>
       </div>
