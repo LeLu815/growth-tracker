@@ -68,7 +68,7 @@ const InfiniteDateScroll = () => {
     const indicator = indicatorRef.current
     const overflow = overflowRef.current
     if (container && indicator && overflow) {
-      const element = overflow.children[index] as HTMLElement
+      const element = overflow.children[index + 1] as HTMLElement
       if (element) {
         const elementRect = element.getBoundingClientRect()
         const containerRect = container.getBoundingClientRect()
@@ -76,7 +76,20 @@ const InfiniteDateScroll = () => {
           elementRect.left -
           containerRect.left -
           (container.clientWidth / 2 - element.clientWidth / 2)
-        container.scrollBy({ left: centerOffset, behavior: "smooth" })
+
+        const resizedOffset = Math.abs(Math.floor(centerOffset))
+
+        if (+gap.split("px")[0] / 2 > resizedOffset) {
+          container.scrollBy({
+            left: 0,
+            behavior: "smooth",
+          })
+        } else {
+          container.scrollBy({
+            left: Math.floor(centerOffset),
+            behavior: "smooth",
+          })
+        }
       }
     }
   }
@@ -127,6 +140,7 @@ const InfiniteDateScroll = () => {
         // 오늘 날짜 설정
         setCurrDate(new Date(closestElement.id))
         // 날짜 객체를 바탕으로 첼린지 데이터 불러오기
+        console.log("여기서 함수 실행", new Date(closestElement.id))
       }
     }
   }
