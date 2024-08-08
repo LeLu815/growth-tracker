@@ -17,10 +17,10 @@ function ChallengePosts({ posts, onClickPost }: ChallengePostsProps) {
   return (
     <div className="pb-[80px]">
       <ul>
-        {posts.map((post) => {
+        {posts.map((post, index) => {
           return (
             <li
-              key={post.id}
+              key={`${post.id}-${index}`}
               onClick={() => onClickPost(post.id)}
               className="cursor-pointe mb-[20px]"
             >
