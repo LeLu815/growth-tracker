@@ -1,14 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useChallengeSearchStore } from "@/store/challengeSearch.store"
-import { useQuery } from "@tanstack/react-query"
+import { InfiniteData, QueryKey, useInfiniteQuery } from "@tanstack/react-query"
 
 import { fetchPosts } from "../_utils/fetchPosts"
 import { PostType } from "../../../../../../types/challenge"
 import CategorySelector from "./CategorySelector"
 import ChallengePosts from "./ChallengePosts"
+import SearchBar from "./SearchBar"
 import SortSelector from "./SortSelector"
 
 function NewsfeedClient() {
@@ -16,19 +17,43 @@ function NewsfeedClient() {
   const [userId, setUserId] = useState<string>("")
   const [category, setCategory] = useState<string>("전체")
   const [showCompleted, setShowCompleted] = useState<boolean>(false)
-  const { searchQuery } = useChallengeSearchStore()
+  const { searchQuery, setSearchQuery } = useChallengeSearchStore()
 
   const router = useRouter()
 
+  const loadMore = useRef<HTMLDivElement | null>(null)
+
   const {
-    data: posts = [],
+    data,
     error,
     refetch,
     isLoading,
-  } = useQuery<PostType[]>({
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery<
+    PostType[],
+    Error,
+    InfiniteData<PostType[]>,
+    QueryKey,
+    number
+  >({
     queryKey: ["posts", filter, category, searchQuery, showCompleted],
-    queryFn: () =>
-      fetchPosts(filter, category, searchQuery, userId, showCompleted),
+    queryFn: async ({ pageParam = 1 }) => {
+      return await fetchPosts(
+        filter,
+        category,
+        searchQuery,
+        userId,
+        showCompleted,
+        pageParam,
+        5
+      )
+    },
+    getNextPageParam: (lastPage, pages) => {
+      return lastPage.length === 5 ? pages.length + 1 : undefined
+    },
+    initialPageParam: 1,
   })
 
   const handlePostClick = (id: string) => {
@@ -49,13 +74,44 @@ function NewsfeedClient() {
     setShowCompleted(!showCompleted)
     refetch()
   }
+  const handleSearch = (query: string) => {
+    setSearchQuery(query)
+    refetch()
+  }
 
   if (error) {
     console.error("리스트 페칭 에러", error)
   }
 
+  useEffect(() => {
+    if (!loadMore.current) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage) {
+          fetchNextPage()
+        }
+      },
+      {
+        rootMargin: "0px",
+        threshold: 1.0,
+      }
+    )
+
+    observer.observe(loadMore.current)
+
+    return () => {
+      if (loadMore.current) {
+        observer.unobserve(loadMore.current)
+      }
+    }
+  }, [fetchNextPage, hasNextPage])
+
   return (
     <>
+      <div>
+        <SearchBar onSearch={handleSearch} />
+      </div>
       {/* 카테고리 */}
       <CategorySelector
         category={category}
@@ -74,7 +130,13 @@ function NewsfeedClient() {
       {isLoading ? (
         <div>로딩 중</div>
       ) : (
-        <ChallengePosts posts={posts} onClickPost={handlePostClick} />
+        <>
+          <ChallengePosts
+            posts={data?.pages.flat() || []}
+            onClickPost={handlePostClick}
+          />
+          <div ref={loadMore}>{isFetchingNextPage && <div> 로딩중</div>}</div>
+        </>
       )}
     </>
   )

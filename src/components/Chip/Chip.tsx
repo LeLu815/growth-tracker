@@ -1,10 +1,10 @@
 import { cva, VariantProps } from "class-variance-authority"
 
-const chipVariant = cva("border cursor-pointer text-black shadow-sm", {
+const chipVariant = cva("border cursor-pointer text-black shadow-1", {
   variants: {
     intent: {
       primary: "bg-[#D8D8D8] border-[#D8D8D8] text-black",
-      secondary: "bg-[#FF7D3D] border-[#FF7D3D] text-black",
+      secondary: "bg-primary border-primary text-black",
       third: "bg-blue-white border-black text-white",
     },
     size: {
@@ -15,7 +15,7 @@ const chipVariant = cva("border cursor-pointer text-black shadow-sm", {
     variant: {
       outline: "bg-white",
       contained: "text-white",
-      selected: "bg-[#FF7D3D] border-[#FF7D3D] text-white",
+      selected: "bg-primary border-primary text-white",
     },
   },
   compoundVariants: [
