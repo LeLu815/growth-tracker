@@ -1,22 +1,26 @@
 "use client"
 
+import { useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
+import { useToast } from "@/context/toast.context"
 import useChallengeDetailStore, {
   InitialDataType,
 } from "@/store/challengeDetail.store"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 
+import ArrowLeftIcon from "@/components/Icon/ArrowLeftIcon"
 import BookmarkIcon from "@/components/Icon/BookmarkIcon"
-import EmptyHart from "@/components/Icon/EmptyHart"
+import EmptyHartIcon from "@/components/Icon/EmptyHartIcon"
+import KebabMenuIcon from "@/components/Icon/KebabMenuIcon"
 import NoneProfile from "@/components/Icon/NoneProfile"
 import ChallengeLike from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeLike"
 import MilestoneList from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/MilestoneList"
 
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
-import ArrowLeftIcon from "@/components/Icon/ArrowLeftIcon";
 
 function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const modal = useModal()
@@ -24,6 +28,14 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const setChallengeDetail = useChallengeDetailStore(
     (state) => state.setChallengeDetail
   )
+  const { me } = useAuth()
+  const queryClient = useQueryClient()
+  const [isOpen, setIsOpen] = useState(false)
+  const { showToast } = useToast()
+
+  const handleDeleteChallengeToast = () => {
+    showToast("챌린지가 삭제되었습니다.")
+  }
 
   const getChallenge = async (): Promise<ChallengeType> => {
     const response = await axios
@@ -49,10 +61,30 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
     return response.data
   }
 
+  const handleDeleteChallenge = async () => {
+    const response = await axios
+      .delete(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/challenge/${challengeId}`
+      )
+      .then((response) => response.data)
+
+    queryClient.invalidateQueries({ queryKey: ["posts"] })
+    router.push("/newsfeed")
+    handleDeleteChallengeToast()
+  }
+
   const { data, isPending, isError } = useQuery<ChallengeType>({
     queryKey: ["challengeDetail"],
     queryFn: getChallenge,
   })
+
+  const confirmOpen = (message: string, ocConfirm: () => void) => {
+    modal.open({
+      type: "confirm",
+      content: message,
+      onConfirm: ocConfirm,
+    })
+  }
 
   if (isPending) return <div>Loading...</div>
   if (isError) return <div>Error loading data</div>
@@ -60,16 +92,50 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
   return (
     <div className={"flex flex-col"}>
       {/*이미지*/}
-      <div className={"ml-5 justify-start flex"}>
-        <ArrowLeftIcon className={"absolute mt-5 w-4 cursor-pointer"} onClick={router.back}/>
+      <div className={"ml-5 flex justify-start"}>
+        <ArrowLeftIcon
+          className={"absolute mt-5 w-4 cursor-pointer"}
+          onClick={router.back}
+        />
+        {me?.id === data.user_id && (
+          <div className="absolute right-0">
+            <KebabMenuIcon
+              onClick={() => setIsOpen((value) => !value)}
+              className={"cursor-pointer"}
+              width={30}
+              height={40}
+            ></KebabMenuIcon>
+            {isOpen && (
+              <div className="absolute right-3 top-8 flex w-[105px] flex-col items-center rounded-[4px] border border-gray-200 bg-white py-2 shadow-lg">
+                <div className="py-2">
+                  <button className="block w-full py-1 text-left text-black hover:bg-gray-200">
+                    수정하기
+                  </button>
+                </div>
+                <div className="py-2">
+                  <button
+                    className="block w-full py-1 text-left text-black hover:bg-gray-200"
+                    onClick={() =>
+                      confirmOpen(
+                        `삭제한 챌린지는 복구할 수 없어요. 삭제하시겠어요?`,
+                        handleDeleteChallenge
+                      )
+                    }
+                  >
+                    삭제하기
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
       <div
         className={"h-[235px] w-full flex-shrink-0 bg-[#EED697]"}
         style={{
           backgroundImage: "url('')",
         }}
-      >
-      </div>
+      ></div>
 
       {/* 상단 */}
       <div className="flex w-full flex-col items-start rounded-t-[12px] bg-white pt-5">
@@ -83,12 +149,12 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
 
             {/*개수*/}
             <div className="flex w-full items-center gap-[11px]">
-              <div className="mr-4 flex gap-1 text-gray-600">
-                <EmptyHart width={20} height={20} color={"gray"} />{" "}
-                {data.like_cnt}
+              <div className="flex gap-1 text-gray-600">
+                <EmptyHartIcon width={20} height={20} color={"black"} />
+                <div className={"pt-[2px]"}>{data.like_cnt}</div>
               </div>
               <div className="flex gap-1 text-gray-600">
-                <BookmarkIcon width={20} height={20} color={"gray"} />{" "}
+                <BookmarkIcon width={20} height={20} color={"gray"} />
                 {data.template_cnt}
               </div>
             </div>
@@ -114,7 +180,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
 
             <div className="font-suite text-[20px] font-bold leading-[135%] text-[#717171]">
               <p className="font-bold text-[#717171]">{data?.nickname}</p>
-              <div className="font-suite w-[195px] text-[12px] font-medium leading-[135%] text-[#717171]">
+              <div className="w-[195px] font-suite text-[12px] font-medium leading-[135%] text-[#717171]">
                 {data?.start_at} ~ {data?.end_at}{" "}
                 {convertStatusToKorean(data?.state)}
               </div>
@@ -133,16 +199,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
               챌린지 정보
             </div>
             <div className={"flex gap-9"}>
-              <div className="font-suite w-[70px] text-[14px] font-medium leading-[135%] text-[#474747]">
-                챌린지 이름
-              </div>
-              <div className="font-suite text-[14px] font-medium leading-[135%] text-[#141414]">
-                {data?.goal}
-              </div>
-            </div>
-
-            <div className={"flex gap-9"}>
-              <div className="font-suite w-[70px] text-[14px] font-medium leading-[135%] text-[#474747]">
+              <div className="w-[70px] font-suite text-[14px] font-medium leading-[135%] text-[#474747]">
                 구분
               </div>
               <div className="font-suite text-[14px] font-medium leading-[135%] text-[#141414]">
@@ -151,22 +208,13 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
             </div>
 
             <div className={"flex gap-9"}>
-              <div className="font-suite w-[70px] text-[14px] font-medium leading-[135%] text-[#474747]">
+              <div className="w-[70px] font-suite text-[14px] font-medium leading-[135%] text-[#474747]">
                 챌린지 기간
               </div>
               <div className="font-suite text-[14px] font-medium leading-[135%] text-[#141414]">
                 {data?.day_cnt}일
               </div>
             </div>
-
-            {/*<div className={"flex gap-9"}>*/}
-            {/*  <div className="font-suite text-[14px] w-[70px] font-medium leading-[135%] text-[#474747]">*/}
-            {/*    총 루틴 횟수*/}
-            {/*  </div>*/}
-            {/*  <div className="font-suite text-[14px] font-medium leading-[135%] text-[#141414]">*/}
-
-            {/*  </div>*/}
-            {/*</div>*/}
           </div>
         </div>
       </div>

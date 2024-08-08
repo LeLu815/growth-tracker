@@ -19,57 +19,65 @@ function MilestoneList({ milestones }: { milestones: MilestoneType[] }) {
   }
 
   return (
-    <div className={"flex w-full flex-col items-center gap-1"}>
+    <div className="mx-auto flex w-[335px] flex-col items-start gap-[12px]">
       {milestones?.map((milestone, index) => {
         const isOpen = openIndexes.includes(index)
         return (
           <div
             key={milestone.id}
-            className="mt-5 h-auto w-[375px] rounded-[5px] border-[1px] border-solid border-gray-200"
+            className="flex flex-col items-start gap-[10px] self-stretch rounded-[5px] border-[1px] border-solid border-[#E0E0E0] p-[14px_12px]"
           >
-            <button
-              className="flex w-full items-center justify-between p-4 text-left focus:outline-none"
-              onClick={() => toggleAccordion(index)}
-            >
-              <div className="text-[16px]">마일스톤{index + 1}</div>
-              <span className="text-2xl">
-                {isOpen ? (
-                  <ArrowDownIcon className="cursor-pointer" />
-                ) : (
-                  <ArrowUpIcon className="cursor-pointer" />
-                )}
-              </span>
-            </button>
-            <div className={"flex flex-col items-center gap-2 pb-5"}>
-              {isOpen && (
-                <div
-                  className={
-                    "mt-5 flex flex-col gap-1 text-[12px] text-[#939393]"
-                  }
+            <div className="flex flex-col items-start gap-[12px] self-stretch">
+              <div className="flex items-center justify-between self-stretch">
+                <div className="text-[16px] font-bold text-[#171717]">
+                  마일스톤{index + 1}
+                </div>
+                <button
+                  className="flex items-center justify-between p-4"
+                  onClick={() => toggleAccordion(index)}
                 >
-                  <div className="font-suite self-stretch text-[10px] font-medium leading-[135%] text-[#171717]">
-                    루틴 기간 {milestone.total_day}일
+                  <span className="text-2xl">
+                    {isOpen ? (
+                      <ArrowDownIcon className="cursor-pointer" />
+                    ) : (
+                      <ArrowUpIcon className="cursor-pointer" />
+                    )}
+                  </span>
+                </button>
+              </div>
+              {isOpen && (
+                <div className="flex w-[161px] flex-col items-start gap-[4px]">
+                  <div className="flex gap-[8px]">
+                    <div className={"text-[12px] font-medium text-[#171717]"}>
+                      루틴 기간
+                    </div>
+                    <div className={"text-[12px] font-medium text-[#FF7D3D]"}>
+                      {milestone.total_day}일
+                    </div>
                   </div>
-                  <div className="font-suite self-stretch text-[10px] font-medium leading-[135%] text-[#171717]">
-                    실천요일{" "}
-                    {milestone.weeks
-                      .map((week, index) => {
-                        return { value: week, key: numberToWeek(index) }
-                      })
-                      .filter((week) => week.value === "true")
-                      .map((week) => week.key)
-                      .join(",")}
-                  </div>
-                  <div className={"flex flex-col gap-2"}>
-                    {milestone.routines?.map((routine) => {
-                      return (
-                        <Routine key={routine.id} routine={routine}></Routine>
-                      )
-                    })}
+
+                  <div className={"flex gap-[8px]"}>
+                    <div className={"text-[12px] font-medium text-[#171717]"}>
+                      실천요일
+                    </div>
+                    <div className={"text-[12px] font-medium text-[#FF7D3D]"}>
+                      {milestone.weeks
+                        .map((week, index) => {
+                          return { value: week, key: numberToWeek(index) }
+                        })
+                        .filter((week) => week.value === "true")
+                        .map((week) => week.key)
+                        .join(",")}
+                    </div>
                   </div>
                 </div>
               )}
             </div>
+
+            {isOpen &&
+              milestone.routines?.map((routine) => {
+                return <Routine key={routine.id} routine={routine}></Routine>
+              })}
           </div>
         )
       })}

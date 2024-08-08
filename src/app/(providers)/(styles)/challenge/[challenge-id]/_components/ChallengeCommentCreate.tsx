@@ -11,6 +11,7 @@ import axios from "axios"
 import NoneProfile from "@/components/Icon/NoneProfile"
 
 import Button from "../../../../../../components/Button"
+import {useToast} from "@/context/toast.context";
 
 function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
   const router = useRouter()
@@ -20,6 +21,12 @@ function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
   const [content, setContent] = useState("")
   const [isFocused, setIsFocused] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  const { showToast } = useToast()
+
+  const handleCommentCreateToast = () => {
+    showToast("댓글을 작성했습니다.")
+  }
 
   /**
    * 댓글 생성
@@ -56,6 +63,7 @@ function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
       alertOpen("댓글 작성에 실패했습니다.")
       throw new Error(response.error)
     }
+    handleCommentCreateToast();
     queryClient.invalidateQueries({ queryKey: ["challengeComment"] })
   }
 
@@ -82,16 +90,16 @@ function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-20 w-full">
-      <div className="flex items-center gap-[9px] self-stretch bg-white px-[20px] py-[10px]">
-        <div className="mt-5 h-12 w-12 overflow-hidden rounded-full">
+    <div className="fixed bottom-0 left-0 right-0 w-full">
+      <div className="flex gap-[9px] bg-white px-[20px] py-[10px]">
+        <div className="relative h-[50px] w-[60px] overflow-hidden rounded-full">
           {userData?.profile_image_url ? (
             <Image
-              src={userData?.profile_image_url!}
-              width={50}
-              height={50}
-              className={"object-cover"}
-              alt={"프로필이미지"}
+              fill
+              className="object-cover"
+              alt="프로필사진"
+              src={userData.profile_image_url
+            }
             />
           ) : (
             <NoneProfile width={50} height={50} />

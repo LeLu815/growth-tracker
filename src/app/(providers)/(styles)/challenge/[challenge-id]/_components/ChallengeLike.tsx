@@ -6,8 +6,8 @@ import useChallengeDetailStore from "@/store/challengeDetail.store"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 
-import EmptyHart from "@/components/Icon/EmptyHart"
-import RedHart from "@/components/Icon/RedHart"
+import EmptyHartIcon from "@/components/Icon/EmptyHartIcon"
+import RedHartIcon from "@/components/Icon/RedHartIcon"
 
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
 
@@ -170,13 +170,13 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
         onClick={handleClick}
       >
         {isLiked ? (
-          <RedHart
+          <RedHartIcon
             width={32}
             height={32}
             color={isLiked ? "#e1e1e1" : "#D9D9D9"}
           />
         ) : (
-          <EmptyHart
+          <EmptyHartIcon
             width={32}
             height={32}
             color={isLiked ? "#e1e1e1" : "#D9D9D9"}
