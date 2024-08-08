@@ -29,7 +29,7 @@ const Header = () => {
 
   switch (headerType) {
     case "feed":
-      return <SelectedHeader onSearch={setSearchQuery} />
+      return <SelectedHeader />
 
     default:
       return <SelectedHeader />
