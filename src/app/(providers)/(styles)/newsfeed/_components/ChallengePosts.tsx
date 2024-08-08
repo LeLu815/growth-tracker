@@ -15,7 +15,7 @@ function ChallengePosts({ posts, onClickPost }: ChallengePostsProps) {
   const { me } = useAuth()
 
   return (
-    <div>
+    <div className="pb-[80px]">
       <ul>
         {posts.map((post) => {
           return (
