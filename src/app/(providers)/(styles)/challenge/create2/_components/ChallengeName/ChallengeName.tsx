@@ -1,8 +1,11 @@
+"use client"
+
 import { useState } from "react"
 import useChallengeCreateStore from "@/store/challengeCreate.store"
 
 import Box from "@/components/Box"
 import Button from "@/components/Button"
+import ResetIcon from "@/components/Icon/ResetIcon"
 import Input from "@/components/Input"
 import Page from "@/components/Page"
 
@@ -21,7 +24,9 @@ function ChallengeName({
   challenge_title = "",
 }: ChallengeNameProps) {
   const [inputValue, setInputValue] = useState<string>(challenge_title)
-  const { setGoal } = useChallengeCreateStore()
+  const { setGoal, setRandomImgUrl } = useChallengeCreateStore()
+
+  const handleClickRandomImgBtn = () => {}
   return (
     <>
       <ChallengePageTitle
@@ -33,10 +38,23 @@ function ChallengeName({
       />
       <Page>
         <Box>
-          <SubTitle className="justify-center">
-            챌린지 명을 입력해주세요.
-          </SubTitle>
-          <div className="h-[40px]"></div>
+          <SubTitle className="justify-center">무엇을 목표로 하나요?</SubTitle>
+          <div className="h-[32px]" />
+          <div className="flex flex-col items-center gap-[12px]">
+            <div className="h-[156px] w-[156px] overflow-hidden rounded-[12px]"></div>
+            <Button
+              intent="secondary"
+              variant="rounded"
+              onClick={() => {
+                handleClickRandomImgBtn()
+              }}
+            >
+              <div className="flex items-center justify-center gap-1">
+                <ResetIcon />
+                랜덤 이미지 변경
+              </div>
+            </Button>
+          </div>
           <Input
             label={"챌린지 명"}
             onChange={(e) => setInputValue(e.target.value)}

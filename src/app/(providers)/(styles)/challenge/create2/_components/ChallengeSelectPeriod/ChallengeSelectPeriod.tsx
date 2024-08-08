@@ -44,7 +44,7 @@ function ChallengeSelectPeriod({
                 시작일
               </p>
               <p className="text-[16px] font-[700] text-[#1D1D1D]">
-                {formatDateRange(range).start}
+                {formatDateRange(range).start || "- 월 - 일"}
               </p>
             </div>
             <div className="flex flex-col gap-[12px]">
@@ -52,7 +52,7 @@ function ChallengeSelectPeriod({
                 완료일
               </p>
               <p className="text-[16px] font-[700] text-[#1D1D1D]">
-                {formatDateRange(range).end}
+                {formatDateRange(range).end || "- 월 - 일"}
               </p>
             </div>
           </div>

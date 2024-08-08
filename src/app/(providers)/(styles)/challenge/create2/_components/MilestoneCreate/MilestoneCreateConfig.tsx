@@ -226,7 +226,7 @@ function MilestoneCreateConfig({
               </li>
             ))}
           </ul>
-          <ul className="my-[20px] flex h-[36px] justify-end gap-[4px]">
+          <ul className="my-[20px] flex h-[40px] justify-between">
             {WEEK_DAY_LIST.map((value, index) => (
               <li key={value} onClick={() => handleClickDay(index)}>
                 <DaysItem isSelected={selectWeeks[index]}>{value}</DaysItem>
