@@ -45,7 +45,9 @@ export const PUT = async (
         (_, index) => `$${index + 1}`
       )
       await pgClient.query(
-        `DELETE FROM milestone WHERE id IN (${deletCountNum.join(", ")})`,
+        `DELETE
+           FROM milestone
+           WHERE id IN (${deletCountNum.join(", ")})`,
         milestoneDeleteList
       )
     }
@@ -166,4 +168,30 @@ export async function GET(
   }
 
   return NextResponse.json({ status: 200, data: data[0], error: null })
+}
+
+export async function DELETE(
+  req: NextRequest,
+  {
+    params,
+  }: {
+    params: {
+      "challenge-id": string
+    }
+  }
+) {
+  const challengeId = params["challenge-id"]
+
+  const supabase = createClient()
+
+  const { error } = await supabase
+    .from("challenge")
+    .delete()
+    .eq("id", challengeId)
+
+  if (error) {
+    return NextResponse.json({ status: 500, error: error.message })
+  }
+
+  return NextResponse.json({ status: 200, error: null })
 }
