@@ -2,7 +2,7 @@ import { SVGProps } from "react"
 
 import Icon from "./Icon"
 
-const EmptyHart = (props: SVGProps<SVGSVGElement> & { color?: string }) => (
+const EmptyHartIcon = (props: SVGProps<SVGSVGElement> & { color?: string }) => (
   <Icon
     {...props}
     width={props.width}
@@ -18,4 +18,4 @@ const EmptyHart = (props: SVGProps<SVGSVGElement> & { color?: string }) => (
   </Icon>
 )
 
-export default EmptyHart
+export default EmptyHartIcon
