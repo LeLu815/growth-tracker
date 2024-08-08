@@ -38,6 +38,13 @@ function MilestoneSection({
     currentUserRoutineDoneDaily,
   } = useMyChallengePageContext()
 
+  const leftDays =
+    (new Date(milestone.end_at).getTime() - new Date(selectedDate).getTime()) /
+      (1000 * 60 * 60 * 24) +
+    1
+
+  console.log(leftDays)
+
   const [targetRDDId, setTargetRDDId] = useState(
     currentUserRoutineDoneDaily.find((item) => {
       return (
@@ -133,11 +140,11 @@ function MilestoneSection({
                   루틴 없음
                 </p>
               ) : (
-                <div
-                  className={`w-[77px] rounded-2xl px-2 py-2 text-center text-[11px] text-white ${targetRDD?.is_success ? "bg-[#4CD964]" : "bg-red-300"}`}
+                <p
+                  className={`w-max rounded-[30px] px-[8px] py-[4px] text-center text-[12px] leading-[135%] text-white ${targetRDD?.is_success ? "bg-[#FF7D3D]" : "bg-[#FF7D3D]"}`}
                 >
-                  {targetRDD?.is_success ? "루틴 완료" : "루틴 미완료"}
-                </div>
+                  {targetRDD?.is_success ? "루틴 완료" : "루틴 실행중"}
+                </p>
               )}
               <h3 className="mt-2 text-[16px] font-bold">{challengeGoal}</h3>
             </div>
@@ -156,6 +163,7 @@ function MilestoneSection({
               <></>
             ) : (
               <ProgressBar
+                leftDays={leftDays}
                 routineDoneDailyId={targetRDDId}
                 routines={milestone.routines}
               />

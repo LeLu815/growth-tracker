@@ -1,5 +1,8 @@
 "use client"
 
+import Button from "@/components/Button"
+import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
+
 import {
   StructuredChallengeType,
   StructuredMilestoneType,
@@ -12,8 +15,9 @@ function ChallengeList() {
   // console.log("리렌더링")
 
   const {
+    todayDate,
     selectedDate,
-
+    setSelectedDate,
     challengeDataError,
     challengeDataPending,
     structuredChallengeData,
@@ -97,7 +101,7 @@ function ChallengeList() {
     // 챌린지 생성하는데 필요한 세부 데이터 구성하고 이를 기반으로
     // 챌린지를 화면에 표시해주는 함수
     const displayEachChallengeItem = () => {
-      return structuredChallengeData?.map((challenge) => {
+      const onDateChallenges = structuredChallengeData.filter((challenge) => {
         const challengeStartDate = parseInt(
           challenge.start_at?.replace(/-/g, "") || "0"
         )
@@ -108,6 +112,12 @@ function ChallengeList() {
           CURRENT_DATE_NUMBER >= challengeStartDate &&
           CURRENT_DATE_NUMBER <= challengeEndDate
         ) {
+          return true
+        }
+      })
+
+      if (onDateChallenges.length > 0) {
+        return onDateChallenges.map((challenge) => {
           return (
             <div
               key={challenge.goal}
@@ -116,18 +126,36 @@ function ChallengeList() {
               {displayTargetMilestoneItem(challenge)}
             </div>
           )
-        }
-      })
+        })
+      } else {
+        console.log("응애")
+        return (
+          <div className="mt-10 flex flex-col items-center justify-center">
+            <NoChallengeFlagsIcon />
+            <p className="mt-3 text-[20px] font-bold">
+              진행 중인 챌린지가 없어요
+            </p>
+          </div>
+        )
+      }
     }
 
     return (
       <div className="mt-10 flex w-full flex-col gap-y-4">
-        <p className="font-suite text-[18px] font-bold text-[#333333]">
-          현재 진행중인 루틴
-        </p>
+        <div className="flex flex-row items-center justify-between">
+          <p className="font-suite text-[18px] font-bold text-[#333333]">
+            현재 진행중인 루틴
+          </p>
+          <button
+            className="rounded-lg border-none bg-gray-400 px-3 py-1 text-sm text-white transition-colors hover:bg-gray-700 focus:outline-none active:bg-gray-700"
+            onClick={() => {
+              setSelectedDate(todayDate)
+            }}
+          >
+            오늘 날짜 보기
+          </button>
+        </div>
         <div className="flex flex-col gap-y-12">
-          {/* 유효한 날짜 범위 내 데이터만 보여지도록 하는 부분인데,
-          애초에 유효한 날짜 범위 내 데이터만 가져와지도록 fetch 부분 수정할 필요 있음 */}
           {displayEachChallengeItem()}
         </div>
       </div>
