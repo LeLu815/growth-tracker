@@ -22,6 +22,7 @@ import CalenderIcon from "@/components/Icon/CalenderIcon"
 import Input from "@/components/Input"
 import RangeInput from "@/components/RangeInput"
 
+import ChallengeMilestoneCalender from "../ChallengeCalender/ChallengeMilestoneCalender"
 import ContentTitle from "../styles/ContentTitle"
 import SubTitle from "../styles/SubTitle"
 import { MilestoneCreateProps } from "./MilestoneCreate"
@@ -189,6 +190,7 @@ function MilestoneCreateConfig({
           <ContentTitle className="mb-[20px] mt-[44px]">
             루틴 기간 설정
           </ContentTitle>
+          <div>{range && <ChallengeMilestoneCalender range={range} />}</div>
           {range && (
             <RangeInput
               thumbColor="#fe7d3d"
