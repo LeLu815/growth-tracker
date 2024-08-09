@@ -9,6 +9,9 @@ import { useQuery } from "@tanstack/react-query"
 import { format, startOfDay } from "date-fns"
 import { ko } from "date-fns/locale"
 
+import BottomNavigation from "@/components/BottomNavigation"
+
+import PlusComponent from "../newsfeed/_components/PlusComponent"
 import { MyChallengePageContext } from "./context"
 
 function MyChallengePageLayout({ children }: PropsWithChildren) {
@@ -75,6 +78,8 @@ function MyChallengePageLayout({ children }: PropsWithChildren) {
   return (
     <MyChallengePageContext.Provider value={contextValue}>
       {children}
+      <PlusComponent />
+      <BottomNavigation />
     </MyChallengePageContext.Provider>
   )
 }

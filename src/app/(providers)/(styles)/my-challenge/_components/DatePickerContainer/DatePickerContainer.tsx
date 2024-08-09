@@ -7,6 +7,7 @@ import {
   eachDayOfInterval,
   format,
   startOfDay,
+  startOfWeek,
   subMonths,
 } from "date-fns"
 import { ko } from "date-fns/locale"
@@ -18,9 +19,11 @@ import "swiper/css"
 import useMyChallengePageContext from "../../context"
 
 function DatePickerContainer({}) {
-  const TODAY = startOfDay(new Date())
-  const INITIAL_START_DATE = startOfDay(subMonths(TODAY, 12))
-  const INITIAL_END_DATE = startOfDay(addMonths(TODAY, 12))
+  const THIS_WEEK_MONDAY = startOfWeek(startOfDay(new Date()), {
+    weekStartsOn: 3,
+  })
+  const INITIAL_START_DATE = startOfDay(subMonths(THIS_WEEK_MONDAY, 12))
+  const INITIAL_END_DATE = startOfDay(addMonths(THIS_WEEK_MONDAY, 12))
 
   const { selectedDate, setSelectedDate, setSelectedDayOfWeek, todayDate } =
     useMyChallengePageContext()
@@ -32,7 +35,7 @@ function DatePickerContainer({}) {
   })
 
   const [visibleMonth, setVisibleMonth] = useState(
-    format(TODAY, "yyyy-MM", { locale: ko })
+    format(THIS_WEEK_MONDAY, "yyyy-MM", { locale: ko })
   )
 
   // selectedDate가 위치한 곳으로 자동으로 slide되도록 해줌
@@ -61,6 +64,7 @@ function DatePickerContainer({}) {
     const firstMonth = format(firstVisibleDate, "yyyy-MM", { locale: ko })
     const lastMonth = format(lastVisibleDate, "yyyy-MM", { locale: ko })
     setVisibleMonth(lastMonth > firstMonth ? lastMonth : firstMonth)
+    // console.log(format(firstVisibleDate, "yyyy-MM-dd", { locale: ko }))
   }
 
   const getDateStyle = (date: string) => {
@@ -82,10 +86,10 @@ function DatePickerContainer({}) {
           setSelectedDate(format(startOfDay(day), "yyyy-MM-dd", { locale: ko }))
           setSelectedDayOfWeek(format(startOfDay(day), "eee", { locale: ko }))
         }}
-        className="flex cursor-pointer flex-col items-center justify-center"
+        className="mt-[6px] flex cursor-pointer flex-col items-center justify-center"
       >
         <p
-          className={`mb-3 text-center text-[12px] font-[500] leading-[135%] ${
+          className={`mb-[6px] text-center text-[12px] font-[500] leading-[135%] ${
             selectedDate &&
             format(startOfDay(day), "yyyy-MM-dd", { locale: ko }) ===
               selectedDate
@@ -107,8 +111,8 @@ function DatePickerContainer({}) {
   }
 
   return (
-    <div className="mt-6 w-full">
-      <p className="mb-4 w-full text-center text-[18px] font-[700] leading-[134%]">
+    <div className="w-full rounded-b-[10px] py-[20px] shadow-2">
+      <p className="mb-[18px] w-full text-center text-[18px] font-[700] leading-[134%]">
         {visibleMonth.replace("-", ". ")}
       </p>
       <Swiper

@@ -140,15 +140,16 @@ function ChallengeList() {
     }
 
     return (
-      <div className="mt-10 flex w-full flex-col gap-y-4">
-        <div className="flex flex-row items-center justify-between">
-          <p className="font-suite text-[18px] font-bold text-[#333333]">
+      <div className="flex w-full flex-col gap-y-4">
+        <div className="flex w-full flex-row items-center justify-between px-[20px] py-[16px]">
+          <p className="font-suite text-[18px] font-bold leading-[135%] text-[#333333]">
             현재 진행중인 루틴
           </p>
           <button
             className="rounded-lg border-none bg-gray-400 px-3 py-1 text-sm text-white transition-colors hover:bg-gray-700 focus:outline-none active:bg-gray-700"
             onClick={() => {
-              setSelectedDate(todayDate)
+              setSelectedDate("")
+              setTimeout(() => setSelectedDate(todayDate), 0)
             }}
           >
             오늘 날짜 보기
