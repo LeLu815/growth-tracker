@@ -70,3 +70,5 @@ function ChallengeMilestoneCalender({
 export default ChallengeMilestoneCalender
 
 const WEEK_DAY_LIST_FOR_CREATE = ["일", "월", "화", "수", "목", "금", "토"]
+
+const challengePeriodDateStyle = "rounded-full border border-primary"

@@ -170,7 +170,7 @@ function MilestoneCreateConfig({
   return (
     <>
       <SubTitle className="justify-start">선택한 챌린지 기간</SubTitle>
-      <div>
+      <div className="scrollbar-hide">
         <div className="mt-[12px] flex items-center gap-2">
           <CalenderIcon color="#717171" />
           <p className="text-[18px] font-[500] text-[#717171]">
