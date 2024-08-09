@@ -1,4 +1,6 @@
 import { FormEventHandler, useState } from "react"
+import { useAuth } from "@/context/auth.context"
+import useChallengeQuery from "@/query/challenge/userChallengeQuery"
 import useChallengeCreateStore, {
   WEEK_DAY_LIST,
 } from "@/store/challengeCreate.store"
@@ -13,7 +15,6 @@ import {
   parseISO,
 } from "date-fns"
 import { produce } from "immer"
-import { v4 as uuidv4 } from "uuid"
 
 import Button from "@/components/Button"
 import Chip from "@/components/Chip"
@@ -25,13 +26,10 @@ import RangeInput from "@/components/RangeInput"
 import ChallengeMilestoneCalender from "../ChallengeCalender/ChallengeMilestoneCalender"
 import ContentTitle from "../styles/ContentTitle"
 import SubTitle from "../styles/SubTitle"
-import { MilestoneCreateProps } from "./MilestoneCreate"
 import MilestoneCreateComponent from "./MilestoneCreateComponent"
 
 // 객체를 기본으로 받자 => 없으면 걍 생성
-interface MilestoneCreateConfigProps {
-  setShowCompoent: (staus: MilestoneCreateProps["status"]) => void
-}
+interface MilestoneCreateConfigProps {}
 
 const SELECT_WEEK_BTN_VALUES: ("주중" | "주말" | "매일")[] = [
   "주중",
@@ -40,13 +38,20 @@ const SELECT_WEEK_BTN_VALUES: ("주중" | "주말" | "매일")[] = [
 ]
 const initialSelectWeeks = WEEK_DAY_LIST.map((_) => false)
 
-function MilestoneCreateConfig({
-  setShowCompoent,
-}: MilestoneCreateConfigProps) {
+function MilestoneCreateConfig({}: MilestoneCreateConfigProps) {
+  // 뮤테이션 함수 => db에 생성 저장하는 로직
+  const {
+    challengeCreateMutate,
+    challengeCreateIsPending,
+    challengeUpdateMutate,
+  } = useChallengeQuery()
   // 마일스톤, 루틴 전체 데이터 설정
   const { setData, data } = useMilestoneCreateStore()
+  // 유저데이터
+  const { me } = useAuth()
   // 챌린지 기간
-  const { range } = useChallengeCreateStore()
+  const { category, range, goal, setRange, setCategory, setGoal } =
+    useChallengeCreateStore()
   // 마일스톤 실행 기간 (챌린지 전체 기간 - 마일스톤 )
   // 마일스톤 시작 날짜
   const milestone_start_date = range
@@ -190,27 +195,17 @@ function MilestoneCreateConfig({
           <ContentTitle className="mb-[20px] mt-[44px]">
             루틴 기간 설정
           </ContentTitle>
-          <div>{range && <ChallengeMilestoneCalender range={range} />}</div>
-          {range && (
-            <RangeInput
-              thumbColor="#fe7d3d"
-              trackColor="#fe7d3d"
-              getValue={(value: string) => {
-                setMilestonePeriod(value)
-              }}
-              step={1}
-              max={differenceInCalendarDays(range.to!, range.from!) + 1}
-              min={
-                data.length === 0
-                  ? 0
-                  : differenceInCalendarDays(milestone_start_date, range?.from!)
-              }
-            />
-          )}
-          <p className="mt-[4px] text-end text-[16px] font-[600]">
-            {range &&
-              `총 ${differenceInCalendarDays(range.to!, range.from!) + 1}일`}
-          </p>
+          <div>
+            {range && (
+              <ChallengeMilestoneCalender
+                range={range}
+                milestoneStartDate={new Date(milestone_start_date)}
+                getValue={(value: string) => {
+                  setMilestonePeriod(value)
+                }}
+              />
+            )}
+          </div>
         </div>
         <div>
           <ContentTitle className="mb-[20px] mt-[44px]">
@@ -242,8 +237,8 @@ function MilestoneCreateConfig({
           </ContentTitle>
           <p className="mb-[20px] text-[14px]">권장 달성률 50%에요</p>
           <RangeInput
-            thumbColor="#fe7d3d"
-            trackColor="#fe7d3d"
+            thumbColor="#FC5A6B"
+            trackColor="#FC5A6B"
             getValue={(value: string) => {
               setMinPercent(value)
             }}
@@ -287,30 +282,60 @@ function MilestoneCreateConfig({
       <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
         <Button
           onClick={() => {
-            setShowCompoent("switch")
-            // 여기에서 그동안 쌓아둔 데이터를 모두 주스탠드에 넣은 작업을 해야함
-            createMilestone({
-              challenge_id: "",
-              id: uuidv4(),
-              start_at: milestone_start_date,
-              end_at: milestone_end_date,
-              is_mon: selectWeeks[0],
-              is_tue: selectWeeks[1],
-              is_wed: selectWeeks[2],
-              is_thu: selectWeeks[3],
-              is_fri: selectWeeks[4],
-              is_sat: selectWeeks[5],
-              is_sun: selectWeeks[6],
-              success_requirement_cnt: Math.ceil(
-                (milestone_actual_day * +minPercent) / 100
-              ),
-              total_cnt: milestone_actual_day,
-              total_day: +milestonePeriod - prevMilestonesPeriod,
-              routines: routines.map((value) => ({
-                id: "",
-                content: value,
-              })),
+            challengeCreateMutate({
+              challenge: {
+                category: category,
+                user_id: me?.id || "",
+                day_cnt: differenceInCalendarDays(range?.to!, range?.from!) + 1,
+                end_at: format(range?.to!, "yyyy-MM-dd"),
+                goal: goal,
+                is_secret: false,
+                start_at: format(range?.from!, "yyyy-MM-dd"),
+              },
+              milestone: [
+                {
+                  challenge_id: "",
+                  start_at: milestone_start_date,
+                  end_at: milestone_end_date,
+                  is_mon: selectWeeks[0],
+                  is_tue: selectWeeks[1],
+                  is_wed: selectWeeks[2],
+                  is_thu: selectWeeks[3],
+                  is_fri: selectWeeks[4],
+                  is_sat: selectWeeks[5],
+                  is_sun: selectWeeks[6],
+                  total_cnt: milestone_actual_day,
+                  total_day: +milestonePeriod - prevMilestonesPeriod,
+                  success_requirement_cnt: Math.ceil(
+                    (milestone_actual_day * +minPercent) / 100
+                  ),
+                },
+              ],
+              routine: [],
             })
+            // 여기에서 그동안 쌓아둔 데이터를 모두 주스탠드에 넣은 작업을 해야함
+            // createMilestone({
+            //   challenge_id: "",
+            //   id: uuid(),
+            //   start_at: milestone_start_date,
+            //   end_at: milestone_end_date,
+            //   is_mon: selectWeeks[0],
+            //   is_tue: selectWeeks[1],
+            //   is_wed: selectWeeks[2],
+            //   is_thu: selectWeeks[3],
+            //   is_fri: selectWeeks[4],
+            //   is_sat: selectWeeks[5],
+            //   is_sun: selectWeeks[6],
+            //   success_requirement_cnt: Math.ceil(
+            //     (milestone_actual_day * +minPercent) / 100
+            //   ),
+            //   total_cnt: milestone_actual_day,
+            //   total_day: +milestonePeriod - prevMilestonesPeriod,
+            //   routines: routines.map((value) => ({
+            //     id: "",
+            //     content: value,
+            //   })),
+            // })
           }}
           disabled={
             routines.length === 0 ||

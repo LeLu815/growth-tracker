@@ -51,6 +51,8 @@ function CreateChallenge() {
             title="루틴 생성"
           />
         )
+      case 5:
+        return
       default:
         // 혹시모를 디폴트는 최초 설정으로
         return (

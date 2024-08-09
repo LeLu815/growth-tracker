@@ -9,9 +9,9 @@ function PlusComponent() {
   return (
     <div
       onClick={() => {
-        return router.push("/challenge/create2")
+        return router.push("/challenge/create")
       }}
-      className="shadow-custom fixed bottom-32 right-10 z-50 flex h-[50px] w-[50px] cursor-pointer items-center justify-center rounded-full bg-black"
+      className="fixed bottom-32 right-10 z-50 flex h-[50px] w-[50px] cursor-pointer items-center justify-center rounded-full bg-black shadow-custom"
     >
       <PlusIcon />
     </div>
