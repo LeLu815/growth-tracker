@@ -14,6 +14,7 @@ const BookmarkIcon = (
         stroke="#171717"
         strokeLinecap="round"
         strokeLinejoin="round"
+
       />
     </Icon>
   )

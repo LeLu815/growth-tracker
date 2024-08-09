@@ -3,22 +3,21 @@
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useChallengeSearchStore } from "@/store/challengeSearch.store"
-import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query"
+import { InfiniteData, QueryKey, useInfiniteQuery } from "@tanstack/react-query"
 
 import { fetchPosts } from "../_utils/fetchPosts"
 import { PostType } from "../../../../../../types/challenge"
 import CategorySelector from "./CategorySelector"
 import ChallengePosts from "./ChallengePosts"
+import SearchBar from "./SearchBar"
 import SortSelector from "./SortSelector"
-
-type Props = { pageParam?: number }
 
 function NewsfeedClient() {
   const [filter, setFilter] = useState<string>("recent")
   const [userId, setUserId] = useState<string>("")
   const [category, setCategory] = useState<string>("전체")
   const [showCompleted, setShowCompleted] = useState<boolean>(false)
-  const { searchQuery } = useChallengeSearchStore()
+  const { searchQuery, setSearchQuery } = useChallengeSearchStore()
 
   const router = useRouter()
 
@@ -36,21 +35,23 @@ function NewsfeedClient() {
     PostType[],
     Error,
     InfiniteData<PostType[]>,
-    any,
+    QueryKey,
     number
   >({
     queryKey: ["posts", filter, category, searchQuery, showCompleted],
-    queryFn: ({ pageParam = 1 }) =>
-      fetchPosts(
+    queryFn: async ({ pageParam = 1 }) => {
+      return await fetchPosts(
         filter,
         category,
         searchQuery,
         userId,
         showCompleted,
-        pageParam
-      ),
+        pageParam,
+        5
+      )
+    },
     getNextPageParam: (lastPage, pages) => {
-      return lastPage.length ? pages.length + 1 : undefined
+      return lastPage.length === 5 ? pages.length + 1 : undefined
     },
     initialPageParam: 1,
   })
@@ -71,6 +72,10 @@ function NewsfeedClient() {
 
   const handleToggleShowCompleted = () => {
     setShowCompleted(!showCompleted)
+    refetch()
+  }
+  const handleSearch = (query: string) => {
+    setSearchQuery(query)
     refetch()
   }
 
@@ -104,6 +109,9 @@ function NewsfeedClient() {
 
   return (
     <>
+      <div>
+        <SearchBar onSearch={handleSearch} />
+      </div>
       {/* 카테고리 */}
       <CategorySelector
         category={category}

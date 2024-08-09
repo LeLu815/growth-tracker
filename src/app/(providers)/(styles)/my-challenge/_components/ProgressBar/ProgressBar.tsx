@@ -9,9 +9,11 @@ import useMyChallengePageContext from "../../context"
 interface ProgressBar {
   routines: RoutineType[]
   routineDoneDailyId: string
+  leftDays: number
 }
 
 function ProgressBar({
+  leftDays,
   routines,
   routineDoneDailyId,
 }: PropsWithChildren<ProgressBar>) {
@@ -34,10 +36,14 @@ function ProgressBar({
           {todayDoneRoutineArray.length}/{routines.length}
         </p>
         <p className="mr-1 text-[10px] text-[#717171]">개 완료</p>
+        <p className="ml-auto mr-0 text-[12px] font-[500] leading-[135%] text-gray-400">
+          {leftDays}일 남음
+        </p>
       </div>
-      <div className="mt-3 h-3 w-full overflow-hidden rounded-lg bg-gray-300">
+
+      <div className="mt-3 h-[6px] w-full overflow-hidden rounded-lg bg-gray-300">
         <div
-          className={`transition-width h-full bg-black duration-300 ease-in-out w-[${progress}%]`}
+          className={`transition-width h-full bg-[#FF7D3D] duration-300 ease-in-out w-[${progress}%]`}
           style={{ width: `${progress}%` }}
         />
       </div>

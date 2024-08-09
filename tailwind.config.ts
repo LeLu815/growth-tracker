@@ -18,9 +18,6 @@ const config = {
       },
     },
     extend: {
-      boxShadow: {
-        custom: "2px 4px 4px 0 rgba(0, 0, 0, 0.25)",
-      },
       backgroundImage: {
         "challenge-image":
           "url('https://blog.kakaocdn.net/dn/bcOXTW/btsvdteG3PE/yHP14OhQdgspKPHUKhCY4K/img.png')",
@@ -32,10 +29,36 @@ const config = {
         lg: "1024px",
         xl: "1280px",
       },
+
+      // 폰트 타입
       fontFamily: {
         suite: ["SUITE", "sans-serif"], // 기본 sans-serif를 추가
       },
+      fontSize: {
+        "title-xl": ["24px", { lineHeight: "135%", fontWeight: "bold" }],
+        "title-l": ["22px", { lineHeight: "135%", fontWeight: "bold" }],
+        "title-m": ["20px", { lineHeight: "135%", fontWeight: "bold" }],
+        "title-s": ["18px", { lineHeight: "135%", fontWeight: "bold" }],
+        "title-xs": ["16px", { lineHeight: "130%", fontWeight: "bold" }],
+        "body-xxs": ["14px", { lineHeight: "135%", fontWeight: "bold" }],
+        "body-xl": ["18px", { lineHeight: "135%", fontWeight: "medium" }],
+        "body-l": ["16px", { lineHeight: "135%", fontWeight: "medium" }],
+        "body-m": ["14px", { lineHeight: "135%", fontWeight: "medium" }],
+        "body-s": ["12px", { lineHeight: "135%", fontWeight: "medium" }],
+        "body-xs": ["12px", { lineHeight: "130%", fontWeight: "medium" }],
+      },
+      fontWeight: {
+        bold: "700",
+        medium: "500",
+      },
+
+      // 섹상 타입
       colors: {
+        primary: "#FC5A6B",
+        secondary: "#82D0DC",
+        black: "#1A1A1A",
+        white: "#FCFCFC",
+
         grey: {
           50: "#141414",
           100: "#2E2E2E",
@@ -49,19 +72,38 @@ const config = {
           900: "#FAFAFA",
         },
 
+        blue: {
+          50: "#0A2024",
+          100: "#15444C",
+          200: "#206874",
+          300: "#2C8C9B",
+          400: "#37B0C3",
+          500: "#5CC2D1",
+          600: "#82D0DC",
+          700: "#ABE0E8",
+          800: "#D3EFF3",
+          900: "#FBFDFE",
+        },
+
+        pink: {
+          50: "#230104",
+          100: "#55020B",
+          200: "#870311",
+          300: "#B90417",
+          400: "#EB041E",
+          500: "#FB283F",
+          600: "#FC5A6B",
+          700: "#FD8C98",
+          800: "#FEBEC5",
+          900: "#FFF0F2",
+        },
+
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
+
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
@@ -82,6 +124,15 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+      },
+
+      // boxShadow
+      boxShadow: {
+        1: "0px 0px 1px 0px rgba(0, 0, 0, 0.08), 0px 1px 2px 0px rgba(0, 0, 0, 0.12), 0px 0px 1px 0px rgba(0, 0, 0, 0.08)",
+        2: "0px 0px 1px 0px rgba(0, 0, 0, 0.08), 0px 2px 4px 0px rgba(0, 0, 0, 0.15), 0px 0px 1px 0px rgba(0, 0, 0, 0.08)",
+        3: "0 5px 10px rgba(0, 0, 0, 0.2)",
+        custom:
+          "1px 1px 1px 0px rgba(0, 0, 0, 0.08), 0px 4px 8px 0px rgba(0, 0, 0, 0.15), 0px 0px 2px 0px rgba(0, 0, 0, 0.08)",
       },
 
       borderRadius: {
@@ -116,6 +167,11 @@ const config = {
         "slide-up": "slide-up 300ms ease-out",
         "slide-down": "slide-down 300ms ease-in",
       },
+    },
+  },
+  variants: {
+    extend: {
+      placeholder: ["focus"],
     },
   },
   plugins: [require("tailwindcss-animate"), require("tailwind-scrollbar-hide")],

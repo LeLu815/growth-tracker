@@ -13,9 +13,9 @@ import {
 import axios from "axios"
 import { useInView } from "react-intersection-observer"
 
-import EmptyHart from "@/components/Icon/EmptyHart"
+import EmptyHartIcon from "@/components/Icon/EmptyHartIcon"
 import NoneProfile from "@/components/Icon/NoneProfile"
-import RedHart from "@/components/Icon/RedHart"
+import RedHartIcon from "@/components/Icon/RedHartIcon"
 
 import {
   ChallengeCommentPageType,
@@ -260,6 +260,14 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
     return
   }
 
+  const confirmOpen = (message: string, ocConfirm: () => void) => {
+    modal.open({
+      type: "confirm",
+      content: message,
+      onConfirm: ocConfirm,
+    })
+  }
+
   const handleOnChangeTextarea = (
     e: ChangeEvent<HTMLTextAreaElement>,
     index: number
@@ -332,14 +340,12 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
           댓글을 제일 먼저 남겨보세요.
         </div>
       ) : (
-        <div>
+        <div className={"w-full"}>
           {data?.map((comment, idx) => {
             const isLastItem = data?.length - 1 === idx
             return (
               <div
-                className={
-                  "mt-2 flex w-full gap-[8px] rounded-lg border p-4 shadow-md"
-                }
+                className={"mt-2 flex w-full gap-[8px] rounded-lg border p-4"}
                 key={comment.id}
                 ref={isLastItem ? ref : null}
               >
@@ -362,7 +368,43 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                   )}
                 </div>
                 <div className={"flex w-full flex-col gap-[6px] pt-2"}>
-                  <div className={"text-[#717171]"}>{comment.nickname}</div>
+                  <div className={"flex justify-between"}>
+                    <div className={"text-[#717171]"}>{comment.nickname}</div>
+                    {comment.user_id === me?.id && (
+                      <div className={"flex gap-2"}>
+                        <button
+                          type="submit"
+                          className="cursor-pointer text-center font-suite text-[12px] font-medium leading-[135%] text-[#969696]"
+                          onClick={() => {
+                            isUpdate && comment.id === updateCommentId
+                              ? handleCommentMutate({
+                                  commentId: comment.id,
+                                  content: updateContent,
+                                })
+                              : handleChangeIsUpdate(comment)
+                          }}
+                        >
+                          {isUpdate && comment.id === updateCommentId
+                            ? "수정완료"
+                            : "수정"}
+                        </button>
+                        <button
+                          className="cursor-pointer text-center font-suite text-[12px] font-medium leading-[135%] text-[#969696]"
+                          onClick={() => {
+                            isUpdate && comment.id === updateCommentId
+                              ? handleChangeIsUpdate(comment)
+                              : confirmOpen("댓글을 삭제하겠습니까?", () =>
+                                  handleCommentDeleteMutate(comment.id)
+                                )
+                          }}
+                        >
+                          {isUpdate && comment.id === updateCommentId
+                            ? "취소"
+                            : "삭제"}
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   <div
                     className={
                       "font-suite text-xs font-normal leading-[1.35] text-gray-600"
@@ -408,9 +450,13 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                   >
                     <div>
                       {comment.is_like ? (
-                        <RedHart width={20} height={20} />
+                        <RedHartIcon width={20} height={20} />
                       ) : (
-                        <EmptyHart width={20} height={20} color={"#D9D9D9"} />
+                        <EmptyHartIcon
+                          width={20}
+                          height={20}
+                          color={"#D9D9D9"}
+                        />
                       )}
                     </div>
                     <div
@@ -422,41 +468,6 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                     </div>
                   </div>
                 </div>
-
-                {comment.user_id === me?.id && (
-                  <div className={"flex w-[100px] justify-end gap-4"}>
-                    <div className={"flex items-start gap-2"}>
-                      <button
-                        type="submit"
-                        className="cursor-pointer text-center font-suite text-[12px] font-medium leading-[135%] text-[#969696]"
-                        onClick={() => {
-                          isUpdate && comment.id === updateCommentId
-                            ? handleCommentMutate({
-                                commentId: comment.id,
-                                content: updateContent,
-                              })
-                            : handleChangeIsUpdate(comment)
-                        }}
-                      >
-                        {isUpdate && comment.id === updateCommentId
-                          ? "수정완료"
-                          : "수정"}
-                      </button>
-                      <button
-                        className="cursor-pointer text-center font-suite text-[12px] font-medium leading-[135%] text-[#969696]"
-                        onClick={() => {
-                          isUpdate && comment.id === updateCommentId
-                            ? handleChangeIsUpdate(comment)
-                            : handleCommentDeleteMutate(comment.id)
-                        }}
-                      >
-                        {isUpdate && comment.id === updateCommentId
-                          ? "취소"
-                          : "삭제"}
-                      </button>
-                    </div>
-                  </div>
-                )}
               </div>
             )
           })}
