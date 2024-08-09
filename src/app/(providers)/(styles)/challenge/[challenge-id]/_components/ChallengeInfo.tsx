@@ -10,17 +10,19 @@ import useChallengeDetailStore, {
   InitialDataType,
 } from "@/store/challengeDetail.store"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { MenuProps } from "antd"
 import axios from "axios"
 
-import ArrowLeftIcon from "@/components/Icon/ArrowLeftIcon"
+import Chip from "@/components/Chip"
 import BookmarkIcon from "@/components/Icon/BookmarkIcon"
-import EmptyHartIcon from "@/components/Icon/EmptyHartIcon"
-import KebabMenuIcon from "@/components/Icon/KebabMenuIcon"
+import ImportIcon from "@/components/Icon/ImportIcon"
 import NoneProfile from "@/components/Icon/NoneProfile"
+import ChallengeDetailPageTitle from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/CallengeDetailPageTitle"
 import ChallengeLike from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeLike"
 import MilestoneList from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/MilestoneList"
 
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
+import StateChip from "../../../../../../components/Chip/StateChip"
 
 function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const modal = useModal()
@@ -55,6 +57,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
       userId: response.data.user_id as string,
       nickname: response.data.nickname as string,
       goal: response.data.goal as string,
+      state: response.data.state as string,
     }
 
     setChallengeDetail(challengeDetail as InitialDataType)
@@ -86,56 +89,87 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
     })
   }
 
+  const menuList: MenuProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <div onClick={() => router.push(`/challenge/${challengeId}/update`)}>
+          수정하기
+        </div>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <div
+          onClick={() =>
+            confirmOpen(
+              `삭제한 챌린지는 복구할 수 없어요. 삭제하시겠어요?`,
+              handleDeleteChallenge
+            )
+          }
+        >
+          삭제하기
+        </div>
+      ),
+    },
+  ]
+
+  const getStatusChip = (state: string) => {
+    const statusLabel = convertStatusToKorean(state)
+
+    let intent: "primary" | "secondary" | "third" | "category" = "primary"
+    let variant: "outline" | "contained" | "selected" = "contained"
+
+    switch (state) {
+      case "on_progress":
+        intent = "primary"
+        break
+      case "on_complete":
+        intent = "primary"
+        variant = "outline"
+        break
+      case "on_fail":
+        intent = "third"
+        variant = "outline"
+        break
+      case "not_started":
+        intent = "third"
+        variant = "outline"
+        break
+      default:
+        intent = "primary"
+    }
+
+    return (
+      <Chip
+        label={statusLabel as string}
+        intent={intent}
+        variant={variant}
+        size="sm"
+      />
+    )
+  }
+
   if (isPending) return <div>Loading...</div>
   if (isError) return <div>Error loading data</div>
 
   return (
-    <div className={"flex flex-col"}>
+    <div className={"mx-auto flex w-full max-w-[640px] flex-col"}>
       {/*이미지*/}
-      <div className={"ml-5 flex justify-start"}>
-        <ArrowLeftIcon
-          className={"absolute mt-5 w-4 cursor-pointer"}
-          onClick={router.back}
-        />
-        {me?.id === data.user_id && (
-          <div className="absolute right-0">
-            <KebabMenuIcon
-              onClick={() => setIsOpen((value) => !value)}
-              className={"cursor-pointer"}
-              width={30}
-              height={40}
-            ></KebabMenuIcon>
-            {isOpen && (
-              <div className="absolute right-3 top-8 flex w-[105px] flex-col items-center rounded-[4px] border border-gray-200 bg-white py-2 shadow-lg">
-                <div className="py-2">
-                  <button className="block w-full py-1 text-left text-black hover:bg-gray-200">
-                    수정하기
-                  </button>
-                </div>
-                <div className="py-2">
-                  <button
-                    className="block w-full py-1 text-left text-black hover:bg-gray-200"
-                    onClick={() =>
-                      confirmOpen(
-                        `삭제한 챌린지는 복구할 수 없어요. 삭제하시겠어요?`,
-                        handleDeleteChallenge
-                      )
-                    }
-                  >
-                    삭제하기
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-      <div
-        className={"h-[235px] w-full flex-shrink-0 bg-[#EED697]"}
-        style={{
-          backgroundImage: "url('')",
-        }}
-      ></div>
+      <ChallengeDetailPageTitle
+        title={"상세페이지"}
+        titleHidden
+        goBackFn={router.back}
+        menuList={menuList}
+      />
+      <Image
+        alt="챌린지 이미지"
+        width={1200}
+        height={1200}
+        src={data.image_url}
+        className={"max-h-[300px] w-full flex-shrink-0 object-center"}
+      ></Image>
 
       {/* 상단 */}
       <div className="flex w-full flex-col items-start rounded-t-[12px] bg-white pt-5">
@@ -150,13 +184,15 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
             {/*개수*/}
             <div className="flex w-full items-center gap-[11px]">
               <div className="flex gap-1 text-gray-600">
-                <EmptyHartIcon width={20} height={20} color={"black"} />
+                <BookmarkIcon width={20} height={20} />
                 <div className={"pt-[2px]"}>{data.like_cnt}</div>
               </div>
-              <div className="flex gap-1 text-gray-600">
-                <BookmarkIcon width={20} height={20} color={"gray"} />
-                {data.template_cnt}
-              </div>
+              {data.state === "on_complete" && (
+                <div className="flex gap-1 text-gray-600">
+                  <ImportIcon width={20} height={20} />
+                  {data.template_cnt}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -177,12 +213,15 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
             ) : (
               <NoneProfile width={50} height={50}></NoneProfile>
             )}
-
-            <div className="font-suite text-[20px] font-bold leading-[135%] text-[#717171]">
-              <p className="font-bold text-[#717171]">{data?.nickname}</p>
-              <div className="w-[195px] font-suite text-[12px] font-medium leading-[135%] text-[#717171]">
-                {data?.start_at} ~ {data?.end_at}{" "}
-                {convertStatusToKorean(data?.state)}
+            <div className={"flex"}>
+              <div className="font-suite text-[20px] font-bold leading-[135%] text-[#717171]">
+                <p className="font-bold text-[#717171]">{data?.nickname}</p>
+                <div className="w-[195px] font-suite text-[12px] font-medium leading-[135%] text-[#717171]">
+                  {data?.start_at} ~ {data?.end_at}{" "}
+                </div>
+              </div>
+              <div className={"my-auto"}>
+                <StateChip state={data?.state} />
               </div>
             </div>
           </div>
@@ -195,8 +234,16 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
       <div className="flex w-full flex-col items-end gap-[16px] border-b-[10px] border-b-[#E0E0E0] bg-white p-[24px_20px]">
         <div className="flex flex-col items-start gap-[16px] self-stretch pb-[20px]">
           <div className="flex w-full flex-col items-start gap-[8px]">
-            <div className="font-suite text-[18px] font-bold leading-[135%] text-[#171717]">
-              챌린지 정보
+            <div className={"flex gap-4"}>
+              <div className="font-suite text-[18px] font-bold leading-[135%] text-[#171717]">
+                챌린지 정보
+              </div>
+              {
+                // "primary" | "secondary" | "third" | "category"
+                data.like_cnt >= 10 && (
+                  <Chip label={`인기 챌린지`} intent={"popular"} />
+                )
+              }
             </div>
             <div className={"flex gap-9"}>
               <div className="w-[70px] font-suite text-[14px] font-medium leading-[135%] text-[#474747]">
@@ -213,6 +260,22 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
               </div>
               <div className="font-suite text-[14px] font-medium leading-[135%] text-[#141414]">
                 {data?.day_cnt}일
+              </div>
+            </div>
+            <div className={"flex gap-9"}>
+              <div className="w-[70px] font-suite text-[14px] font-medium leading-[135%] text-[#474747]">
+                달성률
+              </div>
+              <div className="font-suite text-[14px] font-medium leading-[135%] text-[#141414]">
+                {data?.state === "on_complete"
+                  ? `${Math.floor(
+                      (data?.routine_done_daily_success_count /
+                        data.milestones.reduce((sum, milestone) => {
+                          return sum + milestone.total_cnt
+                        }, 0)) *
+                        100
+                    )}%`
+                  : "진행완료 후 집계됩니다."}
               </div>
             </div>
           </div>

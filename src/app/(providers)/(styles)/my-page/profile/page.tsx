@@ -128,7 +128,7 @@ function UserInfoPage() {
   if (isError) return <div>Error loading data</div>
 
   return (
-    <Box className="flex justify-center h-screen">
+    <Box className="flex h-screen justify-center">
       <div className={"w-full"}>
         <div className="flex flex-col items-center">
           {profileImageUrl ? (
@@ -181,6 +181,7 @@ function UserInfoPage() {
           <div className="mt-6">
             <div className="mb-4">
               <Input
+                variant="login"
                 label={"이메일"}
                 value={me?.email}
                 disabled={true}
@@ -190,6 +191,7 @@ function UserInfoPage() {
               />
             </div>
             <Input
+              variant="login"
               label={"닉네임"}
               value={nickname || ""}
               type="text"

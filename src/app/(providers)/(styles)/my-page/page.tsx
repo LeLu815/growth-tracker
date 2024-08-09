@@ -1,5 +1,8 @@
 "use client"
 
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/context/auth.context"
+
 import Box from "@/components/Box"
 import Button from "@/components/Button"
 import MyInfo from "@/app/(providers)/(styles)/my-page/_components/profile/MyInfo"
@@ -11,6 +14,14 @@ import {
 } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
 function UserInfoPage() {
+  const { logOut } = useAuth()
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    logOut()
+    router.push("/auth/login-email")
+  }
+
   return (
     <div className="mx-auto flex w-full max-w-[640px] flex-col">
       <MyInfo></MyInfo>
@@ -23,7 +34,12 @@ function UserInfoPage() {
           <ProfileMenu menuList={CHALLENGE_MENU_LIST}></ProfileMenu>
         </div>
         <div className={"h-[150px]"}>
-          <Button intent="secondary" className={"h-[50px]"} size="lg">
+          <Button
+            intent="secondary"
+            className={"h-[50px]"}
+            size="lg"
+            onClick={handleLogout}
+          >
             로그아웃
           </Button>
         </div>

@@ -5,6 +5,7 @@ export type RoutineType = {
 }
 
 export type MilestoneType = {
+  name: string
   created_at: string
   start_at: string
   challenge_id: string
@@ -23,6 +24,7 @@ export type ChallengeType = {
   created_at: string
   user_id: string
   nickname: string
+  image_url: string
   profile_image_url: string
   goal: string
   like_cnt: number
@@ -32,6 +34,7 @@ export type ChallengeType = {
   day_cnt: number
   comment_cnt: number
   state: string
+  routine_done_daily_success_count: number
   category: string
   start_at: string
   end_at: string
