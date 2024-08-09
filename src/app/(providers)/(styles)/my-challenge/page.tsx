@@ -1,4 +1,3 @@
-import Box from "@/components/Box"
 import Page from "@/components/Page"
 import StatusBarSpace from "@/components/StatusBarSpace"
 import TopNavigation from "@/components/TopNavigation"
