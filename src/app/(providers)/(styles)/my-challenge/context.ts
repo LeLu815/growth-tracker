@@ -23,6 +23,8 @@ interface MyChallengePageContextType {
   routineDone: RoutineDoneType[]
   routineDonePending: boolean
   routineDoneError: boolean
+  pageToView: "onProgress" | "completed"
+  setPageToView: (item: "onProgress" | "completed") => void
 }
 
 // conetext 생성

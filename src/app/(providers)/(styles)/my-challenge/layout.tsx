@@ -23,6 +23,10 @@ function MyChallengePageLayout({ children }: PropsWithChildren) {
   const [selectedDayOfWeek, setSelectedDayOfWeek] =
     useState<string>(TODAY_DAY_OF_WEEK)
 
+  const [pageToView, setPageToView] = useState<"onProgress" | "completed">(
+    "onProgress"
+  )
+
   const { me } = useAuth()
   const userId = me?.id
 
@@ -73,6 +77,8 @@ function MyChallengePageLayout({ children }: PropsWithChildren) {
     routineDone: routineDone || [],
     routineDonePending,
     routineDoneError,
+    pageToView,
+    setPageToView,
   }
 
   return (
