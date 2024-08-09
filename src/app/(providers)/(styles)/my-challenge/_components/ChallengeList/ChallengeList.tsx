@@ -144,10 +144,7 @@ function ChallengeList() {
 
     return (
       <div className="flex w-full flex-col">
-        <div className="flex w-full flex-row items-center justify-between px-[20px] pb-[16px] pt-[22px]">
-          <p className="font-suite text-[18px] font-bold leading-[135%] text-[#333333]">
-            현재 진행중인 루틴
-          </p>
+        <div className="flex w-full flex-row items-center justify-end px-[20px] pb-[16px] pt-[22px]">
           <button
             className="rounded-lg border-none bg-gray-400 px-3 py-1 text-sm text-white transition-colors hover:bg-gray-700 focus:outline-none active:bg-gray-700"
             onClick={() => {

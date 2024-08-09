@@ -31,7 +31,7 @@ const buttonVariant = cva(
       {
         intent: "primary",
         variant: "contained",
-        className: "bg-[#FF7D3D] text-white",
+        className: "bg-[#FC5A6B] text-white",
       },
       {
         intent: "primary",
