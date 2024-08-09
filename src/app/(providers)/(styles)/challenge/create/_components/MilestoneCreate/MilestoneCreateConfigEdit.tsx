@@ -173,6 +173,8 @@ function MilestoneCreateConfigEdit({
 
   const confirmFunc = () => {
     updateMilestone({
+      name: "",
+      success_percent: 50,
       challenge_id: "",
       id: currentMilestoneObject?.id!,
       start_at: milestone_start_date,
