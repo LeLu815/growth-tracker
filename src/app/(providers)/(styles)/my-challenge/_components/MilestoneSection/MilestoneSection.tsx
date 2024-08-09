@@ -128,46 +128,47 @@ function MilestoneSection({
   }
 
   return (
-    <div>
-      <div className="flex">
+    <section>
+      <div className="flex gap-x-[24px]">
+        {/* 이미지 */}
         <div className="h-[84px] w-[84px] rounded-md bg-[#DDDDDD]"></div>
-        <div className="grow">
-          <div className="ml-5 flex">
-            <div>
-              {!checkMilestoneDayOfWeek ? (
-                <p className="w-[77px] rounded-2xl bg-gray-500 px-2 py-2 text-center text-[11px] text-white">
-                  루틴 없음
-                </p>
-              ) : (
-                <p
-                  className={`w-max rounded-[30px] px-[8px] py-[4px] text-center text-[12px] leading-[135%] text-white ${targetRDD?.is_success ? "bg-[#82D0DC]" : "bg-[#82D0DC]"}`}
-                >
-                  {targetRDD?.is_success ? "루틴 완료" : "루틴 실행중"}
-                </p>
-              )}
-              <h3 className="mt-2 text-[16px] font-bold">{challengeGoal}</h3>
-            </div>
-            <div className="ml-auto mr-0">
-              {!checkMilestoneDayOfWeek ? (
-                <></>
-              ) : (
-                <button onClick={toggleVisibility}>
-                  <ArrowDownIcon />
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="ml-5">
+        {/* 이미지 옆 모든 것 */}
+        <div className="flex grow flex-col gap-y-[12px]">
+          {/* 제목과 열기버튼 */}
+          <div className="flex w-full justify-between">
+            <h3 className="text-title-xs font-bold">{challengeGoal}</h3>
             {!checkMilestoneDayOfWeek ? (
               <></>
             ) : (
-              <ProgressBar
-                leftDays={leftDays}
-                routineDoneDailyId={targetRDDId}
-                routines={milestone.routines}
-              />
+              <button onClick={toggleVisibility}>
+                <ArrowDownIcon />
+              </button>
             )}
           </div>
+          {/* 챌린지 상태 칩 */}
+          <div>
+            {!checkMilestoneDayOfWeek ? (
+              <p className="w-[77px] rounded-2xl bg-gray-500 px-2 py-2 text-center text-[11px] text-white">
+                루틴 없음
+              </p>
+            ) : (
+              <p
+                className={`w-max rounded-[30px] px-[8px] py-[4px] text-center text-[12px] leading-[135%] text-white ${targetRDD?.is_success ? "bg-[#82D0DC]" : "bg-[#82D0DC]"}`}
+              >
+                {targetRDD?.is_success ? "루틴 완료" : "루틴 실행중"}
+              </p>
+            )}
+          </div>
+          {/* 프로그레스 바 */}
+          {!checkMilestoneDayOfWeek ? (
+            <></>
+          ) : (
+            <ProgressBar
+              leftDays={leftDays}
+              routineDoneDailyId={targetRDDId}
+              routines={milestone.routines}
+            />
+          )}
         </div>
       </div>
 
@@ -178,7 +179,7 @@ function MilestoneSection({
               return (
                 <div
                   key={routine.id}
-                  className="flex items-center justify-between rounded-lg border-[1.5px] border-solid border-[#D9D9D9] bg-[#F5F5F5] px-[10px] py-[14px]"
+                  className="flex items-center justify-between rounded-lg border-[1.5px] border-solid border-[#D9D9D9] px-[10px] py-[14px]"
                 >
                   <p className="text-[14px] font-semibold">{routine.content}</p>
                   <RoutineCheckBox
@@ -209,7 +210,7 @@ function MilestoneSection({
           </p>
         </div>
       )}
-    </div>
+    </section>
   )
 }
 
