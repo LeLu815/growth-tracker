@@ -52,8 +52,15 @@ function MilestoneCreateConfig({ goNextPage }: MilestoneCreateConfigProps) {
   // 유저데이터
   const { me } = useAuth()
   // 챌린지 기간
-  const { category, range, goal, setRange, setCategory, setGoal } =
-    useChallengeCreateStore()
+  const {
+    category,
+    range,
+    goal,
+    setRange,
+    setCategory,
+    setGoal,
+    randomImgUrl,
+  } = useChallengeCreateStore()
   // 마일스톤 실행 기간 (챌린지 전체 기간 - 마일스톤 )
   // 마일스톤 시작 날짜
   const milestone_start_date = range
@@ -301,6 +308,7 @@ function MilestoneCreateConfig({ goNextPage }: MilestoneCreateConfigProps) {
                   goal: goal,
                   is_secret: false,
                   start_at: format(range?.from!, "yyyy-MM-dd"),
+                  image_url: randomImgUrl,
                 },
                 milestone: [
                   {

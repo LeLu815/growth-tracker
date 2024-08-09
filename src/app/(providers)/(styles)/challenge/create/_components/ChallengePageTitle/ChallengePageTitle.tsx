@@ -1,3 +1,5 @@
+"use client"
+
 import ArrowLeftIcon from "@/components/Icon/ArrowLeftIcon"
 import DefaultHeader from "@/app/(providers)/_components/Header/DefaultHeader"
 

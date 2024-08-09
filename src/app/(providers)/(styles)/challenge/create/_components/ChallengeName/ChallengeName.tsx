@@ -1,7 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import Image from "next/image"
 import useChallengeCreateStore from "@/store/challengeCreate.store"
+import { createClient } from "@/supabase/client"
 
 import Box from "@/components/Box"
 import Button from "@/components/Button"
@@ -24,9 +26,52 @@ function ChallengeName({
   challenge_title = "",
 }: ChallengeNameProps) {
   const [inputValue, setInputValue] = useState<string>(challenge_title)
-  const { setGoal, setRandomImgUrl } = useChallengeCreateStore()
+  const { setGoal, setRandomImgUrl, randomImgUrl } = useChallengeCreateStore()
 
-  const handleClickRandomImgBtn = () => {}
+  const supabase = createClient()
+  const [imgs, setImgs] = useState<string[]>([])
+  const [selectedRandomUrl, setSelectedRandomUrl] = useState<string>(
+    randomImgUrl || imgs[0]
+  )
+  useEffect(() => {
+    ;(async () => {
+      const { data: imgDatas, error } = await supabase.storage
+        .from("challenge_img")
+        .list("")
+      // 에러
+      if (error) {
+        console.error(error)
+        return
+      }
+      // 파일 목록이 있는지 확인
+      if (imgDatas && imgDatas.length > 0) {
+        // 각 파일에 대해 getPublicUrl을 호출하여 URL을 생성
+        const urlPromises = imgDatas.map((file) =>
+          supabase.storage.from("challenge_img").getPublicUrl(file.name, {
+            download: false,
+          })
+        )
+        let urlDatas
+        try {
+          // 모든 URL 요청을 병렬로 처리
+          urlDatas = await Promise.all(urlPromises)
+          const newUrls = urlDatas.map((data) => data.data.publicUrl)
+          setImgs(newUrls)
+          setSelectedRandomUrl(newUrls[0])
+          // 결과 출력 (혹은 상태 관리)
+        } catch (urlError) {
+          console.error("Error fetching URLs:", urlError)
+        }
+      }
+    })()
+  }, [])
+
+  const handleClickRandomImgBtn = () => {
+    const length = imgs.length
+    const randomIndex = Math.floor(Math.random() * length)
+    setSelectedRandomUrl(imgs[randomIndex])
+  }
+  console.log("randomImgUrl :", randomImgUrl)
   return (
     <>
       <ChallengePageTitle
@@ -41,7 +86,16 @@ function ChallengeName({
           <SubTitle className="justify-center">무엇을 목표로 하나요?</SubTitle>
           <div className="h-[32px]" />
           <div className="flex flex-col items-center gap-[12px]">
-            <div className="h-[156px] w-[156px] overflow-hidden rounded-[12px]"></div>
+            <div className="relative h-[156px] w-[156px] overflow-hidden rounded-[12px]">
+              {selectedRandomUrl && (
+                <Image
+                  alt="랜덤 이미지"
+                  src={selectedRandomUrl}
+                  fill
+                  className="object-cover"
+                />
+              )}
+            </div>
             <Button
               intent="secondary"
               variant="rounded"
@@ -73,6 +127,7 @@ function ChallengeName({
               onClick={() => {
                 handleChangeStep(4)
                 setGoal(inputValue)
+                setRandomImgUrl(selectedRandomUrl)
               }}
             >
               완료

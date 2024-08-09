@@ -41,6 +41,7 @@ export interface POSTchallengeArgumentProps {
     | "is_secret"
     | "day_cnt"
     | "category"
+    | "image_url"
   >
   milestone: Omit<MilestoneRequiredType & MilestonePartialType, "routines">[]
   routine: Pick<RoutineType, "content" | "milestone_id">[][]
