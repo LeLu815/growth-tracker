@@ -204,6 +204,9 @@ function MilestoneSection({
           >
             {selectedDate == todayDate ? "하루 일기 쓰기" : "오늘의 일기"}
           </Button>
+          <p className="w-full text-center text-[10px] font-[500] leading-[135%] text-black">
+            {`챌린지 정보 확인 >`}
+          </p>
         </div>
       )}
     </div>
