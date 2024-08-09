@@ -25,7 +25,7 @@ function MyChallengePage() {
             <ChallengeList />
           </>
         ) : (
-          <></>
+          <div className="mt-10">예정된 챌린지 모아서 보여주는 페이지?!</div>
         )}
       </div>
     </Page>
