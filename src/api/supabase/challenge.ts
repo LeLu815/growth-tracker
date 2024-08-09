@@ -20,6 +20,8 @@ export type MilestoneRequiredType = Pick<
   | "total_cnt"
   | "total_day"
   | "success_requirement_cnt"
+  | "name"
+  | "success_percent"
 >
 // milestone 선택 타입 (요일 지정 타입) : MilestonePartialType
 export type RemainingType = Omit<

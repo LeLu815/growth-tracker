@@ -183,8 +183,21 @@ function ChallengeMilestoneCalender({
                 return
               }
               setSelectedEndDate(Date)
-              const periodString = `${differenceInCalendarDays(selecteedStartDate, Date) + 1}`
-              getValue(periodString)
+              const periodString = differenceInCalendarDays(
+                Date,
+                selecteedStartDate
+              )
+              if (`${periodString}` === "0") {
+                if (
+                  format(Date, "yyyy-MM-dd") ===
+                  format(selecteedStartDate, "yyyy-MM-dd")
+                ) {
+                  return getValue("1")
+                } else {
+                  return getValue("2")
+                }
+              }
+              return getValue(`${periodString + 2}`)
             }}
           >
             {Date.getDate()}

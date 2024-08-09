@@ -18,6 +18,7 @@ export type Database = {
           end_at: string | null
           goal: string
           id: string
+          image_url: string | null
           is_secret: boolean
           like_cnt: number
           start_at: string | null
@@ -34,6 +35,7 @@ export type Database = {
           end_at?: string | null
           goal: string
           id?: string
+          image_url?: string | null
           is_secret: boolean
           like_cnt?: number
           start_at?: string | null
@@ -50,6 +52,7 @@ export type Database = {
           end_at?: string | null
           goal?: string
           id?: string
+          image_url?: string | null
           is_secret?: boolean
           like_cnt?: number
           start_at?: string | null
@@ -256,7 +259,9 @@ export type Database = {
           is_thu: boolean
           is_tue: boolean
           is_wed: boolean
+          name: string
           start_at: string
+          success_percent: number
           success_requirement_cnt: number
           total_cnt: number
           total_day: number
@@ -274,7 +279,9 @@ export type Database = {
           is_thu?: boolean
           is_tue?: boolean
           is_wed?: boolean
+          name: string
           start_at: string
+          success_percent: number
           success_requirement_cnt: number
           total_cnt: number
           total_day: number
@@ -292,7 +299,9 @@ export type Database = {
           is_thu?: boolean
           is_tue?: boolean
           is_wed?: boolean
+          name?: string
           start_at?: string
+          success_percent?: number
           success_requirement_cnt?: number
           total_cnt?: number
           total_day?: number

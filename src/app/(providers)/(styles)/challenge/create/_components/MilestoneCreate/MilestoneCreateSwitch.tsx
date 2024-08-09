@@ -17,14 +17,9 @@ import FlagIcon from "@/components/Icon/FlagIcon"
 
 import DragDropContainer from "../DrapDropContainer/DragDropContainer"
 import SubTitle from "../styles/SubTitle"
-import { MilestoneCreateProps } from "./MilestoneCreate"
 
-interface MilestoneCreateSwitchProps {
-  setShowCompoent: (staus: MilestoneCreateProps["status"]) => void
-}
-function MilestoneCreateSwitch({
-  setShowCompoent,
-}: MilestoneCreateSwitchProps) {
+interface MilestoneCreateSwitchProps {}
+function MilestoneCreateSwitch({}: MilestoneCreateSwitchProps) {
   const { category, range, goal, setRange, setCategory, setGoal } =
     useChallengeCreateStore()
   const { data, setData } = useMilestoneCreateStore()
@@ -58,7 +53,7 @@ function MilestoneCreateSwitch({
         className="h-full"
         size="lg"
         onClick={() => {
-          setShowCompoent("config")
+          // setShowCompoent("config")
         }}
         disabled={
           data.length !== 0 &&

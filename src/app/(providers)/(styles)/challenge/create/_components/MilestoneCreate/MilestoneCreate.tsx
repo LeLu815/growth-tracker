@@ -5,15 +5,10 @@ import ChallengePageTitle from "../ChallengePageTitle"
 import MilestoneCreateConfig from "./MilestoneCreateConfig"
 
 export interface MilestoneCreateProps {
-  status: "config" | "switch"
   title: string
   handleChangeStep: (step: number) => void
 }
-function MilestoneCreate({
-  status,
-  title,
-  handleChangeStep,
-}: MilestoneCreateProps) {
+function MilestoneCreate({ title, handleChangeStep }: MilestoneCreateProps) {
   return (
     <div>
       <ChallengePageTitle
@@ -25,7 +20,7 @@ function MilestoneCreate({
       />
       <Page>
         <Box>
-          <MilestoneCreateConfig />
+          <MilestoneCreateConfig goNextPage={() => handleChangeStep(5)} />
         </Box>
       </Page>
     </div>

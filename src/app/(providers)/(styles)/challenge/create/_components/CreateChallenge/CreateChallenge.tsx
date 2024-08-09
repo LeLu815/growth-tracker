@@ -9,6 +9,7 @@ import useMilestoneCreateStore from "@/store/milestoneCreate.store"
 import ChallengeCategories from "../ChallengeCategories"
 import ChallengeName from "../ChallengeName/ChallengeName"
 import ChallengeSelectPeriod from "../ChallengeSelectPeriod"
+import Congratulations from "../Congratulations"
 import MilestoneCreate from "../MilestoneCreate"
 
 function CreateChallenge() {
@@ -46,13 +47,12 @@ function CreateChallenge() {
       case 4:
         return (
           <MilestoneCreate
-            status={data.length === 0 ? "config" : "switch"}
             handleChangeStep={handleChangeStep}
             title="루틴 생성"
           />
         )
       case 5:
-        return
+        return <Congratulations title="챌린지 생성" />
       default:
         // 혹시모를 디폴트는 최초 설정으로
         return (
