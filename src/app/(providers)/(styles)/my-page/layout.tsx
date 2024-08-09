@@ -1,16 +1,16 @@
-"use client"
-
 import { PropsWithChildren } from "react"
 
 import BottomNavigation from "@/components/BottomNavigation"
+import Page from "@/components/Page"
+import MyPageTitleHeader from "@/app/(providers)/(styles)/my-page/_components/MyPageTitleHeader"
 
 function MyPageLayout({ children }: PropsWithChildren) {
   return (
-    <div>
+    <Page>
+      <MyPageTitleHeader />
       {children}
-      <div className="h-[80px] w-full"></div>
       <BottomNavigation />
-    </div>
+    </Page>
   )
 }
 
