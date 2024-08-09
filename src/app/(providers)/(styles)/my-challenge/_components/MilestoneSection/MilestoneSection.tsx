@@ -178,7 +178,7 @@ function MilestoneSection({
               return (
                 <div
                   key={routine.id}
-                  className="flex items-center justify-between rounded-lg border-[1.5px] border-solid border-[#D9D9D9] bg-[#F5F5F5] px-3 py-2"
+                  className="flex items-center justify-between rounded-lg border-[1.5px] border-solid border-[#D9D9D9] bg-[#F5F5F5] px-[10px] py-[14px]"
                 >
                   <p className="text-[14px] font-semibold">{routine.content}</p>
                   <RoutineCheckBox

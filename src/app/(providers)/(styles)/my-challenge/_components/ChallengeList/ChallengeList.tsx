@@ -121,7 +121,7 @@ function ChallengeList() {
           return (
             <div
               key={challenge.goal}
-              className="flex flex-col gap-y-5 rounded-lg border-[1.5px] border-solid border-[#d9d9d9] px-4 py-4 font-suite"
+              className="flex flex-col gap-y-5 rounded-lg border-[1.5px] border-solid border-[#d9d9d9] px-4 py-4 font-suite shadow-2"
             >
               {displayTargetMilestoneItem(challenge)}
             </div>
@@ -143,8 +143,8 @@ function ChallengeList() {
     }
 
     return (
-      <div className="flex w-full flex-col gap-y-4">
-        <div className="flex w-full flex-row items-center justify-between px-[20px] py-[16px]">
+      <div className="flex w-full flex-col">
+        <div className="flex w-full flex-row items-center justify-between px-[20px] pb-[16px] pt-[22px]">
           <p className="font-suite text-[18px] font-bold leading-[135%] text-[#333333]">
             현재 진행중인 루틴
           </p>
@@ -158,7 +158,7 @@ function ChallengeList() {
             오늘 날짜 보기
           </button>
         </div>
-        <div className="flex flex-col gap-y-12">
+        <div className="flex flex-col gap-y-[10px] px-[12px] pb-[20px]">
           {displayEachChallengeItem()}
         </div>
       </div>
