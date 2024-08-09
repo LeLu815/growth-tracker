@@ -83,6 +83,7 @@ function MilestoneCreateSwitch({}: MilestoneCreateSwitchProps) {
                 goal: goal,
                 is_secret: false,
                 start_at: format(range?.from!, "yyyy-MM-dd"),
+                image_url: "",
               },
               milestone: data.map((obj) =>
                 produce(
