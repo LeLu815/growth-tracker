@@ -12,7 +12,7 @@ interface TopNavigationProps {
 function TopNavigation({ title }: PropsWithChildren<TopNavigationProps>) {
   const router = useRouter()
   const handleArrowLeftClick = () => {
-    router.back()
+    router.back() // 뒤로가기띠
   }
   return (
     <div className="flex h-[50px] w-full items-center justify-center px-[20px] py-[4px]">
