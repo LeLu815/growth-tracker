@@ -28,16 +28,11 @@ function useChallengeQuery() {
       mutationFn: async (variables: POSTchallengeArgumentProps) =>
         await POSTchallenge(variables),
       onSuccess: () => {
-        // 모달 추가
-        open({
-          type: "alert",
-          content: "챌린지 생성이 완료되었습니다.",
-        })
+        // 이전 데이터 초기화
         queryClient.invalidateQueries({ queryKey: [CHALLENGE_QEURY_KEY] })
         setRange(defaultSelected)
         setCurrentSlideId("")
         setData(initialData)
-        return router.push("/")
       },
       onError: () => {
         // 모달 추가
