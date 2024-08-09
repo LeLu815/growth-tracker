@@ -4,12 +4,12 @@ import { cva, VariantProps } from "class-variance-authority"
 import classNames from "classnames"
 
 const buttonVariant = cva(
-  "border font-semibold duration-10 transition-all box-border",
+  "border-2 font-semibold duration-10 transition-all box-border",
   {
     variants: {
       intent: {
-        primary: "md:hover:bg-[#2E2E2E] text-grey-50 active:bg-[#2E2E2E]",
-        secondary: "text-grey-50 md:hover:bg-[#FF7D3D] active:bg-[#FF7D3D]",
+        primary: "md:hover:bg-pink-400 bg-primary active:bg-pink-400",
+        secondary: "md:hover:bg-blue-400 active:bg-blue-400 bg-secondary",
         kakao: "bg-[#FDE500] text-[#1A1A1A]",
       },
       size: {
@@ -18,11 +18,10 @@ const buttonVariant = cva(
         lg: "w-full px-[26px] py-[12px] text-[18px]",
       },
       variant: {
-        outline: "bg-white rounded-lg",
-        contained: "rounded-lg",
-        disabled: "text-[#c7c7c7] cursor-not-allowed rounded-lg",
-        selected:
-          "bg-[#FFE4D6] text-[#FF7D3D] outline-2 outline-[#FF7D3D] md:hover:bg-[#FFE4D6] rounded-lg box-border",
+        outline: "rounded-[8px] ",
+        contained: "rounded-[8px] ",
+        disabled: "text-grey-700 cursor-not-allowed rounded-[8px]",
+        selected: "bg-pink-850 text-primary border-primary rounded-[8px]",
         rounded: "rounded-full",
         borderless: "border-none",
       },
@@ -31,47 +30,47 @@ const buttonVariant = cva(
       {
         intent: "primary",
         variant: "contained",
-        className: "bg-[#FF7D3D] text-white",
+        className: "bg-primary border-transparent text-white",
       },
       {
         intent: "primary",
         variant: "outline",
-        className: "text-[#FF7D3D] outline-[#FF7D3D]",
+        className: "text-primary bg-white border-primary active:text-white",
+      },
+      {
+        intent: "primary",
+        variant: "selected",
+        className: "text-primary border-primary bg-pink-850",
       },
       {
         intent: "secondary",
         variant: "contained",
-        className: "bg-white text-[#141414]",
-      },
-      {
-        variant: "selected",
-        className: "text-[#FF7D3D] box-border",
+        className: "bg-secondary text-white border-transparent",
       },
       {
         intent: "secondary",
         variant: "outline",
-        className: "text-[#141414] outline-[#141414]",
+        className: "text-secondary bg-white border-secondary",
       },
       {
         intent: "primary",
         variant: "disabled",
-        className: "bg-[#E0E0E0] text-[#7a7a7a] pointer-events-none",
+        className: "bg-grey-800 text-grey-700 pointer-events-none",
       },
       {
         intent: "secondary",
         variant: "disabled",
-        className: "text-[#ADADAD] bg-white pointer-events-none",
+        className: "bg-grey-800 text-grey-700 pointer-events-none",
       },
       {
         intent: "primary",
         variant: "rounded",
-        className: "px-[20px] py-[8px] bg-[#FF7D3D] text-white",
+        className: "px-[20px] py-[8px] bg-primary border-primary text-white",
       },
       {
         intent: "secondary",
         variant: "rounded",
-        className:
-          "px-[20px] py-[8px] rounded-full text-[#141414] outline-[#141414]",
+        className: "px-[20px] py-[8px] rounded-full text-[#141414]",
       },
       {
         intent: "primary",

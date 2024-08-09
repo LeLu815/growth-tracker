@@ -95,6 +95,7 @@ const config = {
           600: "#FC5A6B",
           700: "#FD8C98",
           800: "#FEBEC5",
+          850: "#FFE5E9",
           900: "#FFF0F2",
         },
 

@@ -1,4 +1,5 @@
 import { Database } from "./supabase"
+import { StructuredMilestoneType } from "./supabase.type"
 
 export type PostType = Database["public"]["Tables"]["challenge"]["Row"] & {
   user: {
@@ -14,4 +15,7 @@ export type PostType = Database["public"]["Tables"]["challenge"]["Row"] & {
   image: string
   bookmarked: string[]
   liked: string[]
+  // routines: RoutineType[]
+  // routineDoneDailyId: string
+  milestones: StructuredMilestoneType[] // 이 부분 추가
 }

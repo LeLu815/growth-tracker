@@ -17,14 +17,16 @@ function ChallengePosts({ posts, onClickPost }: ChallengePostsProps) {
   return (
     <div className="pb-[80px]">
       <ul>
-        {posts.map((post, index) => {
+        {posts.map((post) => {
           return (
             <li
-              key={`${post.id}-${index}`}
+              key={post.id}
               onClick={() => onClickPost(post.id)}
               className="cursor-pointe mb-[20px]"
             >
               <ChallengeCard
+                challenge={post}
+                milestones={post.milestones}
                 title={post.goal}
                 category={post.category}
                 likes={post.like_cnt}
