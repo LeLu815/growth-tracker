@@ -93,6 +93,42 @@ function MilestoneSection({
 
   const queryClient = useQueryClient()
 
+  const generateRoutineStatusText = (
+    selectedDate: string,
+    todayDate: string,
+    isSuccess: boolean
+  ) => {
+    if (selectedDate < todayDate) {
+      // 과거 날짜에 대한 처리
+      return isSuccess ? "루틴 완료" : "루틴 종료"
+    } else if (selectedDate == todayDate) {
+      return isSuccess ? "루틴 완료" : "루틴 실행중"
+    } else {
+      // 미래 날짜에 대한 처리
+      return "루틴 전"
+    }
+  }
+
+  const generateRoutineStatusStyle = (
+    selectedDate: string,
+    todayDate: string,
+    isSuccess: boolean
+  ) => {
+    if (selectedDate < todayDate) {
+      // 과거 날짜에 대한 처리
+      return isSuccess
+        ? "bg-[#82D0DC] text-white border-[1px] border-[#82D0DC] "
+        : " border-[1px] border-[#82D0DC] text-[#82D0DC]"
+    } else if (selectedDate == todayDate) {
+      return isSuccess
+        ? "bg-[#82D0DC] text-white border-[1px] border-[#82D0DC] "
+        : "bg-[#82D0DC] text-white border-[1px] border-[#82D0DC] "
+    } else {
+      // 미래 날짜에 대한 처리
+      return " border-[1px] border-[#7A7A7A] text-[#7A7A7A]"
+    }
+  }
+
   const postRDDmutation = useMutation({
     mutationFn: async (newId: string) =>
       POSTnewRoutineDoneDaily({
@@ -153,9 +189,14 @@ function MilestoneSection({
               </p>
             ) : (
               <p
-                className={`w-max rounded-[30px] px-[8px] py-[4px] text-center text-[12px] leading-[135%] text-white ${targetRDD?.is_success ? "bg-[#82D0DC]" : "bg-[#82D0DC]"}`}
+                className={`w-max rounded-[30px] border-solid px-[8px] py-[4px] text-center text-[12px] leading-[135%] ${generateRoutineStatusStyle(selectedDate, todayDate, targetRDD?.is_success || false)}`}
               >
-                {targetRDD?.is_success ? "루틴 완료" : "루틴 실행중"}
+                {generateRoutineStatusText(
+                  selectedDate,
+                  todayDate,
+                  targetRDD?.is_success || false
+                )}
+                {/* {targetRDD?.is_success ? "루틴 완료" : "루틴 실행중"} */}
               </p>
             )}
           </div>
