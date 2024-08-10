@@ -7,6 +7,7 @@ import {
 } from "@/api/supabase/challenge"
 import { useModal } from "@/context/modal.context"
 import useChallengeCreateStore, {
+  categories,
   defaultSelected,
 } from "@/store/challengeCreate.store"
 import useMilestoneCreateStore, {
@@ -19,7 +20,8 @@ import queryClient from "../queryClient"
 const CHALLENGE_QEURY_KEY = "challenge"
 
 function useChallengeQuery() {
-  const { setRange } = useChallengeCreateStore()
+  const { setRange, setGoal, setCategory, setRandomImgUrl } =
+    useChallengeCreateStore()
   const { setCurrentSlideId, setData } = useMilestoneCreateStore()
   const router = useRouter() // useRouter 훅 사용
   const { open } = useModal()
@@ -33,6 +35,9 @@ function useChallengeQuery() {
         setRange(defaultSelected)
         setCurrentSlideId("")
         setData(initialData)
+        setGoal("")
+        setCategory(categories[0])
+        setRandomImgUrl("")
       },
       onError: () => {
         // 모달 추가

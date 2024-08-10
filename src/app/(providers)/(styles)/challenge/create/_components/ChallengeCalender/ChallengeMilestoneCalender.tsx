@@ -95,28 +95,32 @@ function ChallengeMilestoneCalender({
   }).map((value) => format(value, "yyyy-MM-dd"))
 
   // date 스타일 리턴 함수
-  const getDateStyle = (date: Date) => {
+  const getDateStyle = (date: Date, isBg: boolean) => {
     const stringInputDate = format(date, "yyyy-MM-dd")
     const stringStartDate =
       selecteedStartDate && format(selecteedStartDate, "yyyy-MM-dd")
     const stringEndDate =
       selectedEndDate && format(selectedEndDate, "yyyy-MM-dd")
     // 선택된 날짜 스타일
-    if (
-      stringInputDate === stringStartDate ||
-      stringInputDate === stringEndDate
-    ) {
-      return selectedDateStyle
+    if (stringInputDate === stringStartDate) {
+      return isBg
+        ? stringEndDate && stringStartDate !== stringEndDate
+          ? slectedDateBgFrontStyle
+          : ""
+        : selectedDateStyle
+    }
+    if (stringInputDate === stringEndDate) {
+      return isBg ? slectedDateBgRearStyle : selectedDateStyle
     }
     // 사이 날짜 스타일
     if (
       selctedMiddleDates.findIndex((value) => value === stringInputDate) !== -1
     ) {
-      return middleSelectedDateStyle
+      return isBg ? middleSelectedDateBgStyle : middleSelectedDateStyle
     }
     // 챌린지 기간 날짜 스타일
     if (challengeDates.findIndex((value) => value === stringInputDate) !== -1) {
-      return challengePeriodDateStyle
+      return isBg ? challengePeriodDateStyle : ""
     }
     // 이전 첼린지가 있으면 앞뒤, 그리고 가운데 스타일 지정
     if (prevMilestoneDisabledDates) {
@@ -129,7 +133,7 @@ function ChallengeMilestoneCalender({
           const copyList = [...prevMilestoneDisabledDates]
           const first = copyList.shift()
           if (first === stringInputDate) {
-            return prevMilestonePeriodStartEndStyle
+            return isBg ? "" : prevMilestonePeriodStartEndStyle
           }
         }
         case 2: {
@@ -138,7 +142,7 @@ function ChallengeMilestoneCalender({
           const first = copyList.shift()
           const last = copyList.pop()
           if (first === stringInputDate || last === stringInputDate) {
-            return prevMilestonePeriodStartEndStyle
+            return isBg ? "" : prevMilestonePeriodStartEndStyle
           }
         }
         default: {
@@ -147,22 +151,22 @@ function ChallengeMilestoneCalender({
           const first = copyList.shift()
           const last = copyList.pop()
           if (first === stringInputDate || last === stringInputDate) {
-            return prevMilestonePeriodStartEndStyle
+            return isBg ? "" : prevMilestonePeriodStartEndStyle
           }
           if (copyList.findIndex((value) => value === stringInputDate) !== -1) {
-            return prevMilestonePeriodMiddleStyle
+            return isBg ? "" : prevMilestonePeriodMiddleStyle
           }
         }
       }
     }
     // 그냥 기본 스타일
-    return disabledPeriodStyle
+    return isBg ? "" : disabledPeriodStyle
   }
   return (
-    <div className="grid grid-cols-7 gap-4">
+    <div className="grid grid-cols-7">
       {WEEK_DAY_LIST_FOR_CREATE.map((value) => (
         <div
-          className={`m-auto flex h-[46px] w-[46px] items-center justify-center text-[14px] ${value === "일" ? "text-[#FF4242]" : "text-grey-500"}`}
+          className={`m-auto flex h-[46px] w-[46px] items-center justify-center text-[14px] text-grey-500`}
           key={value}
         >
           {value}
@@ -170,38 +174,43 @@ function ChallengeMilestoneCalender({
       ))}
       {range &&
         getChallengeDateList({ challengeRange: range }).map((Date) => (
-          <div
-            className={`${getDateStyle(Date)} m-auto flex h-[46px] w-[46px] items-center justify-center text-[16px] font-[700]`}
+          <li
             key={format(Date, "yyyy-MM-dd")}
-            onClick={() => {
-              // 선택할 수 없는 날짜 구분해야함.
-              const currDateString = format(Date, "yyyy-MM-dd")
-              if (
-                disabledDates.findIndex((value) => value === currDateString) !==
-                -1
-              ) {
-                return
-              }
-              setSelectedEndDate(Date)
-              const periodString = differenceInCalendarDays(
-                Date,
-                selecteedStartDate
-              )
-              if (`${periodString}` === "0") {
-                if (
-                  format(Date, "yyyy-MM-dd") ===
-                  format(selecteedStartDate, "yyyy-MM-dd")
-                ) {
-                  return getValue("1")
-                } else {
-                  return getValue("2")
-                }
-              }
-              return getValue(`${periodString + 2}`)
-            }}
+            className={`${getDateStyle(Date, true)} relative flex list-none items-center justify-center`}
           >
-            {Date.getDate()}
-          </div>
+            <div
+              className={`${getDateStyle(Date, false)} z-[1] m-auto flex h-[46px] w-[46px] flex-shrink-0 items-center justify-center text-[16px] font-[700]`}
+              onClick={() => {
+                // 선택할 수 없는 날짜 구분해야함.
+                const currDateString = format(Date, "yyyy-MM-dd")
+                if (
+                  disabledDates.findIndex(
+                    (value) => value === currDateString
+                  ) !== -1
+                ) {
+                  return
+                }
+                setSelectedEndDate(Date)
+                const periodString = differenceInCalendarDays(
+                  Date,
+                  selecteedStartDate
+                )
+                if (`${periodString}` === "0") {
+                  if (
+                    format(Date, "yyyy-MM-dd") ===
+                    format(selecteedStartDate, "yyyy-MM-dd")
+                  ) {
+                    return getValue("1")
+                  } else {
+                    return getValue("2")
+                  }
+                }
+                return getValue(`${periodString + 2}`)
+              }}
+            >
+              {Date.getDate()}
+            </div>
+          </li>
         ))}
     </div>
   )
@@ -219,8 +228,16 @@ const challengePeriodDateStyle = "text-primary cursor-pointer"
 const selectedDateStyle =
   "rounded-full border border-primary text-white bg-primary border-primary cursor-pointer"
 // 가운데 선택된 스타일
-const middleSelectedDateStyle = "bg-pink-900 text-primary cursor-pointer"
+const middleSelectedDateStyle = "text-primary cursor-pointer"
+const middleSelectedDateBgStyle = "bg-pink-900"
+// const middleSelectedDateStyle = "bg-pink-900 text-primary cursor-pointer"
 // 이전에 선택된 선택 불가 스타일 가운데 스타일
 const prevMilestonePeriodMiddleStyle = "bg-grey-700 text-white"
 // 이전에 선택된 선택 불가 스타일 앞뒤 스타일
 const prevMilestonePeriodStartEndStyle = "bg-grey-700 text-white rounded-full"
+// 선택 앞부분 배경
+const slectedDateBgFrontStyle =
+  "after:content-[''] after:absolute after:top-0 after:right-0 after:w-[50%] after:bottom-0 after:bg-pink-900"
+// 선택 뒷부분 배경
+const slectedDateBgRearStyle =
+  "after:content-[''] after:absolute after:top-0 after:left-0 after:w-[50%] after:bottom-0 after:bg-pink-900"
