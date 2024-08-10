@@ -7,7 +7,7 @@ interface DaysItemProps {
 function DaysItem({ children, isSelected }: PropsWithChildren<DaysItemProps>) {
   return (
     <button
-      className={`${isSelected ? "bg-slate-200" : "bg-white"} flex aspect-square h-full w-[40px] items-center justify-center rounded-full border border-slate-500`}
+      className={`${isSelected ? "border-pink-900 bg-pink-900 text-primary" : "border-grey-600 bg-white text-grey-50"} flex aspect-square h-full w-[40px] items-center justify-center rounded-full border`}
     >
       {children}
     </button>
