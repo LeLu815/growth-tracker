@@ -138,8 +138,8 @@ function ComponentTestPage() {
         likes={3}
         liked={false}
         bookmarks={23}
-        userImage=""
-        nickname="닉네임"
+        // userImage=""
+        // nickname="닉네임"
         state="on_progress"
         bookmarked={false}
         challengeImage="/icon/ic-arrow-right.svg"
@@ -150,8 +150,8 @@ function ComponentTestPage() {
         likes={3}
         liked={false}
         bookmarks={23}
-        userImage=""
-        nickname="닉네임"
+        // userImage=""
+        // nickname="닉네임"
         state="not_started"
         bookmarked={false}
         challengeImage="/icon/ic-arrow-right.svg"
