@@ -2,6 +2,7 @@ import { ComponentProps, forwardRef, useId } from "react"
 import { cva } from "class-variance-authority"
 import classNames from "classnames"
 
+import ConfirmMessage from "../ConfirmMessage"
 import ErrorMessage from "../ErrorMessage"
 
 type InputProps = {
@@ -10,6 +11,7 @@ type InputProps = {
   className?: string
   variant?: "default" | "login" | "search"
   errorMessage?: string
+  confirmMessage?: string
 } & ComponentProps<"input">
 
 const inputVariant = cva("transition focus:outline-none", {
@@ -30,7 +32,16 @@ const inputVariant = cva("transition focus:outline-none", {
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   (
-    { label, required, id, className, variant, errorMessage, ...props },
+    {
+      label,
+      required,
+      id,
+      className,
+      variant,
+      errorMessage,
+      confirmMessage,
+      ...props
+    },
     ref
   ) => {
     const inputUid = useId()
@@ -41,14 +52,18 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <label htmlFor={inputId} className="pb-[16px]">
           <span className="text-[18px] font-[700]">{label}</span>
           {required && (
-            <span className="text-sm font-semibold text-red-500">*</span>
+            <span className="text-[#FF1F0F text-sm font-semibold">*</span>
           )}
         </label>
         <input
           className={classNames(
             inputVariant({ variant }),
             className,
-            errorMessage ? "border-red-500" : "border-black"
+            errorMessage
+              ? "border-2 border-[#FF1F0F] focus:border-[#FF1F0F]"
+              : confirmMessage
+                ? "border-2 border-[#01AB3A] focus:border-[#01AB3A]"
+                : "border-black"
           )}
           type="text"
           id={inputId}
@@ -57,6 +72,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         />
         <div className="flex h-6 w-full items-center">
           {errorMessage && <ErrorMessage message={errorMessage} />}
+          {!errorMessage && confirmMessage && (
+            <ConfirmMessage message={confirmMessage} />
+          )}
         </div>
       </div>
     )

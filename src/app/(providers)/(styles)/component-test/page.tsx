@@ -36,17 +36,25 @@ function ComponentTestPage() {
   return (
     <Page>
       <h3 className="pt-4">Chips</h3>
-      <Chip label="전체" intent="primary" />
-      <Chip label="전체" intent="secondary" selected />
-      <Chip size="sm" label="공부" />
-      <Chip size="sm" intent="secondary" label="제테크" />
-      <Chip size="sm" intent="secondary" label="제테크" variant="outline" />
-      <Chip size="sm" label="제테크" variant="outline" selected />
+
+      <div>
+        <Chip label="전체" />
+        <Chip label="디폴트 아웃라인" variant="outline" />
+        <Chip label="전체" intent="secondary" selected />
+        <Chip size="sm" label="공부" />
+        <Chip size="md" intent="secondary" label="제테크" />
+        <Chip size="sm" intent="secondary" label="제테크" variant="outline" />
+        <Chip intent="third" label="제테크" variant="outline" />
+        <Chip size="sm" label="제테크" variant="outline" selected />
+      </div>
 
       <h3 className="pt-4">Buttons</h3>
       {/* default size: md, variant: primary */}
       <h4>default</h4>
       <Button size="lg">Default Button</Button>
+      <Button size="lg" variant="outline">
+        디폴트 아웃라인
+      </Button>
       <Button size="lg" disabled>
         Default disabled Button
       </Button>
@@ -56,6 +64,9 @@ function ComponentTestPage() {
       <h4>secondary buttons</h4>
       <Button intent="secondary" size="lg">
         Secondary Button
+      </Button>
+      <Button intent="secondary" variant="outline" size="lg">
+        Secondary outline Button
       </Button>
       <Button intent="secondary" size="lg" disabled>
         Secondary disabled Button
@@ -127,9 +138,21 @@ function ComponentTestPage() {
         likes={3}
         liked={false}
         bookmarks={23}
-        userImage=""
-        nickname="닉네임"
-        progress="진행중"
+        // userImage=""
+        // nickname="닉네임"
+        state="on_progress"
+        bookmarked={false}
+        challengeImage="/icon/ic-arrow-right.svg"
+      />
+      <ChallengeCard
+        title="토익 990점~~"
+        category="공부"
+        likes={3}
+        liked={false}
+        bookmarks={23}
+        // userImage=""
+        // nickname="닉네임"
+        state="not_started"
         bookmarked={false}
         challengeImage="/icon/ic-arrow-right.svg"
       />
@@ -146,7 +169,7 @@ function ComponentTestPage() {
       {/*<ChallengeCommentCreate />*/}
       <div className="h-[100px]"></div>
 
-      <Button onClick={handleModalClick}> 모달 테스 </Button>
+      <Button onClick={handleModalClick}> 모달 테스트 </Button>
     </Page>
   )
 }
