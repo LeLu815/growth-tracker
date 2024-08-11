@@ -18,6 +18,7 @@ import "swiper/css"
 
 import DatePickerRedDotIcon from "@/components/Icon/DatePickerRedDotIcon"
 
+import { StructuredMilestoneType } from "../../../../../../../types/supabase.type"
 import useMyChallengePageContext from "../../context"
 
 function DatePickerContainer({}) {
@@ -34,7 +35,12 @@ function DatePickerContainer({}) {
     todayDate,
     structuredChallengeData,
   } = useMyChallengePageContext()
-
+  const formattedTodayDate = parseInt(
+    format(startOfDay(todayDate), "yyyy-MM-dd", { locale: ko }).replace(
+      /-/g,
+      ""
+    )
+  )
   const swiperRef = useRef<any>(null)
   const allDates = eachDayOfInterval({
     start: INITIAL_START_DATE,
@@ -84,21 +90,60 @@ function DatePickerContainer({}) {
       return "text-black" // 나머지 날짜는 모두 연한 회색 배경
     }
   }
-
+  const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"]
   const checkDateHasRoutine = (date: Date): boolean => {
-    const formatedDate = parseInt(
+    const formattedDate = parseInt(
       format(startOfDay(date), "yyyy-MM-dd", { locale: ko }).replace(/-/g, "")
     )
+    const formattedDayOfWeek = format(startOfDay(date), "eee", {
+      locale: ko,
+    })
+
+    const generatemilestoneDoDaysArray = (
+      milestone: StructuredMilestoneType
+    ) => {
+      const milestoneDoDays: string[] = []
+      if (milestone.is_sun) {
+        milestoneDoDays.push(DAYS_OF_WEEK[0])
+      }
+      if (milestone.is_mon) {
+        milestoneDoDays.push(DAYS_OF_WEEK[1])
+      }
+      if (milestone.is_tue) {
+        milestoneDoDays.push(DAYS_OF_WEEK[2])
+      }
+      if (milestone.is_wed) {
+        milestoneDoDays.push(DAYS_OF_WEEK[3])
+      }
+      if (milestone.is_thu) {
+        milestoneDoDays.push(DAYS_OF_WEEK[4])
+      }
+      if (milestone.is_fri) {
+        milestoneDoDays.push(DAYS_OF_WEEK[5])
+      }
+      if (milestone.is_sat) {
+        milestoneDoDays.push(DAYS_OF_WEEK[6])
+      }
+
+      return milestoneDoDays
+    }
 
     return structuredChallengeData.some((challenge) =>
       challenge.milestones.some((milestone) => {
-        const milestoneStartDate = parseInt(
-          milestone.start_at.replace(/-/g, "")
-        )
+        // const milestoneStartDate = parseInt(
+        //   milestone.start_at.replace(/-/g, "")
+        // )
         const milestoneEndDate = parseInt(milestone.end_at.replace(/-/g, ""))
-
+        const milestoneDoDays = generatemilestoneDoDaysArray(milestone)
+        const checkMilestoneDayOfWeek = milestoneDoDays.find(
+          (milestoneDoDay) => {
+            return milestoneDoDay == formattedDayOfWeek
+          }
+        )
         return (
-          formatedDate >= milestoneStartDate && formatedDate <= milestoneEndDate
+          formattedDate >= formattedTodayDate &&
+          formattedDate <= milestoneEndDate &&
+          !!checkMilestoneDayOfWeek
         )
       })
     )
