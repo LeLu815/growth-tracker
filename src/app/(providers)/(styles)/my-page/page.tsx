@@ -1,6 +1,10 @@
+"use client"
+
 import Box from "@/components/Box"
+import Button from "@/components/Button"
 import MyInfo from "@/app/(providers)/(styles)/my-page/_components/profile/MyInfo"
 import ProfileMenu from "@/app/(providers)/(styles)/my-page/_components/profile/ProfileMenu"
+import TopPercentGraph from "@/app/(providers)/(styles)/my-page/_components/profile/TopPercentGraph"
 import {
   CHALLENGE_MENU_LIST,
   MY_INFO_LIST,
@@ -10,11 +14,18 @@ function UserInfoPage() {
   return (
     <div className="mx-auto flex w-full max-w-[640px] flex-col">
       <MyInfo></MyInfo>
-      <Box className={""}>
+      <Box className={"flex flex-col gap-[24px]"}>
         <div className={"flex flex-col gap-[24px]"}>
-          <div>그래프</div>
+          <div className="flex w-full flex-col items-center rounded-lg p-5 shadow-md">
+            <TopPercentGraph></TopPercentGraph>
+          </div>
           <ProfileMenu menuList={MY_INFO_LIST}></ProfileMenu>
           <ProfileMenu menuList={CHALLENGE_MENU_LIST}></ProfileMenu>
+        </div>
+        <div className={"h-[150px]"}>
+          <Button intent="secondary" className={"h-[50px]"} size="lg">
+            로그아웃
+          </Button>
         </div>
       </Box>
     </div>

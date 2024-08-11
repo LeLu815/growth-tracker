@@ -76,9 +76,9 @@ function Page() {
                 likes={myChallenge.like_cnt}
                 bookmarks={myChallenge.template_cnt}
                 liked={me ? (myChallenge.liked || []).includes(me.id) : false}
-                nickname={myChallenge.user.nickname}
-                progress={myChallenge.progress}
-                userImage={myChallenge.user.profile_image_url}
+                // nickname={myChallenge.user.nickname}
+                state={myChallenge.progress}
+                // userImage={myChallenge.user.profile_image_url}
                 bookmarked={
                   me ? (myChallenge.bookmarked || []).includes(me.id) : false
                 }

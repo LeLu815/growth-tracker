@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
       request.nextUrl.pathname.includes("/my-challenge"))
   ) {
     const loginUrl = request.nextUrl.clone()
-    loginUrl.pathname = "/auth/login"
+    loginUrl.pathname = "/auth/login-email"
     return NextResponse.redirect(loginUrl)
   }
 

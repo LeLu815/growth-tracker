@@ -30,7 +30,7 @@ function RangeInput({
   const currentPercentage = (value / max) * 100
 
   return (
-    <div className="range-container flex h-[50px] flex-col items-end">
+    <div className="range-container flex h-[50px] w-full flex-col items-end">
       <div className="box-border h-[32px] w-full pl-1 pr-4">
         <div className="relative box-border h-[30px] w-full">
           <div

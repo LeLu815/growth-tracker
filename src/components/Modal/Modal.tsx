@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useModal } from "@/context/modal.context"
 import { CSSTransition } from "react-transition-group"
 
+import Button from "../Button"
 import CloseIcon02 from "../Icon/CloseIcon02"
 import { Calendar } from "../ui/calendar"
 import BackDrop from "./BackDrop"
@@ -28,21 +29,11 @@ const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
   }
 
   const renderButtons = () => (
-    <div className="mt-4 flex justify-around space-x-2">
-      <button
-        onClick={handleCloseModal}
-        className="border border-slate-600 px-6 py-2 text-black"
-      >
+    <div className="mt-6 flex w-full justify-around space-x-2">
+      <Button variant="outline" onClick={handleCloseModal}>
         {type === "alert" ? "확인" : "취소"}
-      </button>
-      {type === "confirm" && (
-        <button
-          onClick={onConfirm}
-          className="border border-slate-600 px-6 py-2 text-black"
-        >
-          확인
-        </button>
-      )}
+      </Button>
+      {type === "confirm" && <Button onClick={onConfirm}>확인</Button>}
     </div>
   )
 
@@ -73,7 +64,7 @@ const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
         unmountOnExit
       >
         <div
-          className={`fixed left-1/2 w-full -translate-x-1/2 transform rounded bg-white p-4 ${
+          className={`fixed left-1/2 w-full -translate-x-1/2 transform rounded bg-white px-5 py-8 ${
             type === "calendar"
               ? "bottom-0 translate-y-full transition sm:w-full"
               : "top-1/2 max-w-[320px] -translate-y-1/2"
@@ -90,7 +81,7 @@ const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
           </button>
 
           <div className="flex flex-col items-center justify-center">
-            <p className="text-black">{content}</p>
+            <p className="text-body-l font-medium text-black">{content}</p>
 
             {type === "calendar" && (
               <div className="calendar-component mt-4">

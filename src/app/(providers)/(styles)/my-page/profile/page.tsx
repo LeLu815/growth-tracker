@@ -1,14 +1,8 @@
 "use client"
 
-import {
-  ChangeEvent,
-  FormEvent,
-  MouseEventHandler,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
 import { useToast } from "@/context/toast.context"
@@ -25,6 +19,7 @@ import {
   PROFILE,
   uploadImage,
 } from "@/app/(providers)/_utils/imageUploadUtils"
+import { MY_PAGE } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
 function UserInfoPage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
@@ -33,11 +28,10 @@ function UserInfoPage() {
   const [nickname, setNickname] = useState("")
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [isUpdate, setIsUpdate] = useState(false)
 
   const { me } = useAuth()
   const modal = useModal()
-
+  const router = useRouter()
   const { showToast } = useToast()
 
   /**
@@ -92,9 +86,9 @@ function UserInfoPage() {
     }
 
     setSelectedFile(null)
-    setIsUpdate(false)
-    showToast("수정되었습니다.")
     refetch()
+    showToast("수정되었습니다.")
+    router.push(MY_PAGE.path)
   }
 
   const { data, isPending, isError, refetch } = useQuery({
@@ -134,7 +128,7 @@ function UserInfoPage() {
   if (isError) return <div>Error loading data</div>
 
   return (
-    <Box className="flex justify-center">
+    <Box className="flex justify-center h-screen">
       <div className={"w-full"}>
         <div className="flex flex-col items-center">
           {profileImageUrl ? (
@@ -174,14 +168,16 @@ function UserInfoPage() {
                 setSelectedFile(null)
               }}
             >
-              기본이미지 적용
+              현재 사진 삭제
             </div>
           </div>
         </div>
+        <hr className={"mt-5"} />
         <form
           className={"mx-auto flex max-w-[640px] flex-col gap-4"}
           onSubmit={handleUpdateUser}
         >
+          <div className="mt-2 text-lg">회원정보</div>
           <div className="mt-6">
             <div className="mb-4">
               <Input
@@ -197,35 +193,14 @@ function UserInfoPage() {
               label={"닉네임"}
               value={nickname || ""}
               type="text"
-              disabled={!isUpdate}
               onChange={(e) => setNickname(e.target.value)}
               id="nickname"
-              className={`${isUpdate && "border-blue-400"} text-sm focus:border-blue-400`}
+              className={`border-blue-400 text-sm focus:border-blue-400`}
             />
           </div>
-          {isUpdate ? (
-            <Button
-              className={"mt-5"}
-              intent="primary"
-              size="sm"
-              type={"submit"}
-            >
-              수정 완료
-            </Button>
-          ) : (
-            <Button
-              className={"mt-5"}
-              intent="primary"
-              size="sm"
-              type={"button"}
-              onClick={(e: any) => {
-                e.preventDefault()
-                setIsUpdate(true)
-              }}
-            >
-              수정
-            </Button>
-          )}
+          <Button className={"mt-5"} intent="primary" size="lg" type={"submit"}>
+            수정 완료
+          </Button>
         </form>
       </div>
     </Box>

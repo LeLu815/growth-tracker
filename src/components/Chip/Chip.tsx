@@ -1,16 +1,17 @@
 import { cva, VariantProps } from "class-variance-authority"
 
-const chipVariant = cva("border cursor-pointer text-black shadow-1", {
+const chipVariant = cva("border shadow-1", {
   variants: {
     intent: {
-      primary: "bg-[#D8D8D8] border-[#D8D8D8] text-black",
-      secondary: "bg-primary border-primary text-black",
-      third: "bg-blue-white border-black text-white",
+      primary: "bg-secondary border-secondary rounded-[30px]",
+      secondary: "bg-primary border-primary rounded-[30px]",
+      third: "bg-grey-400 border-grey-400 rounded-[30px]",
+      category:
+        "bg-primary border-primary text-black rounded-[34px] cursor-pointer",
     },
     size: {
-      sm: "rounded-[4px] px-2 py-1.5 text-[8px]",
-      md: "rounded-[6px] px-1.5 py-1 text-[12px]",
-      rounded: "rounded-[34px] px-4 py-2 text-[12px]",
+      sm: "px-2 py-1 text-body-xs font-medium",
+      md: "px-5 py-2 text-body-xs font-medium",
     },
     variant: {
       outline: "bg-white",
@@ -22,12 +23,12 @@ const chipVariant = cva("border cursor-pointer text-black shadow-1", {
     {
       intent: "primary",
       variant: "contained",
-      className: "bg-black",
+      className: "bg-secondary",
     },
     {
       intent: "primary",
       variant: "outline",
-      className: "text-[#d7d7d7] bg-white",
+      className: "text-secondary border border-solid border-secondary bg-white",
     },
     {
       intent: "secondary",
@@ -37,19 +38,24 @@ const chipVariant = cva("border cursor-pointer text-black shadow-1", {
     {
       intent: "secondary",
       variant: "outline",
-      className:
-        "text-slate-500 bg-white border border-solid border-[#FAFAFA] shadow-sm",
+      className: "text-primary bg-white border border-solid border-primary",
     },
+
     {
       intent: "secondary",
       variant: "selected",
-      className: "bg-[#FF7D3D] border-[#FF7D3D] text-white",
+      className: "bg-primary border-primary text-white",
+    },
+    {
+      intent: "third",
+      variant: "outline",
+      className: "text-grey-400 bg-white border border-solid border-grey-400",
     },
   ],
   defaultVariants: {
     intent: "primary",
-    size: "md",
-    variant: "outline",
+    size: "sm",
+    variant: "contained",
   },
 })
 
@@ -63,10 +69,10 @@ type ChipProps = {
 
 function Chip({
   label,
-  intent = "primary",
-  variant = "outline",
+  intent,
+  variant,
   selected = false,
-  size = "md",
+  size,
   onClick,
 }: ChipProps) {
   const finalVariant = selected ? "selected" : variant
