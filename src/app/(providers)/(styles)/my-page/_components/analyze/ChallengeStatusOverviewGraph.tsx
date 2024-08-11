@@ -175,7 +175,7 @@ const ChallengeStatusOverviewGraph = () => {
         <Doughnut data={graphData} options={options} />
       </div>
       <hr />
-      <div className={"mt-6 flex flex-col items-center"}>
+      <div className={"mt-6 flex flex-col items-start"}>
         <div className={"flex gap-10"}>
           <div className={"w-[100px] text-body-l"}>전체 챌린지</div>
           <div className={"title-xs"}>{challengeCount.totalCount}개</div>

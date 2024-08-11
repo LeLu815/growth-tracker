@@ -128,7 +128,7 @@ function UserInfoPage() {
   if (isError) return <div>Error loading data</div>
 
   return (
-    <Box className="flex justify-center">
+    <Box className="flex justify-center h-screen">
       <div className={"w-full"}>
         <div className="flex flex-col items-center">
           {profileImageUrl ? (
