@@ -10,14 +10,46 @@ import MyChallengeNavBar from "./_components/MyChallengeNavBar"
 import useMyChallengePageContext from "./context"
 
 function MyChallengePage() {
-  const { pageToView } = useMyChallengePageContext()
-  return (
-    <Page>
+  const {
+    pageToView,
+    challengeDataPending,
+    routineDoneDailyPending,
+    challengeDataError,
+    routineDoneDailyError,
+  } = useMyChallengePageContext()
+
+  // Pending이나 Error 상태와 상관없이 항상 표시되는 컴포넌트
+  const renderAlwaysVisibleComponents = () => (
+    <>
       <StatusBarSpace />
       <TopNavigation title="내 챌린지" />
-
       <MyChallengeNavBar />
+    </>
+  )
 
+  // Pending 또는 Error 상태인 경우에 표시되는 메시지
+  if (challengeDataPending || routineDoneDailyPending) {
+    return (
+      <Page>
+        {renderAlwaysVisibleComponents()}
+        <div className="mt-5">로딩 중</div>
+      </Page>
+    )
+  }
+
+  if (challengeDataError || routineDoneDailyError) {
+    return (
+      <Page>
+        {renderAlwaysVisibleComponents()}
+        <div className="mt-5">서버에서 데이터 로드 중 오류 발생</div>
+      </Page>
+    )
+  }
+
+  // 모든 상태가 false일 때만 표시되는 컴포넌트
+  return (
+    <Page>
+      {renderAlwaysVisibleComponents()}
       <div>
         {pageToView == "onProgress" ? (
           <>
