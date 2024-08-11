@@ -1,3 +1,4 @@
+import { createClient } from "@/supabase/client"
 import axios from "axios"
 
 import {
@@ -82,4 +83,46 @@ export const PUTchallenge = async (params: PUTchallengeArgumentProps) => {
     }
   )
   return putResponse
+}
+
+// 첼린지 id로 챌린지 가져오기
+export const GETchallenge = async (challenge_id: string) => {
+  const supabase = createClient()
+  const { data, error } = await supabase
+    .from("challenge")
+    .select()
+    .eq("id", challenge_id)
+
+  if (error) {
+    return false
+  }
+  return data
+}
+
+// 첼린지 id로 마일스톤 가져오기
+export const GETmilestones = async (challenge_id: string) => {
+  const supabase = createClient()
+  const { data, error } = await supabase
+    .from("milestone")
+    .select()
+    .eq("challenge_id", challenge_id)
+
+  if (error) {
+    return false
+  }
+  return data
+}
+
+// 첼린지 id로 루틴 가져오기
+export const GETroutines = async (milestoneId: string) => {
+  const supabase = createClient()
+  const { data, error } = await supabase
+    .from("routine")
+    .select()
+    .eq("milestone_id", milestoneId)
+
+  if (error) {
+    throw error
+  }
+  return data
 }

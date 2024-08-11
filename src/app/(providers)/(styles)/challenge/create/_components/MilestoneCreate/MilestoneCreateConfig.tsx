@@ -1,5 +1,6 @@
 import { FormEventHandler, useState } from "react"
 import { useAuth } from "@/context/auth.context"
+import { useToast } from "@/context/toast.context"
 import useChallengeQuery from "@/query/challenge/userChallengeQuery"
 import useChallengeCreateStore, {
   WEEK_DAY_LIST,
@@ -42,6 +43,8 @@ const SELECT_WEEK_BTN_VALUES: ("주중" | "주말" | "매일")[] = [
 const initialSelectWeeks = WEEK_DAY_LIST.map((_) => false)
 
 function MilestoneCreateConfig({ goNextPage }: MilestoneCreateConfigProps) {
+  // 토스트 띄우기
+  const { showToast } = useToast()
   // 뮤테이션 함수 => db에 생성 저장하는 로직
   const {
     challengeCreateMutate,
@@ -115,6 +118,10 @@ function MilestoneCreateConfig({ goNextPage }: MilestoneCreateConfigProps) {
     e.preventDefault()
     if (routineInpt === "") {
       return
+    }
+    if (routines.findIndex((routine) => routine === routineInpt) !== -1) {
+      // 같은 값 금지 토스트 띄우기
+      return showToast("이미 추가한 루틴입니다.", 500)
     }
     setRoutines((prev) => [...prev, routineInpt])
     setRoutineInput("")

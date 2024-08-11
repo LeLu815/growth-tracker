@@ -16,8 +16,8 @@ import CalenderIcon from "@/components/Icon/CalenderIcon"
 import FlagIcon from "@/components/Icon/FlagIcon"
 import Page from "@/components/Page"
 
-import DragDropContainer from "../DrapDropContainer/DragDropContainer"
-import SubTitle from "../styles/SubTitle"
+import DragDropContainer from "../../../../create/_components/DrapDropContainer/DragDropContainer"
+import SubTitle from "../../../../create/_components/styles/SubTitle"
 
 interface MilestoneCreateSwitchProps {}
 function MilestoneCreateSwitch({}: MilestoneCreateSwitchProps) {
@@ -72,7 +72,13 @@ function MilestoneCreateSwitch({}: MilestoneCreateSwitchProps) {
         </section>
 
         <section className="p-[20px]">
-          <DragDropContainer range={range} />
+          {data.length === 0 ? (
+            <p className="text-center text-[16px] text-grey-400">
+              루틴을 생성해주세요.
+            </p>
+          ) : (
+            <DragDropContainer range={range} />
+          )}
         </section>
         <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
           <Button
