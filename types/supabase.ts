@@ -527,6 +527,24 @@ export type Database = {
         }
         Returns: undefined
       }
+      get_average_success_rate: {
+        Args: {
+          user_id_param: string
+        }
+        Returns: {
+          period: string
+          success_rate: number
+        }[]
+      }
+      get_category_count_by_user: {
+        Args: {
+          user_id_param: string
+        }
+        Returns: {
+          category: string
+          challenge_count: number
+        }[]
+      }
       get_challenge_with_milestones: {
         Args: {
           request_challenge_id: string
@@ -549,6 +567,31 @@ export type Database = {
           start_at: string
           end_at: string
           milestones: Json
+        }[]
+      }
+      get_state_counts_by_user: {
+        Args: {
+          user_id_param: string
+        }
+        Returns: {
+          state: string
+          state_count: number
+        }[]
+      }
+      get_success_rate_distribution: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          success_rate_percentage: number
+          user_count: number
+        }[]
+      }
+      get_user_success_rate_distribution: {
+        Args: {
+          user_id_param: string
+        }
+        Returns: {
+          rounded_success_rate: number
+          percentile: number
         }[]
       }
       increment_challenge_like_cnt: {

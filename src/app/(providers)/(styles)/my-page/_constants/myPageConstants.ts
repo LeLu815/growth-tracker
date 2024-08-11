@@ -3,19 +3,24 @@ export interface MenuProps {
   path: string
 }
 
-const PROFILE: MenuProps = {
-  name: "내 정보",
+export const PROFILE: MenuProps = {
+  name: "내 정보 수정",
   path: "/my-page/profile",
 }
 
-const LIKE_CHALLENGE: MenuProps = {
+export const MY_PAGE: MenuProps = {
+  name: "",
+  path: "/my-page",
+}
+
+export const LIKE_CHALLENGE: MenuProps = {
   name: "찜한 챌린지",
   path: "/my-page/challenge/like",
 }
 
-const MY_CHALLENGE_ANALYZE: MenuProps = {
+export const MY_CHALLENGE_ANALYZE: MenuProps = {
   name: "내 챌린지 분석",
-  path: "/my-page/challenge/analyze",
+  path: "/my-page/analyze",
 }
 
 export const CHALLENGE_MENU_LIST: MenuProps[] = [
