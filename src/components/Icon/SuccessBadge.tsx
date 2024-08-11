@@ -3,7 +3,7 @@ import { SVGProps } from "react"
 
 import Icon from "./Icon"
 
-const FlagIcon = (props: SVGProps<SVGSVGElement> & { color?: string }) => (
+const SuccessBadge = (props: SVGProps<SVGSVGElement> & { color?: string }) => (
   <Icon
     {...props}
     viewBox="0 0 24 24"
@@ -31,4 +31,4 @@ const FlagIcon = (props: SVGProps<SVGSVGElement> & { color?: string }) => (
   </Icon>
 )
 
-export default FlagIcon
+export default SuccessBadge

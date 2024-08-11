@@ -8,11 +8,13 @@ const buttonVariant = cva(
   {
     variants: {
       intent: {
-        primary: "md:hover:bg-pink-400 bg-primary active:bg-pink-400",
-        secondary: "md:hover:bg-blue-400 active:bg-blue-400 bg-secondary",
+        primary: "active:bg-pink-400 md:hover:bg-pink-400",
+        secondary: "md:hover:bg-blue-400 active:bg-blue-400",
+        third: "active:bg-grey-800 md:hover:bg-grey-800",
         kakao: "bg-[#FDE500] text-[#1A1A1A]",
       },
       size: {
+        xs: "text-body-s px-[10px] py-[8px]",
         sm: "px-[22px] py-[10px] text-[14px]",
         md: "px-[24px] py-[12px] w-[calc(50%-6px)] mx-[3px] text-[16px]",
         lg: "w-full px-[26px] py-[12px] text-[18px]",
@@ -20,7 +22,7 @@ const buttonVariant = cva(
       variant: {
         outline: "rounded-[8px] ",
         contained: "rounded-[8px] ",
-        disabled: "text-grey-700 cursor-not-allowed rounded-[8px]",
+        disabled: "bg-grey-800 text-grey-700 cursor-not-allowed rounded-[8px]",
         selected: "bg-pink-850 text-primary border-primary rounded-[8px]",
         rounded: "rounded-full",
         borderless: "border-none",
@@ -76,6 +78,26 @@ const buttonVariant = cva(
         intent: "primary",
         variant: "borderless",
         className: "md:hover:bg-white active:bg-white",
+      },
+      {
+        intent: "third",
+        variant: "contained",
+        className: "bg-grey-600 border-transparent text-white",
+      },
+      {
+        intent: "kakao",
+        variant: "contained",
+        className: "border-transparent",
+      },
+      {
+        intent: "third",
+        variant: "outline",
+        className: "text-grey-50 bg-white border-grey-600",
+      },
+      {
+        intent: "third",
+        variant: "selected",
+        className: "text-grey-50 border-grey-50 bg-grey-800",
       },
     ],
     defaultVariants: {

@@ -1,14 +1,17 @@
+import Image from "next/image"
+
+import { successRateCalcu } from "@/app/(providers)/_utils/successRateCalcuUtils"
 import { convertStatusToKorean } from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeInfo"
 
 import {
-  StructuredChallengeType,
-  StructuredMilestoneType,
-} from "../../../types/supabase.type"
-import ChallengeProgress from "../ChallengeProgress"
+  ProgressChallengeType,
+  ProgressMilestoneType,
+} from "../../../types/challengeProgress.type"
 import Chip from "../Chip"
 import BookmarkIcon from "../Icon/BookmarkIcon"
 import CopyIcon from "../Icon/CopyIcon"
-import RangeInput from "../RangeInput"
+import SuccessBadge from "../Icon/SuccessBadge"
+import ProgressBar from "../ProgressBar/ProgressBar"
 
 interface ChallengeCardProps {
   title: string
@@ -16,13 +19,13 @@ interface ChallengeCardProps {
   likes: number
   bookmarks: number
   liked: boolean
-  nickname: string
-  progress: string
-  userImage: string
+  // nickname: string
+  state: string
+  // userImage: string
   bookmarked: boolean
   challengeImage: string
-  challenge: StructuredChallengeType
-  milestones: StructuredMilestoneType[]
+  challenge?: ProgressChallengeType
+  milestone?: ProgressMilestoneType[]
 }
 
 function ChallengeCard({
@@ -31,25 +34,29 @@ function ChallengeCard({
   liked,
   bookmarks,
   likes,
-  nickname,
-  progress,
-  userImage,
+  // nickname,
+  state,
+  // userImage,
   bookmarked,
   challengeImage,
   challenge,
+  milestone = [],
 }: ChallengeCardProps) {
+  const successRate = successRateCalcu(milestone)
+
   const getStatusChip = () => {
-    const statusLabel = convertStatusToKorean(progress)
+    const statusLabel = convertStatusToKorean(state)
 
     let intent: "primary" | "secondary" | "third" | "category" = "primary"
     let variant: "outline" | "contained" | "selected" = "contained"
 
-    switch (progress) {
+    switch (state) {
       case "on_progress":
         intent = "primary"
         break
       case "on_complete":
-        intent = "secondary"
+        intent = "primary"
+        variant = "outline"
         break
       case "on_fail":
         intent = "third"
@@ -75,29 +82,37 @@ function ChallengeCard({
 
   return (
     <div
-      className="flex flex-col rounded-lg bg-white shadow-sm"
+      className="flex cursor-pointer flex-col rounded-lg bg-white shadow-sm"
       style={{ border: "1px solid #E0E0E0" }}
     >
-      <div className="flex w-full px-[8px] py-[14px]">
+      <div className="flex w-full px-[12px] py-[14px]">
         <div className="mr-4 flex w-1/4 min-w-[98px] flex-col">
-          <div className="align-start relative flex h-full w-full flex-col items-start justify-between rounded-lg bg-gray-200"></div>
+          <div className="align-start relative flex h-full w-full flex-col items-start justify-between overflow-hidden rounded-[6px] border">
+            <Image
+              fill
+              className="object-cover"
+              src={challengeImage}
+              alt="챌린지 대표 이미지"
+            />
+          </div>
         </div>
         <div className="flex w-3/4 flex-col">
           <div className="flex items-center justify-between">
-            <p className="text-title-s font-bold">{title}</p>
+            <p className="flex w-full justify-between text-title-s font-bold">
+              <span>{title}</span>
+              <span>{successRate === 100 ? <SuccessBadge /> : ""}</span>
+            </p>
           </div>
           <div className="flex w-full items-center justify-between py-[12px]">
             <span>{getStatusChip()}</span>
-            <span>
-              <span className="text-body-s font-medium">달성률 </span>
-              <span className="text-body-m font-medium text-primary">
-                <ChallengeProgress
-                  challenge={challenge}
-                  milestones={challenge.milestones || []}
-                />
-                100%
+            {state === "on_complete" && (
+              <span>
+                <span className="text-body-s font-medium">달성률 </span>
+                <span className="text-body-m font-medium text-primary">
+                  {successRate}%
+                </span>
               </span>
-            </span>
+            )}
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -119,22 +134,9 @@ function ChallengeCard({
         </div>
       </div>
       <div className="flex w-full">
-        <div className="flex w-1/4"></div>
-        <div className="flex w-3/4 flex-col items-end px-[8px]">
-          <ChallengeProgress
-            challenge={challenge}
-            milestones={challenge.milestones || []}
-          />
-
-          <RangeInput
-            max={100}
-            min={10}
-            getValue={() => {}}
-            trackColor="#82D0DC"
-            thumbColor="#FC5A6B"
-            step={5}
-            defaultValue={50}
-          />
+        <div className="mr-4 flex w-1/4 min-w-[98px]"></div>
+        <div className="flex w-3/4 flex-col items-end px-[12px]">
+          <ProgressBar progress={successRate} />
         </div>
       </div>
 

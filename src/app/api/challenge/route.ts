@@ -26,7 +26,6 @@ export const POST = async (request: NextRequest) => {
     .insert(challengeData)
     .select()
 
-  // *** 수정된 부분 시작 ***
   console.log("첼린지 생성 응답:", challengeCreateResponse)
 
   // 응답 데이터 검증
@@ -44,7 +43,6 @@ export const POST = async (request: NextRequest) => {
       { status: 400 }
     )
   }
-  // *** 수정된 부분 끝 ***
 
   // 첼린지 아이디 추출
   const newChallengeId = challengeCreateResponse.data[0].id
@@ -150,6 +148,69 @@ export const POST = async (request: NextRequest) => {
   return NextResponse.json("")
 }
 
+// export async function GET(req: NextRequest) {
+//   const supabase = createClient()
+
+//   const { searchParams } = new URL(req.url)
+//   const keyword = searchParams.get("keyword") || ""
+//   const filter = searchParams.get("filter") || ""
+//   const category = searchParams.get("category") || ""
+//   const showCompleted = searchParams.get("showCompleted") === "true"
+
+//   const baseQuery = supabase
+//     .from("challenge")
+//     .select(
+//       `
+//       *,
+//       milestone(
+//         *,
+//         routine(*),
+//         routine_done_daily(*)
+//       ),
+//       user:users (
+//         nickname,
+//         profile_image_url
+//       )
+//     `
+//     )
+//     .ilike("goal", `%${keyword}%`)
+
+//   // 카테고리 필터링
+//   const categoryQuery = category
+//     ? baseQuery.eq("category", category)
+//     : baseQuery
+
+//   // 성공 루틴만 보기 필터링
+//   const completeQuery = showCompleted
+//     ? categoryQuery.eq("state", "on_complete")
+//     : categoryQuery
+
+//   // 필터링 & 정렬
+//   const query = (() => {
+//     switch (filter) {
+//       case "recent":
+//         return baseQuery.order("created_at", { ascending: false })
+//       case "popular":
+//         return baseQuery.order("like_cnt", { ascending: false })
+//       case "followed":
+//         return baseQuery.order("template_cnt", { ascending: false })
+//       // case "complete":
+//       //   return baseQuery.eq("state", "on_complete")
+//       default:
+//         return completeQuery
+//     }
+//   })()
+
+//   const { data: listsData, error: listsError } = await query
+
+//   if (listsError) {
+//     console.log(listsError.message)
+//     return NextResponse.json({ listsError: listsError.message })
+//   }
+
+//   return NextResponse.json(listsData)
+// }
+
 export async function GET(req: NextRequest) {
   const supabase = createClient()
 
@@ -164,6 +225,11 @@ export async function GET(req: NextRequest) {
     .select(
       `
       *,
+      milestone(
+        *,
+        routine(*),
+        routine_done_daily(*)
+      ),
       user:users (
         nickname,
         profile_image_url
@@ -172,27 +238,22 @@ export async function GET(req: NextRequest) {
     )
     .ilike("goal", `%${keyword}%`)
 
-  // 카테고리 필터링
   const categoryQuery = category
     ? baseQuery.eq("category", category)
     : baseQuery
 
-  // 성공 루틴만 보기 필터링
   const completeQuery = showCompleted
     ? categoryQuery.eq("state", "on_complete")
     : categoryQuery
 
-  // 필터링 & 정렬
   const query = (() => {
     switch (filter) {
       case "recent":
-        return baseQuery.order("created_at", { ascending: false })
+        return completeQuery.order("created_at", { ascending: false })
       case "popular":
-        return baseQuery.order("like_cnt", { ascending: false })
+        return completeQuery.order("like_cnt", { ascending: false })
       case "followed":
-        return baseQuery.order("template_cnt", { ascending: false })
-      // case "complete":
-      //   return baseQuery.eq("state", "on_complete")
+        return completeQuery.order("template_cnt", { ascending: false })
       default:
         return completeQuery
     }
@@ -205,5 +266,24 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ listsError: listsError.message })
   }
 
-  return NextResponse.json(listsData)
+  // 수동으로 routine_done_daily를 routine에 연결
+  const enhancedData = listsData.map((challenge) => {
+    // milestone을 순회하며 routine_done_daily를 연결
+    challenge.milestone = challenge.milestone.map((milestone) => {
+      // routine_done_daily가 존재하는지 확인한 후 매핑 수행
+      if (milestone.routine_done_daily) {
+        milestone.routine_done_daily = milestone.routine_done_daily.map(
+          (rdd) => ({
+            ...rdd,
+            milestone_id: milestone.id,
+            challenge_id: challenge.id,
+          })
+        )
+      }
+      return milestone
+    })
+    return challenge
+  })
+
+  return NextResponse.json(enhancedData)
 }

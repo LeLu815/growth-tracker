@@ -50,9 +50,11 @@ function NewsfeedClient() {
         5
       )
     },
+
     getNextPageParam: (lastPage, pages) => {
-      return lastPage.length === 5 ? pages.length + 1 : undefined
+      return lastPage?.length === 5 ? pages.length + 1 : undefined
     },
+
     initialPageParam: 1,
   })
 
@@ -130,13 +132,18 @@ function NewsfeedClient() {
       {isLoading ? (
         <div>로딩 중</div>
       ) : (
-        <>
-          <ChallengePosts
-            posts={data?.pages.flat() || []}
-            onClickPost={handlePostClick}
-          />
-          <div ref={loadMore}>{isFetchingNextPage && <div> 로딩중</div>}</div>
-        </>
+        <div className="pb-[60px]">
+          {data?.pages
+            .flat()
+            .map((post, index) => (
+              <ChallengePosts
+                key={post.id}
+                posts={[post]}
+                onClickPost={handlePostClick}
+              />
+            ))}
+          <div ref={loadMore}>{isFetchingNextPage && <div>로딩중...</div>}</div>
+        </div>
       )}
     </>
   )

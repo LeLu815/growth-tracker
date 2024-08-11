@@ -233,6 +233,8 @@ export const convertStatusToKorean = (state: string) => {
       return "챌린지 실패"
     case "not_started":
       return "챌린지 실행전"
+    default:
+      return "알 수 없음"
   }
 }
 

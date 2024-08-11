@@ -33,7 +33,7 @@ function SortSelector({
 
   return (
     <div className="my-[24px] flex justify-end gap-[12px]">
-      <div>
+      <div className="flex items-center">
         <label
           className="ml-4 flex cursor-pointer items-center text-sm font-medium text-gray-700"
           onClick={onToggleShowComplete}
@@ -52,7 +52,7 @@ function SortSelector({
         </label>
       </div>
 
-      <div className="relative flex transition">
+      <div className="itmes-center relative flex transition">
         <SortButton
           isOpen={isOpen}
           filter={filter}
@@ -60,7 +60,7 @@ function SortSelector({
         />
 
         {isOpen && (
-          <div className="shadow-3 absolute right-0 top-[20px] z-10 w-[102px] rounded-md bg-white">
+          <div className="absolute right-0 top-[20px] z-10 w-[102px] rounded-md bg-white shadow-3">
             <div
               className="text-black"
               role="menu"

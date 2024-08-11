@@ -140,7 +140,7 @@ function ComponentTestPage() {
         bookmarks={23}
         userImage=""
         nickname="닉네임"
-        progress="on_progress"
+        state="on_progress"
         bookmarked={false}
         challengeImage="/icon/ic-arrow-right.svg"
       />
@@ -152,7 +152,7 @@ function ComponentTestPage() {
         bookmarks={23}
         userImage=""
         nickname="닉네임"
-        progress="not_started"
+        state="not_started"
         bookmarked={false}
         challengeImage="/icon/ic-arrow-right.svg"
       />
@@ -169,7 +169,7 @@ function ComponentTestPage() {
       {/*<ChallengeCommentCreate />*/}
       <div className="h-[100px]"></div>
 
-      <Button onClick={handleModalClick}> 모달 테스 </Button>
+      <Button onClick={handleModalClick}> 모달 테스트 </Button>
     </Page>
   )
 }
