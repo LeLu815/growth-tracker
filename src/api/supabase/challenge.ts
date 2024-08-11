@@ -20,6 +20,8 @@ export type MilestoneRequiredType = Pick<
   | "total_cnt"
   | "total_day"
   | "success_requirement_cnt"
+  | "name"
+  | "success_percent"
 >
 // milestone 선택 타입 (요일 지정 타입) : MilestonePartialType
 export type RemainingType = Omit<
@@ -39,6 +41,7 @@ export interface POSTchallengeArgumentProps {
     | "is_secret"
     | "day_cnt"
     | "category"
+    | "image_url"
   >
   milestone: Omit<MilestoneRequiredType & MilestonePartialType, "routines">[]
   routine: Pick<RoutineType, "content" | "milestone_id">[][]

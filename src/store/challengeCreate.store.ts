@@ -11,6 +11,8 @@ interface RangeState {
   setCategory: (name: string) => void
   goal: string
   setGoal: (name: string) => void
+  randomImgUrl: string
+  setRandomImgUrl: (url: string) => void
 }
 const defaultMonth = new Date()
 export const defaultSelected: DateRange = {
@@ -26,6 +28,8 @@ export const useChallengeCreateStore = create<RangeState>((set) => ({
   setCategory: (name) => set({ category: name }),
   goal: "",
   setGoal: (name) => set({ goal: name }),
+  randomImgUrl: "",
+  setRandomImgUrl: (url) => set({ randomImgUrl: url }),
 }))
 
 export default useChallengeCreateStore

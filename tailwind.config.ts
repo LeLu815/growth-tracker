@@ -18,6 +18,9 @@ const config = {
       },
     },
     extend: {
+      gradientColorStopPositions: {
+        50: "50%",
+      },
       backgroundImage: {
         "challenge-image":
           "url('https://blog.kakaocdn.net/dn/bcOXTW/btsvdteG3PE/yHP14OhQdgspKPHUKhCY4K/img.png')",

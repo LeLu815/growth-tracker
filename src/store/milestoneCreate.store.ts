@@ -22,6 +22,8 @@ export type MilestoneType = {
   is_thu: boolean
   is_tue: boolean
   is_wed: boolean
+  name: string
+  success_percent: number
 }
 
 interface MilestoneState {
