@@ -26,8 +26,6 @@ export const POST = async (request: NextRequest) => {
     .insert(challengeData)
     .select()
 
-  console.log("첼린지 생성 응답:", challengeCreateResponse)
-
   // 응답 데이터 검증
   if (
     challengeCreateResponse.error ||
@@ -145,71 +143,8 @@ export const POST = async (request: NextRequest) => {
   }
 
   // 위의 모든 과정 성공
-  return NextResponse.json("")
+  return NextResponse.json(newChallengeId)
 }
-
-// export async function GET(req: NextRequest) {
-//   const supabase = createClient()
-
-//   const { searchParams } = new URL(req.url)
-//   const keyword = searchParams.get("keyword") || ""
-//   const filter = searchParams.get("filter") || ""
-//   const category = searchParams.get("category") || ""
-//   const showCompleted = searchParams.get("showCompleted") === "true"
-
-//   const baseQuery = supabase
-//     .from("challenge")
-//     .select(
-//       `
-//       *,
-//       milestone(
-//         *,
-//         routine(*),
-//         routine_done_daily(*)
-//       ),
-//       user:users (
-//         nickname,
-//         profile_image_url
-//       )
-//     `
-//     )
-//     .ilike("goal", `%${keyword}%`)
-
-//   // 카테고리 필터링
-//   const categoryQuery = category
-//     ? baseQuery.eq("category", category)
-//     : baseQuery
-
-//   // 성공 루틴만 보기 필터링
-//   const completeQuery = showCompleted
-//     ? categoryQuery.eq("state", "on_complete")
-//     : categoryQuery
-
-//   // 필터링 & 정렬
-//   const query = (() => {
-//     switch (filter) {
-//       case "recent":
-//         return baseQuery.order("created_at", { ascending: false })
-//       case "popular":
-//         return baseQuery.order("like_cnt", { ascending: false })
-//       case "followed":
-//         return baseQuery.order("template_cnt", { ascending: false })
-//       // case "complete":
-//       //   return baseQuery.eq("state", "on_complete")
-//       default:
-//         return completeQuery
-//     }
-//   })()
-
-//   const { data: listsData, error: listsError } = await query
-
-//   if (listsError) {
-//     console.log(listsError.message)
-//     return NextResponse.json({ listsError: listsError.message })
-//   }
-
-//   return NextResponse.json(listsData)
-// }
 
 export async function GET(req: NextRequest) {
   const supabase = createClient()

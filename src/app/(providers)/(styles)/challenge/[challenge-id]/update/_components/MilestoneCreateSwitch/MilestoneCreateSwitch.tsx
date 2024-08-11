@@ -16,12 +16,20 @@ import CalenderIcon from "@/components/Icon/CalenderIcon"
 import FlagIcon from "@/components/Icon/FlagIcon"
 import Page from "@/components/Page"
 
-import DragDropContainer from "../DrapDropContainer/DragDropContainer"
-import SubTitle from "../styles/SubTitle"
+import DragDropContainer from "../../../../create/_components/DrapDropContainer/DragDropContainer"
+import SubTitle from "../../../../create/_components/styles/SubTitle"
 
-interface MilestoneCreateSwitchProps {}
-function MilestoneCreateSwitch({}: MilestoneCreateSwitchProps) {
-  const { category, range, goal, setRange, setCategory, setGoal } =
+interface MilestoneCreateSwitchProps {
+  goNextPage: () => void
+  challengeId: string
+  milestoneIds: string[]
+}
+function MilestoneCreateSwitch({
+  goNextPage,
+  challengeId,
+  milestoneIds,
+}: MilestoneCreateSwitchProps) {
+  const { range, goal, setRange, setCategory, setGoal } =
     useChallengeCreateStore()
   const { data, setData } = useMilestoneCreateStore()
   const { me } = useAuth()
@@ -33,6 +41,9 @@ function MilestoneCreateSwitch({}: MilestoneCreateSwitchProps) {
     challengeCreateIsPending,
     challengeUpdateMutate,
   } = useChallengeQuery()
+
+  console.log("milestoneIds:", milestoneIds)
+  console.log("data:", data)
 
   return (
     <>
@@ -59,7 +70,7 @@ function MilestoneCreateSwitch({}: MilestoneCreateSwitchProps) {
             className="h-full"
             size="lg"
             onClick={() => {
-              // setShowCompoent("config")
+              goNextPage()
             }}
             disabled={
               data.length !== 0 &&
@@ -72,8 +83,15 @@ function MilestoneCreateSwitch({}: MilestoneCreateSwitchProps) {
         </section>
 
         <section className="p-[20px]">
-          <DragDropContainer range={range} />
+          {data.length === 0 ? (
+            <p className="text-center text-[16px] text-grey-400">
+              루틴을 생성해주세요.
+            </p>
+          ) : (
+            <DragDropContainer range={range} />
+          )}
         </section>
+        <div className="h-[100px]" />
         <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
           <Button
             className="h-full"
@@ -82,18 +100,9 @@ function MilestoneCreateSwitch({}: MilestoneCreateSwitchProps) {
               router.push("/")
 
               // 2. 먼저 뮤테이션 돌리고
-              challengeCreateMutate({
-                challenge: {
-                  category: category,
-                  user_id: me?.id || "",
-                  day_cnt:
-                    differenceInCalendarDays(range?.to!, range?.from!) + 1,
-                  end_at: format(range?.to!, "yyyy-MM-dd"),
-                  goal: goal,
-                  is_secret: false,
-                  start_at: format(range?.from!, "yyyy-MM-dd"),
-                  image_url: "",
-                },
+              challengeUpdateMutate({
+                milestoneIds: milestoneIds,
+                "challenge-id": challengeId,
                 milestone: data.map((obj) =>
                   produce(
                     obj,

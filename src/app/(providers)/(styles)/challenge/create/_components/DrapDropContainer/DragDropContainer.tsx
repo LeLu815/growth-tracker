@@ -120,7 +120,7 @@ export function updateDataBetweenSwitchDays(
     for (let i = first_index; i <= later_index; i++) {
       if (i === 0) {
         if (challenge_start) {
-          const newEndAt = addDays(challenge_start, draft[i].total_day)
+          const newEndAt = addDays(challenge_start, draft[i].total_day - 1)
           draft[i].start_at = format(challenge_start, "yyyy-MM-dd")
           draft[i].end_at = format(newEndAt, "yyyy-MM-dd")
         }
