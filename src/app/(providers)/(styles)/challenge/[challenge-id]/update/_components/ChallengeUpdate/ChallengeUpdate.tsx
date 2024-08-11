@@ -13,15 +13,25 @@ import useMilestoneCreateStore, {
   MilestoneType,
 } from "@/store/milestoneCreate.store"
 
+import Box from "@/components/Box"
+import Page from "@/components/Page"
+
 import ChallengePageTitle from "../../../../create/_components/ChallengePageTitle"
 import MilestoneCreateSwitch from "../MilestoneCreateSwitch/MilestoneCreateSwitch"
+import MilestoneUpdateConfig from "../MilestoneUpdateConfig/MilestoneUpdateConfig"
 
 interface ChallengeUpdateProps {
   challengeId: string
+  milestoneId?: string
 }
 function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
   // 수정 되었는지 여부 체크
   const [isModified, setIsModified] = useState<boolean>(false)
+  // 선택된 페이지 이름
+  const [selectedPageName, setSelectedPageName] = useState<
+    "switch" | "add" | "edit"
+  >("switch")
+
   // 이전 정보 불러와서 저장하기
   // 챌린지 정보
   const { setCategory, setGoal, setRandomImgUrl, setRange } =
@@ -71,26 +81,55 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
       }
     })()
   }, [])
-  // 정보를 불러오는 중입니다가 들어가면 좋을 거 같아요
+
   return (
     <div className="mx-auto flex h-screen max-w-[640px] flex-col">
-      <ChallengePageTitle
-        title={"루틴 수정"}
-        allStepCount={4}
-        titleHidden={false}
-        handleClickGoBack={() => {
-          // 컨펌 열기 => 확인이면 뒤로 가기
-          if (isModified) {
-            return open({
-              type: "confirm",
-              content: "저장되지 않은 변경사항은 삭제됩니다.",
-              onConfirm: () => router.back(),
-            })
-          }
-          return router.back()
-        }}
-      />
-      <MilestoneCreateSwitch />
+      {selectedPageName === "switch" && (
+        <>
+          <ChallengePageTitle
+            title={"루틴 수정"}
+            allStepCount={4}
+            titleHidden={false}
+            handleClickGoBack={() => {
+              // 컨펌 열기 => 확인이면 뒤로 가기
+              if (isModified) {
+                return open({
+                  type: "confirm",
+                  content: "저장되지 않은 변경사항은 삭제됩니다.",
+                  onConfirm: () => router.back(),
+                })
+              }
+              return router.back()
+            }}
+          />
+          <MilestoneCreateSwitch
+            goNextPage={() => setSelectedPageName("add")}
+            // goMilestoneDetail={()=> setSelectedPageName("edit")}
+          />
+        </>
+      )}
+      {(selectedPageName === "add" || selectedPageName === "edit") && (
+        <>
+          <div>
+            <ChallengePageTitle
+              title="루틴 생성"
+              step={4}
+              allStepCount={4}
+              titleHidden={false}
+              handleClickGoBack={() => {
+                setSelectedPageName("switch")
+              }}
+            />
+            <Page>
+              <Box>
+                <MilestoneUpdateConfig
+                  goNextPage={() => setSelectedPageName("switch")}
+                />
+              </Box>
+            </Page>
+          </div>
+        </>
+      )}
     </div>
   )
 }

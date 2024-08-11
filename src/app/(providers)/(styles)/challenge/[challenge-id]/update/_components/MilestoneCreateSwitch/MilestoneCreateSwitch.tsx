@@ -19,8 +19,10 @@ import Page from "@/components/Page"
 import DragDropContainer from "../../../../create/_components/DrapDropContainer/DragDropContainer"
 import SubTitle from "../../../../create/_components/styles/SubTitle"
 
-interface MilestoneCreateSwitchProps {}
-function MilestoneCreateSwitch({}: MilestoneCreateSwitchProps) {
+interface MilestoneCreateSwitchProps {
+  goNextPage: () => void
+}
+function MilestoneCreateSwitch({ goNextPage }: MilestoneCreateSwitchProps) {
   const { category, range, goal, setRange, setCategory, setGoal } =
     useChallengeCreateStore()
   const { data, setData } = useMilestoneCreateStore()
@@ -59,7 +61,7 @@ function MilestoneCreateSwitch({}: MilestoneCreateSwitchProps) {
             className="h-full"
             size="lg"
             onClick={() => {
-              // setShowCompoent("config")
+              goNextPage()
             }}
             disabled={
               data.length !== 0 &&
@@ -80,6 +82,7 @@ function MilestoneCreateSwitch({}: MilestoneCreateSwitchProps) {
             <DragDropContainer range={range} />
           )}
         </section>
+        <div className="h-[100px]" />
         <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
           <Button
             className="h-full"
