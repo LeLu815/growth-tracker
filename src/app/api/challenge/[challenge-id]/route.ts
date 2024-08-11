@@ -67,6 +67,8 @@ export const PUT = async (
       "is_thu",
       "is_tue",
       "is_wed",
+      "name",
+      "success_percent",
     ]
     // promise 배열 생성
     const insertMileStonePromises = milestoneList.map((milestoneObj) => {
@@ -77,7 +79,7 @@ export const PUT = async (
         return milestoneObj[attr]
       })
       return pgClient.query(
-        "INSERT INTO milestone (end_at, start_at, challenge_id, success_requirement_cnt, total_cnt, total_day, is_fri, is_mon, is_sat, is_sun, is_thu, is_tue, is_wed) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id",
+        "INSERT INTO milestone (end_at, start_at, challenge_id, success_requirement_cnt, total_cnt, total_day, is_fri, is_mon, is_sat, is_sun, is_thu, is_tue, is_wed, name, success_percent) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING id",
         queryList
       )
     })

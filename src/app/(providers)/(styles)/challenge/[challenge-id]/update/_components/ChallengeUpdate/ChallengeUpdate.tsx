@@ -27,6 +27,7 @@ interface ChallengeUpdateProps {
 function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
   // 수정 되었는지 여부 체크
   const [isModified, setIsModified] = useState<boolean>(false)
+  const [milestoneIds, setMilestoneIds] = useState<string[]>([])
   // 선택된 페이지 이름
   const [selectedPageName, setSelectedPageName] = useState<
     "switch" | "add" | "edit"
@@ -49,9 +50,15 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
     ;(async () => {
       const challengeObj = await GETchallenge(challengeId)
       const milestones = await GETmilestones(challengeId)
+      const temp_milestoneIds: string[] = []
 
       const routinesPromise =
-        milestones && milestones.map((milestone) => GETroutines(milestone.id))
+        milestones &&
+        milestones.map((milestone) => {
+          temp_milestoneIds.push(milestone.id)
+          return GETroutines(milestone.id)
+        })
+      setMilestoneIds(temp_milestoneIds)
       const routines = routinesPromise ? await Promise.all(routinesPromise) : []
 
       // 챌린지 데이터 전역에 저장
@@ -103,6 +110,8 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
             }}
           />
           <MilestoneCreateSwitch
+            challengeId={challengeId}
+            milestoneIds={milestoneIds}
             goNextPage={() => setSelectedPageName("add")}
             // goMilestoneDetail={()=> setSelectedPageName("edit")}
           />

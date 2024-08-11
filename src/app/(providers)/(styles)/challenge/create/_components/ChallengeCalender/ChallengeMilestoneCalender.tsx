@@ -30,12 +30,15 @@ function ChallengeMilestoneCalender({
   // 첼린지 기간 제외 날짜들
   const disabledDates: string[] = []
   // 이전 마일스톤 기간들
-  const prevMilestoneDisabledDates: string[] | null = milestoneStartDate
-    ? eachDayOfInterval({
-        start: range.from!,
-        end: subDays(milestoneStartDate, 1),
-      }).map((value) => format(value, "yyyy-MM-dd"))
-    : null
+  const prevMilestoneDisabledDates: string[] | null =
+    milestoneStartDate &&
+    format(milestoneStartDate, "yyyy-MM-dd") !==
+      format(range.from!, "yyyy-MM-dd")
+      ? eachDayOfInterval({
+          start: range.from!,
+          end: subDays(milestoneStartDate, 1),
+        }).map((value) => format(value, "yyyy-MM-dd"))
+      : null
 
   // 루틴 기간 설정 함수
   const getChallengeDateList = ({
@@ -123,6 +126,7 @@ function ChallengeMilestoneCalender({
       const length = prevMilestoneDisabledDates.length
       // const first = prevMilestoneDisabledDates.shift()
       // const last = prevMilestoneDisabledDates.pop()
+
       switch (length) {
         case 1: {
           // 여기서는 첫번째만

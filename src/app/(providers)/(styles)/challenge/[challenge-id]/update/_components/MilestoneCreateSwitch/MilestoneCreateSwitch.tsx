@@ -21,9 +21,15 @@ import SubTitle from "../../../../create/_components/styles/SubTitle"
 
 interface MilestoneCreateSwitchProps {
   goNextPage: () => void
+  challengeId: string
+  milestoneIds: string[]
 }
-function MilestoneCreateSwitch({ goNextPage }: MilestoneCreateSwitchProps) {
-  const { category, range, goal, setRange, setCategory, setGoal } =
+function MilestoneCreateSwitch({
+  goNextPage,
+  challengeId,
+  milestoneIds,
+}: MilestoneCreateSwitchProps) {
+  const { range, goal, setRange, setCategory, setGoal } =
     useChallengeCreateStore()
   const { data, setData } = useMilestoneCreateStore()
   const { me } = useAuth()
@@ -35,6 +41,9 @@ function MilestoneCreateSwitch({ goNextPage }: MilestoneCreateSwitchProps) {
     challengeCreateIsPending,
     challengeUpdateMutate,
   } = useChallengeQuery()
+
+  console.log("milestoneIds:", milestoneIds)
+  console.log("data:", data)
 
   return (
     <>
@@ -91,18 +100,9 @@ function MilestoneCreateSwitch({ goNextPage }: MilestoneCreateSwitchProps) {
               router.push("/")
 
               // 2. 먼저 뮤테이션 돌리고
-              challengeCreateMutate({
-                challenge: {
-                  category: category,
-                  user_id: me?.id || "",
-                  day_cnt:
-                    differenceInCalendarDays(range?.to!, range?.from!) + 1,
-                  end_at: format(range?.to!, "yyyy-MM-dd"),
-                  goal: goal,
-                  is_secret: false,
-                  start_at: format(range?.from!, "yyyy-MM-dd"),
-                  image_url: "",
-                },
+              challengeUpdateMutate({
+                milestoneIds: milestoneIds,
+                "challenge-id": challengeId,
                 milestone: data.map((obj) =>
                   produce(
                     obj,

@@ -71,7 +71,6 @@ function ChallengeName({
     const randomIndex = Math.floor(Math.random() * length)
     setSelectedRandomUrl(imgs[randomIndex])
   }
-  console.log("randomImgUrl :", randomImgUrl)
   return (
     <>
       <ChallengePageTitle

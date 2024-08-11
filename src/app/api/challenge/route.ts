@@ -27,7 +27,6 @@ export const POST = async (request: NextRequest) => {
     .select()
 
   // *** 수정된 부분 시작 ***
-  console.log("첼린지 생성 응답:", challengeCreateResponse)
 
   // 응답 데이터 검증
   if (
@@ -147,7 +146,7 @@ export const POST = async (request: NextRequest) => {
   }
 
   // 위의 모든 과정 성공
-  return NextResponse.json("")
+  return NextResponse.json(newChallengeId)
 }
 
 export async function GET(req: NextRequest) {

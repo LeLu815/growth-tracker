@@ -69,7 +69,8 @@ export const POSTchallenge = async (params: POSTchallengeArgumentProps) => {
     milestone: params.milestone,
     routine: params.routine,
   })
-  return postResponse
+  console.log("postResponse :", postResponse)
+  return postResponse.data
 }
 
 // 챌린지 디테일 업데이트 함수
