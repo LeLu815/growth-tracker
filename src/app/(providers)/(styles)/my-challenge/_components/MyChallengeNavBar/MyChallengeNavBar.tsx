@@ -49,4 +49,4 @@ function MyChallengeNavBar() {
   )
 }
 
-export default MyChallengeNavBar
+export default React.memo(MyChallengeNavBar)
