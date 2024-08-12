@@ -80,6 +80,9 @@ function LikeChallengeList() {
                   me ? (myChallenge.bookmarked || []).includes(me.id) : false
                 }
                 challengeImage={myChallenge.image}
+                successRate={myChallenge.successRate}
+                challenge={myChallenge}
+                milestone={myChallenge.milestone}
               />
             </li>
           )
