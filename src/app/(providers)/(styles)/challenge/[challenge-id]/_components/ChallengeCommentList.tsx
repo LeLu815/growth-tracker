@@ -426,6 +426,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                       <textarea
                         style={{ overflow: "hidden" }}
                         rows={comment.rows}
+                        disabled={!isUpdate}
                         className={`h-full w-full resize-none text-gray-700 focus:outline-none ${isUpdate && comment.id === updateCommentId ? `border-b border-l-0 border-r-0 border-t-0 border-[#141414] bg-white p-2 text-gray-700 outline-none` : "border-none bg-transparent"}`}
                         value={`${isUpdate && comment.id === updateCommentId ? updateContent : comment.content}`}
                         ref={(el) => {
