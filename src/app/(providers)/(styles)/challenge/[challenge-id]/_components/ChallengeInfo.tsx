@@ -281,7 +281,9 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
           </div>
         </div>
       </div>
-      <MilestoneList milestones={data?.milestones} />
+      <div className={"px-3 pt-2"}>
+        <MilestoneList milestones={data?.milestones} />
+      </div>
     </div>
   )
 }

@@ -39,7 +39,8 @@ export async function GET(
     `
     )
     .eq("user_id", userId)
-    // .range(page * limit, page * limit + (limit - 1))
+    .in("state", ["on_complete", "on_fail"])
+    .range(page * limit, page * limit + (limit - 1))
     .order("created_at", { ascending: false })
     .order("id", { ascending: false })
 

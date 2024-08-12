@@ -28,7 +28,7 @@ function ChallengeDetailPageTitle({
   const [isScrolled, setIsScrolled] = useState(false)
 
   const handleScroll = () => {
-    setIsScrolled(window.scrollY > 290)
+    setIsScrolled(window.scrollY > 230)
   }
 
   useEffect(() => {
