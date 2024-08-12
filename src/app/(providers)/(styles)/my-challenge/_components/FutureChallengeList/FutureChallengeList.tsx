@@ -2,12 +2,7 @@ import React from "react"
 
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
 
-import {
-  StructuredChallengeType,
-  StructuredMilestoneType,
-} from "../../../../../../../types/supabase.type"
 import useMyChallengePageContext from "../../context"
-import FutureMilestoneSection from "../FutureChallengeSection"
 import FutureChallengeSection from "../FutureChallengeSection"
 
 function FutureChallengeList() {
@@ -44,9 +39,7 @@ function FutureChallengeList() {
       return (
         <div className="mt-5 flex flex-col items-center justify-center">
           <NoChallengeFlagsIcon />
-          <p className="mt-3 text-[20px] font-bold">
-            진행 중인 챌린지가 없어요
-          </p>
+          <p className="mt-3 text-[20px] font-bold">예정된 챌린지가 없어요</p>
           <p className="mt-[12px] text-[12px] font-[500]">
             챌린지를 생성해보세요
           </p>
