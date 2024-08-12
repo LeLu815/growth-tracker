@@ -3,6 +3,7 @@
 import { ChangeEventHandler, useState } from "react"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
+import { useToast } from "@/context/toast.context"
 import { createClient } from "@/supabase/client"
 
 import Button from "@/components/Button"
@@ -27,6 +28,7 @@ function SignUpClient() {
 
   const { signUp } = useAuth()
   const { open } = useModal()
+  const { showToast } = useToast()
   const supabase = createClient()
 
   const handleChangeNickname: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -114,7 +116,7 @@ function SignUpClient() {
 
   const handleSignUp = async () => {
     if (emailError || passwordError || passwordConfirmError || nicknameError) {
-      return open({ content: "입력한 정보를 다시 확인해주세요", type: "alert" })
+      return showToast("입력한 정보를 다시 확인해주세요", 3000, "bottom-20")
     }
 
     const response = await signUp(email, password, nickname)
@@ -162,7 +164,7 @@ function SignUpClient() {
             onClick={handleCheckNickname}
             className="absolute right-2 top-[62px]"
             size="xs"
-            intent={nickname.length < 1 ? "secondary" : "primary"}
+            intent={nickname.length < 1 ? "third" : "primary"}
             disabled={nickname.length < 1}
           >
             중복 확인
@@ -239,6 +241,7 @@ function SignUpClient() {
           size="lg"
           onClick={handleSignUp}
           disabled={!nickname || !email || !password || !passwordConfirm}
+          className="mt-[62px]"
         >
           회원가입
         </Button>
