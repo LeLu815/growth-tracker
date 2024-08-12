@@ -162,12 +162,13 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
         titleHidden
         goBackFn={router.back}
         menuList={menuList}
+        isMe={data?.user_id === me?.id }
       />
       <Image
         alt="챌린지 이미지"
         width={1200}
         height={1200}
-        src={data.image_url}
+        src={data?.image_url}
         className={"max-h-[300px] w-full flex-shrink-0 object-center"}
       ></Image>
 
