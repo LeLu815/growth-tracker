@@ -5,13 +5,12 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
+import { useToast } from "@/context/toast.context"
 import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 
 import NoneProfile from "@/components/Icon/NoneProfile"
-
-import Button from "../../../../../../components/Button"
-import {useToast} from "@/context/toast.context";
+import SendIcon from "@/components/Icon/SendIcon"
 
 function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
   const router = useRouter()
@@ -63,7 +62,7 @@ function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
       alertOpen("댓글 작성에 실패했습니다.")
       throw new Error(response.error)
     }
-    handleCommentCreateToast();
+    handleCommentCreateToast()
     queryClient.invalidateQueries({ queryKey: ["challengeComment"] })
   }
 
@@ -90,7 +89,7 @@ function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 w-full">
+    <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px]">
       <div className="flex gap-[9px] bg-white px-[20px] py-[10px]">
         <div className="relative h-[50px] w-[60px] overflow-hidden rounded-full">
           {userData?.profile_image_url ? (
@@ -98,8 +97,7 @@ function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
               fill
               className="object-cover"
               alt="프로필사진"
-              src={userData.profile_image_url
-            }
+              src={userData.profile_image_url}
             />
           ) : (
             <NoneProfile width={50} height={50} />
@@ -109,7 +107,7 @@ function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
         <form className="flex w-full items-center">
           <div className="flex flex-1 p-2">
             <textarea
-              className={`w-full resize-none p-2 text-gray-700 ${isFocused ? "" : "border-[1px]"}`}
+              className={`border-red-[#ADADAD] w-full resize-none border-b border-l-0 border-r-0 border-t-0 border-[#141414] bg-white p-2 text-gray-700 outline-none`}
               placeholder="댓글을 입력해주세요..."
               value={content}
               ref={textareaRef}
@@ -120,16 +118,13 @@ function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
             />
           </div>
           {isFocused && (
-            <Button
-              type="button"
-              intent="primary"
-              variant="rounded"
-              size="sm"
-              className="flex-shrink-0 bg-blue-500 px-4 py-2 text-white"
+            <SendIcon
+              width={30}
+              height={30}
+              color={content ? "#FD8C98" : ""}
+              className="cursor-pointer"
               onClick={createComment}
-            >
-              Send
-            </Button>
+            />
           )}
         </form>
       </div>

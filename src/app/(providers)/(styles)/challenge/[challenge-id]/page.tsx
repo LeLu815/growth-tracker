@@ -15,11 +15,8 @@ function ChallengeDetailPage({ params }: ChallengeDetailPageProps) {
   return (
     <Page>
       <ChallengeInfo challengeId={challengeId} />
-      <hr className={"mt-5"}></hr>
-      <Box>
+      <Box className={"mx-auto w-full max-w-[640px]"}>
         <ChallengeCommentList challengeId={challengeId} />
-      </Box>
-      <Box>
         <ChallengeCommentCreate challengeId={challengeId} />
       </Box>
     </Page>

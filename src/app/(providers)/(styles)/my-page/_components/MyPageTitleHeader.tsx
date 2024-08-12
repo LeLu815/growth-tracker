@@ -35,7 +35,7 @@ function MyPageTitleHeader() {
 
   return (
     <div className={"flex flex-col items-center"}>
-      <DefaultHeader className="z-[5] flex items-center justify-center">
+      <DefaultHeader className="z-[5] flex items-center justify-center bg-white">
         <div className="absolute left-[20px] cursor-pointer">
           <ArrowLeftIcon onClick={() => router.back()} />
         </div>

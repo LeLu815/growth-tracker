@@ -1,5 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority"
 
+import ThumbsUpIcon from "@/components/Icon/ThumbsUpIcon"
+
 const chipVariant = cva("border shadow-1", {
   variants: {
     intent: {
@@ -8,6 +10,7 @@ const chipVariant = cva("border shadow-1", {
       third: "bg-grey-400 border-grey-400 rounded-[30px]",
       category:
         "bg-primary border-primary text-black rounded-[34px] cursor-pointer",
+      popular: "bg-[#FF7D3D] border-[#FF7D3D] rounded-[30px]",
     },
     size: {
       sm: "px-2 py-1 text-body-xs font-medium",
@@ -51,6 +54,11 @@ const chipVariant = cva("border shadow-1", {
       variant: "outline",
       className: "text-grey-400 bg-white border border-solid border-grey-400",
     },
+    {
+      intent: "popular",
+      variant: "contained",
+      className: "text-white",
+    },
   ],
   defaultVariants: {
     intent: "primary",
@@ -86,6 +94,12 @@ function Chip({
         size,
       })}
     >
+      {intent === "popular" && (
+        <ThumbsUpIcon
+          className={"mb-1 mr-1 inline h-[12px] w-[12px]"}
+          stroke={"#FFFFFF"}
+        />
+      )}
       {label}
     </span>
   )

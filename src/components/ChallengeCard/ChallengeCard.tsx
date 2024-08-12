@@ -1,5 +1,6 @@
 import Image from "next/image"
 
+import StateChip from "@/components/Chip/StateChip"
 import { successRateCalcu } from "@/app/(providers)/_utils/successRateCalcuUtils"
 import { convertStatusToKorean } from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeInfo"
 
@@ -44,42 +45,6 @@ function ChallengeCard({
 }: ChallengeCardProps) {
   const successRate = successRateCalcu(milestone)
 
-  const getStatusChip = () => {
-    const statusLabel = convertStatusToKorean(state)
-
-    let intent: "primary" | "secondary" | "third" | "category" = "primary"
-    let variant: "outline" | "contained" | "selected" = "contained"
-
-    switch (state) {
-      case "on_progress":
-        intent = "primary"
-        break
-      case "on_complete":
-        intent = "primary"
-        variant = "outline"
-        break
-      case "on_fail":
-        intent = "third"
-        variant = "outline"
-        break
-      case "not_started":
-        intent = "third"
-        variant = "outline"
-        break
-      default:
-        intent = "primary"
-    }
-
-    return (
-      <Chip
-        label={statusLabel as string}
-        intent={intent}
-        variant={variant}
-        size="sm"
-      />
-    )
-  }
-
   return (
     <div
       className="flex cursor-pointer flex-col rounded-lg bg-white shadow-sm"
@@ -104,7 +69,9 @@ function ChallengeCard({
             </p>
           </div>
           <div className="flex w-full items-center justify-between py-[12px]">
-            <span>{getStatusChip()}</span>
+            <span>
+              <StateChip state={state} />
+            </span>
             {state === "on_complete" && (
               <span>
                 <span className="text-body-s font-medium">달성률 </span>

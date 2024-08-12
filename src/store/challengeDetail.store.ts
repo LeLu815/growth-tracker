@@ -5,6 +5,7 @@ export type InitialDataType = {
   userId: string
   nickname: string
   goal: string
+  state: string
 }
 
 type ChallengeDetailState = {
@@ -17,6 +18,7 @@ const initialData: InitialDataType = {
   userId: "",
   nickname: "",
   goal: "",
+  state: "",
 }
 
 const useChallengeDetailStore = create<ChallengeDetailState>((set) => ({

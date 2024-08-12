@@ -6,8 +6,8 @@ import useChallengeDetailStore from "@/store/challengeDetail.store"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 
-import EmptyHartIcon from "@/components/Icon/EmptyHartIcon"
-import RedHartIcon from "@/components/Icon/RedHartIcon"
+import BookmarkIcon from "@/components/Icon/BookmarkIcon"
+import ImportIcon from "@/components/Icon/ImportIcon"
 
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
 
@@ -109,6 +109,7 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
             created_at: prev?.created_at || "",
             user_id: prev?.user_id || "",
             nickname: prev?.nickname || "",
+            image_url: prev?.image_url || "",
             profile_image_url: prev?.profile_image_url || "",
             goal: prev?.goal || "",
             template_cnt: prev?.template_cnt || 0,
@@ -116,6 +117,8 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
             is_secret: prev?.is_secret || false,
             day_cnt: prev?.day_cnt || 0,
             comment_cnt: prev?.comment_cnt || 0,
+            routine_done_daily_success_count:
+              prev?.routine_done_daily_success_count || 0,
             state: prev?.state || "",
             category: prev?.category || "",
             start_at: prev?.start_at || "",
@@ -164,28 +167,24 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
   }
 
   return (
-    <div className="col-span-1">
+    <div className="col-span-1 flex gap-4">
       <button
         className="flex w-full flex-col items-center justify-center transition-all duration-300"
         onClick={handleClick}
       >
-        {isLiked ? (
-          <RedHartIcon
-            width={32}
-            height={32}
-            color={isLiked ? "#e1e1e1" : "#D9D9D9"}
-          />
-        ) : (
-          <EmptyHartIcon
-            width={32}
-            height={32}
-            color={isLiked ? "#e1e1e1" : "#D9D9D9"}
-          />
-        )}
-        <span
-          className={`transition-all duration-300 ${isLiked ? "text-black" : "text-[#D9D9D9]"}`}
-        ></span>
+        <BookmarkIcon
+          width={32}
+          height={32}
+          className={`h-[32px] w-full`}
+          color={isLiked ? "#FC5A6B" : "none"}
+          stroke={isLiked ? "#FC5A6B" : ""}
+        />
       </button>
+      {challengeDetail.state === "on_complete" && (
+        <button className="flex w-full flex-col items-center justify-center transition-all duration-300">
+          <ImportIcon width={32} height={32} className={`h-[32px] w-full`} />
+        </button>
+      )}
     </div>
   )
 }
