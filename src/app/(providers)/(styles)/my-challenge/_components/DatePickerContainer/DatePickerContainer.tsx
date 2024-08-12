@@ -77,7 +77,6 @@ function DatePickerContainer({}) {
     const firstMonth = format(firstVisibleDate, "yyyy-MM", { locale: ko })
     const lastMonth = format(lastVisibleDate, "yyyy-MM", { locale: ko })
     setVisibleMonth(lastMonth > firstMonth ? lastMonth : firstMonth)
-    // console.log(format(firstVisibleDate, "yyyy-MM-dd", { locale: ko }))
   }
 
   const getDateStyle = (date: string) => {
@@ -189,7 +188,7 @@ function DatePickerContainer({}) {
       </SwiperSlide>
     ))
   }
-
+  const todayDayOfWeek = format(startOfDay(Date.now()), "eee", { locale: ko })
   return (
     <div className="w-full rounded-b-[10px] py-[20px] shadow-2">
       <div className="flex items-center justify-between px-[20px]">
@@ -201,6 +200,7 @@ function DatePickerContainer({}) {
           onClick={() => {
             setSelectedDate("")
             setTimeout(() => setSelectedDate(todayDate), 0)
+            setTimeout(() => setSelectedDayOfWeek(todayDayOfWeek), 0)
           }}
         >
           오늘 날짜 보기

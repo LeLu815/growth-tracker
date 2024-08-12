@@ -50,7 +50,6 @@ function DiarySection({
     if (currentDiary == undefined) {
       setDiaryReadOnly(true)
     }
-    console.log(currentDiary)
   }, [])
 
   const queryClient = useQueryClient()
