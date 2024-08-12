@@ -70,29 +70,32 @@ function CompleteChallengeList() {
   return (
     <div className={"flex w-full flex-col items-center px-4"}>
       <ul className={"w-full"}>
+
         {data?.length > 0 ? (
           data?.map((myChallenge, index) => {
             const isLastItem = data?.length - 1 === index
             return (
               <li
-                key={myChallenge.id}
-                onClick={() => handleMoveDetail(myChallenge.id)}
-                className="mb-[20px] cursor-pointer"
-                ref={isLastItem ? ref : null}
-              >
-                <ChallengeCard
-                  title={myChallenge.goal}
-                  category={myChallenge.category}
-                  likes={myChallenge.like_cnt}
-                  bookmarks={myChallenge.template_cnt}
-                  liked={me ? (myChallenge.liked || []).includes(me.id) : false}
-                  state={myChallenge.state}
-                  bookmarked={
-                    me ? (myChallenge.bookmarked || []).includes(me.id) : false
-                  }
-                  challengeImage={myChallenge.image}
-                />
-              </li>
+              key={myChallenge.id}
+              onClick={() => handleMoveDetail(myChallenge.id)}
+              className="mb-[20px] cursor-pointer"
+            >
+              <ChallengeCard
+                title={myChallenge.goal}
+                category={myChallenge.category}
+                likes={myChallenge.like_cnt}
+                bookmarks={myChallenge.template_cnt}
+                liked={me ? (myChallenge.liked || []).includes(me.id) : false}
+                state={myChallenge.state}
+                bookmarked={
+                  me ? (myChallenge.bookmarked || []).includes(me.id) : false
+                }
+                challengeImage={myChallenge.image}
+                successRate={myChallenge.successRate}
+                challenge={myChallenge}
+                milestone={myChallenge.milestone}
+              />
+            </li>
             )
           })
         ) : (
@@ -106,6 +109,7 @@ function CompleteChallengeList() {
             </p>
           </div>
         )}
+
       </ul>
     </div>
   )

@@ -75,27 +75,29 @@ function LikeChallengeList() {
           data?.map((myChallenge, index) => {
             const isLastItem = data?.length - 1 === index
             return (
-              <li
-                key={myChallenge.id}
-                onClick={() => handleMoveDetail(myChallenge.id)}
-                className="mb-[20px] cursor-pointer"
-                ref={isLastItem ? ref : null}
-              >
-                <ChallengeCard
-                  title={myChallenge.goal}
-                  category={myChallenge.category}
-                  likes={myChallenge.like_cnt}
-                  bookmarks={myChallenge.template_cnt}
-                  liked={me ? (myChallenge.liked || []).includes(me.id) : false}
-                  // nickname={myChallenge.user.nickname}
-                  state={myChallenge.progress}
-                  // userImage={myChallenge.user.profile_image_url}
-                  bookmarked={
-                    me ? (myChallenge.bookmarked || []).includes(me.id) : false
-                  }
-                  challengeImage={myChallenge.image}
-                />
-              </li>
+             <li
+              key={myChallenge.id}
+              onClick={() => handleMoveDetail(myChallenge.id)}
+              className="mb-[20px] cursor-pointer"
+            >
+              <ChallengeCard
+                title={myChallenge.goal}
+                category={myChallenge.category}
+                likes={myChallenge.like_cnt}
+                bookmarks={myChallenge.template_cnt}
+                liked={me ? (myChallenge.liked || []).includes(me.id) : false}
+                // nickname={myChallenge.user.nickname}
+                state={myChallenge.progress}
+                // userImage={myChallenge.user.profile_image_url}
+                bookmarked={
+                  me ? (myChallenge.bookmarked || []).includes(me.id) : false
+                }
+                challengeImage={myChallenge.image}
+                successRate={myChallenge.successRate}
+                challenge={myChallenge}
+                milestone={myChallenge.milestone}
+              />
+            </li>
             )
           })
         ) : (

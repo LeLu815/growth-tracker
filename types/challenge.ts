@@ -7,20 +7,15 @@ export interface RoutineDoneDaily {
   is_success: boolean
 }
 
-// 루틴의 기본 구조를 정의하는 인터페이스
 export interface RoutineType {
   content: string
   created_at: string
   id: string
   milestone_id: string
-  routine_done_daily?: RoutineDoneDaily[] // 루틴 완료 여부를 배열로 변경
+  routine_done_daily?: RoutineDoneDaily[]
 }
 
 export type PostType = Database["public"]["Tables"]["challenge"]["Row"] & {
-  // user?: {
-  //   nickname: string
-  //   profile_image_url: string
-  // }
   goal: string
   like_cnt: number
   template_cnt: number
@@ -32,4 +27,5 @@ export type PostType = Database["public"]["Tables"]["challenge"]["Row"] & {
   liked: string[]
   id: string
   milestone: ProgressMilestoneType[]
+  successRate: number
 }
