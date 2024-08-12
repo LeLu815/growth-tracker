@@ -135,7 +135,7 @@ function NewsfeedClient() {
         <div className="pb-[60px]">
           {data?.pages
             .flat()
-            .map((post, index) => (
+            .map((post) => (
               <ChallengePosts
                 key={post.id}
                 posts={[post]}

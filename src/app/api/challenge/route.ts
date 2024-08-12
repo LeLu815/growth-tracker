@@ -201,24 +201,27 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ listsError: listsError.message })
   }
 
-  // 수동으로 routine_done_daily를 routine에 연결
-  const enhancedData = listsData.map((challenge) => {
-    // milestone을 순회하며 routine_done_daily를 연결
+  const challengesWithSuccessRates = listsData.map((challenge) => {
     challenge.milestone = challenge.milestone.map((milestone) => {
-      // routine_done_daily가 존재하는지 확인한 후 매핑 수행
-      if (milestone.routine_done_daily) {
-        milestone.routine_done_daily = milestone.routine_done_daily.map(
-          (rdd) => ({
-            ...rdd,
-            milestone_id: milestone.id,
-            challenge_id: challenge.id,
-          })
-        )
+      // 성공한 총 횟수
+      const successfulDays =
+        milestone.routine_done_daily?.filter((rdd) => rdd.is_success).length ||
+        0
+      // 수행된 총 일수
+      const totalDays = milestone.routine_done_daily?.length || 0
+
+      // 성공률 계산
+      const successRate = totalDays > 0 ? (successfulDays / totalDays) * 100 : 0
+
+      // 성공률을 milestone 객체에 추가
+      return {
+        ...milestone,
+        successRate,
       }
-      return milestone
     })
+
     return challenge
   })
 
-  return NextResponse.json(enhancedData)
+  return NextResponse.json(challengesWithSuccessRates)
 }

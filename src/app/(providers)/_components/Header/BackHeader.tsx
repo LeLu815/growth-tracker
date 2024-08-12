@@ -12,7 +12,7 @@ function BackHeader({ title }: BackHeaderProps) {
   const router = useRouter()
 
   return (
-    <DefaultHeader>
+    <DefaultHeader className="bg-white">
       <div className="flex w-full items-center">
         <button className="flex items-center p-2">
           <ArrowLeftIcon onClick={() => router.back()} />
