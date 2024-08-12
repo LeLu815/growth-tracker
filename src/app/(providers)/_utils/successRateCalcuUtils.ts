@@ -1,23 +1,23 @@
 import { ProgressMilestoneType } from "../../../../types/challengeProgress.type"
 
-export function successRateCalcu(milestone: ProgressMilestoneType[]): number {
-  // 총 루틴 수 계산
-  const totalRoutines = milestone.reduce(
-    (acc, milestoneItem) => acc + (milestoneItem.routine?.length || 0),
-    0
-  )
+export function successRateCalcu(milestones: ProgressMilestoneType[]): number {
+  const totalRoutineDays = milestones.reduce((acc, milestone) => {
+    const totalDays = milestone.routine_done_daily?.length || 0
+    return acc + totalDays
+  }, 0)
 
-  // 성공한 루틴 수 계산
-  const successfulRoutines = milestone.reduce((acc, milestoneItem) => {
+  // 성공한 루틴 총 횟수
+  const successfulRoutine = milestones.reduce((acc, milestone) => {
     const successfulInMilestone =
-      milestoneItem.routine_done_daily?.filter((rdd) => rdd.is_success)
-        .length || 0
+      milestone.routine_done_daily?.filter((rdd) => rdd.is_success).length || 0
     return acc + successfulInMilestone
   }, 0)
 
-  // 달성률 계산
-  const successRate =
-    totalRoutines > 0 ? (successfulRoutines / totalRoutines) * 100 : 0
+  // 전체 성공률 계산
+  const overallSuccessRate =
+    totalRoutineDays > 0
+      ? Math.round((successfulRoutine / totalRoutineDays) * 100)
+      : 0
 
-  return successRate
+  return overallSuccessRate
 }

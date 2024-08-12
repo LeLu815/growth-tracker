@@ -4,7 +4,7 @@ function Routine({ routine }: { routine: RoutineType }) {
   return (
     <div
       className={
-        "flex w-[300px] items-center justify-between rounded-[6px] border border-[#D9D9D9] bg-[#F5F5F5] p-[14px_10px]"
+        "flex w-full items-center justify-between rounded-[6px] border border-[#D9D9D9] bg-[#F5F5F5] p-[14px_10px]"
       }
       key={routine.id}
     >

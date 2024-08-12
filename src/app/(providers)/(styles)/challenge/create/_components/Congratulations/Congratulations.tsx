@@ -46,9 +46,8 @@ function Congratulations({
               intent="secondary"
               size="lg"
               onClick={() => {
-                console.log("justCreatedChallengeId :", justCreatedChallengeId)
                 justCreatedChallengeId &&
-                  router.push(`/challenge/${justCreatedChallengeId}/update`)
+                  router.replace(`/challenge/${justCreatedChallengeId}/update`)
               }}
             >
               루틴 만들기

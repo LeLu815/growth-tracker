@@ -14,6 +14,8 @@ import {
 import ChartDataLabels from "chartjs-plugin-datalabels"
 import { Bar } from "react-chartjs-2"
 
+import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
+
 import { Step2GraphType } from "../../../../../../../types/myPageGraph.type"
 
 ChartJS.register(
@@ -27,6 +29,7 @@ ChartJS.register(
 
 const CategoryCountGraph = () => {
   const { me } = useAuth()
+  const [isPossibleStatistics, setIsPossibleStatistics] = useState(false)
   const [category, setCategory] = useState("")
   const [graphData, setGraphData] = useState({
     labels: ["생활", "건강", "공부", "취미"],
@@ -118,6 +121,10 @@ const CategoryCountGraph = () => {
         }
       }
 
+      if (maxCategoryCount > 0) {
+        setIsPossibleStatistics(true)
+      }
+
       setCategory(maxCategory)
       const colorList = countList
         .sort((a, b) => b - a)
@@ -186,8 +193,20 @@ const CategoryCountGraph = () => {
     return "loading..."
   }
 
+  if (!isPossibleStatistics) {
+    return (
+      <div className="mt-36 flex flex-col items-center justify-center">
+        <NoChallengeFlagsIcon />
+        <p className="mt-3 text-[20px] font-bold">분석할 데이터가 없습니다.</p>
+        <p className="mt-[12px] text-[12px] font-[500]">
+          챌린지를 생성해 목표를 이루어 보세요.
+        </p>
+      </div>
+    )
+  }
+
   return (
-    <div className={"mx-auto flex w-full flex-col gap-14"}>
+    <div className={"mx-auto flex w-full flex-col gap-28"}>
       <div className={"flex flex-col gap-4"}>
         <div className={"text-title-xl"}>
           <p className={"inline text-primary"}>{category}</p> 항목을 <br /> 제일

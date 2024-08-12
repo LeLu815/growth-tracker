@@ -51,11 +51,11 @@ function MyInfo() {
           src={profileImageUrl as string}
           alt="Profile"
           className="h-[60px] w-[60px] rounded-full object-cover"
-          width={130}
-          height={130}
+          width={60}
+          height={60}
         />
       ) : (
-        <NoneProfile width={130} height={130}></NoneProfile>
+        <NoneProfile width={60} height={60}></NoneProfile>
       )}
       <div>
         <div className="mb-1 text-lg font-bold">{nickname || ""}</div>

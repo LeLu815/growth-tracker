@@ -33,6 +33,7 @@ function ChallengeName({
   const [selectedRandomUrl, setSelectedRandomUrl] = useState<string>(
     randomImgUrl || imgs[0]
   )
+  console.log("randomImgUrl :", randomImgUrl)
   useEffect(() => {
     ;(async () => {
       const { data: imgDatas, error } = await supabase.storage
@@ -57,7 +58,7 @@ function ChallengeName({
           urlDatas = await Promise.all(urlPromises)
           const newUrls = urlDatas.map((data) => data.data.publicUrl)
           setImgs(newUrls)
-          setSelectedRandomUrl(newUrls[0])
+          randomImgUrl || setSelectedRandomUrl(newUrls[0])
           // 결과 출력 (혹은 상태 관리)
         } catch (urlError) {
           console.error("Error fetching URLs:", urlError)

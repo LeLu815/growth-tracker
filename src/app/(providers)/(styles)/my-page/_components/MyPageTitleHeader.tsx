@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation"
 import ArrowLeftIcon from "@/components/Icon/ArrowLeftIcon"
 import DefaultHeader from "@/app/(providers)/_components/Header/DefaultHeader"
 import {
+  LIKE_CHALLENGE,
   MY_CHALLENGE_ANALYZE,
   MY_PAGE,
   PROFILE,
@@ -28,14 +29,17 @@ function MyPageTitleHeader() {
         return PROFILE.name
       case MY_CHALLENGE_ANALYZE.path:
         return MY_CHALLENGE_ANALYZE.name
+      case LIKE_CHALLENGE.path:
+        return LIKE_CHALLENGE.name
       default:
-        return ""
+        LIKE_CHALLENGE.path
+        return LIKE_CHALLENGE.name
     }
   }, [])
 
   return (
     <div className={"flex flex-col items-center"}>
-      <DefaultHeader className="z-[5] flex items-center justify-center">
+      <DefaultHeader className="z-[5] flex items-center justify-center bg-white">
         <div className="absolute left-[20px] cursor-pointer">
           <ArrowLeftIcon onClick={() => router.back()} />
         </div>

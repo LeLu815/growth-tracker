@@ -201,24 +201,42 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ listsError: listsError.message })
   }
 
-  // 수동으로 routine_done_daily를 routine에 연결
-  const enhancedData = listsData.map((challenge) => {
-    // milestone을 순회하며 routine_done_daily를 연결
+  // 챌린지 돌면서 total_cnt 합산, routine_done_daily의 true개수 구하기
+  const challengesWithSuccessRates = listsData.map((challenge) => {
+    let totalChallengeRoutines = 0
+    let totalSuccessfulRoutines = 0
+
+    // 각각 마일스톤의 total_cnt랑 routine_done_daily의 true개수
     challenge.milestone = challenge.milestone.map((milestone) => {
-      // routine_done_daily가 존재하는지 확인한 후 매핑 수행
-      if (milestone.routine_done_daily) {
-        milestone.routine_done_daily = milestone.routine_done_daily.map(
-          (rdd) => ({
-            ...rdd,
-            milestone_id: milestone.id,
-            challenge_id: challenge.id,
-          })
-        )
+      const totalRoutines = milestone.total_cnt
+      const successfulRoutines =
+        milestone.routine_done_daily?.filter((rdd) => rdd.is_success).length ||
+        0
+
+      totalChallengeRoutines += totalRoutines
+      totalSuccessfulRoutines += successfulRoutines
+
+      // 총 루틴 개수 성공개수로 나누고 백분율로 바꾸기
+      const successRate =
+        totalRoutines > 0 ? (successfulRoutines / totalRoutines) * 100 : 0
+      console.log(successRate)
+      return {
+        ...milestone,
+        successRate,
       }
-      return milestone
     })
-    return challenge
+
+    // 긱 챌린지 전체 성공률
+    const challengeSuccessRate =
+      totalChallengeRoutines > 0
+        ? (totalSuccessfulRoutines / totalChallengeRoutines) * 100
+        : 0
+
+    return {
+      ...challenge,
+      successRate: challengeSuccessRate,
+    }
   })
 
-  return NextResponse.json(enhancedData)
+  return NextResponse.json(challengesWithSuccessRates)
 }

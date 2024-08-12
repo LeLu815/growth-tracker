@@ -113,7 +113,6 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
             challengeId={challengeId}
             milestoneIds={milestoneIds}
             goNextPage={() => setSelectedPageName("add")}
-            // goMilestoneDetail={()=> setSelectedPageName("edit")}
           />
         </>
       )}

@@ -7,9 +7,15 @@ interface ToastProps {
   content: string
   duration?: number
   onClose: () => void
+  positionY?: string
 }
 
-function Toast({ content, duration = 3000, onClose }: ToastProps) {
+function Toast({
+  content,
+  duration = 3000,
+  positionY = "bottom-80",
+  onClose,
+}: ToastProps) {
   const [isShow, setIsShow] = useState<boolean>(false)
 
   useEffect(() => {
@@ -41,7 +47,9 @@ function Toast({ content, duration = 3000, onClose }: ToastProps) {
       }}
       unmountOnExit
     >
-      <div className="fixed bottom-80 left-1/2 w-[calc(100%-40px)] -translate-x-1/2 transform rounded bg-black/80 px-8 py-6 text-center text-white">
+      <div
+        className={`fixed ${positionY} left-1/2 w-[calc(100%-40px)] -translate-x-1/2 transform rounded bg-black/80 px-8 py-6 text-center text-white`}
+      >
         {content}
       </div>
     </CSSTransition>

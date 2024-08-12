@@ -28,7 +28,6 @@ function MilestoneCreate({
           <MilestoneCreateConfig
             goNextPage={() => handleChangeStep(5)}
             getCreatedChallengeId={(id: string) => {
-              console.log("마일스톤 크리에이트 id : ", id)
               getCreatedChallengeId(id)
             }}
           />

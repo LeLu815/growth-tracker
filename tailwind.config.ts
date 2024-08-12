@@ -49,6 +49,7 @@ const config = {
         "body-m": ["14px", { lineHeight: "135%", fontWeight: "medium" }],
         "body-s": ["12px", { lineHeight: "135%", fontWeight: "medium" }],
         "body-xs": ["12px", { lineHeight: "130%", fontWeight: "medium" }],
+        "sub-m": ["10px", { lineHeight: "135%", fontWeight: "right" }],
       },
       fontWeight: {
         bold: "700",
