@@ -64,6 +64,11 @@ function DragDropContainer({ challenge_id, range }: DragDropContainerProps) {
     )
   }
 
+  // 수정이 가능한 시작 인덱스
+  const switchPossibleStartIndex = data.findIndex(
+    (milestone) =>
+      new Date(milestone.start_at).getTime() >= new Date().getTime()
+  )
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -77,24 +82,34 @@ function DragDropContainer({ challenge_id, range }: DragDropContainerProps) {
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className="flex w-full flex-col gap-4 overflow-y-auto"
+                className="mt-4 flex w-full flex-col gap-4 overflow-y-auto pb-[10px]"
               >
-                {data.map((milestone, index) => (
-                  <Draggable
-                    key={milestone.id}
-                    draggableId={milestone.id}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <MilestoneComponent
-                        deleteMilestone={deleteMilestone}
-                        milestone={milestone}
-                        provided={provided}
-                        setData={setData}
-                      />
-                    )}
-                  </Draggable>
-                ))}
+                {data.map((milestone, index) =>
+                  index >= switchPossibleStartIndex ? (
+                    <Draggable
+                      key={milestone.id}
+                      draggableId={milestone.id}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <MilestoneComponent
+                          deleteMilestone={deleteMilestone}
+                          milestone={milestone}
+                          provided={provided}
+                          setData={setData}
+                        />
+                      )}
+                    </Draggable>
+                  ) : (
+                    <MilestoneComponent
+                      key={milestone.id}
+                      deleteMilestone={deleteMilestone}
+                      milestone={milestone}
+                      setData={setData}
+                      disDisabled
+                    />
+                  )
+                )}
               </div>
             </>
           )}
