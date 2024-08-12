@@ -24,7 +24,7 @@ function MyChallengeStorageBoxTab() {
   )
 
   return (
-    <Box className={"mx-auto flex w-full max-w-[640px] flex-col gap-10"}>
+    <div className={"mx-auto flex w-full max-w-[640px] flex-col"}>
       <div className="flex h-[50px] w-full flex-row items-center text-[16px] font-[700]">
         {menuList.map((menu) => (
           <div
@@ -36,12 +36,12 @@ function MyChallengeStorageBoxTab() {
           </div>
         ))}
       </div>
-      <div>
+      <Box>
         {menuList.map((menu) => (
           <div key={menu.key}>{activeTap === menu.key && menu.children}</div>
         ))}
-      </div>
-    </Box>
+      </Box>
+    </div>
   )
 }
 

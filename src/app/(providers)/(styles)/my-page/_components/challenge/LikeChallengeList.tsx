@@ -2,8 +2,10 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import axios from "axios"
+import { useInView } from "react-intersection-observer"
 
 import ChallengeCard from "@/components/ChallengeCard"
+import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
 
 import { MyChallengeType } from "../../../../../../../types/myChallengeList.type"
 
@@ -18,7 +20,7 @@ function LikeChallengeList() {
   }): Promise<MyChallengeType> => {
     const response = await axios
       .get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/challenge/like?page=${pageParam}&limit=10`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/challenge/like?page=${pageParam}&limit=20`
       )
       .then((response) => response.data)
 
@@ -49,9 +51,18 @@ function LikeChallengeList() {
       allPageParams
     ) => {
       const nextPage = lastPageParam + 1
-      return lastPage?.length === 10 ? nextPage : undefined
+      return lastPage?.length === 20 ? nextPage : undefined
     },
     select: ({ pages }) => pages.flat(),
+  })
+
+  const { ref } = useInView({
+    threshold: 0,
+    onChange: (inView) => {
+      if (inView && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage()
+      }
+    },
   })
 
   if (isPending) return <div>Loading...</div>
@@ -60,9 +71,11 @@ function LikeChallengeList() {
   return (
     <div className={"flex flex-col items-center px-4"}>
       <ul className={"w-full"}>
-        {data?.map((myChallenge) => {
-          return (
-            <li
+        {data?.length > 0 ? (
+          data?.map((myChallenge, index) => {
+            const isLastItem = data?.length - 1 === index
+            return (
+             <li
               key={myChallenge.id}
               onClick={() => handleMoveDetail(myChallenge.id)}
               className="mb-[20px] cursor-pointer"
@@ -85,8 +98,17 @@ function LikeChallengeList() {
                 milestone={myChallenge.milestone}
               />
             </li>
-          )
-        })}
+            )
+          })
+        ) : (
+          <div className="mt-5 flex flex-col items-center justify-center">
+            <NoChallengeFlagsIcon />
+            <p className="mt-3 text-[20px] font-bold">찜한 챌린지가 없어요.</p>
+            <p className="mt-[12px] text-[12px] font-[500]">
+              관심있는 챌린지를 찜 해보세요.
+            </p>
+          </div>
+        )}
       </ul>
     </div>
   )
