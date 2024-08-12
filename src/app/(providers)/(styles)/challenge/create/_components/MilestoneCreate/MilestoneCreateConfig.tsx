@@ -1,5 +1,6 @@
 import { FormEventHandler, useState } from "react"
 import { useAuth } from "@/context/auth.context"
+import { useToast } from "@/context/toast.context"
 import useChallengeQuery from "@/query/challenge/userChallengeQuery"
 import useChallengeCreateStore, {
   WEEK_DAY_LIST,
@@ -32,6 +33,7 @@ import MilestoneCreateComponent from "./MilestoneCreateComponent"
 // 객체를 기본으로 받자 => 없으면 걍 생성
 interface MilestoneCreateConfigProps {
   goNextPage: () => void
+  getCreatedChallengeId: (id: string) => void
 }
 
 const SELECT_WEEK_BTN_VALUES: ("주중" | "주말" | "매일")[] = [
@@ -41,7 +43,12 @@ const SELECT_WEEK_BTN_VALUES: ("주중" | "주말" | "매일")[] = [
 ]
 const initialSelectWeeks = WEEK_DAY_LIST.map((_) => false)
 
-function MilestoneCreateConfig({ goNextPage }: MilestoneCreateConfigProps) {
+function MilestoneCreateConfig({
+  goNextPage,
+  getCreatedChallengeId,
+}: MilestoneCreateConfigProps) {
+  // 토스트 띄우기
+  const { showToast } = useToast()
   // 뮤테이션 함수 => db에 생성 저장하는 로직
   const {
     challengeCreateMutate,
@@ -115,6 +122,10 @@ function MilestoneCreateConfig({ goNextPage }: MilestoneCreateConfigProps) {
     e.preventDefault()
     if (routineInpt === "") {
       return
+    }
+    if (routines.findIndex((routine) => routine === routineInpt) !== -1) {
+      // 같은 값 금지 토스트 띄우기
+      return showToast("이미 추가한 루틴입니다.", 500)
     }
     setRoutines((prev) => [...prev, routineInpt])
     setRoutineInput("")
@@ -299,7 +310,7 @@ function MilestoneCreateConfig({ goNextPage }: MilestoneCreateConfigProps) {
       <div className="h-[100px]"></div>
       <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
         <Button
-          onClick={() => {
+          onClick={async () => {
             challengeCreateMutate(
               {
                 challenge: {
@@ -342,36 +353,14 @@ function MilestoneCreateConfig({ goNextPage }: MilestoneCreateConfigProps) {
                 ],
               },
               {
-                onSuccess: () => {
+                onSuccess: (id) => {
                   // 다음 페이지로 이동.
+                  console.log("마일스톤 크리에이트 컨피그 id:", id)
+                  getCreatedChallengeId(id)
                   goNextPage()
                 },
               }
             )
-
-            // 여기에서 그동안 쌓아둔 데이터를 모두 주스탠드에 넣은 작업을 해야함
-            // createMilestone({
-            //   challenge_id: "",
-            //   id: uuid(),
-            //   start_at: milestone_start_date,
-            //   end_at: milestone_end_date,
-            //   is_mon: selectWeeks[0],
-            //   is_tue: selectWeeks[1],
-            //   is_wed: selectWeeks[2],
-            //   is_thu: selectWeeks[3],
-            //   is_fri: selectWeeks[4],
-            //   is_sat: selectWeeks[5],
-            //   is_sun: selectWeeks[6],
-            //   success_requirement_cnt: Math.ceil(
-            //     (milestone_actual_day * +minPercent) / 100
-            //   ),
-            //   total_cnt: milestone_actual_day,
-            //   total_day: +milestonePeriod - prevMilestonesPeriod,
-            //   routines: routines.map((value) => ({
-            //     id: "",
-            //     content: value,
-            //   })),
-            // })
           }}
           disabled={
             routines.length === 0 ||

@@ -223,14 +223,18 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
   )
 }
 
-const convertStatusToKorean = (state: string) => {
+export const convertStatusToKorean = (state: string) => {
   switch (state) {
     case "on_progress":
-      return "진행"
+      return "챌린지 실행중"
     case "on_complete":
-      return "성공"
+      return "챌린지 완료"
     case "on_fail":
-      return "실패"
+      return "챌린지 실패"
+    case "not_started":
+      return "챌린지 실행전"
+    default:
+      return "알 수 없음"
   }
 }
 

@@ -66,11 +66,11 @@ function MilestoneComponent({
       <div className="pr-[24px]">
         <div className="flex justify-between">
           <div className="flex flex-col gap-[10px]">
-            <ContentTitle>루틴 A</ContentTitle>
+            <ContentTitle>{milestone.name}</ContentTitle>
             <p className="text-[12px] font-[500] text-[#717171]">{`${milestone.start_at.replace(/-/g, ".")} ~ ${milestone.end_at.replace(/-/g, ".")} (${milestone.total_day}일)`}</p>
           </div>
           <div className="flex flex-1 items-center justify-center">
-            <ContentTitle>달성률 {50}%</ContentTitle>
+            <ContentTitle>달성률 {milestone.success_percent}%</ContentTitle>
           </div>
         </div>
         {showDetail && (

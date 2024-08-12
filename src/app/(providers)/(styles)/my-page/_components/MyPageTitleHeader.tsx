@@ -5,6 +5,11 @@ import { usePathname, useRouter } from "next/navigation"
 
 import ArrowLeftIcon from "@/components/Icon/ArrowLeftIcon"
 import DefaultHeader from "@/app/(providers)/_components/Header/DefaultHeader"
+import {
+  MY_CHALLENGE_ANALYZE,
+  MY_PAGE,
+  PROFILE,
+} from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
 function MyPageTitleHeader() {
   const [title, setTitle] = useState<string>("")
@@ -17,10 +22,12 @@ function MyPageTitleHeader() {
 
   const pathToTitle = useCallback((path: string) => {
     switch (path) {
-      case "/my-page":
-        return ""
-      case "/my-page/profile":
-        return "내 정보"
+      case MY_PAGE.path:
+        return MY_PAGE.name
+      case PROFILE.path:
+        return PROFILE.name
+      case MY_CHALLENGE_ANALYZE.path:
+        return MY_CHALLENGE_ANALYZE.name
       default:
         return ""
     }

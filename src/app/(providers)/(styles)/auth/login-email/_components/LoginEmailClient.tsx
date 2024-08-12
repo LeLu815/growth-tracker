@@ -7,11 +7,12 @@ import { useAuth } from "@/context/auth.context"
 import { useToast } from "@/context/toast.context"
 
 import Button from "@/components/Button"
-import GoogleIcon from "@/components/Icon/GoogleIcon"
 import InvisibilityIcon from "@/components/Icon/InvisibilityIcon"
-import KakaoIcon2 from "@/components/Icon/KakaoIcon2"
 import VisibilityIcon from "@/components/Icon/VisibilityIcon"
 import Input from "@/components/Input"
+
+import GoogleLoginButton from "../../login/_components/GoogleLoginButton"
+import KakaoLoginButton from "../../login/_components/KakaoLoginButton"
 
 function LoginEmailClient() {
   const [email, setEmail] = useState<string>("")
@@ -121,34 +122,25 @@ function LoginEmailClient() {
         </Button>
       </div>
       <div className="flex justify-between text-sm">
-        <div className="text-grey-50">아이디 찾기</div>
-        <span className="text-grey-700 mx-[8px]">|</span>
+        {/* <div className="text-grey-50">아이디 찾기</div>
+        <span className="mx-[8px] text-grey-700">|</span>
         <div className="text-grey-50">비밀번호 찾기</div>
-        <span className="text-grey-700 mx-[8px]">|</span>
+        <span className="mx-[8px] text-grey-700">|</span> */}
         <Link href="/auth/sign-up" className="text-grey-50 active:text-black">
-          회원가입
+          아직 회원이 아니신가요?{" "}
+          <span className="text-body-m font-bold">회원가입</span>
         </Link>
       </div>
       <div className="mt-12 flex w-full flex-col items-center">
         <div className="relative w-full text-center">
-          <div className="bg-grey-400 absolute left-0 top-1/2 h-[1px] w-full -translate-y-1/2 transform"></div>
-          <p className="text-grey-400 relative inline-block bg-white px-2 text-sm">
+          <div className="absolute left-0 top-1/2 h-[1px] w-full -translate-y-1/2 transform bg-grey-400"></div>
+          <p className="relative inline-block bg-white px-2 text-sm text-grey-400">
             SNS 계정으로 로그인
           </p>
         </div>
-        <div className="mt-6 flex space-x-4">
-          <GoogleIcon
-            width="58px"
-            height="58px"
-            onClick={googleLogin}
-            className="cursor-pointer"
-          />
-          <KakaoIcon2
-            width="58px"
-            height="58px"
-            onClick={kakaoLogin}
-            className="bg-yellow cursor-pointer"
-          />
+        <div className="flex w-full flex-col gap-y-[24px] py-[24px]">
+          <KakaoLoginButton />
+          <GoogleLoginButton />
         </div>
       </div>
     </div>

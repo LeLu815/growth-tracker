@@ -7,8 +7,13 @@ import MilestoneCreateConfig from "./MilestoneCreateConfig"
 export interface MilestoneCreateProps {
   title: string
   handleChangeStep: (step: number) => void
+  getCreatedChallengeId: (id: string) => void
 }
-function MilestoneCreate({ title, handleChangeStep }: MilestoneCreateProps) {
+function MilestoneCreate({
+  title,
+  handleChangeStep,
+  getCreatedChallengeId,
+}: MilestoneCreateProps) {
   return (
     <div>
       <ChallengePageTitle
@@ -20,37 +25,16 @@ function MilestoneCreate({ title, handleChangeStep }: MilestoneCreateProps) {
       />
       <Page>
         <Box>
-          <MilestoneCreateConfig goNextPage={() => handleChangeStep(5)} />
+          <MilestoneCreateConfig
+            goNextPage={() => handleChangeStep(5)}
+            getCreatedChallengeId={(id: string) => {
+              console.log("마일스톤 크리에이트 id : ", id)
+              getCreatedChallengeId(id)
+            }}
+          />
         </Box>
       </Page>
     </div>
-    // <div>
-    //   {showComponent === "config" && (
-    //     <>
-
-    //     </>
-    //   )}
-    //   {showComponent === "switch" && (
-    //     <>
-    //       <ChallengePageTitle
-    //         title={title}
-    //         step={4}
-    //         allStepCount={4}
-    //         titleHidden={false}
-    //         handleClickGoBack={() => handleChangeStep(3)}
-    //       />
-    //       <Page>
-    //         <Box>
-    //           <MilestoneCreateSwitch
-    //             setShowCompoent={(status: MilestoneCreateProps["status"]) =>
-    //               setShowCompoent(status)
-    //             }
-    //           />
-    //         </Box>
-    //       </Page>
-    //     </>
-    //   )}
-    // </div>
   )
 }
 

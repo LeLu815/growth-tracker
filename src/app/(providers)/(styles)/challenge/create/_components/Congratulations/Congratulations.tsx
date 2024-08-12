@@ -11,8 +11,12 @@ import ChallengePageTitle from "../ChallengePageTitle"
 
 interface CongratulationsProps {
   title: string
+  justCreatedChallengeId: null | string
 }
-function Congratulations({ title }: CongratulationsProps) {
+function Congratulations({
+  title,
+  justCreatedChallengeId,
+}: CongratulationsProps) {
   const router = useRouter()
   return (
     <div>
@@ -41,7 +45,11 @@ function Congratulations({ title }: CongratulationsProps) {
             <Button
               intent="secondary"
               size="lg"
-              onClick={() => alert("빨리 만들겠습니다.")}
+              onClick={() => {
+                console.log("justCreatedChallengeId :", justCreatedChallengeId)
+                justCreatedChallengeId &&
+                  router.push(`/challenge/${justCreatedChallengeId}/update`)
+              }}
             >
               루틴 만들기
             </Button>
