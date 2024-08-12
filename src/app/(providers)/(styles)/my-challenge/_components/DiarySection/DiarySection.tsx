@@ -47,8 +47,8 @@ function DiarySection({
       setDiaryReadOnly(true)
     }
 
-    if (!currentDiary) {
-      setDiaryReadOnly(false)
+    if (currentDiary == undefined) {
+      setDiaryReadOnly(true)
     }
     console.log(currentDiary)
   }, [])

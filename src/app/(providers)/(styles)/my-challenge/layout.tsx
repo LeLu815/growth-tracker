@@ -9,6 +9,9 @@ import { useQuery } from "@tanstack/react-query"
 import { format, startOfDay } from "date-fns"
 import { ko } from "date-fns/locale"
 
+import BottomNavigation from "@/components/BottomNavigation"
+
+import PlusComponent from "../newsfeed/_components/PlusComponent"
 import { MyChallengePageContext } from "./context"
 
 function MyChallengePageLayout({ children }: PropsWithChildren) {
@@ -19,6 +22,10 @@ function MyChallengePageLayout({ children }: PropsWithChildren) {
   const [selectedDate, setSelectedDate] = useState<string>(TODAY)
   const [selectedDayOfWeek, setSelectedDayOfWeek] =
     useState<string>(TODAY_DAY_OF_WEEK)
+
+  const [pageToView, setPageToView] = useState<"onProgress" | "completed">(
+    "onProgress"
+  )
 
   const { me } = useAuth()
   const userId = me?.id
@@ -70,11 +77,15 @@ function MyChallengePageLayout({ children }: PropsWithChildren) {
     routineDone: routineDone || [],
     routineDonePending,
     routineDoneError,
+    pageToView,
+    setPageToView,
   }
 
   return (
     <MyChallengePageContext.Provider value={contextValue}>
       {children}
+      <PlusComponent />
+      <BottomNavigation />
     </MyChallengePageContext.Provider>
   )
 }

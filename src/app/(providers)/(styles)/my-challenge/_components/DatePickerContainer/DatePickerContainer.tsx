@@ -7,6 +7,7 @@ import {
   eachDayOfInterval,
   format,
   startOfDay,
+  startOfWeek,
   subMonths,
 } from "date-fns"
 import { ko } from "date-fns/locale"
@@ -15,16 +16,31 @@ import { Swiper, SwiperSlide } from "swiper/react"
 
 import "swiper/css"
 
+import DatePickerRedDotIcon from "@/components/Icon/DatePickerRedDotIcon"
+
+import { StructuredMilestoneType } from "../../../../../../../types/supabase.type"
 import useMyChallengePageContext from "../../context"
 
 function DatePickerContainer({}) {
-  const TODAY = startOfDay(new Date())
-  const INITIAL_START_DATE = startOfDay(subMonths(TODAY, 12))
-  const INITIAL_END_DATE = startOfDay(addMonths(TODAY, 12))
+  const THIS_WEEK_MONDAY = startOfWeek(startOfDay(new Date()), {
+    weekStartsOn: 3,
+  })
+  const INITIAL_START_DATE = startOfDay(subMonths(THIS_WEEK_MONDAY, 12))
+  const INITIAL_END_DATE = startOfDay(addMonths(THIS_WEEK_MONDAY, 12))
 
-  const { selectedDate, setSelectedDate, setSelectedDayOfWeek, todayDate } =
-    useMyChallengePageContext()
-
+  const {
+    selectedDate,
+    setSelectedDate,
+    setSelectedDayOfWeek,
+    todayDate,
+    structuredChallengeData,
+  } = useMyChallengePageContext()
+  const formattedTodayDate = parseInt(
+    format(startOfDay(todayDate), "yyyy-MM-dd", { locale: ko }).replace(
+      /-/g,
+      ""
+    )
+  )
   const swiperRef = useRef<any>(null)
   const allDates = eachDayOfInterval({
     start: INITIAL_START_DATE,
@@ -32,7 +48,7 @@ function DatePickerContainer({}) {
   })
 
   const [visibleMonth, setVisibleMonth] = useState(
-    format(TODAY, "yyyy-MM", { locale: ko })
+    format(THIS_WEEK_MONDAY, "yyyy-MM", { locale: ko })
   )
 
   // selectedDate가 위치한 곳으로 자동으로 slide되도록 해줌
@@ -61,6 +77,7 @@ function DatePickerContainer({}) {
     const firstMonth = format(firstVisibleDate, "yyyy-MM", { locale: ko })
     const lastMonth = format(lastVisibleDate, "yyyy-MM", { locale: ko })
     setVisibleMonth(lastMonth > firstMonth ? lastMonth : firstMonth)
+    // console.log(format(firstVisibleDate, "yyyy-MM-dd", { locale: ko }))
   }
 
   const getDateStyle = (date: string) => {
@@ -73,6 +90,64 @@ function DatePickerContainer({}) {
       return "text-black" // 나머지 날짜는 모두 연한 회색 배경
     }
   }
+  const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"]
+  const checkDateHasRoutine = (date: Date): boolean => {
+    const formattedDate = parseInt(
+      format(startOfDay(date), "yyyy-MM-dd", { locale: ko }).replace(/-/g, "")
+    )
+    const formattedDayOfWeek = format(startOfDay(date), "eee", {
+      locale: ko,
+    })
+
+    const generatemilestoneDoDaysArray = (
+      milestone: StructuredMilestoneType
+    ) => {
+      const milestoneDoDays: string[] = []
+      if (milestone.is_sun) {
+        milestoneDoDays.push(DAYS_OF_WEEK[0])
+      }
+      if (milestone.is_mon) {
+        milestoneDoDays.push(DAYS_OF_WEEK[1])
+      }
+      if (milestone.is_tue) {
+        milestoneDoDays.push(DAYS_OF_WEEK[2])
+      }
+      if (milestone.is_wed) {
+        milestoneDoDays.push(DAYS_OF_WEEK[3])
+      }
+      if (milestone.is_thu) {
+        milestoneDoDays.push(DAYS_OF_WEEK[4])
+      }
+      if (milestone.is_fri) {
+        milestoneDoDays.push(DAYS_OF_WEEK[5])
+      }
+      if (milestone.is_sat) {
+        milestoneDoDays.push(DAYS_OF_WEEK[6])
+      }
+
+      return milestoneDoDays
+    }
+
+    return structuredChallengeData.some((challenge) =>
+      challenge.milestones.some((milestone) => {
+        // const milestoneStartDate = parseInt(
+        //   milestone.start_at.replace(/-/g, "")
+        // )
+        const milestoneEndDate = parseInt(milestone.end_at.replace(/-/g, ""))
+        const milestoneDoDays = generatemilestoneDoDaysArray(milestone)
+        const checkMilestoneDayOfWeek = milestoneDoDays.find(
+          (milestoneDoDay) => {
+            return milestoneDoDay == formattedDayOfWeek
+          }
+        )
+        return (
+          formattedDate >= formattedTodayDate &&
+          formattedDate <= milestoneEndDate &&
+          !!checkMilestoneDayOfWeek
+        )
+      })
+    )
+  }
 
   const renderAllDatesSwiperSlides = () => {
     return allDates.map((day, index) => (
@@ -82,33 +157,43 @@ function DatePickerContainer({}) {
           setSelectedDate(format(startOfDay(day), "yyyy-MM-dd", { locale: ko }))
           setSelectedDayOfWeek(format(startOfDay(day), "eee", { locale: ko }))
         }}
-        className="flex cursor-pointer flex-col items-center justify-center"
+        className="mt-[6px] flex w-[14.286%] cursor-pointer flex-col items-center justify-center"
       >
+        {/* 요일 */}
         <p
-          className={`mb-3 text-center text-[12px] font-[500] leading-[135%] ${
-            selectedDate &&
-            format(startOfDay(day), "yyyy-MM-dd", { locale: ko }) ===
-              selectedDate
-              ? "text-[#949494]"
-              : "text-[#949494]"
-          }`}
+          className={`mb-[10px] text-center text-[12px] font-[500] leading-[135%] text-[#949494]`}
         >
           {format(day, "EEE", { locale: ko })}
         </p>
-        <p
-          className={`mx-auto flex h-[34px] w-[34px] items-center justify-center rounded-full text-center ${getDateStyle(
-            format(startOfDay(day), "yyyy-MM-dd", { locale: ko })
-          )}`}
-        >
-          {format(day, "dd", { locale: ko })}
-        </p>
+        {/* 빨간점 */}
+        <div className="flex h-[6px] w-full justify-center">
+          {format(startOfDay(day), "yyyy-MM-dd", { locale: ko }) ==
+            selectedDate ||
+          format(startOfDay(day), "yyyy-MM-dd", { locale: ko }) == todayDate ? (
+            <></>
+          ) : checkDateHasRoutine(day) ? (
+            <DatePickerRedDotIcon />
+          ) : (
+            <></>
+          )}
+        </div>
+        {/* 날짜 동그라미 */}
+        <div className="flex w-full justify-center">
+          <p
+            className={`flex h-[34px] w-[34px] items-center justify-center rounded-full text-center ${getDateStyle(
+              format(startOfDay(day), "yyyy-MM-dd", { locale: ko })
+            )}`}
+          >
+            {format(day, "dd", { locale: ko })}
+          </p>
+        </div>
       </SwiperSlide>
     ))
   }
 
   return (
-    <div className="mt-6 w-full">
-      <p className="mb-4 w-full text-center text-[18px] font-[700] leading-[134%]">
+    <div className="w-full rounded-b-[10px] py-[20px] shadow-2">
+      <p className="mb-[18px] w-full text-center text-[18px] font-[700] leading-[134%]">
         {visibleMonth.replace("-", ". ")}
       </p>
       <Swiper

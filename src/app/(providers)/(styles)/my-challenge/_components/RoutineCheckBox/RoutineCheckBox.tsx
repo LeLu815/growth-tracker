@@ -124,7 +124,7 @@ function RoutineCheckBox({
     <>
       <input
         type="checkbox"
-        className="h-8 w-8 rounded-lg accent-[#FF7D3D] hover:cursor-pointer"
+        className="h-[20px] w-[20px] rounded-lg accent-[#FC5A6B] hover:cursor-pointer"
         onChange={(event) => {
           handleCheckboxChange(event)
         }}

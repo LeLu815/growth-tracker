@@ -41,6 +41,9 @@ function ChallengeList() {
   if (structuredChallengeData && currentUserRoutineDoneDaily) {
     // 마일스톤 생성하는데 필요한 세부 데이터 구성하고 이를 기반으로
     // 마일스톤을 화면에 표시해주는 함수
+
+    console.log(structuredChallengeData)
+
     const displayTargetMilestoneItem = (challenge: StructuredChallengeType) => {
       return challenge.milestones?.map((milestone, index) => {
         // 요일 필터링 작업 위해 마일스톤 시행 요일이 담긴 배열 형성해주는 함수
@@ -121,7 +124,7 @@ function ChallengeList() {
           return (
             <div
               key={challenge.goal}
-              className="flex flex-col gap-y-5 rounded-lg border-[1.5px] border-solid border-[#d9d9d9] px-4 py-4 font-suite"
+              className="flex flex-col gap-y-5 rounded-lg border-[1.5px] border-solid border-[#d9d9d9] px-4 py-4 font-suite shadow-2"
             >
               {displayTargetMilestoneItem(challenge)}
             </div>
@@ -129,10 +132,13 @@ function ChallengeList() {
         })
       } else {
         return (
-          <div className="mt-10 flex flex-col items-center justify-center">
+          <div className="mt-5 flex flex-col items-center justify-center">
             <NoChallengeFlagsIcon />
             <p className="mt-3 text-[20px] font-bold">
               진행 중인 챌린지가 없어요
+            </p>
+            <p className="mt-[12px] text-[12px] font-[500]">
+              챌린지를 생성해보세용
             </p>
           </div>
         )
@@ -140,21 +146,19 @@ function ChallengeList() {
     }
 
     return (
-      <div className="mt-10 flex w-full flex-col gap-y-4">
-        <div className="flex flex-row items-center justify-between">
-          <p className="font-suite text-[18px] font-bold text-[#333333]">
-            현재 진행중인 루틴
-          </p>
+      <div className="flex w-full flex-col">
+        <div className="flex w-full flex-row items-center justify-end px-[20px] pb-[16px] pt-[22px]">
           <button
             className="rounded-lg border-none bg-gray-400 px-3 py-1 text-sm text-white transition-colors hover:bg-gray-700 focus:outline-none active:bg-gray-700"
             onClick={() => {
-              setSelectedDate(todayDate)
+              setSelectedDate("")
+              setTimeout(() => setSelectedDate(todayDate), 0)
             }}
           >
             오늘 날짜 보기
           </button>
         </div>
-        <div className="flex flex-col gap-y-12">
+        <div className="flex flex-col gap-y-[10px] px-[12px] pb-[20px]">
           {displayEachChallengeItem()}
         </div>
       </div>

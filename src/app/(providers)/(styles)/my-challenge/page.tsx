@@ -1,22 +1,65 @@
-import Box from "@/components/Box"
+"use client"
+
 import Page from "@/components/Page"
+import StatusBarSpace from "@/components/StatusBarSpace"
+import TopNavigation from "@/components/TopNavigation"
 
 import ChallengeList from "./_components/ChallengeList"
 import DatePickerContainer from "./_components/DatePickerContainer"
-import InfiniteDateScroll from "./_components/InfiniteDateScroll"
 import MyChallengeNavBar from "./_components/MyChallengeNavBar"
+import useMyChallengePageContext from "./context"
 
 function MyChallengePage() {
+  const {
+    pageToView,
+    challengeDataPending,
+    routineDoneDailyPending,
+    challengeDataError,
+    routineDoneDailyError,
+  } = useMyChallengePageContext()
+
+  // Pending이나 Error 상태와 상관없이 항상 표시되는 컴포넌트
+  const renderAlwaysVisibleComponents = () => (
+    <>
+      <StatusBarSpace />
+      <TopNavigation title="내 챌린지" />
+      <MyChallengeNavBar />
+    </>
+  )
+
+  // Pending 또는 Error 상태인 경우에 표시되는 메시지
+  if (challengeDataPending || routineDoneDailyPending) {
+    return (
+      <Page>
+        {renderAlwaysVisibleComponents()}
+        <div className="mt-5">로딩 중</div>
+      </Page>
+    )
+  }
+
+  if (challengeDataError || routineDoneDailyError) {
+    return (
+      <Page>
+        {renderAlwaysVisibleComponents()}
+        <div className="mt-5">서버에서 데이터 로드 중 오류 발생</div>
+      </Page>
+    )
+  }
+
+  // 모든 상태가 false일 때만 표시되는 컴포넌트
   return (
     <Page>
-      <Box>
-        <h1 className="mb-8 ml-2 text-[20px] font-bold">내 챌린지</h1>
-
-        <MyChallengeNavBar />
-        {/* <InfiniteDateScroll /> */}
-        <DatePickerContainer />
-        <ChallengeList />
-      </Box>
+      {renderAlwaysVisibleComponents()}
+      <div>
+        {pageToView == "onProgress" ? (
+          <>
+            <DatePickerContainer />
+            <ChallengeList />
+          </>
+        ) : (
+          <div className="mt-10">예정된 챌린지 모아서 보여주는 페이지?!</div>
+        )}
+      </div>
     </Page>
   )
 }
