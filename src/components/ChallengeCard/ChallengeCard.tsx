@@ -1,6 +1,7 @@
 import Image from "next/image"
 
 import StateChip from "@/components/Chip/StateChip"
+import { formatStartDate } from "@/app/(providers)/(styles)/newsfeed/_utils/dateUtils"
 
 import { PostType } from "../../../types/challenge"
 import { ProgressMilestoneType } from "../../../types/challengeProgress.type"
@@ -18,8 +19,10 @@ interface ChallengeCardProps {
   state: string
   bookmarked: boolean
   challengeImage: string
-  milestone?: ProgressMilestoneType[]
+  successRate: number
   challenge: PostType
+  milestone: ProgressMilestoneType[]
+  startDate?: string
 }
 
 function ChallengeCard({
@@ -31,12 +34,12 @@ function ChallengeCard({
   state,
   bookmarked,
   challengeImage,
-  milestone = [],
+  successRate,
+  startDate,
 }: ChallengeCardProps) {
-  // 서버에서 받은 milestone 객체의 successRate를 평균하여 사용
-  const successRate =
-    milestone.reduce((acc, m) => acc + (m.successRate || 0), 0) /
-    (milestone.length > 0 ? milestone.length : 1) // Avoid division by zero
+  const isCompleted = state === "on_complete"
+  const isNotStarted = state === "not_started"
+  const formattedStartDate = startDate ? formatStartDate(startDate) : ""
 
   return (
     <div
@@ -45,7 +48,7 @@ function ChallengeCard({
     >
       <div className="flex w-full px-[12px] py-[14px]">
         <div className="mr-4 flex w-1/4 min-w-[98px] flex-col">
-          <div className="align-start relative flex h-full w-full flex-col items-start justify-between overflow-hidden rounded-[6px] border">
+          <div className="relative flex h-full w-full flex-col items-start justify-between overflow-hidden rounded-[6px] border">
             <Image
               fill
               className="object-cover"
@@ -58,19 +61,22 @@ function ChallengeCard({
           <div className="flex items-center justify-between">
             <p className="flex w-full justify-between text-title-s font-bold">
               <span>{title}</span>
-              <span>{successRate === 100 ? <SuccessBadge /> : ""}</span>
+              <span>{successRate === 100 && <SuccessBadge />}</span>
             </p>
           </div>
           <div className="flex w-full items-center justify-between py-[12px]">
-            <span>
-              <StateChip state={state} />
-            </span>
-            {state === "on_complete" && (
+            <StateChip state={state} />
+            {isCompleted && (
               <span>
                 <span className="text-body-s font-medium">달성률 </span>
                 <span className="text-body-m font-medium text-primary">
                   {Math.round(successRate)}%
                 </span>
+              </span>
+            )}
+            {isNotStarted && (
+              <span className="text-body-s text-grey-400">
+                {formattedStartDate}
               </span>
             )}
           </div>
