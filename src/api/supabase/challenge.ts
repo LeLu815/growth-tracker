@@ -111,7 +111,9 @@ export const GETmilestones = async (challenge_id: string) => {
   if (error) {
     return false
   }
-  return data
+  return data.sort(
+    (a, b) => new Date(a.start_at).getTime() - new Date(b.start_at).getTime()
+  )
 }
 
 // 첼린지 id로 루틴 가져오기
