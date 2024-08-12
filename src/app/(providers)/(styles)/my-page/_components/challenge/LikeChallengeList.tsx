@@ -1,5 +1,3 @@
-"use client"
-
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useInfiniteQuery } from "@tanstack/react-query"
@@ -9,7 +7,7 @@ import ChallengeCard from "@/components/ChallengeCard"
 
 import { MyChallengeType } from "../../../../../../../types/myChallengeList.type"
 
-function Page() {
+function LikeChallengeList() {
   const { me } = useAuth()
   const router = useRouter()
 
@@ -61,7 +59,6 @@ function Page() {
 
   return (
     <div className={"flex flex-col items-center px-4"}>
-      <h1 className={"text-2xl"}>좋아요 챌린지 목록</h1>
       <ul className={"w-full"}>
         {data?.map((myChallenge) => {
           return (
@@ -92,4 +89,4 @@ function Page() {
   )
 }
 
-export default Page
+export default LikeChallengeList
