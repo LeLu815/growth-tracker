@@ -52,7 +52,7 @@ function RangeInput({
           const newValue = Number(e.target.value)
           if (newValue >= min) {
             setValue(newValue)
-            getValue(e.target.value)
+            getValue(`${newValue - min}`)
           }
         }}
         className="custom-range"

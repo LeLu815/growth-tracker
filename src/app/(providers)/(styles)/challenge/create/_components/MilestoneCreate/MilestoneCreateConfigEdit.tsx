@@ -21,6 +21,7 @@ import CalenderIcon from "@/components/Icon/CalenderIcon"
 import Input from "@/components/Input"
 import RangeInput from "@/components/RangeInput"
 
+import { updateDataBetweenSwitchDays } from "../DrapDropContainer/DragDropContainer"
 import ContentTitle from "../styles/ContentTitle"
 import SubTitle from "../styles/SubTitle"
 import MilestoneCreateComponent from "./MilestoneCreateComponent"
@@ -53,7 +54,9 @@ function MilestoneCreateConfigEdit({
   // 마일스톤 시작 날짜 *
   const milestone_start_date = currentMilestoneObject?.start_at!
   // 마일스톤 이름 input *
-  const [milestoneNameInput, setMilestoneNameInput] = useState("이름은 준비 중")
+  const [milestoneNameInput, setMilestoneNameInput] = useState(
+    currentMilestoneObject?.name || ""
+  )
   // 루틴 이름 input *
   const [routineInpt, setRoutineInput] = useState<string>("")
   // 루틴 배열 *
@@ -71,7 +74,11 @@ function MilestoneCreateConfigEdit({
     currentMilestoneObject?.is_sun!,
   ])
   // 마일스톤 성공 기준 퍼센트 *
-  const [minPercent, setMinPercent] = useState<string>("50")
+  const [minPercent, setMinPercent] = useState<string>(
+    currentMilestoneObject?.success_percent
+      ? `${currentMilestoneObject?.success_percent!}`
+      : "50"
+  )
   // 챌린지 토탈 일수
   const challenge_total_day =
     differenceInCalendarDays(range?.to!, range?.from!) + 1
@@ -84,6 +91,25 @@ function MilestoneCreateConfigEdit({
     milestone_start_date,
     range?.from!
   )
+  // 모든 마일스톤이 등록되어있는 기간 일수
+  const resisteredMilestonePeriod = data.reduce(
+    (prev, curr) => prev + curr.total_day,
+    0
+  )
+  // 현재 내 마일스톤 제외하고 등록되어있는 기간 일수
+  const resisteredMilestonePeriodWithoutMe = data.reduce((prev, curr) => {
+    if (curr.id !== milestoneId) {
+      return prev + curr.total_day
+    }
+    return prev
+  }, 0)
+
+  console.log(
+    "resisteredMilestonePeriodWithoutMe :",
+    resisteredMilestonePeriodWithoutMe,
+    milestonePeriod
+  )
+
   // 마일스톤 종료 날짜 *
   const milestone_end_date = format(
     addDays(new Date(milestone_start_date), +milestonePeriod - 1),
@@ -172,8 +198,9 @@ function MilestoneCreateConfigEdit({
   }
 
   const confirmFunc = () => {
+    // 값 저장하기
     updateMilestone({
-      name: "",
+      name: milestoneNameInput,
       success_percent: 50,
       challenge_id: "",
       id: currentMilestoneObject?.id!,
@@ -196,13 +223,54 @@ function MilestoneCreateConfigEdit({
         content: value,
       })),
     })
+    // 이후 값들 업데이트 시켜주기
+    // 현재 값의 인덱스 구학
+    const currentIndex = data.findIndex(
+      (milestoneObj) => milestoneObj.id === milestoneId
+    )
+    const newData = produce(data, (draft) => {
+      draft[currentIndex] = {
+        name: milestoneNameInput,
+        success_percent: 50,
+        challenge_id: "",
+        id: currentMilestoneObject?.id!,
+        start_at: milestone_start_date,
+        end_at: milestone_end_date,
+        is_mon: selectWeeks[0],
+        is_tue: selectWeeks[1],
+        is_wed: selectWeeks[2],
+        is_thu: selectWeeks[3],
+        is_fri: selectWeeks[4],
+        is_sat: selectWeeks[5],
+        is_sun: selectWeeks[6],
+        success_requirement_cnt: Math.ceil(
+          (milestone_actual_day * +minPercent) / 100
+        ),
+        total_cnt: milestone_actual_day,
+        total_day: +milestonePeriod,
+        routines: routines.map((value) => ({
+          id: "",
+          content: value,
+        })),
+      }
+    })
+    setData(
+      updateDataBetweenSwitchDays(
+        newData,
+        currentIndex,
+        data.length - 1,
+        range?.from
+      )
+    )
   }
 
   useEffect(() => {}, [data, range])
   return (
     <>
       <div className="mb-16">
-        <SubTitle className="justify-start">루틴 A</SubTitle>
+        <SubTitle className="justify-start">
+          {currentMilestoneObject?.name}
+        </SubTitle>
         <div>
           <div className="mt-[12px] flex items-center gap-2">
             <CalenderIcon color="#717171" />
@@ -232,13 +300,8 @@ function MilestoneCreateConfigEdit({
                 }}
                 step={1}
                 max={differenceInCalendarDays(range.to!, range.from!) + 1}
-                min={differenceInCalendarDays(
-                  milestone_start_date,
-                  range.from!
-                )}
-                defaultValue={
-                  differenceInCalendarDays(milestone_end_date, range.from!) + 1
-                }
+                min={resisteredMilestonePeriodWithoutMe}
+                defaultValue={resisteredMilestonePeriod}
               />
             )}
             <p className="mt-[4px] text-end text-[16px] font-[600]">
@@ -283,6 +346,11 @@ function MilestoneCreateConfigEdit({
               }}
               step={10}
               max={100}
+              defaultValue={
+                currentMilestoneObject?.success_percent
+                  ? currentMilestoneObject?.success_percent!
+                  : 50
+              }
             />
             <div className="mt-[4px] flex justify-between">
               <p className="font-[800]">0%</p>
