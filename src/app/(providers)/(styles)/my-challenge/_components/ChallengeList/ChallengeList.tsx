@@ -112,7 +112,7 @@ function ChallengeList() {
             진행 중인 챌린지가 없어요
           </p>
           <p className="mt-[12px] text-[12px] font-[500]">
-            챌린지를 생성해보세용
+            챌린지를 생성해보세요
           </p>
         </div>
       )
