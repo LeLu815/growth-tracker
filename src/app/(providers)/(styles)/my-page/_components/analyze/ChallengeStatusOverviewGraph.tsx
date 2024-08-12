@@ -147,7 +147,7 @@ const ChallengeStatusOverviewGraph = () => {
   }
 
   return (
-    <div className={"mx-auto"}>
+    <div >
       <div className={"text-title-xl"}>
         {compareNumbersReturnMessage(
           challengeCount.successCount,
@@ -172,7 +172,7 @@ const ChallengeStatusOverviewGraph = () => {
         )}
       </div>
       <div className="h-[300px] w-full">
-        <Doughnut data={graphData} options={options} />
+        <Doughnut data={graphData} options={options} className={"mx-auto"}/>
       </div>
       <hr />
       <div className={"mt-6 flex flex-col items-start"}>
