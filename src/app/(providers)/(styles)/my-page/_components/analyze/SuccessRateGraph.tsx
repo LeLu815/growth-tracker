@@ -15,6 +15,8 @@ import {
 import ChartDataLabels from "chartjs-plugin-datalabels"
 import { Bar } from "react-chartjs-2"
 
+import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
+
 import { Step1GraphType } from "../../../../../../../types/myPageGraph.type"
 
 ChartJS.register(
@@ -29,6 +31,7 @@ ChartJS.register(
 
 const SuccessRateGraph = () => {
   const { me } = useAuth()
+  const [isPossibleStatistics, setIsPossibleStatistics] = useState(false)
   const [currentMonthSuccessRate, setCurrentMonthSuccessRate] = useState(0)
   const [message, setMessage] = useState("")
 
@@ -122,9 +125,15 @@ const SuccessRateGraph = () => {
       const labels = []
       const dataList = []
 
+      let totalSuccessRate = 0
       for (const item of data) {
         labels.push(item.period)
         dataList.push(item.success_rate)
+        totalSuccessRate += item.success_rate
+      }
+
+      if (totalSuccessRate > 0) {
+        setIsPossibleStatistics(true)
       }
 
       setCurrentMonthSuccessRate(dataList[1])
@@ -162,6 +171,18 @@ const SuccessRateGraph = () => {
 
   if (isPending) {
     return "loading..."
+  }
+
+  if (!isPossibleStatistics) {
+    return (
+      <div className="mt-36 flex flex-col items-center justify-center">
+        <NoChallengeFlagsIcon />
+        <p className="mt-3 text-[20px] font-bold">분석할 데이터가 없습니다.</p>
+        <p className="mt-[12px] text-[12px] font-[500]">
+          챌린지를 생성해 목표를 이루어 보세요.
+        </p>
+      </div>
+    )
   }
 
   return (
