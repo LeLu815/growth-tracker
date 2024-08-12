@@ -42,8 +42,6 @@ function ChallengeList() {
     // 마일스톤 생성하는데 필요한 세부 데이터 구성하고 이를 기반으로
     // 마일스톤을 화면에 표시해주는 함수
 
-    console.log(structuredChallengeData)
-
     const displayTargetMilestoneItem = (challenge: StructuredChallengeType) => {
       return challenge.milestones?.map((milestone, index) => {
         // 요일 필터링 작업 위해 마일스톤 시행 요일이 담긴 배열 형성해주는 함수

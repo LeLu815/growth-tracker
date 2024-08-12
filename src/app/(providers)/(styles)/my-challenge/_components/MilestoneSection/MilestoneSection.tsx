@@ -2,9 +2,9 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { PropsWithChildren, useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { POSTnewRoutineDoneDaily } from "@/api/supabase/routineDoneDaily"
 import { useModal } from "@/context/modal.context"
-import queryClient from "@/query/queryClient"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { v4 } from "uuid"
 
@@ -38,6 +38,7 @@ function MilestoneSection({
     currentUserRoutineDoneDaily,
   } = useMyChallengePageContext()
 
+  const router = useRouter()
   const leftDays =
     (new Date(milestone.end_at).getTime() - new Date(selectedDate).getTime()) /
       (1000 * 60 * 60 * 24) +
@@ -246,7 +247,12 @@ function MilestoneSection({
           >
             {selectedDate == todayDate ? "하루 일기 쓰기" : "오늘의 일기"}
           </Button>
-          <p className="w-full text-center text-[10px] font-[500] leading-[135%] text-black">
+          <p
+            onClick={() => {
+              router.push(`/challenge/${challengeId}`)
+            }}
+            className="w-full text-center text-[10px] font-[500] leading-[135%] text-black"
+          >
             {`챌린지 정보 확인 >`}
           </p>
         </div>
