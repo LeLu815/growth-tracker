@@ -134,7 +134,11 @@ const TopPercentGraph = () => {
 
       const myPositionIndex =
         data.userUserSuccessRateList[0]!.rounded_success_rate / 10
-      setMyPercentile(data.userUserSuccessRateList[0]!.percentile)
+      setMyPercentile(
+        data.userUserSuccessRateList[0]!.percentile === 100
+          ? 0
+          : data.userUserSuccessRateList[0]!.percentile
+      )
 
       const newPointBackgroundColorList = []
       const pointRadiusList = []
@@ -176,7 +180,7 @@ const TopPercentGraph = () => {
   return (
     <div className={"flex flex-col gap-4"}>
       <div className={"text-title-xl"}>
-        현재 닉네임님의 성공률은 <br />{" "}
+        현재 닉네임님의 성공률은 <br />
         <p className={"inline text-primary"}>상위 {myPercentile}%</p>에
         속합니다.
       </div>

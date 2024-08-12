@@ -7,6 +7,7 @@ import { useInView } from "react-intersection-observer"
 import ChallengeCard from "@/components/ChallengeCard"
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
 
+import { PostType } from "../../../../../../../types/challenge"
 import { MyChallengeType } from "../../../../../../../types/myChallengeList.type"
 
 function LikeChallengeList() {
@@ -17,13 +18,13 @@ function LikeChallengeList() {
     pageParam,
   }: {
     pageParam: number
-  }): Promise<MyChallengeType> => {
+  }): Promise<PostType[]> => {
     const response = await axios
       .get(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/challenge/like?page=${pageParam}&limit=20`
       )
       .then((response) => response.data)
-
+    debugger
     return response.data
   }
 
@@ -75,29 +76,29 @@ function LikeChallengeList() {
           data?.map((myChallenge, index) => {
             const isLastItem = data?.length - 1 === index
             return (
-             <li
-              key={myChallenge.id}
-              onClick={() => handleMoveDetail(myChallenge.id)}
-              className="mb-[20px] cursor-pointer"
-            >
-              <ChallengeCard
-                title={myChallenge.goal}
-                category={myChallenge.category}
-                likes={myChallenge.like_cnt}
-                bookmarks={myChallenge.template_cnt}
-                liked={me ? (myChallenge.liked || []).includes(me.id) : false}
-                // nickname={myChallenge.user.nickname}
-                state={myChallenge.progress}
-                // userImage={myChallenge.user.profile_image_url}
-                bookmarked={
-                  me ? (myChallenge.bookmarked || []).includes(me.id) : false
-                }
-                challengeImage={myChallenge.image}
-                successRate={myChallenge.successRate}
-                challenge={myChallenge}
-                milestone={myChallenge.milestone}
-              />
-            </li>
+              <li
+                key={myChallenge.id}
+                onClick={() => handleMoveDetail(myChallenge.id)}
+                className="mb-[20px] cursor-pointer"
+              >
+                <ChallengeCard
+                  title={myChallenge.goal}
+                  category={myChallenge.category}
+                  likes={myChallenge.like_cnt}
+                  bookmarks={myChallenge.template_cnt}
+                  liked={me ? (myChallenge.liked || []).includes(me.id) : false}
+                  // nickname={myChallenge.user.nickname}
+                  state={myChallenge.state}
+                  // userImage={myChallenge.user.profile_image_url}
+                  bookmarked={
+                    me ? (myChallenge.bookmarked || []).includes(me.id) : false
+                  }
+                  challengeImage={myChallenge.image_url || ""}
+                  successRate={myChallenge.successRate}
+                  challenge={myChallenge}
+                  milestone={myChallenge.milestone}
+                />
+              </li>
             )
           })
         ) : (

@@ -37,6 +37,7 @@ function ChallengeCard({
   successRate,
   startDate,
 }: ChallengeCardProps) {
+  debugger
   const isCompleted = state === "on_complete"
   const isNotStarted = state === "not_started"
   const formattedStartDate = startDate ? formatStartDate(startDate) : ""
