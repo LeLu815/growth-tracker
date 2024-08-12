@@ -51,7 +51,15 @@ const ChallengeStatusOverviewGraph = () => {
         tooltip: {
           enabled: false,
         },
+        datalabels: {
+          display: (context) => context.dataset.data[context.dataIndex] !== 0, // 값이 0이 아닌 경우에만 표시
+          color: "#000",
+          font: {
+            size: 14,
+          },
+        },
       },
+
       cutout: "40%",
     }),
     []
