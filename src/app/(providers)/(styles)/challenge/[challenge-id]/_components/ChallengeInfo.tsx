@@ -36,7 +36,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const { showToast } = useToast()
 
   const handleDeleteChallengeToast = () => {
-    showToast("챌린지가 삭제되었습니다.")
+    showToast("챌린지가 삭제되었습니다.", 3000, "bottom-20 max-w-[640px]")
   }
 
   const getChallenge = async (): Promise<ChallengeType> => {
