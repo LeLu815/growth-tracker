@@ -13,9 +13,7 @@ import {
 import axios from "axios"
 import { useInView } from "react-intersection-observer"
 
-import EmptyHartIcon from "@/components/Icon/EmptyHartIcon"
 import NoneProfile from "@/components/Icon/NoneProfile"
-import RedHartIcon from "@/components/Icon/RedHartIcon"
 import ThumbsUpIcon from "@/components/Icon/ThumbsUpIcon"
 
 import {
