@@ -122,7 +122,7 @@ function ChallengeList() {
           return (
             <div
               key={challenge.goal}
-              className="flex flex-col gap-y-5 rounded-lg border-[1.5px] border-solid border-[#d9d9d9] px-4 py-4 font-suite shadow-2"
+              className="flex flex-col gap-y-5 rounded-lg border-[1.5px] border-solid border-[#d9d9d9] px-[20px] py-4 font-suite shadow-2"
             >
               {displayTargetMilestoneItem(challenge)}
             </div>
@@ -145,18 +145,7 @@ function ChallengeList() {
 
     return (
       <div className="flex w-full flex-col">
-        <div className="flex w-full flex-row items-center justify-end px-[20px] pb-[16px] pt-[22px]">
-          <button
-            className="rounded-lg border-none bg-gray-400 px-3 py-1 text-sm text-white transition-colors hover:bg-gray-700 focus:outline-none active:bg-gray-700"
-            onClick={() => {
-              setSelectedDate("")
-              setTimeout(() => setSelectedDate(todayDate), 0)
-            }}
-          >
-            오늘 날짜 보기
-          </button>
-        </div>
-        <div className="flex flex-col gap-y-[10px] px-[12px] pb-[20px]">
+        <div className="flex flex-col gap-y-[10px] px-[20px] pb-[20px] pt-[20px]">
           {displayEachChallengeItem()}
         </div>
       </div>
