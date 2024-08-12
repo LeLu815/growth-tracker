@@ -187,7 +187,7 @@ const CategoryCountGraph = () => {
   }
 
   return (
-    <div className={"mx-auto flex w-full flex-col gap-14"}>
+    <div className={"mx-auto flex w-full flex-col gap-28"}>
       <div className={"flex flex-col gap-4"}>
         <div className={"text-title-xl"}>
           <p className={"inline text-primary"}>{category}</p> 항목을 <br /> 제일
