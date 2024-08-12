@@ -6,6 +6,7 @@ import TopNavigation from "@/components/TopNavigation"
 
 import ChallengeList from "./_components/ChallengeList"
 import DatePickerContainer from "./_components/DatePickerContainer"
+import FutureChallengeList from "./_components/FutureChallengeList"
 import MyChallengeNavBar from "./_components/MyChallengeNavBar"
 import useMyChallengePageContext from "./context"
 
@@ -27,7 +28,7 @@ function MyChallengePage() {
     </>
   )
 
-  // Pending 또는 Error 상태인 경우에 표시되는 메시지
+  // 데이터 불러오는 상태가 Pending 또는 Error 상태인 경우에 표시되는 메시지
   if (challengeDataPending || routineDoneDailyPending) {
     return (
       <Page>
@@ -46,7 +47,7 @@ function MyChallengePage() {
     )
   }
 
-  // 모든 상태가 false일 때만 표시되는 컴포넌트
+  // 모든 데이터가 불러와졌을 때 표시되는 컴포넌트
   return (
     <Page>
       {renderAlwaysVisibleComponents()}
@@ -57,7 +58,7 @@ function MyChallengePage() {
             <ChallengeList />
           </>
         ) : (
-          <div className="mt-10">예정된 챌린지 모아서 보여주는 페이지?!</div>
+          <FutureChallengeList />
         )}
       </div>
     </Page>

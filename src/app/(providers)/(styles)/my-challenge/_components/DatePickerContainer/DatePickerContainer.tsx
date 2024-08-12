@@ -77,7 +77,6 @@ function DatePickerContainer({}) {
     const firstMonth = format(firstVisibleDate, "yyyy-MM", { locale: ko })
     const lastMonth = format(lastVisibleDate, "yyyy-MM", { locale: ko })
     setVisibleMonth(lastMonth > firstMonth ? lastMonth : firstMonth)
-    // console.log(format(firstVisibleDate, "yyyy-MM-dd", { locale: ko }))
   }
 
   const getDateStyle = (date: string) => {
@@ -168,8 +167,7 @@ function DatePickerContainer({}) {
         {/* 빨간점 */}
         <div className="flex h-[6px] w-full justify-center">
           {format(startOfDay(day), "yyyy-MM-dd", { locale: ko }) ==
-            selectedDate ||
-          format(startOfDay(day), "yyyy-MM-dd", { locale: ko }) == todayDate ? (
+          todayDate ? (
             <></>
           ) : checkDateHasRoutine(day) ? (
             <DatePickerRedDotIcon />
@@ -178,9 +176,9 @@ function DatePickerContainer({}) {
           )}
         </div>
         {/* 날짜 동그라미 */}
-        <div className="flex w-full justify-center">
+        <div className="mt-[4px] flex w-full justify-center">
           <p
-            className={`flex h-[34px] w-[34px] items-center justify-center rounded-full text-center ${getDateStyle(
+            className={`flex h-[32px] w-[32px] items-center justify-center rounded-full text-center ${getDateStyle(
               format(startOfDay(day), "yyyy-MM-dd", { locale: ko })
             )}`}
           >
@@ -190,23 +188,37 @@ function DatePickerContainer({}) {
       </SwiperSlide>
     ))
   }
-
+  const todayDayOfWeek = format(startOfDay(Date.now()), "eee", { locale: ko })
   return (
     <div className="w-full rounded-b-[10px] py-[20px] shadow-2">
-      <p className="mb-[18px] w-full text-center text-[18px] font-[700] leading-[134%]">
-        {visibleMonth.replace("-", ". ")}
-      </p>
-      <Swiper
-        slidesPerView={7}
-        spaceBetween={0}
-        slidesPerGroup={7}
-        mousewheel={true}
-        modules={[Mousewheel, Navigation]}
-        ref={swiperRef}
-        onSlideChange={handleSlideChange}
-      >
-        {renderAllDatesSwiperSlides()}
-      </Swiper>
+      <div className="flex items-center justify-between px-[20px]">
+        <p className="text-start text-[18px] font-[700] leading-[135%]">
+          {visibleMonth.replace("-", ". ")}
+        </p>
+        <button
+          className="rounded-lg border-none bg-gray-400 px-3 py-1 text-sm text-white transition-colors hover:bg-gray-700 focus:outline-none active:bg-gray-700"
+          onClick={() => {
+            setSelectedDate("")
+            setTimeout(() => setSelectedDate(todayDate), 0)
+            setTimeout(() => setSelectedDayOfWeek(todayDayOfWeek), 0)
+          }}
+        >
+          오늘 날짜 보기
+        </button>
+      </div>
+      <div className="mt-[24px] px-[18px]">
+        <Swiper
+          slidesPerView={7}
+          spaceBetween={0}
+          slidesPerGroup={7}
+          mousewheel={true}
+          modules={[Mousewheel, Navigation]}
+          ref={swiperRef}
+          onSlideChange={handleSlideChange}
+        >
+          {renderAllDatesSwiperSlides()}
+        </Swiper>
+      </div>
     </div>
   )
 }

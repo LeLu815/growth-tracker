@@ -34,7 +34,7 @@ function MyChallengeNavBar() {
         )}`}
         onClick={handleOnProgressClick}
       >
-        <p>진행 중</p>
+        <p>진행중</p>
       </div>
       <div
         className={`flex h-full w-[50%] cursor-pointer items-center justify-center px-4 text-center ${getTabStyle(
@@ -43,10 +43,10 @@ function MyChallengeNavBar() {
         )}`}
         onClick={handleCompletedClick}
       >
-        <p>예정된 챌린지?!</p>
+        <p>진행전</p>
       </div>
     </div>
   )
 }
 
-export default MyChallengeNavBar
+export default React.memo(MyChallengeNavBar)
