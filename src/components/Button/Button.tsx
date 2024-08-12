@@ -4,7 +4,7 @@ import { cva, VariantProps } from "class-variance-authority"
 import classNames from "classnames"
 
 const buttonVariant = cva(
-  "border-2 font-semibold duration-10 transition-all box-border",
+  "border font-semibold duration-10 transition-all box-border",
   {
     variants: {
       intent: {
@@ -22,7 +22,7 @@ const buttonVariant = cva(
       variant: {
         outline: "rounded-[8px] ",
         contained: "rounded-[8px] ",
-        disabled: "bg-grey-800 text-grey-700 cursor-not-allowed rounded-[8px]",
+        disabled: "cursor-not-allowed rounded-[8px]",
         selected: "bg-pink-850 text-primary border-primary rounded-[8px]",
         rounded: "rounded-full",
         borderless: "border-none",
@@ -62,7 +62,7 @@ const buttonVariant = cva(
       {
         intent: "secondary",
         variant: "disabled",
-        className: "bg-grey-800 text-grey-700 pointer-events-none",
+        className: "bg-grey-800 text-grey-700 pointer-events-none ",
       },
       {
         intent: "primary",
@@ -98,6 +98,11 @@ const buttonVariant = cva(
         intent: "third",
         variant: "selected",
         className: "text-grey-50 border-grey-50 bg-grey-800",
+      },
+      {
+        intent: "third",
+        variant: "disabled",
+        className: "text-grey-600 border-grey-600 bg-white",
       },
     ],
     defaultVariants: {
