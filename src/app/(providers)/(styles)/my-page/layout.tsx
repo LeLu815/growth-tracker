@@ -6,7 +6,7 @@ import MyPageTitleHeader from "@/app/(providers)/(styles)/my-page/_components/My
 
 function MyPageLayout({ children }: PropsWithChildren) {
   return (
-    <Page>
+    <Page >
       <MyPageTitleHeader />
       {children}
       <BottomNavigation />

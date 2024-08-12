@@ -23,7 +23,7 @@ function GraphSlider() {
   }
 
   return (
-    <Box className={"mx-auto mb-10 flex h-auto w-full max-w-[640px] flex-col gap-2"}>
+    <Box className={"mx-auto mb-10 flex h-screen w-full max-w-[640px] flex-col gap-2"}>
       <Slider {...settings}>
         <SuccessRateGraph />
         <CategoryCountGraph />

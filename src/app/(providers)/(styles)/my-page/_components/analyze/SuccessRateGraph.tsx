@@ -165,7 +165,7 @@ const SuccessRateGraph = () => {
   }
 
   return (
-    <div className={"mx-auto flex h-auto w-full flex-col gap-14"}>
+    <div className={"mx-auto flex h-auto w-full flex-col gap-28"}>
       <div className={"flex flex-col gap-4"}>
         <div className={"text-title-xl"}>
           이번달 누적 성공률은 <br />
