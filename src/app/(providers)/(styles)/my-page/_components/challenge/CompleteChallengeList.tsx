@@ -73,7 +73,6 @@ function CompleteChallengeList() {
         {data?.length > 0 ? (
           data?.map((myChallenge, index) => {
             const isLastItem = data?.length - 1 === index
-            debugger
             return (
               <li
                 key={myChallenge.id}

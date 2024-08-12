@@ -24,7 +24,6 @@ function LikeChallengeList() {
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/challenge/like?page=${pageParam}&limit=20`
       )
       .then((response) => response.data)
-    debugger
     return response.data
   }
 
