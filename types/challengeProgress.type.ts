@@ -30,6 +30,7 @@ export interface ProgressMilestoneType extends MilestoneRow {
   success_cnt: number // 성공한 루틴 수
   success_requirement_cnt: number // 성공에 필요한 루틴 수
   routine_done_daily?: RoutineDoneDaily[]
+  successRate?: number
 }
 
 // 챌린지의 전체 구조를 정의하는 인터페이스

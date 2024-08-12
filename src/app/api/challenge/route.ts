@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/supabase/server"
 import { PostgrestResponse } from "@supabase/supabase-js"
 import { produce } from "immer"
+import { Milestone } from "lucide-react"
+
+import { successRateCalcu } from "@/app/(providers)/_utils/successRateCalcuUtils"
 
 import { Database } from "../../../../types/supabase"
 
@@ -203,22 +206,23 @@ export async function GET(req: NextRequest) {
 
   const challengesWithSuccessRates = listsData.map((challenge) => {
     challenge.milestone = challenge.milestone.map((milestone) => {
-      // 성공한 총 횟수
-      const successfulDays =
+      const totalRoutines = milestone.total_cnt || 0
+      const successfulRoutines =
         milestone.routine_done_daily?.filter((rdd) => rdd.is_success).length ||
         0
-      // 수행된 총 일수
-      const totalDays = milestone.routine_done_daily?.length || 0
 
-      // 성공률 계산
-      const successRate = totalDays > 0 ? (successfulDays / totalDays) * 100 : 0
+      const successRate =
+        totalRoutines > 0 ? (successfulRoutines / totalRoutines) * 100 : 0
 
-      // 성공률을 milestone 객체에 추가
       return {
         ...milestone,
         successRate,
       }
     })
+
+    console.log(challenge)
+    console.log(Milestone)
+    console.log(successRateCalcu)
 
     return challenge
   })

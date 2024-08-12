@@ -1,11 +1,10 @@
 "use client"
 
-import { useState } from "react"
 import { useModal } from "@/context/modal.context"
 import { useToast } from "@/context/toast.context"
+import { useState } from "react"
 
 import Button from "@/components/Button"
-import ChallengeCard from "@/components/ChallengeCard"
 import Chip from "@/components/Chip"
 import CheckIcon from "@/components/Icon/CheckIcon"
 import Input from "@/components/Input"
@@ -132,7 +131,7 @@ function ComponentTestPage() {
       <Chip label="공부" selected={isSelected} onClick={handleClick} />
 
       <h4>challenge card</h4>
-      <ChallengeCard
+      {/* <ChallengeCard
         title="토익 990점~~"
         category="공부"
         likes={3}
@@ -155,7 +154,7 @@ function ComponentTestPage() {
         state="not_started"
         bookmarked={false}
         challengeImage="/icon/ic-arrow-right.svg"
-      />
+      /> */}
 
       <h4>토스트 테스트</h4>
       <div>

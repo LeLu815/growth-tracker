@@ -1,14 +1,9 @@
 import Image from "next/image"
 
 import StateChip from "@/components/Chip/StateChip"
-import { successRateCalcu } from "@/app/(providers)/_utils/successRateCalcuUtils"
-import { convertStatusToKorean } from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeInfo"
 
-import {
-  ProgressChallengeType,
-  ProgressMilestoneType,
-} from "../../../types/challengeProgress.type"
-import Chip from "../Chip"
+import { PostType } from "../../../types/challenge"
+import { ProgressMilestoneType } from "../../../types/challengeProgress.type"
 import BookmarkIcon from "../Icon/BookmarkIcon"
 import CopyIcon from "../Icon/CopyIcon"
 import SuccessBadge from "../Icon/SuccessBadge"
@@ -20,13 +15,11 @@ interface ChallengeCardProps {
   likes: number
   bookmarks: number
   liked: boolean
-  // nickname: string
   state: string
-  // userImage: string
   bookmarked: boolean
   challengeImage: string
-  challenge?: ProgressChallengeType
   milestone?: ProgressMilestoneType[]
+  challenge: PostType
 }
 
 function ChallengeCard({
@@ -35,15 +28,15 @@ function ChallengeCard({
   liked,
   bookmarks,
   likes,
-  // nickname,
   state,
-  // userImage,
   bookmarked,
   challengeImage,
-  challenge,
   milestone = [],
 }: ChallengeCardProps) {
-  const successRate = successRateCalcu(milestone)
+  // 서버에서 받은 milestone 객체의 successRate를 평균하여 사용
+  const successRate =
+    milestone.reduce((acc, m) => acc + (m.successRate || 0), 0) /
+    (milestone.length > 0 ? milestone.length : 1) // Avoid division by zero
 
   return (
     <div
@@ -76,7 +69,7 @@ function ChallengeCard({
               <span>
                 <span className="text-body-s font-medium">달성률 </span>
                 <span className="text-body-m font-medium text-primary">
-                  {successRate}%
+                  {Math.round(successRate)}%
                 </span>
               </span>
             )}
@@ -103,7 +96,7 @@ function ChallengeCard({
       <div className="flex w-full">
         <div className="mr-4 flex w-1/4 min-w-[98px]"></div>
         <div className="flex w-3/4 flex-col items-end px-[12px]">
-          <ProgressBar progress={successRate} />
+          <ProgressBar progress={Math.round(successRate)} />
         </div>
       </div>
 
