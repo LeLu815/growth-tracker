@@ -20,8 +20,8 @@ interface ChallengeCardProps {
   bookmarked: boolean
   challengeImage: string
   successRate: number
-  challenge: PostType
-  milestone: ProgressMilestoneType[]
+  challenge?: PostType
+  milestone?: ProgressMilestoneType[]
   startDate?: string
 }
 
