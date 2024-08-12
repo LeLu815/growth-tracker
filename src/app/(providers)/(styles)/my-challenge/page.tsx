@@ -6,6 +6,7 @@ import TopNavigation from "@/components/TopNavigation"
 
 import ChallengeList from "./_components/ChallengeList"
 import DatePickerContainer from "./_components/DatePickerContainer"
+import FutureChallengeList from "./_components/FutureChallengeList"
 import MyChallengeNavBar from "./_components/MyChallengeNavBar"
 import useMyChallengePageContext from "./context"
 
@@ -57,7 +58,7 @@ function MyChallengePage() {
             <ChallengeList />
           </>
         ) : (
-          <div className="mt-10">예정된 챌린지 모아서 보여주는 페이지?!</div>
+          <FutureChallengeList />
         )}
       </div>
     </Page>
