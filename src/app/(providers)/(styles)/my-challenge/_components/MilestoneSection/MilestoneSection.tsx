@@ -166,7 +166,7 @@ function MilestoneSection({
 
   return (
     <section>
-      <div className="flex gap-x-[24px]">
+      <div className="flex gap-x-[24px] cursor-pointer" onClick={toggleVisibility}>
         {/* 이미지 */}
         <div className="h-[84px] w-[84px] rounded-md bg-[#DDDDDD]"></div>
         {/* 이미지 옆 모든 것 */}
@@ -177,7 +177,7 @@ function MilestoneSection({
             {!checkMilestoneDayOfWeek ? (
               <></>
             ) : (
-              <button onClick={toggleVisibility}>
+              <button >
                 <ArrowDownIcon />
               </button>
             )}
