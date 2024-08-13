@@ -331,7 +331,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
       {data?.length === 0 ? (
         <div
           className={
-            "text-gray-custom p-24 text-center font-suite text-[14px] font-medium leading-[18.9px]"
+            "text-gray-custom p-24 text-center text-[14px] font-medium leading-[18.9px]"
           }
         >
           아직 댓글이 없어요.
@@ -374,7 +374,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                         <div className={"flex gap-2"}>
                           <button
                             type="submit"
-                            className="cursor-pointer text-center font-suite text-[12px] font-medium leading-[135%] text-[#969696]"
+                            className="cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
                             onClick={() => {
                               isUpdate && comment.id === updateCommentId
                                 ? handleCommentMutate({
@@ -389,7 +389,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                               : "수정"}
                           </button>
                           <button
-                            className="cursor-pointer text-center font-suite text-[12px] font-medium leading-[135%] text-[#969696]"
+                            className="cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
                             onClick={() => {
                               isUpdate && comment.id === updateCommentId
                                 ? handleChangeIsUpdate(comment)
@@ -407,7 +407,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                     </div>
                     <div
                       className={
-                        "font-suite text-xs font-normal leading-[1.35] text-gray-600"
+                        "text-xs font-normal leading-[1.35] text-gray-600"
                       }
                     >
                       {comment.created_at}
@@ -458,7 +458,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                     </div>
                     <div
                       className={
-                        "pt-[2px] font-suite text-[15px] font-normal leading-none text-gray-600"
+                        "pt-[2px] text-[15px] font-normal leading-none text-gray-600"
                       }
                     >
                       {comment.like_cnt}

@@ -215,9 +215,9 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
               <NoneProfile width={50} height={50}></NoneProfile>
             )}
             <div className={"flex"}>
-              <div className="font-suite text-[20px] font-bold leading-[135%] text-[#717171]">
+              <div className="text-[20px] font-bold leading-[135%] text-[#717171]">
                 <p className="font-bold text-[#717171]">{data?.nickname}</p>
-                <div className="w-[195px] font-suite text-[12px] font-medium leading-[135%] text-[#717171]">
+                <div className="w-[195px]text-[12px] font-medium leading-[135%] text-[#717171]">
                   {data?.start_at} ~ {data?.end_at}{" "}
                 </div>
               </div>
@@ -236,7 +236,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
         <div className="flex flex-col items-start gap-[16px] self-stretch pb-[20px]">
           <div className="flex w-full flex-col items-start gap-[8px]">
             <div className={"flex gap-4"}>
-              <div className="font-suite text-[18px] font-bold leading-[135%] text-[#171717]">
+              <div className=" text-[18px] font-bold leading-[135%] text-[#171717]">
                 챌린지 정보
               </div>
               {
@@ -247,27 +247,27 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
               }
             </div>
             <div className={"flex gap-9"}>
-              <div className="w-[70px] font-suite text-[14px] font-medium leading-[135%] text-[#474747]">
+              <div className="w-[70px]  text-[14px] font-medium leading-[135%] text-[#474747]">
                 구분
               </div>
-              <div className="font-suite text-[14px] font-medium leading-[135%] text-[#141414]">
+              <div className=" text-[14px] font-medium leading-[135%] text-[#141414]">
                 {data?.category}
               </div>
             </div>
 
             <div className={"flex gap-9"}>
-              <div className="w-[70px] font-suite text-[14px] font-medium leading-[135%] text-[#474747]">
+              <div className="w-[70px]  text-[14px] font-medium leading-[135%] text-[#474747]">
                 챌린지 기간
               </div>
-              <div className="font-suite text-[14px] font-medium leading-[135%] text-[#141414]">
+              <div className=" text-[14px] font-medium leading-[135%] text-[#141414]">
                 {data?.day_cnt}일
               </div>
             </div>
             <div className={"flex gap-9"}>
-              <div className="w-[70px] font-suite text-[14px] font-medium leading-[135%] text-[#474747]">
+              <div className="w-[70px]  text-[14px] font-medium leading-[135%] text-[#474747]">
                 달성률
               </div>
-              <div className="font-suite text-[14px] font-medium leading-[135%] text-[#141414]">
+              <div className=" text-[14px] font-medium leading-[135%] text-[#141414]">
                 {data?.state === "on_complete"
                   ? `${Math.floor(
                       (data?.routine_done_daily_success_count /
