@@ -6,6 +6,7 @@ import {
   PUTchallengeArgumentProps,
 } from "@/api/supabase/challenge"
 import { useModal } from "@/context/modal.context"
+import { useToast } from "@/context/toast.context"
 import useChallengeCreateStore, {
   categories,
   defaultSelected,
@@ -25,6 +26,7 @@ function useChallengeQuery() {
   const { setCurrentSlideId, setData } = useMilestoneCreateStore()
   const router = useRouter() // useRouter 훅 사용
   const { open } = useModal()
+  const { showToast } = useToast()
   const { isPending: challengeCreateIsPending, mutate: challengeCreateMutate } =
     useMutation({
       mutationFn: async (variables: POSTchallengeArgumentProps) =>
@@ -41,10 +43,7 @@ function useChallengeQuery() {
       },
       onError: () => {
         // 모달 추가
-        open({
-          type: "alert",
-          content: "챌린지 생성이 실패했습니다.",
-        })
+        showToast("생성이 실패 되었습니다.")
       },
     })
 
@@ -54,7 +53,7 @@ function useChallengeQuery() {
         await PUTchallenge(variables),
       onSuccess: (data, variables) => {
         // 모달 추가
-        alert("성공했어!")
+        showToast("챌린지 생성이 성공했습니다.")
         queryClient.invalidateQueries({
           queryKey: [CHALLENGE_QEURY_KEY, variables["challenge-id"]],
         })
@@ -65,7 +64,7 @@ function useChallengeQuery() {
       },
       onError: () => {
         // 모달 추가
-        alert("실패했어")
+        showToast("생성이 실패 되었습니다.")
       },
     })
 

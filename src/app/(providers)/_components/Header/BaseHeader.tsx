@@ -12,7 +12,7 @@ const BaseHeader = ({
   return (
     <header
       className={classNames(
-        "fixed top-0 z-20 flex h-[60px] w-full items-center px-[20px] py-[14px]",
+        "fixed top-0 z-20 mx-auto flex h-[60px] w-full items-center px-[20px] py-[14px]",
         className
       )}
     >
