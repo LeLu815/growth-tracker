@@ -98,7 +98,7 @@ function ChallengeList() {
         return (
           <div
             key={challenge.goal}
-            className="flex flex-col gap-y-5 rounded-lg border-[1.5px] border-solid border-[#d9d9d9] px-[20px] py-4 font-suite shadow-2"
+            className="flex flex-col gap-y-5 rounded-lg border-[1.5px] border-solid border-[#d9d9d9] px-[20px] py-4 shadow-2"
           >
             {displayTargetMilestoneItem(challenge)}
           </div>

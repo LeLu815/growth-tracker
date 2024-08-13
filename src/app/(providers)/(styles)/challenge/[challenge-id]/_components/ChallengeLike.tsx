@@ -175,7 +175,7 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
         <BookmarkIcon
           width={32}
           height={32}
-          className={`h-[32px] w-full`}
+          className={`h-[20px] w-[14px]`}
           color={isLiked ? "#FC5A6B" : "none"}
           stroke={isLiked ? "#FC5A6B" : ""}
         />
