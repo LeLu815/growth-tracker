@@ -207,6 +207,7 @@ function MilestoneCreateConfig({
         </div>
         <div className="h-[40px]" />
         <Input
+          variant="login"
           label="루틴명"
           placeholder="루틴명을 입력해주세요"
           value={milestoneNameInput}
