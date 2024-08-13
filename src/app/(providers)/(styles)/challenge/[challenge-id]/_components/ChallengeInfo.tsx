@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
@@ -23,7 +22,6 @@ import MilestoneList from "@/app/(providers)/(styles)/challenge/[challenge-id]/_
 
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
 import StateChip from "../../../../../../components/Chip/StateChip"
-import {step} from "next/dist/experimental/testmode/playwright/step";
 
 function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const modal = useModal()
@@ -36,7 +34,6 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
 
   const { showToast } = useToast()
   const { open } = useModal()
-
 
   const handleDeleteChallengeToast = () => {
     showToast("챌린지가 삭제되었습니다.", 3000, "bottom-20 max-w-[640px]")
@@ -92,15 +89,14 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
     })
   }
 
-
   const handleMoveChallenge = () => {
-    if (data.state !== 'on_progress' &&  data.state !== "not_started") {
+    if (data?.state !== "on_progress" && data?.state !== "not_started") {
       open({
         type: "alert",
         content: "완료된 챌린지는 수정할 수 없습니다.",
       })
 
-      return;
+      return
     }
     router.push(`/challenge/${challengeId}/update`)
   }
@@ -108,11 +104,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const menuList: MenuProps["items"] = [
     {
       key: "1",
-      label: (
-        <div onClick={handleMoveChallenge}>
-          수정하기
-        </div>
-      ),
+      label: <div onClick={handleMoveChallenge}>수정하기</div>,
     },
     {
       key: "2",
@@ -272,9 +264,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
             </div>
             <div className={"flex flex-col gap-[8px]"}>
               <div className={"flex gap-[24px]"}>
-                <div className="w-[70px] text-body-m text-[#474747]">
-                  구분
-                </div>
+                <div className="w-[70px] text-body-m text-[#474747]">구분</div>
                 <div className="text-body-m text-[#141414]">
                   {data?.category}
                 </div>
@@ -294,14 +284,14 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
                 </div>
                 <div className="text-body-m text-[#141414]">
                   {data?.state === "on_complete"
-                      ? `${Math.floor(
-                          (data?.routine_done_daily_success_count /
-                              data.milestones.reduce((sum, milestone) => {
-                                return sum + milestone.total_cnt
-                              }, 0)) *
+                    ? `${Math.floor(
+                        (data?.routine_done_daily_success_count /
+                          data.milestones.reduce((sum, milestone) => {
+                            return sum + milestone.total_cnt
+                          }, 0)) *
                           100
                       )}%`
-                      : "진행완료 후 집계됩니다."}
+                    : "진행완료 후 집계됩니다."}
                 </div>
               </div>
             </div>
@@ -309,7 +299,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
         </div>
       </div>
 
-      <MilestoneList milestones={data?.milestones}/>
+      <MilestoneList milestones={data?.milestones} />
     </div>
   )
 }
