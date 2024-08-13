@@ -43,6 +43,8 @@ function MilestoneCreateConfigEdit({
   handleClickConfirm,
   milestoneId,
 }: MilestoneCreateConfigProps) {
+  // 처리중 상태
+  const [isProcess, setIsProcess] = useState<boolean>(false)
   // 마일스톤, 루틴 전체 데이터 설정
   const { setData, data } = useMilestoneCreateStore()
   // 선택된 마일스톤 객체
@@ -196,6 +198,14 @@ function MilestoneCreateConfigEdit({
       })
     )
   }
+  // 마일스톤 삭제 함수
+  const deleteMilestone = (milestoneId: string) => {
+    setData((prev) =>
+      produce(prev, (drafts) => {
+        const draft = drafts.filter((draft) => draft.id === milestoneId)
+      })
+    )
+  }
 
   const confirmFunc = () => {
     // 값 저장하기
@@ -296,8 +306,8 @@ function MilestoneCreateConfigEdit({
             </ContentTitle>
             {range && (
               <RangeInput
-                thumbColor="#fe7d3d"
-                trackColor="#fe7d3d"
+                thumbColor="#FC5A6B"
+                trackColor="#FC5A6B"
                 getValue={(value: string) => {
                   setMilestonePeriod(value)
                 }}
@@ -307,9 +317,9 @@ function MilestoneCreateConfigEdit({
                 defaultValue={resisteredMilestonePeriod}
               />
             )}
-            <p className="mt-[4px] text-end text-[16px] font-[600]">
+            <p className="mt-[4px] text-end text-[14px] font-[500] text-grey-400">
               {range &&
-                `총 ${differenceInCalendarDays(range.to!, range.from!) + 1}일`}
+                `${differenceInCalendarDays(range.to!, range.from!) + 1}일`}
             </p>
           </div>
           <div>
@@ -328,7 +338,7 @@ function MilestoneCreateConfigEdit({
                 </li>
               ))}
             </ul>
-            <ul className="my-[20px] flex h-[36px] justify-end gap-[4px]">
+            <ul className="my-[20px] flex h-[40px] justify-between">
               {WEEK_DAY_LIST.map((value, index) => (
                 <li key={value} onClick={() => handleClickDay(index)}>
                   <DaysItem isSelected={selectWeeks[index]}>{value}</DaysItem>
@@ -342,8 +352,8 @@ function MilestoneCreateConfigEdit({
             </ContentTitle>
             <p className="mb-[20px] text-[14px]">권장 달성률 50%에요</p>
             <RangeInput
-              thumbColor="#fe7d3d"
-              trackColor="#fe7d3d"
+              thumbColor="#FC5A6B"
+              trackColor="#FC5A6B"
               getValue={(value: string) => {
                 setMinPercent(value)
               }}
@@ -356,8 +366,8 @@ function MilestoneCreateConfigEdit({
               }
             />
             <div className="mt-[4px] flex justify-between">
-              <p className="font-[800]">0%</p>
-              <p className="font-[800]">100%</p>
+              <p className="text-[14px] font-[500] text-grey-400">0%</p>
+              <p className="text-[14px] font-[500] text-grey-400">100%</p>
             </div>
           </div>
           <form onSubmit={hanleSubmit}>
@@ -390,10 +400,11 @@ function MilestoneCreateConfigEdit({
           </form>
         </div>
       </div>
-      <div className="sticky bottom-0 left-0 z-50 h-[100px] w-full bg-gradient-to-t from-white from-70% via-white to-transparent pb-2 pt-[20px]">
+      <div className="sticky bottom-0 left-0 z-50 h-[120px] w-full bg-gradient-to-t from-white from-70% via-white to-transparent pb-2 pt-[20px]">
         <Button
           onClick={() => {
             // 모달 닫는 함수
+            setIsProcess(true)
             handleClickConfirm && handleClickConfirm()
             // 업데이트 함수
             confirmFunc()
@@ -402,12 +413,29 @@ function MilestoneCreateConfigEdit({
             routines.length === 0 ||
             milestoneNameInput === "" ||
             selectWeeks.filter((value) => value).length === 0 ||
-            milestone_actual_day === 0
+            milestone_actual_day === 0 ||
+            isProcess
           }
           size="lg"
         >
           완료
         </Button>
+        <div className="mt-3 flex justify-center pb-5">
+          <button
+            disabled={isProcess}
+            onClick={() => {
+              // 삭제중에는 클릭금지
+              setIsProcess(true)
+              // 삭제처리
+              deleteMilestone(milestoneId)
+              // 모달 닫는 함수
+              handleClickConfirm && handleClickConfirm()
+            }}
+            className="text-[16px] font-[500] text-grey-500 underline underline-offset-2"
+          >
+            삭제하기
+          </button>
+        </div>
       </div>
     </>
   )

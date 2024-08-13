@@ -25,7 +25,7 @@ const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
 
   const handleCloseModal = () => {
     setIsShow(false)
-    setTimeout(() => modal.close, 300)
+    setTimeout(() => modal.close(), 300)
   }
 
   const renderAlertButtons = () => (

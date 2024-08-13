@@ -125,6 +125,7 @@ function ChallengeName({
               챌린지명을 입력해주세요
             </span>
           )}
+          <div className="h-[100px]" />
           <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
             <Button
               size="lg"

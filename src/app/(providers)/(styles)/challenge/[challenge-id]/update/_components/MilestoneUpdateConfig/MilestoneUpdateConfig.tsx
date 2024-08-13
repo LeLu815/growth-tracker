@@ -219,7 +219,7 @@ function MilestoneUpdateConfig({ goNextPage }: MilestoneCreateConfigProps) {
                 <Chip
                   label={value}
                   selected={currentDayGroupType === value}
-                  intent="secondary"
+                  intent="third"
                   variant="outline"
                 />
               </li>
