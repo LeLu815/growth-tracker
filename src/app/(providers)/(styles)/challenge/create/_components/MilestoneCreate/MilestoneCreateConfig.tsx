@@ -243,7 +243,7 @@ function MilestoneCreateConfig({
                 <Chip
                   label={value}
                   selected={currentDayGroupType === value}
-                  intent="secondary"
+                  intent="third"
                   variant="outline"
                 />
               </li>
@@ -272,8 +272,8 @@ function MilestoneCreateConfig({
             max={100}
           />
           <div className="mt-[4px] flex justify-between">
-            <p className="font-[800]">0%</p>
-            <p className="font-[800]">100%</p>
+            <p className="font-[500] text-grey-400">0%</p>
+            <p className="font-[500] text-grey-400">100%</p>
           </div>
         </div>
         <form onSubmit={hanleSubmit}>
@@ -316,7 +316,7 @@ function MilestoneCreateConfig({
         </form>
       </div>
       <div className="h-[100px]"></div>
-      <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
+      <div className="fixed bottom-0 left-0 right-0 z-10 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
         <Button
           onClick={async () => {
             challengeCreateMutate(
@@ -363,7 +363,6 @@ function MilestoneCreateConfig({
               {
                 onSuccess: (id) => {
                   // 다음 페이지로 이동.
-                  console.log("마일스톤 크리에이트 컨피그 id:", id)
                   getCreatedChallengeId(id)
                   goNextPage()
                 },
@@ -374,7 +373,8 @@ function MilestoneCreateConfig({
             routines.length === 0 ||
             milestoneNameInput === "" ||
             selectWeeks.filter((value) => value).length === 0 ||
-            milestone_actual_day === 0
+            milestone_actual_day === 0 ||
+            challengeCreateIsPending
           }
           size="lg"
         >

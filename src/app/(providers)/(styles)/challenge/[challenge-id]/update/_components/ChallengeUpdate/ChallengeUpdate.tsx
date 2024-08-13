@@ -8,7 +8,10 @@ import {
   GETroutines,
 } from "@/api/supabase/challenge"
 import { useModal } from "@/context/modal.context"
-import useChallengeCreateStore from "@/store/challengeCreate.store"
+import useChallengeCreateStore, {
+  categories,
+  defaultSelected,
+} from "@/store/challengeCreate.store"
 import useMilestoneCreateStore, {
   MilestoneType,
 } from "@/store/milestoneCreate.store"
@@ -54,8 +57,9 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
 
       // 만약에 챌린지가 끝난 상태라면 수정이 불가능하다. 되돌려보내기
       if (
-        (challengeObj && challengeObj[0].state !== "on_progress") ||
-        (challengeObj && challengeObj[0].state !== "not_started")
+        challengeObj &&
+        challengeObj[0].state !== "on_progress" &&
+        challengeObj[0].state !== "not_started"
       ) {
         open({
           type: "alert",
@@ -128,14 +132,17 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
             titleHidden={false}
             handleClickGoBack={() => {
               // 컨펌 열기 => 확인이면 뒤로 가기
-              if (isModified) {
-                return open({
-                  type: "confirm",
-                  content: "저장되지 않은 변경사항은 삭제됩니다.",
-                  onConfirm: () => router.back(),
-                })
-              }
-              return router.back()
+              return open({
+                type: "confirm",
+                content: "저장되지 않은 변경사항은 삭제됩니다.",
+                onConfirm: () => {
+                  setData([])
+                  setRange(defaultSelected)
+                  setCategory(categories[0])
+                  setGoal("")
+                  router.back()
+                },
+              })
             }}
           />
           <MilestoneCreateSwitch

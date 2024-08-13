@@ -2,7 +2,12 @@
 
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
+import useChallengeCreateStore, {
+  categories,
+  defaultSelected,
+} from "@/store/challengeCreate.store"
 import { useChallengeSearchStore } from "@/store/challengeSearch.store"
+import useMilestoneCreateStore from "@/store/milestoneCreate.store"
 import { InfiniteData, QueryKey, useInfiniteQuery } from "@tanstack/react-query"
 
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
@@ -25,7 +30,19 @@ function NewsfeedClient() {
   const router = useRouter()
 
   const loadMore = useRef<HTMLDivElement | null>(null)
-
+  const {
+    setRange,
+    setCategory: setZustandCategory,
+    setGoal,
+  } = useChallengeCreateStore()
+  const { setData } = useMilestoneCreateStore()
+  useEffect(() => {
+    // 최초 랜더링시에 초기 데이터 삭제
+    setData([])
+    setRange(defaultSelected)
+    setZustandCategory(categories[0])
+    setGoal("")
+  }, [])
   const {
     data,
     error,

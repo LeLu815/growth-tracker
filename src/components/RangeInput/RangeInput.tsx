@@ -34,7 +34,7 @@ function RangeInput({
       <div className="box-border h-[32px] w-full pl-1 pr-4">
         <div className="relative box-border h-[30px] w-full">
           <div
-            className="absolute top-[1px] h-[30px] text-center"
+            className="absolute top-[1px] h-[30px] text-center text-primary"
             style={{
               left: `calc(${(value / max) * 100}%)`, // 왼쪽 패딩을 제외한 위치 계산
             }}
@@ -57,7 +57,7 @@ function RangeInput({
         }}
         className="custom-range"
         style={{
-          background: `linear-gradient(to right, #4F4F4F ${minPercentage}%, ${trackColor} ${minPercentage}%, ${trackColor} ${currentPercentage}%, #d3d3d3 ${currentPercentage}%)`,
+          background: `linear-gradient(to right, #C7C7C7 ${minPercentage}%, ${trackColor} ${minPercentage}%, ${trackColor} ${currentPercentage}%, #E0E0E0 ${currentPercentage}%)`,
         }}
         step={step}
       />

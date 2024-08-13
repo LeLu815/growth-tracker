@@ -59,6 +59,7 @@ function ChallengeSelectPeriod({
           <div className="flex justify-center">
             <ChallengeCalender range={range} setRange={setRange} />
           </div>
+          <div className="h-[100px]"></div>
           <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
             <Button
               disabled={!isOkay}
