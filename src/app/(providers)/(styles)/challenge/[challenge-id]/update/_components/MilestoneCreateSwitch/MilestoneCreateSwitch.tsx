@@ -71,7 +71,7 @@ function MilestoneCreateSwitch({
         <div className="h-[10px] flex-shrink-0 bg-grey-800" />
         <section className="p-[20px]">
           <Button
-            intent="secondary"
+            variant="outline"
             className="h-full"
             size="lg"
             onClick={() => {
@@ -96,7 +96,7 @@ function MilestoneCreateSwitch({
             <DragDropContainer range={range} />
           )}
         </section>
-        <div className="h-[100px]" />
+        <div className="h-[120px]" />
         <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
           <Button
             className="h-full"
