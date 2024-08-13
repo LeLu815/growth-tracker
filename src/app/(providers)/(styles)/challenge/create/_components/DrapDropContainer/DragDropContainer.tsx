@@ -66,9 +66,22 @@ function DragDropContainer({ challenge_id, range }: DragDropContainerProps) {
 
   // 수정이 가능한 시작 인덱스
   const switchPossibleStartIndex = data.findIndex(
-    (milestone) =>
-      new Date(milestone.start_at).getTime() >= new Date().getTime()
+    // 당일까지 수정 가능
+    (milestone) => {
+      const today = new Date() // 현재 날짜와 시간
+      const earliestTime = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        0,
+        0,
+        0,
+        0
+      )
+      new Date(milestone.start_at).getTime() >= earliestTime.getTime()
+    }
   )
+
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>

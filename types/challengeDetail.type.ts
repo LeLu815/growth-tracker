@@ -17,6 +17,7 @@ export type MilestoneType = {
   success_requirement_cnt: number
   total_cnt: number
   routines: RoutineType[]
+  success_percent?: number
 }
 
 export type ChallengeType = {

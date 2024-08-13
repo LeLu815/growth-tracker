@@ -21,16 +21,24 @@ import SubTitle from "../../../../create/_components/styles/SubTitle"
 
 interface MilestoneCreateSwitchProps {
   goNextPage: () => void
-  challengeId: string
-  milestoneIds: string[]
+  challengeId?: string
+  milestoneIds?: string[]
 }
 function MilestoneCreateSwitch({
   goNextPage,
   challengeId,
   milestoneIds,
 }: MilestoneCreateSwitchProps) {
-  const { range, goal, setRange, setCategory, setGoal } =
-    useChallengeCreateStore()
+  const {
+    randomImgUrl,
+    range,
+    category,
+    goal,
+    setRange,
+    setCategory,
+    setGoal,
+    setRandomImgUrl,
+  } = useChallengeCreateStore()
   const { data, setData } = useMilestoneCreateStore()
   const { me } = useAuth()
   const router = useRouter()
@@ -41,9 +49,6 @@ function MilestoneCreateSwitch({
     challengeCreateIsPending,
     challengeUpdateMutate,
   } = useChallengeQuery()
-
-  console.log("milestoneIds:", milestoneIds)
-  console.log("data:", data)
 
   return (
     <>
@@ -98,39 +103,88 @@ function MilestoneCreateSwitch({
             onClick={() => {
               // 1. 홈으로 네비게이션 돌리기
               router.push("/")
-
-              // 2. 먼저 뮤테이션 돌리고
-              challengeUpdateMutate({
-                milestoneIds: milestoneIds,
-                "challenge-id": challengeId,
-                milestone: data.map((obj) =>
-                  produce(
-                    obj,
-                    (
-                      draft: Omit<MilestoneType, "routines" | "id"> & {
-                        routines?: MilestoneType["routines"]
-                        id?: MilestoneType["id"]
-                      }
-                    ) => {
-                      draft.start_at = draft.start_at
-                      draft.end_at = draft.end_at
-                      delete draft.routines
-                      delete draft.id
-                    }
-                  )
-                ),
-                routine: data.map((obj) =>
-                  obj.routines.map((routine) => ({
-                    content: routine.content,
-                    milestone_id: obj.id,
-                  }))
-                ),
-              })
+              // 2. 여기에서 그냥 생성 함수가 들어갈 수도 있다. 가져오기일때
+              {
+                !milestoneIds &&
+                  !challengeId &&
+                  challengeCreateMutate({
+                    challenge: {
+                      category: category,
+                      user_id: me?.id || "",
+                      day_cnt:
+                        differenceInCalendarDays(range?.to!, range?.from!) + 1,
+                      end_at: format(range?.to!, "yyyy-MM-dd"),
+                      goal: goal,
+                      is_secret: false,
+                      start_at: format(range?.from!, "yyyy-MM-dd"),
+                      image_url: randomImgUrl,
+                    },
+                    milestone: data.map((obj) =>
+                      produce(
+                        obj,
+                        (
+                          draft: Omit<MilestoneType, "routines" | "id"> & {
+                            routines?: MilestoneType["routines"]
+                            id?: MilestoneType["id"]
+                          }
+                        ) => {
+                          draft.start_at = draft.start_at
+                          draft.end_at = draft.end_at
+                          delete draft.routines
+                          delete draft.id
+                        }
+                      )
+                    ),
+                    routine: data.map((obj) =>
+                      obj.routines.map((routine) => ({
+                        content: routine.content,
+                        milestone_id: obj.id,
+                      }))
+                    ),
+                  })
+              }
+              // 2. 뮤테이션
+              // milestoneIds 안에 있는 값만 업데이트하게 필터링
+              const filteredData = data.filter(
+                (obj) => milestoneIds && milestoneIds.includes(obj.id)
+              )
+              // 뮤테이션 돌리기
+              {
+                milestoneIds &&
+                  challengeId &&
+                  challengeUpdateMutate({
+                    milestoneIds: milestoneIds,
+                    "challenge-id": challengeId,
+                    milestone: filteredData.map((obj) =>
+                      produce(
+                        obj,
+                        (
+                          draft: Omit<MilestoneType, "routines" | "id"> & {
+                            routines?: MilestoneType["routines"]
+                            id?: MilestoneType["id"]
+                          }
+                        ) => {
+                          draft.start_at = draft.start_at
+                          draft.end_at = draft.end_at
+                          delete draft.routines
+                          delete draft.id
+                        }
+                      )
+                    ),
+                    routine: filteredData.map((obj) =>
+                      obj.routines.map((routine) => ({
+                        content: routine.content,
+                        milestone_id: obj.id,
+                      }))
+                    ),
+                  })
+              }
               // 3. 주스텐드 싹다 정리하는 함수를 실행하기 (스토어 초기화)
               setData([])
               setRange(defaultSelected)
               setCategory(categories[0])
               setGoal("")
+              setRandomImgUrl("")
             }}
             disabled={data.length === 0}
             size="lg"
