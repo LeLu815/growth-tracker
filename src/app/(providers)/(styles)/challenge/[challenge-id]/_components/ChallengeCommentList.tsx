@@ -15,7 +15,6 @@ import { useInView } from "react-intersection-observer"
 
 import NoneProfile from "@/components/Icon/NoneProfile"
 import ThumbsUpIcon from "@/components/Icon/ThumbsUpIcon"
-import Loading from "@/components/Loading"
 
 import {
   ChallengeCommentPageType,
@@ -425,7 +424,11 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                         style={{ overflow: "hidden" }}
                         rows={comment.rows}
                         disabled={!isUpdate}
-                        className={`h-full w-full resize-none focus:outline-none ${isUpdate && comment.id === updateCommentId ? `border-b border-l-0 border-r-0 border-t-0 border-[#141414] bg-white p-2 outline-none` : "border-none bg-transparent"}`}
+                        className={`h-full w-full resize-none text-black focus:outline-none disabled:text-black ${
+                          isUpdate && comment.id === updateCommentId
+                            ? `border-b border-l-0 border-r-0 border-t-0 border-[#141414] bg-white p-2`
+                            : "border-none bg-transparent"
+                        }`}
                         value={`${isUpdate && comment.id === updateCommentId ? updateContent : comment.content}`}
                         ref={(el) => {
                           if (el) {
