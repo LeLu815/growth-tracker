@@ -52,12 +52,41 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
       const milestones = await GETmilestones(challengeId)
       const temp_milestoneIds: string[] = []
 
+      // 만약에 챌린지가 끝난 상태라면 수정이 불가능하다. 되돌려보내기
+      if (
+        (challengeObj && challengeObj[0].state !== "on_progress") ||
+        (challengeObj && challengeObj[0].state !== "not_started")
+      ) {
+        open({
+          type: "alert",
+          content: "진행중인 챌린지만 수정이 가능합니다.",
+        })
+        return router.back()
+      }
+
+      // 오늘 날짜
+      const today = new Date() // 현재 날짜와 시간
+      const earliestTime = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        0,
+        0,
+        0,
+        0
+      )
       const routinesPromise =
         milestones &&
         milestones.map((milestone) => {
-          temp_milestoneIds.push(milestone.id)
+          // 오늘 날짜보다 이전에 실행된 마일스톤 아이디 필더링 하기
+          if (
+            new Date(milestone.start_at).getTime() >= earliestTime.getTime()
+          ) {
+            temp_milestoneIds.push(milestone.id)
+          }
           return GETroutines(milestone.id)
         })
+
       setMilestoneIds(temp_milestoneIds)
       const routines = routinesPromise ? await Promise.all(routinesPromise) : []
 

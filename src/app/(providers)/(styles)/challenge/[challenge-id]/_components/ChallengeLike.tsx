@@ -2,7 +2,9 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
+import useChallengeCreateStore from "@/store/challengeCreate.store"
 import useChallengeDetailStore from "@/store/challengeDetail.store"
+import useMilestoneCreateStore from "@/store/milestoneCreate.store"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 
@@ -11,7 +13,12 @@ import ImportIcon from "@/components/Icon/ImportIcon"
 
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
 
-function ChallengeLike({ challengeId }: { challengeId: string }) {
+interface ChallengeLikeProps {
+  challengeId: string
+}
+function ChallengeLike({ challengeId }: ChallengeLikeProps) {
+  const { setRange, setCategory } = useChallengeCreateStore()
+  const { setData } = useMilestoneCreateStore()
   const router = useRouter()
   const [isLiked, setIsLiked] = useState<boolean>(false)
   const queryClient = useQueryClient()
@@ -164,6 +171,10 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
     }
 
     handleLikeMutate()
+  }
+  // copy 버튼 클릭시 실행 함수
+  const handleClickCopy = (challengeId: string) => {
+    return router.push(`/challenge/${challengeId}/import`)
   }
 
   return (

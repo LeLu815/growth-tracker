@@ -111,7 +111,12 @@ function ChallengeName({
           </div>
           <Input
             label={"챌린지 명"}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value.length > 20) {
+                return
+              }
+              return setInputValue(e.target.value)
+            }}
             value={inputValue}
             placeholder="챌린지명을 입력해주세요"
           />

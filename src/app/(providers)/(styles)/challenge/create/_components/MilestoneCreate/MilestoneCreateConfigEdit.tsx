@@ -285,7 +285,10 @@ function MilestoneCreateConfigEdit({
             label="루틴명"
             placeholder="챌린지명을 입력해주세요"
             value={milestoneNameInput}
-            onChange={(e) => setMilestoneNameInput(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value.length > 20) return
+              setMilestoneNameInput(e.target.value)
+            }}
           />
           <div>
             <ContentTitle className="mb-[20px] mt-[44px]">
@@ -366,6 +369,7 @@ function MilestoneCreateConfigEdit({
               placeholder="ex. 영단어 100개씩 암기"
               value={routineInpt}
               onChange={(e) => {
+                if (e.target.value.length > 20) return
                 setRoutineInput(e.target.value)
               }}
             />
