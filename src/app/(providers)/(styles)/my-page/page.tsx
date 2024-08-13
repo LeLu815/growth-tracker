@@ -26,7 +26,7 @@ function UserInfoPage() {
 
   const handleLogout = async () => {
     await logOut()
-    router.push("/")
+    router.push("/newsfeed")
   }
 
   return (

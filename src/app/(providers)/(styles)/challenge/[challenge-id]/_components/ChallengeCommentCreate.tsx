@@ -33,7 +33,7 @@ function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
    * */
   const createComment = async () => {
     if (!me) {
-      router.push("/")
+      router.push("/auth/login-email")
       return
     } else if (!content.trim()) {
       alertOpen("댓글 내용을 입력해주세요.")
