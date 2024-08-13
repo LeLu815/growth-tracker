@@ -90,7 +90,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
   }
 
   const handleMoveChallenge = () => {
-    if (data && data.state !== "on_progress" && data.state !== "not_started") {
+    if (data?.state !== "on_progress" && data?.state !== "not_started") {
       open({
         type: "alert",
         content: "완료된 챌린지는 수정할 수 없습니다.",
