@@ -15,6 +15,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels"
 import { Bar } from "react-chartjs-2"
 
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
+import Loading from "@/components/Loading"
 
 import { Step2GraphType } from "../../../../../../../types/myPageGraph.type"
 
@@ -106,29 +107,38 @@ const CategoryCountGraph = () => {
 
   useEffect(() => {
     if (data) {
-      const categoryList = []
-      const countList = []
+      const categoryList:string[] = []
+      const countList:number[] = []
 
       let maxCategory = ""
       let maxCategoryCount = 0
-      for (const item of data) {
+      let maxCategoryCountIdx = 0
+
+      data.forEach((item, idx) => {
         categoryList.push(item.category)
         countList.push(item.challenge_count)
 
         if (maxCategoryCount < item.challenge_count) {
           maxCategoryCount = item.challenge_count
           maxCategory = item.category
+          maxCategoryCountIdx = idx
         }
-      }
+      })
 
       if (maxCategoryCount > 0) {
         setIsPossibleStatistics(true)
       }
 
       setCategory(maxCategory)
-      const colorList = countList
-        .sort((a, b) => b - a)
-        .map((_, idx) => getColor(idx))
+
+      const colorList = []
+      for (let i = 0; i < 4; i++) {
+        if (i == maxCategoryCountIdx) {
+          colorList.push("rgba(122, 80, 149, 1)")
+          continue
+        }
+        colorList.push("rgba(172, 139, 192, 1)")
+      }
 
       setGraphData({
         labels: categoryList,
@@ -189,9 +199,8 @@ const CategoryCountGraph = () => {
     }
   }, [data])
 
-  if (isPending) {
-    return "loading..."
-  }
+  if (isPending) return <Loading />
+  if (isError) return <div>Error loading data</div>
 
   if (!isPossibleStatistics) {
     return (
@@ -219,21 +228,6 @@ const CategoryCountGraph = () => {
       </div>
     </div>
   )
-}
-
-const getColor = (index: number) => {
-  switch (index) {
-    case 0:
-      return "rgba(0, 163, 188, 0.8)"
-    case 1:
-      return "rgba(0, 163, 188, 0.6)"
-    case 2:
-      return "rgba(0, 163, 188, 0.4)"
-    case 3:
-      return "rgba(0, 163, 188, 0.2)"
-    default:
-      return "rgba(0, 163, 188, 0.8)"
-  }
 }
 
 export default CategoryCountGraph

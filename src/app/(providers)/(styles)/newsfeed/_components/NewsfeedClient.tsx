@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation"
 import { useChallengeSearchStore } from "@/store/challengeSearch.store"
 import { InfiniteData, QueryKey, useInfiniteQuery } from "@tanstack/react-query"
 
+import Loading from "@/components/Loading"
+
 import { fetchPosts } from "../_utils/fetchPosts"
 import { PostType } from "../../../../../../types/challenge"
 import CategorySelector from "./CategorySelector"
@@ -130,9 +132,11 @@ function NewsfeedClient() {
 
       {/* 목록 */}
       {isLoading ? (
-        <div>로딩 중</div>
+        <div className="h-screen">
+          <Loading />
+        </div>
       ) : (
-        <div className="pb-[60px]">
+        <div className="h-full pb-[60px]">
           {data?.pages
             .flat()
             .map((post) => (
