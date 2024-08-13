@@ -14,6 +14,7 @@ import Button from "@/components/Button"
 import Camera from "@/components/Icon/Camera"
 import NoneProfile from "@/components/Icon/NoneProfile"
 import Input from "@/components/Input"
+import Loading from "@/components/Loading"
 import {
   deleteImage,
   PROFILE,
@@ -124,7 +125,7 @@ function UserInfoPage() {
     }
   }
 
-  if (isPending) return <div>Loading...</div>
+  if (isPending) return <Loading />
   if (isError) return <div>Error loading data</div>
 
   return (

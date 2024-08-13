@@ -307,10 +307,13 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
     setSortField((sorted) => (sorted = sortField))
   }
 
+  if (isPending) return <div />
+  if (isError) return <div>Error loading data</div>
+
   return (
     <div className={"flex w-full flex-col items-center gap-4 pb-10"}>
       <div className={"flex w-full justify-between p-2"}>
-        <div className={"text-[14px] font-bold text-[#141414]"}>
+        <div className={"text-body-xxs text-[#141414]"}>
           댓글 {data?.[0] ? data?.[0].total_count : 0}
         </div>
         <div className={"flex cursor-pointer gap-3"}>
@@ -329,11 +332,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
         </div>
       </div>
       {data?.length === 0 ? (
-        <div
-          className={
-            "text-gray-custom p-24 text-center text-[14px] font-medium leading-[18.9px]"
-          }
-        >
+        <div className={"text-gray-custom p-24 text-center text-body-m"}>
           아직 댓글이 없어요.
           <br />
           댓글을 제일 먼저 남겨보세요.
@@ -369,12 +368,14 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                 <div className={"flex w-full flex-col gap-[6px]"}>
                   <div>
                     <div className={"flex justify-between"}>
-                      <div className={"text-sub-m"}>{comment.nickname}</div>
+                      <div className={"text-sub-m font-bold text-grey-400"}>
+                        {comment.nickname}
+                      </div>
                       {comment.user_id === me?.id && (
                         <div className={"flex gap-2"}>
                           <button
                             type="submit"
-                            className="cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
+                            className="cursor-pointer text-center text-body-s text-[#969696]"
                             onClick={() => {
                               isUpdate && comment.id === updateCommentId
                                 ? handleCommentMutate({
@@ -389,7 +390,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                               : "수정"}
                           </button>
                           <button
-                            className="cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
+                            className="cursor-pointer text-center text-body-s text-[#969696]"
                             onClick={() => {
                               isUpdate && comment.id === updateCommentId
                                 ? handleChangeIsUpdate(comment)
@@ -405,11 +406,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                         </div>
                       )}
                     </div>
-                    <div
-                      className={
-                        "text-xs font-normal leading-[1.35] text-gray-600"
-                      }
-                    >
+                    <div className={"text-sub-m text-grey-400"}>
                       {comment.created_at}
                     </div>
                   </div>
@@ -427,7 +424,11 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                         style={{ overflow: "hidden" }}
                         rows={comment.rows}
                         disabled={!isUpdate}
-                        className={`h-full w-full resize-none text-gray-700 focus:outline-none ${isUpdate && comment.id === updateCommentId ? `border-b border-l-0 border-r-0 border-t-0 border-[#141414] bg-white p-2 text-gray-700 outline-none` : "border-none bg-transparent"}`}
+                        className={`h-full w-full resize-none text-black focus:outline-none disabled:text-black ${
+                          isUpdate && comment.id === updateCommentId
+                            ? `border-b border-l-0 border-r-0 border-t-0 border-[#141414] bg-white p-2`
+                            : "border-none bg-transparent"
+                        }`}
                         value={`${isUpdate && comment.id === updateCommentId ? updateContent : comment.content}`}
                         ref={(el) => {
                           if (el) {
@@ -458,7 +459,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                     </div>
                     <div
                       className={
-                        "pt-[2px] text-[15px] font-normal leading-none text-gray-600"
+                        "pt-[2px] text-body-l leading-none text-gray-600"
                       }
                     >
                       {comment.like_cnt}

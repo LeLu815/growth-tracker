@@ -1,29 +1,25 @@
 import { SVGProps } from "react"
-
 import Icon from "./Icon"
 
 const SendIcon = (props: SVGProps<SVGSVGElement> & { color?: string }) => {
-  const { color, stroke, ...svgProps } = props
-  console.log(color)
+  const { color, stroke, width, height, ...svgProps } = props
+
   return (
-    <Icon
-      {...props}
-      width={props.width}
-      height={props.height}
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <g id="Icon/enter">
+      <Icon
+          {...props}
+          width={width} // Apply the width here
+          height={height} // Apply the height here
+          viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+
         <path
-          id="Subtract"
-          d="M4 16.7639C4 18.2507 5.56462 19.2177 6.89443 18.5528L12 16L16.4223 13.7889C17.8964 13.0518 17.8964 10.9482 16.4223 10.2111L6.89443 5.44721C5.56463 4.78231 4 5.7493 4 7.23607V10.2095C4 10.7119 4.37977 11.1331 4.87955 11.185V11.185C6.05229 11.3066 6.05228 13.0143 4.87955 13.1359V13.1359C4.37976 13.1878 4 13.6089 4 14.1114V16.7639Z"
-          stroke={color ? color : "#ADADAD"}
-          fill={color ? color : "#ADADAD"}
-          stroke-width="1.5"
-          stroke-linejoin="round"
+            id="Subtract"
+            d="M1 12.7639C1 14.2507 2.56462 15.2177 3.89443 14.5528L9 12L13.4223 9.78885C14.8964 9.05181 14.8964 6.94819 13.4223 6.21115L3.89443 1.44721C2.56463 0.782313 1 1.7493 1 3.23607V6.20948C1 6.71195 1.37977 7.13313 1.87955 7.18496V7.18496C3.05229 7.30658 3.05228 9.01431 1.87955 9.13593V9.13593C1.37976 9.18776 1 9.60895 1 10.1114V12.7639Z"
+            stroke={color ? color : "#ADADAD"}
+            fill={color ? color : "#ADADAD"}
         />
-      </g>
-    </Icon>
-  )
+      </Icon>
+
+)
 }
+
 export default SendIcon

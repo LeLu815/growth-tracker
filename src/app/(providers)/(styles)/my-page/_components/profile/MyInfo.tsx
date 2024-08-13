@@ -41,7 +41,7 @@ function MyInfo() {
     originProfileImageUrlRef.current = data?.profile_image_url
   }, [data?.nickname, data?.profile_image_url])
 
-  if (isPending) return <div>Loading...</div>
+  if (isPending) return <div></div>
   if (isError) return <div>Error loading data</div>
 
   return (

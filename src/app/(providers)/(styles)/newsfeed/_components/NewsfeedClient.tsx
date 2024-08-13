@@ -10,6 +10,9 @@ import { useChallengeSearchStore } from "@/store/challengeSearch.store"
 import useMilestoneCreateStore from "@/store/milestoneCreate.store"
 import { InfiniteData, QueryKey, useInfiniteQuery } from "@tanstack/react-query"
 
+import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
+import Loading from "@/components/Loading"
+
 import { fetchPosts } from "../_utils/fetchPosts"
 import { PostType } from "../../../../../../types/challenge"
 import CategorySelector from "./CategorySelector"
@@ -126,6 +129,9 @@ function NewsfeedClient() {
     }
   }, [fetchNextPage, hasNextPage])
 
+  // 검색결과 없을 때
+  const noResult = !isLoading && data?.pages?.flat().length === 0
+
   return (
     <>
       <div>
@@ -147,9 +153,15 @@ function NewsfeedClient() {
 
       {/* 목록 */}
       {isLoading ? (
-        <div>로딩 중</div>
+        <Loading />
+      ) : noResult ? (
+        <div className="flex w-full flex-col items-center">
+          <NoChallengeFlagsIcon className="mb-[32px] mt-[78px]" />
+          <p className="mb-[12px] text-title-m">일치하는 챌린지가 없어요</p>
+          <p className="text-body-s">챌린지를 생성해보세요</p>
+        </div>
       ) : (
-        <div className="pb-[60px]">
+        <div className="h-full pb-[60px]">
           {data?.pages
             .flat()
             .map((post) => (
