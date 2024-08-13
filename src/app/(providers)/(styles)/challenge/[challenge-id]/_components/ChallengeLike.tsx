@@ -175,14 +175,14 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
         <BookmarkIcon
           width={32}
           height={32}
-          className={`h-[20px] w-[14px]`}
+          className={`h-[32px] w-[32px]`}
           color={isLiked ? "#FC5A6B" : "none"}
           stroke={isLiked ? "#FC5A6B" : ""}
         />
       </button>
       {challengeDetail.state === "on_complete" && (
         <button className="flex w-full flex-col items-center justify-center transition-all duration-300">
-          <ImportIcon width={32} height={32} className={`h-[32px] w-full`} />
+          <ImportIcon width={32} height={32} className={`h-[32px] w-[32px]`} />
         </button>
       )}
     </div>

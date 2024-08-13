@@ -23,6 +23,7 @@ import MilestoneList from "@/app/(providers)/(styles)/challenge/[challenge-id]/_
 
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
 import StateChip from "../../../../../../components/Chip/StateChip"
+import {step} from "next/dist/experimental/testmode/playwright/step";
 
 function ChallengeInfo({ challengeId }: { challengeId: string }) {
   const modal = useModal()
@@ -32,8 +33,10 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
   )
   const { me } = useAuth()
   const queryClient = useQueryClient()
-  const [isOpen, setIsOpen] = useState(false)
+
   const { showToast } = useToast()
+  const { open } = useModal()
+
 
   const handleDeleteChallengeToast = () => {
     showToast("챌린지가 삭제되었습니다.", 3000, "bottom-20 max-w-[640px]")
@@ -89,11 +92,24 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
     })
   }
 
+
+  const handleMoveChallenge = () => {
+    if (data.state !== 'on_progress' &&  data.state !== "not_started") {
+      open({
+        type: "alert",
+        content: "완료된 챌린지는 수정할 수 없습니다.",
+      })
+
+      return;
+    }
+    router.push(`/challenge/${challengeId}/update`)
+  }
+
   const menuList: MenuProps["items"] = [
     {
       key: "1",
       label: (
-        <div onClick={() => router.push(`/challenge/${challengeId}/update`)}>
+        <div onClick={handleMoveChallenge}>
           수정하기
         </div>
       ),
@@ -162,7 +178,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
         titleHidden
         goBackFn={router.back}
         menuList={menuList}
-        isMe={data?.user_id === me?.id }
+        isMe={data?.user_id === me?.id}
       />
       <Image
         alt="챌린지 이미지"
@@ -173,25 +189,35 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
       ></Image>
 
       {/* 상단 */}
-      <div className="flex w-full flex-col items-start rounded-t-[12px] bg-white pt-5">
-        <div className="flex flex-col items-center justify-center gap-[10px] self-stretch p-[10px] pt-0">
-          <div className="gap-[9px]p-[20px_0] flex w-full flex-col items-start">
+      <div className="flex w-full flex-col items-start rounded-t-[12px] bg-white">
+        <div className="flex flex-col items-center justify-center gap-[10px] self-stretch p-[10px_10px_0px_10px]">
+          <div className="flex w-full flex-col items-start gap-[9px] px-[10px] py-[20px]">
             {/*챌린지 및 좋아요*/}
             <div className="flex items-start justify-between self-stretch">
-              <h2 className="text-xl font-bold">{data?.goal}</h2>
+              <h2 className="text-title-xl">{data?.goal}</h2>
               <ChallengeLike challengeId={challengeId}></ChallengeLike>
             </div>
 
             {/*개수*/}
             <div className="flex w-full items-center gap-[11px]">
-              <div className="flex gap-1 text-gray-600">
-                <BookmarkIcon width={20} height={20} />
-                <div className={"pt-[2px]"}>{data.like_cnt}</div>
+              <div className="flex gap-1 text-grey-50">
+                <BookmarkIcon
+                  width={20}
+                  height={20}
+                  className={"h-[20px] w-[20px]"}
+                />
+                <div className={"pt-[2px] text-body-m"}>{data.like_cnt}</div>
               </div>
               {data.state === "on_complete" && (
-                <div className="flex gap-1 text-gray-600">
-                  <ImportIcon width={20} height={20} />
-                  {data.template_cnt}
+                <div className="flex gap-1 text-grey-50">
+                  <ImportIcon
+                    width={20}
+                    height={20}
+                    className={"h-[20px] w-[20px]"}
+                  />
+                  <div className={"pt-[2px] text-body-m"}>
+                    {data.template_cnt}
+                  </div>
                 </div>
               )}
             </div>
@@ -204,20 +230,20 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
             {data?.profile_image_url ? (
               <div className="h-[50px] w-[50px] overflow-hidden rounded-full bg-gray-300">
                 <Image
-                  width={50}
-                  height={50}
+                  width={60}
+                  height={60}
                   src={data.profile_image_url}
                   alt="Profile Image"
                   className="object-cover"
                 />
               </div>
             ) : (
-              <NoneProfile width={50} height={50}></NoneProfile>
+              <NoneProfile width={60} height={60}></NoneProfile>
             )}
             <div className={"flex"}>
-              <div className="text-[20px] font-bold leading-[135%] text-[#717171]">
-                <p className="font-bold text-[#717171]">{data?.nickname}</p>
-                <div className="w-[195px]text-[12px] font-medium leading-[135%] text-[#717171]">
+              <div className="flex flex-col gap-[10px]">
+                <p className="text-title-m text-[#717171]">{data?.nickname}</p>
+                <div className="w-[195px] text-body-s text-[#717171]">
                   {data?.start_at} ~ {data?.end_at}{" "}
                 </div>
               </div>
@@ -234,11 +260,9 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
       {/*  챌린지 정보*/}
       <div className="flex w-full flex-col items-end gap-[16px] border-b-[10px] border-b-[#E0E0E0] bg-white p-[24px_20px]">
         <div className="flex flex-col items-start gap-[16px] self-stretch pb-[20px]">
-          <div className="flex w-full flex-col items-start gap-[8px]">
-            <div className={"flex gap-4"}>
-              <div className=" text-[18px] font-bold leading-[135%] text-[#171717]">
-                챌린지 정보
-              </div>
+          <div className="flex w-full flex-col items-start gap-[16px]">
+            <div className={"flex gap-[13px]"}>
+              <div className="text-title-s text-[#171717]">챌린지 정보</div>
               {
                 // "primary" | "secondary" | "third" | "category"
                 data.like_cnt >= 10 && (
@@ -246,45 +270,46 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
                 )
               }
             </div>
-            <div className={"flex gap-9"}>
-              <div className="w-[70px]  text-[14px] font-medium leading-[135%] text-[#474747]">
-                구분
+            <div className={"flex flex-col gap-[8px]"}>
+              <div className={"flex gap-[24px]"}>
+                <div className="w-[70px] text-body-m text-[#474747]">
+                  구분
+                </div>
+                <div className="text-body-m text-[#141414]">
+                  {data?.category}
+                </div>
               </div>
-              <div className=" text-[14px] font-medium leading-[135%] text-[#141414]">
-                {data?.category}
-              </div>
-            </div>
 
-            <div className={"flex gap-9"}>
-              <div className="w-[70px]  text-[14px] font-medium leading-[135%] text-[#474747]">
-                챌린지 기간
+              <div className={"flex gap-[24px]"}>
+                <div className="w-[70px] text-body-m text-[#474747]">
+                  챌린지 기간
+                </div>
+                <div className="text-body-m text-[#141414]">
+                  {data?.day_cnt}일
+                </div>
               </div>
-              <div className=" text-[14px] font-medium leading-[135%] text-[#141414]">
-                {data?.day_cnt}일
-              </div>
-            </div>
-            <div className={"flex gap-9"}>
-              <div className="w-[70px]  text-[14px] font-medium leading-[135%] text-[#474747]">
-                달성률
-              </div>
-              <div className=" text-[14px] font-medium leading-[135%] text-[#141414]">
-                {data?.state === "on_complete"
-                  ? `${Math.floor(
-                      (data?.routine_done_daily_success_count /
-                        data.milestones.reduce((sum, milestone) => {
-                          return sum + milestone.total_cnt
-                        }, 0)) *
-                        100
-                    )}%`
-                  : "진행완료 후 집계됩니다."}
+              <div className={"flex gap-[24px]"}>
+                <div className="w-[70px] text-body-m text-[#474747]">
+                  달성률
+                </div>
+                <div className="text-body-m text-[#141414]">
+                  {data?.state === "on_complete"
+                      ? `${Math.floor(
+                          (data?.routine_done_daily_success_count /
+                              data.milestones.reduce((sum, milestone) => {
+                                return sum + milestone.total_cnt
+                              }, 0)) *
+                          100
+                      )}%`
+                      : "진행완료 후 집계됩니다."}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div className={"px-3 pt-2"}>
-        <MilestoneList milestones={data?.milestones} />
-      </div>
+
+      <MilestoneList milestones={data?.milestones}/>
     </div>
   )
 }

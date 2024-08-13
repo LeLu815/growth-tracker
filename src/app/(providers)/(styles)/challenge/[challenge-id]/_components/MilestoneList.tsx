@@ -37,13 +37,13 @@ function MilestoneList({ milestones }: { milestones: MilestoneType[] }) {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-[640px] flex-col items-start gap-[12px]">
+    <div className="mx-auto flex w-full max-w-[640px] flex-col items-start gap-[12px] px-[20px]">
       {milestones?.map((milestone, index) => {
         const isOpen = openIndexes.includes(index)
         return (
           <div
             key={milestone.id}
-            className="flex cursor-pointer flex-col items-start gap-[10px] self-stretch rounded-[5px] border-[1px] border-solid border-[#E0E0E0] p-[14px_12px] "
+            className="flex cursor-pointer flex-col items-start gap-[10px] self-stretch rounded-[5px] border-[1px] border-solid border-[#E0E0E0] p-[14px_12px]"
             onClick={() => toggleAccordion(index)}
           >
             <div className="flex flex-col items-start gap-[20px] self-stretch">
