@@ -107,7 +107,7 @@ function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
         <form className="flex w-full items-center">
           <div className="flex flex-1 p-2">
             <textarea
-              className={`border-red-[#ADADAD] w-full resize-none border-b border-l-0 border-r-0 border-t-0 border-[#141414] bg-white p-2 text-gray-700 outline-none`}
+              className={`border-red-[#ADADAD] w-full resize-none border-b border-l-0 border-r-0 border-t-0 border-[#141414] bg-white p-2 text-grey-200 outline-none`}
               placeholder="댓글을 입력해주세요..."
               value={content}
               ref={textareaRef}
@@ -119,10 +119,8 @@ function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
           </div>
           {isFocused && (
             <SendIcon
-              width={30}
-              height={30}
               color={content ? "#FD8C98" : ""}
-              className="cursor-pointer"
+              className="cursor-pointer w-[24px] h-[24px]"
               onClick={createComment}
             />
           )}

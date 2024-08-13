@@ -45,7 +45,7 @@ function ChallengeDetailPageTitle({
       <div className="cursor-pointer">
         <ArrowLeftIcon onClick={() => goBackFn()} />
       </div>
-      {!titleHidden && <h1 className="text-[20px] font-[700]">{title}</h1>}
+      {!titleHidden && <h1 className="text-title-m]">{title}</h1>}
       {isMe && (
         <div className="right-0">
           <Space direction="vertical">
