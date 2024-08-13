@@ -7,6 +7,7 @@ import {
   useEffect,
   useState,
 } from "react"
+import { useRouter } from "next/navigation"
 import { createClient } from "@/supabase/client"
 import { User } from "@supabase/supabase-js"
 
@@ -18,7 +19,8 @@ type AuthContextValue = {
   userData: { nickname: string | null; profile_image_url: string | null } | null
   logIn: (
     email: string,
-    password: string
+    password: string,
+    redirectUrl?: string
   ) => Promise<{ status: number; message: string }>
   logOut: () => void
   signUp: (
@@ -49,6 +51,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const [userData, setUserData] = useState<AuthContextValue["userData"]>(null)
   const isLoggedIn = Boolean(me)
   const supabase = createClient()
+  const router = useRouter()
 
   const fetchUserData = async (userId: string) => {
     const { data, error } = await supabase
@@ -65,7 +68,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
   }
 
   // 로그인 함수
-  const logIn: AuthContextValue["logIn"] = async (email, password) => {
+  const logIn: AuthContextValue["logIn"] = async (
+    email,
+    password,
+    redirectUrl
+  ) => {
     if (!email || !password) {
       return { status: 401, message: "이메일, 비밀번호 모두 채워 주세요!" }
     }
@@ -73,7 +80,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       email,
       password,
     }
-    
+
     const response = await fetch(
       process.env.NEXT_PUBLIC_DOMAIN + "/api/auth/log-in",
       {
@@ -89,6 +96,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const user = await response.json()
     setMe(user)
     fetchUserData(user.id)
+
+    if (redirectUrl) {
+      router.push(redirectUrl)
+    } else {
+      router.back()
+    }
+
     return { status: 200, message: "" }
   }
 
@@ -130,8 +144,19 @@ export function AuthProvider({ children }: PropsWithChildren) {
         return { status: 422, message: interpretErrorMsg(responseData.error) }
       }
     }
-    setMe(responseData)
-    fetchUserData(responseData.id)
+
+    // setMe(responseData)
+    // fetchUserData(responseData.id)
+    // return { status: 200, message: "" }
+    // 회원가입이 성공적으로 완료되면 로그인 처리를 합니다.
+    const loginResponse = await logIn(email, password)
+    if (loginResponse.status !== 200) {
+      return {
+        status: loginResponse.status,
+        message: "회원가입은 성공했지만 자동 로그인이 실패했습니다.",
+      }
+    }
+
     return { status: 200, message: "" }
   }
 
