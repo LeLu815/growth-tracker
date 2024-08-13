@@ -18,7 +18,7 @@ function UserInfoPage() {
   const router = useRouter()
 
   const handleLogout = async () => {
-    logOut()
+    await logOut()
     router.push("/auth/login-email")
   }
 
@@ -31,7 +31,10 @@ function UserInfoPage() {
             <TopPercentGraph></TopPercentGraph>
           </div>
           <ProfileMenu menuList={MY_INFO_LIST} title={"정보"}></ProfileMenu>
-          <ProfileMenu menuList={CHALLENGE_MENU_LIST} title={"정보"}></ProfileMenu>
+          <ProfileMenu
+            menuList={CHALLENGE_MENU_LIST}
+            title={"정보"}
+          ></ProfileMenu>
         </div>
         <div className={"h-[150px]"}>
           <Button
