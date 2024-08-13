@@ -15,6 +15,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels"
 import { Bar } from "react-chartjs-2"
 
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
+import Loading from "@/components/Loading"
 
 import { Step2GraphType } from "../../../../../../../types/myPageGraph.type"
 
@@ -106,8 +107,8 @@ const CategoryCountGraph = () => {
 
   useEffect(() => {
     if (data) {
-      const categoryList = []
-      const countList = []
+      const categoryList:string[] = []
+      const countList:number[] = []
 
       let maxCategory = ""
       let maxCategoryCount = 0
@@ -198,9 +199,8 @@ const CategoryCountGraph = () => {
     }
   }, [data])
 
-  if (isPending) {
-    return "loading..."
-  }
+  if (isPending) return <Loading />
+  if (isError) return <div>Error loading data</div>
 
   if (!isPossibleStatistics) {
     return (

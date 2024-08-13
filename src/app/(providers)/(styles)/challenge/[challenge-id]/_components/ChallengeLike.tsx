@@ -10,6 +10,7 @@ import axios from "axios"
 
 import BookmarkIcon from "@/components/Icon/BookmarkIcon"
 import ImportIcon from "@/components/Icon/ImportIcon"
+import Loading from "@/components/Loading"
 
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
 
@@ -17,8 +18,6 @@ interface ChallengeLikeProps {
   challengeId: string
 }
 function ChallengeLike({ challengeId }: ChallengeLikeProps) {
-  const { setRange, setCategory } = useChallengeCreateStore()
-  const { setData } = useMilestoneCreateStore()
   const router = useRouter()
   const [isLiked, setIsLiked] = useState<boolean>(false)
   const queryClient = useQueryClient()
@@ -176,6 +175,9 @@ function ChallengeLike({ challengeId }: ChallengeLikeProps) {
   const handleClickCopy = (challengeId: string) => {
     return router.push(`/challenge/${challengeId}/import`)
   }
+
+  if (isPending) return <div />
+  if (isError) return <div>Error loading data</div>
 
   return (
     <div className="col-span-1 flex gap-4">

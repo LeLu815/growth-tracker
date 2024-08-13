@@ -6,6 +6,7 @@ import { useInView } from "react-intersection-observer"
 
 import ChallengeCard from "@/components/ChallengeCard"
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
+import Loading from "@/components/Loading"
 
 import { PostType } from "../../../../../../../types/challenge"
 import { MyChallengeType } from "../../../../../../../types/myChallengeList.type"
@@ -65,7 +66,7 @@ function LikeChallengeList() {
     },
   })
 
-  if (isPending) return <div>Loading...</div>
+  if (isPending) return <Loading />
   if (isError) return <div>Error loading data</div>
 
   return (

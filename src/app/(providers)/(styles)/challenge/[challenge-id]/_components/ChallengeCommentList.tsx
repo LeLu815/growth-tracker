@@ -15,6 +15,7 @@ import { useInView } from "react-intersection-observer"
 
 import NoneProfile from "@/components/Icon/NoneProfile"
 import ThumbsUpIcon from "@/components/Icon/ThumbsUpIcon"
+import Loading from "@/components/Loading"
 
 import {
   ChallengeCommentPageType,
@@ -307,6 +308,9 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
     setSortField((sorted) => (sorted = sortField))
   }
 
+  if (isPending) return <div />
+  if (isError) return <div>Error loading data</div>
+
   return (
     <div className={"flex w-full flex-col items-center gap-4 pb-10"}>
       <div className={"flex w-full justify-between p-2"}>
@@ -329,11 +333,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
         </div>
       </div>
       {data?.length === 0 ? (
-        <div
-          className={
-            "text-gray-custom p-24 text-center text-body-m"
-          }
-        >
+        <div className={"text-gray-custom p-24 text-center text-body-m"}>
           아직 댓글이 없어요.
           <br />
           댓글을 제일 먼저 남겨보세요.
@@ -369,7 +369,9 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                 <div className={"flex w-full flex-col gap-[6px]"}>
                   <div>
                     <div className={"flex justify-between"}>
-                      <div className={"text-sub-m font-bold text-grey-400"}>{comment.nickname}</div>
+                      <div className={"text-sub-m font-bold text-grey-400"}>
+                        {comment.nickname}
+                      </div>
                       {comment.user_id === me?.id && (
                         <div className={"flex gap-2"}>
                           <button
@@ -405,11 +407,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                         </div>
                       )}
                     </div>
-                    <div
-                      className={
-                        "text-sub-m text-grey-400"
-                      }
-                    >
+                    <div className={"text-sub-m text-grey-400"}>
                       {comment.created_at}
                     </div>
                   </div>
@@ -427,7 +425,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                         style={{ overflow: "hidden" }}
                         rows={comment.rows}
                         disabled={!isUpdate}
-                        className={`h-full w-full resize-none text-grey-300 focus:outline-none ${isUpdate && comment.id === updateCommentId ? `border-b border-l-0 border-r-0 border-t-0 border-[#141414] bg-white p-2 text-grey-300 outline-none` : "border-none bg-transparent"}`}
+                        className={`h-full w-full resize-none focus:outline-none ${isUpdate && comment.id === updateCommentId ? `border-b border-l-0 border-r-0 border-t-0 border-[#141414] bg-white p-2 outline-none` : "border-none bg-transparent"}`}
                         value={`${isUpdate && comment.id === updateCommentId ? updateContent : comment.content}`}
                         ref={(el) => {
                           if (el) {
