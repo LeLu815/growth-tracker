@@ -218,7 +218,20 @@ const config = {
       placeholder: ["focus"],
     },
   },
-  plugins: [require("tailwindcss-animate"), require("tailwind-scrollbar-hide")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("tailwind-scrollbar-hide"),
+    function ({ addUtilities }: { addUtilities: any }) {
+      addUtilities(
+        {
+          ".disabled\\:text-black": {
+            color: "#000000",
+          },
+        },
+        ["disabled"]
+      )
+    },
+  ],
 } satisfies Config
 
 export default config
