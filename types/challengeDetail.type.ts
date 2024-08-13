@@ -13,6 +13,7 @@ export type MilestoneType = {
   total_day: number
   weeks: string[]
   is_success: boolean
+  success_percent: number
   id: string
   success_requirement_cnt: number
   total_cnt: number

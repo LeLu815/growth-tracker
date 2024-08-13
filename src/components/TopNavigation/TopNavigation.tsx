@@ -25,4 +25,4 @@ function TopNavigation({ title }: PropsWithChildren<TopNavigationProps>) {
   )
 }
 
-export default TopNavigation
+export default React.memo(TopNavigation)

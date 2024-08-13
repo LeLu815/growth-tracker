@@ -11,12 +11,15 @@ import {
 } from "chart.js"
 import { Doughnut } from "react-chartjs-2"
 
+import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
+
 import { Step3GraphType } from "../../../../../../../types/myPageGraph.type"
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 const ChallengeStatusOverviewGraph = () => {
   const { me } = useAuth()
+  const [isPossibleStatistics, setIsPossibleStatistics] = useState(false)
   const [challengeCount, setChallengeCount] = useState({
     totalCount: 0,
     successCount: 0,
@@ -39,7 +42,7 @@ const ChallengeStatusOverviewGraph = () => {
     () => ({
       plugins: {
         legend: {
-          position: "right", // Chart.js에서 지원하는 값으로 수정
+          position: "right",
           labels: {
             usePointStyle: true,
             boxWidth: 100,
@@ -48,8 +51,16 @@ const ChallengeStatusOverviewGraph = () => {
         tooltip: {
           enabled: false,
         },
+        datalabels: {
+          display: (context) => context.dataset.data[context.dataIndex] !== 0, // 값이 0이 아닌 경우에만 표시
+          color: "#000",
+          font: {
+            size: 14,
+          },
+        },
       },
-      cutout: "40%", // Chart.js에서는 퍼센트 문자열도 허용됩니다.
+
+      cutout: "40%",
     }),
     []
   )
@@ -127,6 +138,10 @@ const ChallengeStatusOverviewGraph = () => {
         }
       })
 
+      if (count.totalCount > 0) {
+        setIsPossibleStatistics(true)
+      }
+
       setChallengeCount(count)
       setGraphData({
         labels: ["실패 챌린지", "성공 챌린지", "진행중 챌린지"],
@@ -146,8 +161,20 @@ const ChallengeStatusOverviewGraph = () => {
     return "loading..."
   }
 
+  if (!isPossibleStatistics) {
+    return (
+      <div className="mt-36 flex flex-col items-center justify-center">
+        <NoChallengeFlagsIcon />
+        <p className="mt-3 text-[20px] font-bold">분석할 데이터가 없습니다.</p>
+        <p className="mt-[12px] text-[12px] font-[500]">
+          챌린지를 생성해 목표를 이루어 보세요.
+        </p>
+      </div>
+    )
+  }
+
   return (
-    <div className={"mx-auto"}>
+    <div>
       <div className={"text-title-xl"}>
         {compareNumbersReturnMessage(
           challengeCount.successCount,
@@ -172,7 +199,7 @@ const ChallengeStatusOverviewGraph = () => {
         )}
       </div>
       <div className="h-[300px] w-full">
-        <Doughnut data={graphData} options={options} />
+        <Doughnut data={graphData} options={options} className={"mx-auto"} />
       </div>
       <hr />
       <div className={"mt-6 flex flex-col items-start"}>

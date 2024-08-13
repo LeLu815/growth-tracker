@@ -13,9 +13,7 @@ import {
 import axios from "axios"
 import { useInView } from "react-intersection-observer"
 
-import EmptyHartIcon from "@/components/Icon/EmptyHartIcon"
 import NoneProfile from "@/components/Icon/NoneProfile"
-import RedHartIcon from "@/components/Icon/RedHartIcon"
 import ThumbsUpIcon from "@/components/Icon/ThumbsUpIcon"
 
 import {
@@ -333,7 +331,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
       {data?.length === 0 ? (
         <div
           className={
-            "text-gray-custom p-24 text-center font-suite text-[14px] font-medium leading-[18.9px]"
+            "text-gray-custom p-24 text-center text-[14px] font-medium leading-[18.9px]"
           }
         >
           아직 댓글이 없어요.
@@ -376,7 +374,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                         <div className={"flex gap-2"}>
                           <button
                             type="submit"
-                            className="cursor-pointer text-center font-suite text-[12px] font-medium leading-[135%] text-[#969696]"
+                            className="cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
                             onClick={() => {
                               isUpdate && comment.id === updateCommentId
                                 ? handleCommentMutate({
@@ -391,7 +389,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                               : "수정"}
                           </button>
                           <button
-                            className="cursor-pointer text-center font-suite text-[12px] font-medium leading-[135%] text-[#969696]"
+                            className="cursor-pointer text-center text-[12px] font-medium leading-[135%] text-[#969696]"
                             onClick={() => {
                               isUpdate && comment.id === updateCommentId
                                 ? handleChangeIsUpdate(comment)
@@ -409,7 +407,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                     </div>
                     <div
                       className={
-                        "font-suite text-xs font-normal leading-[1.35] text-gray-600"
+                        "text-xs font-normal leading-[1.35] text-gray-600"
                       }
                     >
                       {comment.created_at}
@@ -428,6 +426,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                       <textarea
                         style={{ overflow: "hidden" }}
                         rows={comment.rows}
+                        disabled={!isUpdate}
                         className={`h-full w-full resize-none text-gray-700 focus:outline-none ${isUpdate && comment.id === updateCommentId ? `border-b border-l-0 border-r-0 border-t-0 border-[#141414] bg-white p-2 text-gray-700 outline-none` : "border-none bg-transparent"}`}
                         value={`${isUpdate && comment.id === updateCommentId ? updateContent : comment.content}`}
                         ref={(el) => {
@@ -459,7 +458,7 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
                     </div>
                     <div
                       className={
-                        "pt-[2px] font-suite text-[15px] font-normal leading-none text-gray-600"
+                        "pt-[2px] text-[15px] font-normal leading-none text-gray-600"
                       }
                     >
                       {comment.like_cnt}

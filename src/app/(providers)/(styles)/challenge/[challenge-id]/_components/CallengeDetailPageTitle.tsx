@@ -17,6 +17,7 @@ interface ChallengePageTitleProps {
   titleHidden: boolean
   goBackFn: () => void
   menuList: MenuProps["items"]
+  isMe: boolean
 }
 
 function ChallengeDetailPageTitle({
@@ -24,11 +25,12 @@ function ChallengeDetailPageTitle({
   titleHidden,
   goBackFn,
   menuList,
+  isMe,
 }: ChallengePageTitleProps) {
   const [isScrolled, setIsScrolled] = useState(false)
 
   const handleScroll = () => {
-    setIsScrolled(window.scrollY > 290)
+    setIsScrolled(window.scrollY > 230)
   }
 
   useEffect(() => {
@@ -44,17 +46,19 @@ function ChallengeDetailPageTitle({
         <ArrowLeftIcon onClick={() => goBackFn()} />
       </div>
       {!titleHidden && <h1 className="text-[20px] font-[700]">{title}</h1>}
-      <div className="right-0">
-        <Space direction="vertical">
-          <Dropdown menu={{ items: menuList }} placement="bottomRight">
-            <KebabMenuIcon
-              className={"cursor-pointer"}
-              width={30}
-              height={40}
-            ></KebabMenuIcon>
-          </Dropdown>
-        </Space>
-      </div>
+      {isMe && (
+        <div className="right-0">
+          <Space direction="vertical">
+            <Dropdown menu={{ items: menuList }} placement="bottomRight">
+              <KebabMenuIcon
+                className={"cursor-pointer"}
+                width={30}
+                height={40}
+              ></KebabMenuIcon>
+            </Dropdown>
+          </Space>
+        </div>
+      )}
     </DefaultHeader>
   )
 }

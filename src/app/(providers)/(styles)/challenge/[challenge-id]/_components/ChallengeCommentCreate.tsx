@@ -24,7 +24,7 @@ function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
   const { showToast } = useToast()
 
   const handleCommentCreateToast = () => {
-    showToast("댓글을 작성했습니다.")
+    showToast("댓글을 작성했습니다.", 3000, "bottom-20 max-w-[640px]")
   }
 
   /**

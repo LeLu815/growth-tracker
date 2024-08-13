@@ -14,8 +14,8 @@ export const MY_PAGE: MenuProps = {
 }
 
 export const LIKE_CHALLENGE: MenuProps = {
-  name: "찜한 챌린지",
-  path: "/my-page/challenge/like",
+  name: "내 챌린지 보관함",
+  path: "/my-page/challenge",
 }
 
 export const MY_CHALLENGE_ANALYZE: MenuProps = {

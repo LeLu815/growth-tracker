@@ -31,11 +31,11 @@ function ProgressBar({
   return (
     <div className="flex w-full flex-col gap-y-[12px]">
       <div className="flex items-baseline font-bold">
-        <p className="mr-[5px] text-[10px] text-[#717171]">오늘해야하는 일</p>
+        <p className="mr-[5px] text-[10px] text-[#717171]">오늘 해야하는 일</p>
         <p className="text-[#FC5A6B]">
           {todayDoneRoutineArray.length}/{routines.length}
         </p>
-        <p className="ml-[3px] text-[10px] text-[#717171]">개 완료</p>
+        {/* <p className="ml-[3px] text-[10px] text-[#717171]">개 완료</p> */}
         <p className="ml-auto mr-0 text-[12px] font-[500] leading-[135%] text-gray-400">
           {leftDays}일 남음
         </p>

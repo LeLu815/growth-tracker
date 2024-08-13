@@ -12,7 +12,6 @@ import Button from "@/components/Button"
 import CloseIcon02 from "@/components/Icon/CloseIcon02"
 
 import { DiaryType } from "../../../../../../../types/diary.type"
-import useMyChallengePageContext from "../../context"
 
 interface DiarySectionProps {
   challengeId: string
@@ -30,7 +29,7 @@ function DiarySection({
   isDiaryToday,
 }: PropsWithChildren<DiarySectionProps>) {
   const {
-    data: currentDiary,
+    data: currentDiary = [],
     isPending: diaryPending,
     isError: diaryError,
   } = useQuery({
@@ -43,15 +42,10 @@ function DiarySection({
   const [diaryReadOnly, setDiaryReadOnly] = useState(!isDiaryToday) // 오늘의 일기일땐 readOnly가 false
 
   useEffect(() => {
-    if (!(currentDiary?.length == 0)) {
+    if (isDiaryToday && !(currentDiary.length == 0)) {
       setDiaryReadOnly(true)
     }
-
-    if (currentDiary == undefined) {
-      setDiaryReadOnly(true)
-    }
-    console.log(currentDiary)
-  }, [])
+  }, [currentDiary])
 
   const queryClient = useQueryClient()
   if (diaryPending) {

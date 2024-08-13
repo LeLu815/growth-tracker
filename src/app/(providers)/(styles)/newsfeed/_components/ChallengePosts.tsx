@@ -21,7 +21,7 @@ function ChallengePosts({ posts, onClickPost }: ChallengePostsProps) {
           <li
             key={post.id}
             onClick={() => onClickPost(post.id)}
-            className="cursor-pointe mb-[20px]"
+            className="mb-[20px] cursor-pointer"
           >
             <ChallengeCard
               challenge={post}
@@ -34,6 +34,8 @@ function ChallengePosts({ posts, onClickPost }: ChallengePostsProps) {
               state={post.state}
               bookmarked={me ? (post.bookmarked || []).includes(me.id) : false}
               challengeImage={post.image_url || ""}
+              successRate={post.successRate}
+              startDate={post.start_at || ""}
             />
           </li>
         )

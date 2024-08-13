@@ -1,14 +1,10 @@
 import Image from "next/image"
 
 import StateChip from "@/components/Chip/StateChip"
-import { successRateCalcu } from "@/app/(providers)/_utils/successRateCalcuUtils"
-import { convertStatusToKorean } from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeInfo"
+import { formatStartDate } from "@/app/(providers)/(styles)/newsfeed/_utils/dateUtils"
 
-import {
-  ProgressChallengeType,
-  ProgressMilestoneType,
-} from "../../../types/challengeProgress.type"
-import Chip from "../Chip"
+import { PostType } from "../../../types/challenge"
+import { ProgressMilestoneType } from "../../../types/challengeProgress.type"
 import BookmarkIcon from "../Icon/BookmarkIcon"
 import CopyIcon from "../Icon/CopyIcon"
 import SuccessBadge from "../Icon/SuccessBadge"
@@ -20,13 +16,13 @@ interface ChallengeCardProps {
   likes: number
   bookmarks: number
   liked: boolean
-  // nickname: string
   state: string
-  // userImage: string
   bookmarked: boolean
   challengeImage: string
-  challenge?: ProgressChallengeType
+  successRate: number
+  challenge?: PostType
   milestone?: ProgressMilestoneType[]
+  startDate?: string
 }
 
 function ChallengeCard({
@@ -35,15 +31,15 @@ function ChallengeCard({
   liked,
   bookmarks,
   likes,
-  // nickname,
   state,
-  // userImage,
   bookmarked,
   challengeImage,
-  challenge,
-  milestone = [],
+  successRate,
+  startDate,
 }: ChallengeCardProps) {
-  const successRate = successRateCalcu(milestone)
+  const isCompleted = state === "on_complete"
+  const isNotStarted = state === "not_started"
+  const formattedStartDate = startDate ? formatStartDate(startDate) : ""
 
   return (
     <div
@@ -52,7 +48,7 @@ function ChallengeCard({
     >
       <div className="flex w-full px-[12px] py-[14px]">
         <div className="mr-4 flex w-1/4 min-w-[98px] flex-col">
-          <div className="align-start relative flex h-full w-full flex-col items-start justify-between overflow-hidden rounded-[6px] border">
+          <div className="relative flex h-full w-full flex-col items-start justify-between overflow-hidden rounded-[6px] border">
             <Image
               fill
               className="object-cover"
@@ -65,19 +61,22 @@ function ChallengeCard({
           <div className="flex items-center justify-between">
             <p className="flex w-full justify-between text-title-s font-bold">
               <span>{title}</span>
-              <span>{successRate === 100 ? <SuccessBadge /> : ""}</span>
+              <span>{successRate === 100 && <SuccessBadge />}</span>
             </p>
           </div>
           <div className="flex w-full items-center justify-between py-[12px]">
-            <span>
-              <StateChip state={state} />
-            </span>
-            {state === "on_complete" && (
+            <StateChip state={state} />
+            {isCompleted && (
               <span>
                 <span className="text-body-s font-medium">달성률 </span>
                 <span className="text-body-m font-medium text-primary">
-                  {successRate}%
+                  {Math.round(successRate)}%
                 </span>
+              </span>
+            )}
+            {isNotStarted && (
+              <span className="text-body-s text-grey-400">
+                {formattedStartDate}
               </span>
             )}
           </div>
@@ -103,7 +102,7 @@ function ChallengeCard({
       <div className="flex w-full">
         <div className="mr-4 flex w-1/4 min-w-[98px]"></div>
         <div className="flex w-3/4 flex-col items-end px-[12px]">
-          <ProgressBar progress={successRate} />
+          <ProgressBar progress={Math.round(successRate)} />
         </div>
       </div>
 

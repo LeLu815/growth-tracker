@@ -186,19 +186,14 @@ function ChallengeLike({ challengeId }: ChallengeLikeProps) {
         <BookmarkIcon
           width={32}
           height={32}
-          className={`h-[32px] w-full`}
+          className={`h-[32px] w-[32px]`}
           color={isLiked ? "#FC5A6B" : "none"}
           stroke={isLiked ? "#FC5A6B" : ""}
         />
       </button>
       {challengeDetail.state === "on_complete" && (
-        <button
-          onClick={() => {
-            handleClickCopy(challengeId)
-          }}
-          className="flex w-full flex-col items-center justify-center transition-all duration-300"
-        >
-          <ImportIcon width={32} height={32} className={`h-[32px] w-full`} />
+        <button className="flex w-full flex-col items-center justify-center transition-all duration-300">
+          <ImportIcon width={32} height={32} className={`h-[32px] w-[32px]`} />
         </button>
       )}
     </div>
