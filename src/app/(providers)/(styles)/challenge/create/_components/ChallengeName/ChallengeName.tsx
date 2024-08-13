@@ -110,6 +110,7 @@ function ChallengeName({
             </Button>
           </div>
           <Input
+            variant="login"
             label={"챌린지 명"}
             onChange={(e) => {
               if (e.target.value.length > 20) {
