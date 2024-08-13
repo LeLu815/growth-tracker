@@ -30,8 +30,8 @@ function UserInfoPage() {
           <div className="flex w-full flex-col items-center rounded-lg p-5 shadow-md">
             <TopPercentGraph></TopPercentGraph>
           </div>
-          <ProfileMenu menuList={MY_INFO_LIST}></ProfileMenu>
-          <ProfileMenu menuList={CHALLENGE_MENU_LIST}></ProfileMenu>
+          <ProfileMenu menuList={MY_INFO_LIST} title={"정보"}></ProfileMenu>
+          <ProfileMenu menuList={CHALLENGE_MENU_LIST} title={"정보"}></ProfileMenu>
         </div>
         <div className={"h-[150px]"}>
           <Button

@@ -3,10 +3,16 @@ import Link from "next/link"
 import ArrowRightIcon from "@/components/Icon/ArrowRightIcon"
 import { MenuProps } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
-function ProfileMenu({ menuList }: { menuList: MenuProps[] }) {
+function ProfileMenu({
+  menuList,
+  title,
+}: {
+  menuList: MenuProps[]
+  title: string
+}) {
   return (
     <div>
-      <div className="mb-2 font-bold text-primary">챌린지</div>
+      <div className="mb-2 font-bold text-primary">{title}</div>
       <div className="rounded-lg border border-solid border-grey-800">
         {menuList.map((menu, index) => {
           const isLastMenu = menuList.length - 1 !== index
