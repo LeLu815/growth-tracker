@@ -291,7 +291,7 @@ function MilestoneUpdateConfig({ goNextPage }: MilestoneCreateConfigProps) {
         </form>
       </div>
       <div className="h-[100px]" />
-      <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
+      <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[480px] bg-white px-[20px] pb-8 pt-5">
         <Button
           onClick={() => {
             // 여기에서 그동안 쌓아둔 데이터를 모두 주스탠드에 넣은 작업을 해야함

@@ -51,7 +51,7 @@ function Congratulations({
             </p>
           </div>
           <div className="h-[100px]" />
-          <div className="fixed bottom-0 left-0 right-0 mx-auto flex max-w-[640px] gap-[8px] bg-white px-[20px] pb-8 pt-5">
+          <div className="fixed bottom-0 left-0 right-0 mx-auto flex max-w-[480px] gap-[8px] bg-white px-[20px] pb-8 pt-5">
             <Button
               disabled={isProcessing}
               variant="outline"
