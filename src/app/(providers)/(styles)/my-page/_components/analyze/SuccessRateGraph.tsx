@@ -16,6 +16,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels"
 import { Bar } from "react-chartjs-2"
 
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
+import Loading from "@/components/Loading"
 
 import { Step1GraphType } from "../../../../../../../types/myPageGraph.type"
 
@@ -41,7 +42,7 @@ const SuccessRateGraph = () => {
       {
         label: "성공률",
         data: [1, 10],
-        backgroundColor: ["rgba(0, 163, 188, 0.4)", "rgba(0, 163, 188, 0.8)"],
+        backgroundColor: ["rgba(255, 229, 233, 1)", "rgba(252, 90, 107, 1)"],
         borderRadius: 12,
         barPercentage: 1.5,
         categoryPercentage: 0.5,
@@ -141,16 +142,16 @@ const SuccessRateGraph = () => {
       const backgroundColor = ["", ""]
       if (dataList[0] > dataList[1]) {
         setMessage(`지난달 대비 ${dataList[0] - dataList[1]}% 떨어졌어요!`)
-        backgroundColor[0] = "rgba(0, 163, 188, 0.8)"
-        backgroundColor[1] = "rgba(0, 163, 188, 0.4)"
+        backgroundColor[0] = "rgba(252, 90, 107, 1)"
+        backgroundColor[1] = "rgba(255, 229, 233, 1)"
       } else if (dataList[0] < dataList[1]) {
-        setMessage(` 지난달 대비 ${dataList[0] - dataList[1]}%나 올랐어요!`)
-        backgroundColor[0] = "rgba(0, 163, 188, 0.4)"
-        backgroundColor[1] = "rgba(0, 163, 188, 0.8)"
+        setMessage(` 지난달 대비 ${dataList[1] - dataList[0]}% 올랐어요!`)
+        backgroundColor[0] = "rgba(255, 229, 233, 1)"
+        backgroundColor[1] = "rgba(252, 90, 107, 1)"
       } else {
         setMessage(`지난달과 동일합니다!`)
-        backgroundColor[0] = "rgba(0, 163, 188, 0.8)"
-        backgroundColor[1] = "rgba(0, 163, 188, 0.8)"
+        backgroundColor[0] = "rgba(252, 90, 107, 1)"
+        backgroundColor[1] = "rgba(252, 90, 107, 1)"
       }
 
       setGraphData({
@@ -169,9 +170,8 @@ const SuccessRateGraph = () => {
     }
   }, [data])
 
-  if (isPending) {
-    return "loading..."
-  }
+  if (isPending) return <Loading />
+  if (isError) return <div>Error loading data</div>
 
   if (!isPossibleStatistics) {
     return (

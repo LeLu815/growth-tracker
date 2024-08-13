@@ -16,6 +16,7 @@ import Chip from "@/components/Chip"
 import BookmarkIcon from "@/components/Icon/BookmarkIcon"
 import ImportIcon from "@/components/Icon/ImportIcon"
 import NoneProfile from "@/components/Icon/NoneProfile"
+import Loading from "@/components/Loading"
 import ChallengeDetailPageTitle from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/CallengeDetailPageTitle"
 import ChallengeLike from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeLike"
 import MilestoneList from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/MilestoneList"
@@ -159,7 +160,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
     )
   }
 
-  if (isPending) return <div>Loading...</div>
+  if (isPending) return <Loading />
   if (isError) return <div>Error loading data</div>
 
   return (
@@ -176,7 +177,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
         alt="챌린지 이미지"
         width={1200}
         height={1200}
-        src={data?.image_url}
+        src={data?.image_url || ""}
         className={"max-h-[300px] w-full flex-shrink-0 object-center"}
       ></Image>
 
@@ -198,9 +199,9 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
                   height={20}
                   className={"h-[20px] w-[20px]"}
                 />
-                <div className={"pt-[2px] text-body-m"}>{data.like_cnt}</div>
+                <div className={"pt-[2px] text-body-m"}>{data?.like_cnt}</div>
               </div>
-              {data.state === "on_complete" && (
+              {data?.state === "on_complete" && (
                 <div className="flex gap-1 text-grey-50">
                   <ImportIcon
                     width={20}
@@ -208,7 +209,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
                     className={"h-[20px] w-[20px]"}
                   />
                   <div className={"pt-[2px] text-body-m"}>
-                    {data.template_cnt}
+                    {data?.template_cnt}
                   </div>
                 </div>
               )}

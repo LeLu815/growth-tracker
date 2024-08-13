@@ -12,6 +12,7 @@ import {
 import { Doughnut } from "react-chartjs-2"
 
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
+import Loading from "@/components/Loading"
 
 import { Step3GraphType } from "../../../../../../../types/myPageGraph.type"
 
@@ -157,9 +158,8 @@ const ChallengeStatusOverviewGraph = () => {
     }
   }, [data])
 
-  if (isPending) {
-    return "loading..."
-  }
+  if (isPending) return <Loading />
+  if (isError) return <div>Error loading data</div>
 
   if (!isPossibleStatistics) {
     return (
