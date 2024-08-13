@@ -98,10 +98,12 @@ function ChallengeName({
             </div>
             <Button
               intent="secondary"
+              size="sm"
               variant="rounded"
               onClick={() => {
                 handleClickRandomImgBtn()
               }}
+              className="mb-[24px]"
             >
               <div className="flex items-center justify-center gap-1">
                 <ResetIcon />
