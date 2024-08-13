@@ -1,9 +1,18 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import localFont from "next/font/local"
 
 import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"] })
+const suiteFont = localFont({
+  src: [
+    {
+      path: "/assets/fonts/SUITE-Variable.woff2",
+      weight: "100 900",
+      style: "normal",
+    },
+  ],
+  variable: "--font-suite",
+})
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,8 +25,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} font-suite`}>{children}</body>
+    <html lang="ko" className={suiteFont.variable}>
+      <body className={suiteFont.className}>{children}</body>
     </html>
   )
 }

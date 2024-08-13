@@ -35,7 +35,7 @@ const config = {
 
       // 폰트 타입
       fontFamily: {
-        suite: ["SUITE", "sans-serif"], // 기본 sans-serif를 추가
+        suite: ["SUITE"], // 기본 sans-serif를 추가
       },
       fontSize: {
         "title-xl": ["24px", { lineHeight: "135%", fontWeight: "bold" }],
