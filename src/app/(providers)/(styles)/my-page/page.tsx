@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 
@@ -14,12 +15,18 @@ import {
 } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
 function UserInfoPage() {
-  const { logOut } = useAuth()
+  const { logOut, isLoggedIn } = useAuth()
   const router = useRouter()
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push("/auth/login-email")
+    }
+  }, [isLoggedIn, router])
 
   const handleLogout = async () => {
     await logOut()
-    router.push("/auth/login-email")
+    // router.push("/auth/login-email")
   }
 
   return (
