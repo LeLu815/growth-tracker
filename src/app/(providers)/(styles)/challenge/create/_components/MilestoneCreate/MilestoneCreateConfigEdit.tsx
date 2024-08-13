@@ -293,6 +293,7 @@ function MilestoneCreateConfigEdit({
           <div className="h-[40px]" />
           <Input
             label="루틴명"
+            variant="login"
             placeholder="챌린지명을 입력해주세요"
             value={milestoneNameInput}
             onChange={(e) => {
