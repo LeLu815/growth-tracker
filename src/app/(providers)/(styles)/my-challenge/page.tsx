@@ -1,47 +1,67 @@
 "use client"
 
-import { useState } from "react"
-import { format, startOfDay } from "date-fns"
-import { ko } from "date-fns/locale"
-
-import Box from "@/components/Box"
 import Page from "@/components/Page"
+import StatusBarSpace from "@/components/StatusBarSpace"
+import TopNavigation from "@/components/TopNavigation"
 
 import ChallengeList from "./_components/ChallengeList"
 import DatePickerContainer from "./_components/DatePickerContainer"
+import FutureChallengeList from "./_components/FutureChallengeList"
 import MyChallengeNavBar from "./_components/MyChallengeNavBar"
-import { MyChallengePageContext } from "./context"
+import useMyChallengePageContext from "./context"
 
 function MyChallengePage() {
-  const TODAY = format(startOfDay(new Date()), "yyyy-MM-dd", { locale: ko })
-  const TODAY_DAY_OF_WEEK = format(startOfDay(new Date()), "eee", {
-    locale: ko,
-  })
-  const [selectedDate, setSelectedDate] = useState<string>(TODAY)
-  const [selectedDayOfWeek, setSelectedDayOfWeek] =
-    useState<string>(TODAY_DAY_OF_WEEK)
+  const {
+    pageToView,
+    challengeDataPending,
+    routineDoneDailyPending,
+    challengeDataError,
+    routineDoneDailyError,
+  } = useMyChallengePageContext()
 
-  return (
-    <MyChallengePageContext.Provider
-      value={{
-        selectedDate,
-        setSelectedDate,
-        selectedDayOfWeek,
-        setSelectedDayOfWeek,
-        todayDate: TODAY,
-      }}
-    >
+  // Pending이나 Error 상태와 상관없이 항상 표시되는 컴포넌트
+  const renderAlwaysVisibleComponents = () => (
+    <>
+      <StatusBarSpace />
+      <TopNavigation title="내 챌린지" />
+      <MyChallengeNavBar />
+    </>
+  )
+
+  // 데이터 불러오는 상태가 Pending 또는 Error 상태인 경우에 표시되는 메시지
+  if (challengeDataPending || routineDoneDailyPending) {
+    return (
       <Page>
-        <Box>
-          <h1 className="mb-8 ml-2 text-[20px] font-bold">내 챌린지</h1>
-          <div className="flex flex-col items-center">
-            <MyChallengeNavBar />
+        {renderAlwaysVisibleComponents()}
+        <div className="mt-5">로딩 중</div>
+      </Page>
+    )
+  }
+
+  if (challengeDataError || routineDoneDailyError) {
+    return (
+      <Page>
+        {renderAlwaysVisibleComponents()}
+        <div className="mt-5">서버에서 데이터 로드 중 오류 발생</div>
+      </Page>
+    )
+  }
+
+  // 모든 데이터가 불러와졌을 때 표시되는 컴포넌트
+  return (
+    <Page>
+      {renderAlwaysVisibleComponents()}
+      <div>
+        {pageToView == "onProgress" ? (
+          <>
             <DatePickerContainer />
             <ChallengeList />
-          </div>
-        </Box>
-      </Page>
-    </MyChallengePageContext.Provider>
+          </>
+        ) : (
+          <FutureChallengeList />
+        )}
+      </div>
+    </Page>
   )
 }
 

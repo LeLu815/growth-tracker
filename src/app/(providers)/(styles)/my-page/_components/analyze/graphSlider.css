@@ -1,0 +1,17 @@
+/* slick-dots 기본 스타일 */
+.slick-dots {
+   margin-top: 10px;
+}
+
+.slick-slider {
+  height: 550px
+}
+
+.slick-dots li {
+  margin: 0 5px; /* 점 사이의 간격 (좌우 마진) */
+}
+
+.slick-dots li button {
+  width: 10px; /* 점의 너비 */
+  height: 10px; /* 점의 높이 */
+}

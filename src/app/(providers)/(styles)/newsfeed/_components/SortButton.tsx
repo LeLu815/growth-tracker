@@ -10,7 +10,7 @@ const SortButton = ({ isOpen, filter, handleToggle }: SortButtonProps) => {
   return (
     <button
       type="button"
-      className="inline-flex justify-end gap-[4px] rounded-md bg-white text-sm font-medium text-gray-700 transition"
+      className="inline-flex items-center justify-end gap-[4px] rounded-md bg-white text-sm font-medium text-gray-700 transition"
       onClick={handleToggle}
     >
       <SortIcon width={16} height={16} />

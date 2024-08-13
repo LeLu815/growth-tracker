@@ -1,19 +1,52 @@
 import React from "react"
 
+import useMyChallengePageContext from "../../context"
+
 function MyChallengeNavBar() {
+  const { setPageToView, pageToView } = useMyChallengePageContext()
+
+  const handleOnProgressClick = () => {
+    setPageToView("onProgress")
+  }
+
+  const handleCompletedClick = () => {
+    setPageToView("completed")
+  }
+
+  const getTabStyle = (
+    currentPageToView: "onProgress" | "completed",
+    item: "onProgress" | "completed"
+  ) => {
+    const isActive = currentPageToView === item
+    return `border-b-[1px] border-solid transition-colors duration-300 ease-in-out ${
+      isActive
+        ? "border-b-2 border-b-[#141414] text-black"
+        : "border-b-gray-300 text-[#ADADAD]"
+    }`
+  }
+
   return (
-    <div className="flex w-full flex-row items-center justify-between font-bold">
-      <div className="cursor-pointer border-b-2 border-solid border-b-orange-400 px-4 pb-4 text-orange-400">
-        진행 중
+    <div className="flex h-[50px] w-full flex-row items-center text-[16px] font-[700]">
+      <div
+        className={`flex h-full w-[50%] cursor-pointer items-center justify-center px-4 text-center ${getTabStyle(
+          pageToView,
+          "onProgress"
+        )}`}
+        onClick={handleOnProgressClick}
+      >
+        <p>진행중</p>
       </div>
-      <div className="cursor-pointer border-b-2 border-solid border-b-gray-400 px-4 pb-4 text-gray-400">
-        진행 완료
-      </div>
-      <div className="cursor-pointer border-b-2 border-solid border-b-gray-400 px-4 pb-4 text-gray-400">
-        보관함
+      <div
+        className={`flex h-full w-[50%] cursor-pointer items-center justify-center px-4 text-center ${getTabStyle(
+          pageToView,
+          "completed"
+        )}`}
+        onClick={handleCompletedClick}
+      >
+        <p>진행전</p>
       </div>
     </div>
   )
 }
 
-export default MyChallengeNavBar
+export default React.memo(MyChallengeNavBar)

@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 
+import CustomCheckBox from "@/components/CustomCheckBox"
+
 import SortButton from "./SortButton"
 import SortItem from "./SortItem"
 
@@ -31,19 +33,26 @@ function SortSelector({
 
   return (
     <div className="my-[24px] flex justify-end gap-[12px]">
-      <div>
-        <label className="ml-4 flex items-center text-sm font-medium text-gray-700">
-          <input
+      <div className="flex items-center">
+        <label
+          className="ml-4 flex cursor-pointer items-center text-sm font-medium text-gray-700"
+          onClick={onToggleShowComplete}
+        >
+          {/* <input
             type="checkbox"
             className="form-checkbox"
             checked={showCompleted}
             onChange={onToggleShowComplete}
+          /> */}
+          <CustomCheckBox
+            checked={showCompleted}
+            onChange={onToggleShowComplete}
           />
-          <span className="ml-2">성공 루틴만 보기</span>
+          <span>성공 루틴만 보기</span>
         </label>
       </div>
 
-      <div className="relative flex transition">
+      <div className="itmes-center relative flex transition">
         <SortButton
           isOpen={isOpen}
           filter={filter}
@@ -51,25 +60,40 @@ function SortSelector({
         />
 
         {isOpen && (
-          <div className="absolute right-0 top-[20px] z-10 w-[145px] rounded-md bg-white shadow-lg">
+          <div className="absolute right-0 top-[20px] z-10 w-[102px] rounded-md bg-white shadow-3">
             <div
-              className="py-1 text-black"
+              className="text-black"
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="options-menu"
             >
-              <SortItem value="recent" onSelect={handleSelect}>
-                최신순
+              <SortItem
+                value="recent"
+                onSelect={handleSelect}
+                selected={filter === "recent"}
+              >
+                <span>최신순</span>
               </SortItem>
-              <SortItem value="popular" onSelect={handleSelect}>
-                인기순
+              <SortItem
+                value="popular"
+                onSelect={handleSelect}
+                selected={filter === "popular"}
+              >
+                <span>인기순</span>
               </SortItem>
-              <SortItem value="followed" onSelect={handleSelect}>
-                따라하기 많은 순
+              <SortItem
+                value="followed"
+                onSelect={handleSelect}
+                selected={filter === "followed"}
+              >
+                <span>따라하기 많은 순</span>
               </SortItem>
-              <SortItem value="complete" onSelect={handleSelect}>
-                성공 루틴만 보기
-              </SortItem>
+              {/* <SortItem value="complete" onSelect={handleSelect}>
+                <span>성공 루틴만 보기</span>
+                <span>
+                  {filter === "complete" && <CheckIcon className="mr-2" />}
+                </span>
+              </SortItem> */}
             </div>
           </div>
         )}

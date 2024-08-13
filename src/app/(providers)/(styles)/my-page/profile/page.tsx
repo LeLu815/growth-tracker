@@ -5,10 +5,13 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
+import { useToast } from "@/context/toast.context"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
+import Box from "@/components/Box"
 import Button from "@/components/Button"
+import Camera from "@/components/Icon/Camera"
 import NoneProfile from "@/components/Icon/NoneProfile"
 import Input from "@/components/Input"
 import {
@@ -16,6 +19,7 @@ import {
   PROFILE,
   uploadImage,
 } from "@/app/(providers)/_utils/imageUploadUtils"
+import { MY_PAGE } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
 function UserInfoPage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
@@ -27,8 +31,8 @@ function UserInfoPage() {
 
   const { me } = useAuth()
   const modal = useModal()
-
   const router = useRouter()
+  const { showToast } = useToast()
 
   /**
    * 유저 정보 조회
@@ -82,9 +86,9 @@ function UserInfoPage() {
     }
 
     setSelectedFile(null)
-    alertOpen("저장되었습니다.")
     refetch()
-    router.push("/my-page")
+    showToast("수정되었습니다.")
+    router.push(MY_PAGE.path)
   }
 
   const { data, isPending, isError, refetch } = useQuery({
@@ -124,84 +128,84 @@ function UserInfoPage() {
   if (isError) return <div>Error loading data</div>
 
   return (
-    <div className="flex justify-center">
-      <div>
-        <div className="bg-white p-4">
-          <div className="flex flex-col items-center">
-            <div className="mb-3 h-48 w-48">
-              {profileImageUrl ? (
-                <Image
-                  src={profileImageUrl as string}
-                  alt="Profile"
-                  className="h-full w-full rounded-full object-cover"
-                  width={192}
-                  height={192}
-                />
-              ) : (
-                <NoneProfile width={192} height={192}></NoneProfile>
-              )}
-            </div>
-            <Input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageChange}
-              ref={fileInputRef}
+    <Box className="flex h-screen justify-center">
+      <div className={"w-full"}>
+        <div className="flex flex-col items-center">
+          {profileImageUrl ? (
+            <Image
+              src={profileImageUrl as string}
+              alt="Profile"
+              className="h-[100px] w-[100px] rounded-full object-cover"
+              width={100}
+              height={100}
             />
-            <div className={"flex flex-col gap-2"}>
-              <Button
-                intent="secondary"
-                size="sm"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                프로필사진 변경
-              </Button>
-              <Button
-                intent="secondary"
-                size="sm"
-                onClick={() => {
-                  setProfileImageUrl(null)
-                  setSelectedFile(null)
-                }}
-              >
-                기본이미지 적용
-              </Button>
+          ) : (
+            <NoneProfile width={100} height={100}></NoneProfile>
+          )}
+          <Input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageChange}
+            ref={fileInputRef}
+          />
+          <div className={"flex flex-col items-center gap-2"}>
+            <div
+              className={
+                "cursor-pointer rounded-[20px] border-[1px] border-solid border-grey-800 p-[8px_10px]"
+              }
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <div className={"flex items-center gap-[4px]"}>
+                <Camera className={"h-[24px] w-[24px]"}></Camera>{" "}
+                <div>사진 변경</div>
+              </div>
+            </div>
+            <div
+              className={"cursor-pointer text-body-s text-grey-400"}
+              onClick={() => {
+                setProfileImageUrl(null)
+                setSelectedFile(null)
+              }}
+            >
+              현재 사진 삭제
             </div>
           </div>
-          <form className={"flex flex-col gap-4"} onSubmit={handleUpdateUser}>
-            <div className="mt-6">
-              <div className="mb-4">
-                <Input
-                  label={"이메일"}
-                  placeholder={me?.email}
-                  disabled={true}
-                  type="text"
-                  id="email"
-                  className="box-border block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                />
-              </div>
+        </div>
+        <hr className={"mt-5"} />
+        <form
+          className={"mx-auto flex max-w-[640px] flex-col gap-4"}
+          onSubmit={handleUpdateUser}
+        >
+          <div className="mt-2 text-lg">회원정보</div>
+          <div className="mt-6">
+            <div className="mb-4">
               <Input
-                label={"닉네임"}
-                value={nickname || ""}
+                variant="login"
+                label={"이메일"}
+                value={me?.email}
+                disabled={true}
                 type="text"
-                onChange={(e) => setNickname(e.target.value)}
-                id="nickname"
-                className="box-border block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                id="email"
+                className="border-grey-600 text-sm text-grey-600"
               />
             </div>
-            <Button
-              className={"mt-5"}
-              intent="primary"
-              variant="rounded"
-              size="sm"
-              type={"submit"}
-            >
-              저장
-            </Button>
-          </form>
-        </div>
+            <Input
+              variant="login"
+              label={"닉네임"}
+              value={nickname || ""}
+              type="text"
+              onChange={(e) => setNickname(e.target.value)}
+              id="nickname"
+              className={`border-blue-400 text-sm focus:border-blue-400`}
+            />
+          </div>
+          <Button className={"mt-5"} intent="primary" size="lg" type={"submit"}>
+            수정 완료
+          </Button>
+        </form>
       </div>
-    </div>
+    </Box>
   )
 }
 

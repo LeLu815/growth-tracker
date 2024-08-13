@@ -1,16 +1,22 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
-import React, { ChangeEvent, PropsWithChildren, useContext } from "react"
+import React, {
+  ChangeEvent,
+  PropsWithChildren,
+  useEffect,
+  useState,
+} from "react"
 import {
   DELETEroutineDone,
   POSTnewRoutineDone,
 } from "@/api/supabase/routineDone"
-import queryClient from "@/query/queryClient"
+import { PUTisSuccessRoutineDoneDaily } from "@/api/supabase/routineDoneDaily"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { v4 } from "uuid"
 
-import { RoutineDoneType } from "../../../../../../../types/routineDone.type"
 import { RoutineType } from "../../../../../../../types/supabase.type"
-import { MyChallengePageContext } from "../../context"
+import useMyChallengePageContext from "../../context"
 
 interface RoutineCheckBoxProps {
   milestoneId: string
@@ -18,7 +24,6 @@ interface RoutineCheckBoxProps {
   selectedDate: string
   userId: string
   routineId: string
-  routineDone: RoutineDoneType[]
   routines: RoutineType[]
   routineDoneDailyId: string
 }
@@ -27,64 +32,104 @@ function RoutineCheckBox({
   routines,
   selectedDate,
   routineId,
-  routineDone,
   routineDoneDailyId,
 }: PropsWithChildren<RoutineCheckBoxProps>) {
-  const routineCount = routines.length
-  const { todayDate } = useContext(MyChallengePageContext)
-  // 전체 routine_done에서 routine_done_daily_id를 통해서
-  // 현재 체크한 루틴에 대한 오늘 날짜의 데이터 가져오기 및 존재 여부 확인하며,
-  // 이를 활용해 추후 체크박스의 최초값(선택/해제) 부여
+  const { todayDate, routineDone } = useMyChallengePageContext()
+  const [temp, setTemp] = useState<boolean>(true)
+  const queryClient = useQueryClient()
+
   const targetRD = routineDone.find((item) => {
     return (
-      item.created_at.slice(0, 10) == selectedDate &&
-      item.routine_id == routineId
+      item.created_at.slice(0, 10) === selectedDate &&
+      item.routine_id === routineId
     )
   })
 
-  // 체크박스 체크값 대응 함수
-  const handleCheckboxChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    // 체크하는 경우
-    if (event.target.checked) {
-      if (!targetRD) {
-        // routine_done 테이블에 레코드 추가
-        const routineDoneId = v4()
-        await POSTnewRoutineDone({
-          routineDoneDailyId,
-          routineId,
-          createdAt: selectedDate,
-          routineDoneId,
-        })
-      }
-    }
+  const addRoutineDoneMutation = useMutation({
+    mutationFn: async () => {
+      const routineDoneId = v4()
+      await POSTnewRoutineDone({
+        routineDoneDailyId,
+        routineId,
+        createdAt: selectedDate,
+        routineDoneId,
+      })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["fetchRoutineDone"] })
+    },
+  })
 
-    // 체크를 해제하는 경우
-    else {
+  const deleteRoutineDoneMutation = useMutation({
+    mutationFn: async () => {
       if (targetRD) {
         await DELETEroutineDone({
           routineId: targetRD.routine_id,
           routineDoneDailyId: routineDoneDailyId,
         })
       }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["fetchRoutineDone"] })
+    },
+  })
+
+  const updateIsSuccessMutation = useMutation({
+    mutationFn: async (isSuccess: boolean) => {
+      await PUTisSuccessRoutineDoneDaily({
+        currentIsSuccess: isSuccess,
+        routineDoneDailyId: routineDoneDailyId,
+      })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["fetchCurrentUserRoutineDoneDaily"],
+      })
+    },
+  })
+
+  useEffect(() => {
+    const updateIsSuccess = async () => {
+      const todayDoneRoutineArray = routineDone.filter((item) => {
+        return (
+          item.created_at.slice(0, 10) === selectedDate &&
+          item.routine_done_daily_id === routineDoneDailyId
+        )
+      })
+      if (routineDoneDailyId.length > 0) {
+        if (todayDoneRoutineArray.length === routines.length) {
+          updateIsSuccessMutation.mutate(true)
+        } else {
+          updateIsSuccessMutation.mutate(false)
+        }
+      }
     }
-    await queryClient.invalidateQueries({
-      queryKey: ["fetchRoutineDone"],
-    })
-    queryClient.invalidateQueries({
-      queryKey: ["fetchCurrentUserRoutineDoneDaily"],
-    })
+    updateIsSuccess()
+  }, [routineDone])
+
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      if (!targetRD) {
+        addRoutineDoneMutation.mutate()
+      }
+    } else {
+      if (targetRD) {
+        deleteRoutineDoneMutation.mutate()
+      }
+    }
+    setTemp(!temp)
   }
 
   return (
     <>
       <input
         type="checkbox"
-        className="h-8 w-8 rounded-lg accent-[#FF7D3D] hover:cursor-pointer"
+        className="h-[20px] w-[20px] rounded-lg accent-[#FC5A6B] hover:cursor-pointer"
         onChange={(event) => {
           handleCheckboxChange(event)
         }}
         checked={targetRD ? true : false}
-        disabled={selectedDate == todayDate ? false : true}
+        disabled={selectedDate === todayDate ? false : true}
       />
     </>
   )

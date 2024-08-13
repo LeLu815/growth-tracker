@@ -24,9 +24,23 @@ export async function GET(
 
   const { data, error } = await supabase
     .from("challenge")
-    .select(`*, user: users (nickname, profile_image_url)`)
+    .select(
+      `
+      *,
+      milestone(
+        *,
+        routine(*),
+        routine_done_daily(*)
+      ),
+      user:users (
+        nickname,
+        profile_image_url
+      )
+    `
+    )
     .eq("user_id", userId)
-    // .range(page * limit, page * limit + (limit - 1))
+    .in("state", ["on_complete", "on_fail"])
+    .range(page * limit, page * limit + (limit - 1))
     .order("created_at", { ascending: false })
     .order("id", { ascending: false })
 
@@ -34,5 +48,46 @@ export async function GET(
     return NextResponse.json({ status: 500, error: error.message })
   }
 
-  return NextResponse.json({ status: 200, error: null, data: data })
+  // 챌린지 돌면서 total_cnt 합산, routine_done_daily의 true개수 구하기
+  const challengesWithSuccessRates = data?.map((challenge) => {
+    let totalChallengeRoutines = 0
+    let totalSuccessfulRoutines = 0
+
+    // 각각 마일스톤의 total_cnt랑 routine_done_daily의 true개수
+    challenge.milestone = challenge.milestone.map((milestone) => {
+      const totalRoutines = milestone.total_cnt
+      const successfulRoutines =
+        milestone.routine_done_daily?.filter((rdd) => rdd.is_success).length ||
+        0
+
+      totalChallengeRoutines += totalRoutines
+      totalSuccessfulRoutines += successfulRoutines
+
+      // 총 루틴 개수 성공개수로 나누고 백분율로 바꾸기
+      const successRate =
+        totalRoutines > 0 ? (successfulRoutines / totalRoutines) * 100 : 0
+      console.log(successRate)
+      return {
+        ...milestone,
+        successRate,
+      }
+    })
+
+    // 긱 챌린지 전체 성공률
+    const challengeSuccessRate =
+      totalChallengeRoutines > 0
+        ? (totalSuccessfulRoutines / totalChallengeRoutines) * 100
+        : 0
+
+    return {
+      ...challenge,
+      successRate: challengeSuccessRate,
+    }
+  })
+
+  return NextResponse.json({
+    status: 200,
+    error: null,
+    data: challengesWithSuccessRates,
+  })
 }

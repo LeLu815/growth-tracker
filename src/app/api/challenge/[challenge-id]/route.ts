@@ -45,7 +45,9 @@ export const PUT = async (
         (_, index) => `$${index + 1}`
       )
       await pgClient.query(
-        `DELETE FROM milestone WHERE id IN (${deletCountNum.join(", ")})`,
+        `DELETE
+           FROM milestone
+           WHERE id IN (${deletCountNum.join(", ")})`,
         milestoneDeleteList
       )
     }
@@ -65,6 +67,8 @@ export const PUT = async (
       "is_thu",
       "is_tue",
       "is_wed",
+      "name",
+      "success_percent",
     ]
     // promise 배열 생성
     const insertMileStonePromises = milestoneList.map((milestoneObj) => {
@@ -75,7 +79,7 @@ export const PUT = async (
         return milestoneObj[attr]
       })
       return pgClient.query(
-        "INSERT INTO milestone (end_at, start_at, challenge_id, success_requirement_cnt, total_cnt, total_day, is_fri, is_mon, is_sat, is_sun, is_thu, is_tue, is_wed) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id",
+        "INSERT INTO milestone (end_at, start_at, challenge_id, success_requirement_cnt, total_cnt, total_day, is_fri, is_mon, is_sat, is_sun, is_thu, is_tue, is_wed, name, success_percent) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING id",
         queryList
       )
     })
@@ -166,4 +170,30 @@ export async function GET(
   }
 
   return NextResponse.json({ status: 200, data: data[0], error: null })
+}
+
+export async function DELETE(
+  req: NextRequest,
+  {
+    params,
+  }: {
+    params: {
+      "challenge-id": string
+    }
+  }
+) {
+  const challengeId = params["challenge-id"]
+
+  const supabase = createClient()
+
+  const { error } = await supabase
+    .from("challenge")
+    .delete()
+    .eq("id", challengeId)
+
+  if (error) {
+    return NextResponse.json({ status: 500, error: error.message })
+  }
+
+  return NextResponse.json({ status: 200, error: null })
 }

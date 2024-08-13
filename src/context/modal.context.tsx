@@ -30,7 +30,6 @@ export const useModal = () => useContext(ModalContext)
 
 export const ModalProvider = ({ children }: PropsWithChildren) => {
   const [modalOptions, setModalOptions] = useState<ModalProps | null>(null)
-
   const open = (options: ModalProps) => {
     const addedOption = {
       ...options,

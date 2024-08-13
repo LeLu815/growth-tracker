@@ -1,6 +1,6 @@
 import Box from "@/components/Box"
 import Page from "@/components/Page"
-import BottomBar from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/BottomBar"
+import ChallengeCommentCreate from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeCommentCreate"
 
 import ChallengeCommentList from "./_components/ChallengeCommentList"
 import ChallengeInfo from "./_components/ChallengeInfo"
@@ -15,12 +15,9 @@ function ChallengeDetailPage({ params }: ChallengeDetailPageProps) {
   return (
     <Page>
       <ChallengeInfo challengeId={challengeId} />
-      <hr className={"mt-5"}></hr>
-      <Box>
+      <Box className={"mx-auto w-full max-w-[640px]"}>
         <ChallengeCommentList challengeId={challengeId} />
-      </Box>
-      <Box>
-        <BottomBar challengeId={challengeId} />
+        <ChallengeCommentCreate challengeId={challengeId} />
       </Box>
     </Page>
   )

@@ -26,9 +26,6 @@ export const POST = async (request: NextRequest) => {
     .insert(challengeData)
     .select()
 
-  // *** 수정된 부분 시작 ***
-  console.log("첼린지 생성 응답:", challengeCreateResponse)
-
   // 응답 데이터 검증
   if (
     challengeCreateResponse.error ||
@@ -44,7 +41,6 @@ export const POST = async (request: NextRequest) => {
       { status: 400 }
     )
   }
-  // *** 수정된 부분 끝 ***
 
   // 첼린지 아이디 추출
   const newChallengeId = challengeCreateResponse.data[0].id
@@ -147,7 +143,7 @@ export const POST = async (request: NextRequest) => {
   }
 
   // 위의 모든 과정 성공
-  return NextResponse.json("")
+  return NextResponse.json(newChallengeId)
 }
 
 export async function GET(req: NextRequest) {
@@ -164,6 +160,11 @@ export async function GET(req: NextRequest) {
     .select(
       `
       *,
+      milestone(
+        *,
+        routine(*),
+        routine_done_daily(*)
+      ),
       user:users (
         nickname,
         profile_image_url
@@ -172,27 +173,22 @@ export async function GET(req: NextRequest) {
     )
     .ilike("goal", `%${keyword}%`)
 
-  // 카테고리 필터링
   const categoryQuery = category
     ? baseQuery.eq("category", category)
     : baseQuery
 
-  // 성공 루틴만 보기 필터링
   const completeQuery = showCompleted
     ? categoryQuery.eq("state", "on_complete")
     : categoryQuery
 
-  // 필터링 & 정렬
   const query = (() => {
     switch (filter) {
       case "recent":
-        return baseQuery.order("created_at", { ascending: false })
+        return completeQuery.order("created_at", { ascending: false })
       case "popular":
-        return baseQuery.order("like_cnt", { ascending: false })
+        return completeQuery.order("like_cnt", { ascending: false })
       case "followed":
-        return baseQuery.order("template_cnt", { ascending: false })
-      // case "complete":
-      //   return baseQuery.eq("state", "on_complete")
+        return completeQuery.order("template_cnt", { ascending: false })
       default:
         return completeQuery
     }
@@ -205,5 +201,42 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ listsError: listsError.message })
   }
 
-  return NextResponse.json(listsData)
+  // 챌린지 돌면서 total_cnt 합산, routine_done_daily의 true개수 구하기
+  const challengesWithSuccessRates = listsData.map((challenge) => {
+    let totalChallengeRoutines = 0
+    let totalSuccessfulRoutines = 0
+
+    // 각각 마일스톤의 total_cnt랑 routine_done_daily의 true개수
+    challenge.milestone = challenge.milestone.map((milestone) => {
+      const totalRoutines = milestone.total_cnt
+      const successfulRoutines =
+        milestone.routine_done_daily?.filter((rdd) => rdd.is_success).length ||
+        0
+
+      totalChallengeRoutines += totalRoutines
+      totalSuccessfulRoutines += successfulRoutines
+
+      // 총 루틴 개수 성공개수로 나누고 백분율로 바꾸기
+      const successRate =
+        totalRoutines > 0 ? (successfulRoutines / totalRoutines) * 100 : 0
+
+      return {
+        ...milestone,
+        successRate,
+      }
+    })
+
+    // 긱 챌린지 전체 성공률
+    const challengeSuccessRate =
+      totalChallengeRoutines > 0
+        ? (totalSuccessfulRoutines / totalChallengeRoutines) * 100
+        : 0
+
+    return {
+      ...challenge,
+      successRate: challengeSuccessRate,
+    }
+  })
+
+  return NextResponse.json(challengesWithSuccessRates)
 }

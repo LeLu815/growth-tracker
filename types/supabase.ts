@@ -18,6 +18,7 @@ export type Database = {
           end_at: string | null
           goal: string
           id: string
+          image_url: string | null
           is_secret: boolean
           like_cnt: number
           start_at: string | null
@@ -34,6 +35,7 @@ export type Database = {
           end_at?: string | null
           goal: string
           id?: string
+          image_url?: string | null
           is_secret: boolean
           like_cnt?: number
           start_at?: string | null
@@ -50,6 +52,7 @@ export type Database = {
           end_at?: string | null
           goal?: string
           id?: string
+          image_url?: string | null
           is_secret?: boolean
           like_cnt?: number
           start_at?: string | null
@@ -75,6 +78,7 @@ export type Database = {
           created_at: string
           id: string
           like_cnt: number
+          rows: number
           user_id: string
         }
         Insert: {
@@ -83,6 +87,7 @@ export type Database = {
           created_at?: string
           id?: string
           like_cnt?: number
+          rows?: number
           user_id: string
         }
         Update: {
@@ -91,6 +96,7 @@ export type Database = {
           created_at?: string
           id?: string
           like_cnt?: number
+          rows?: number
           user_id?: string
         }
         Relationships: [
@@ -253,7 +259,9 @@ export type Database = {
           is_thu: boolean
           is_tue: boolean
           is_wed: boolean
+          name: string
           start_at: string
+          success_percent: number
           success_requirement_cnt: number
           total_cnt: number
           total_day: number
@@ -271,7 +279,9 @@ export type Database = {
           is_thu?: boolean
           is_tue?: boolean
           is_wed?: boolean
+          name: string
           start_at: string
+          success_percent: number
           success_requirement_cnt: number
           total_cnt: number
           total_day: number
@@ -289,7 +299,9 @@ export type Database = {
           is_thu?: boolean
           is_tue?: boolean
           is_wed?: boolean
+          name?: string
           start_at?: string
+          success_percent?: number
           success_requirement_cnt?: number
           total_cnt?: number
           total_day?: number
@@ -515,6 +527,24 @@ export type Database = {
         }
         Returns: undefined
       }
+      get_average_success_rate: {
+        Args: {
+          user_id_param: string
+        }
+        Returns: {
+          period: string
+          success_rate: number
+        }[]
+      }
+      get_category_count_by_user: {
+        Args: {
+          user_id_param: string
+        }
+        Returns: {
+          category: string
+          challenge_count: number
+        }[]
+      }
       get_challenge_with_milestones: {
         Args: {
           request_challenge_id: string
@@ -524,6 +554,7 @@ export type Database = {
           created_at: string
           user_id: string
           nickname: string
+          profile_image_url: string
           goal: string
           like_cnt: number
           template_cnt: number
@@ -536,6 +567,31 @@ export type Database = {
           start_at: string
           end_at: string
           milestones: Json
+        }[]
+      }
+      get_state_counts_by_user: {
+        Args: {
+          user_id_param: string
+        }
+        Returns: {
+          state: string
+          state_count: number
+        }[]
+      }
+      get_success_rate_distribution: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          success_rate_percentage: number
+          user_count: number
+        }[]
+      }
+      get_user_success_rate_distribution: {
+        Args: {
+          user_id_param: string
+        }
+        Returns: {
+          rounded_success_rate: number
+          percentile: number
         }[]
       }
       increment_challenge_like_cnt: {

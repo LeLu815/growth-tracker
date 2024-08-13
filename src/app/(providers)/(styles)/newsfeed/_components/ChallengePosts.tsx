@@ -15,34 +15,32 @@ function ChallengePosts({ posts, onClickPost }: ChallengePostsProps) {
   const { me } = useAuth()
 
   return (
-    <div>
-      <ul>
-        {posts.map((post) => {
-          return (
-            <li
-              key={post.id}
-              onClick={() => onClickPost(post.id)}
-              className="cursor-pointe mb-[20px]"
-            >
-              <ChallengeCard
-                title={post.goal}
-                category={post.category}
-                likes={post.like_cnt}
-                bookmarks={post.template_cnt}
-                liked={me ? (post.liked || []).includes(me.id) : false}
-                nickname={post.user.nickname}
-                progress={post.progress}
-                userImage={post.user.profile_image_url}
-                bookmarked={
-                  me ? (post.bookmarked || []).includes(me.id) : false
-                }
-                challengeImage={post.image}
-              />
-            </li>
-          )
-        })}
-      </ul>
-    </div>
+    <ul>
+      {posts.map((post: PostType) => {
+        return (
+          <li
+            key={post.id}
+            onClick={() => onClickPost(post.id)}
+            className="mb-[20px] cursor-pointer"
+          >
+            <ChallengeCard
+              challenge={post}
+              milestone={post.milestone}
+              title={post.goal}
+              category={post.category}
+              likes={post.like_cnt}
+              bookmarks={post.template_cnt}
+              liked={me ? (post.liked || []).includes(me.id) : false}
+              state={post.state}
+              bookmarked={me ? (post.bookmarked || []).includes(me.id) : false}
+              challengeImage={post.image_url || ""}
+              successRate={post.successRate}
+              startDate={post.start_at || ""}
+            />
+          </li>
+        )
+      })}
+    </ul>
   )
 }
 

@@ -1,17 +1,16 @@
 import { PropsWithChildren } from "react"
 
 import BottomNavigation from "@/components/BottomNavigation"
-
-import Header from "../../_components/Header"
+import Page from "@/components/Page"
+import MyPageTitleHeader from "@/app/(providers)/(styles)/my-page/_components/MyPageTitleHeader"
 
 function MyPageLayout({ children }: PropsWithChildren) {
   return (
-    <div>
-      <Header />
+    <Page >
+      <MyPageTitleHeader />
       {children}
-      <div className="h-[80px] w-full"></div>
       <BottomNavigation />
-    </div>
+    </Page>
   )
 }
 

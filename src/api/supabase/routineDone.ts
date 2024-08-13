@@ -26,9 +26,7 @@ export const POSTnewRoutineDone = async (params: POSTnewRoutineDoneProps) => {
       routineDoneId: params.routineDoneId,
     }
   )
-  await queryClient.invalidateQueries({
-    queryKey: ["fetchRoutineDone"],
-  })
+
   return postResponse
 }
 

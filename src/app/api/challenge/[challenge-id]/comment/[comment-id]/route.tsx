@@ -15,7 +15,7 @@ export async function PUT(
   const commentId = params["comment-id"]
 
   const body = await req.json()
-  const { content } = body
+  const { content, rows } = body
 
   if (!content) {
     return NextResponse.json({ error: "변경할 내용이 없습니다", status: 400 })
@@ -24,7 +24,7 @@ export async function PUT(
 
   const { data, error } = await supabase
     .from("challenge_comment")
-    .update({ content })
+    .update({ content, rows })
     .eq("id", commentId)
     .select()
 

@@ -43,9 +43,7 @@ export const POSTnewRoutineDoneDaily = async (
       isSuccess: params.isSuccess,
     }
   )
-  queryClient.invalidateQueries({
-    queryKey: ["fetchCurrentUserRoutineDoneDaily"],
-  })
+
   return postResponse
 }
 

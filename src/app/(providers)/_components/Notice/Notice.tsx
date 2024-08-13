@@ -126,21 +126,25 @@ function Notice() {
   }, [me?.id])
 
   return (
-    <div>
+    <div className="relative right-[20px] top-2">
       <div onClick={showDrawer}>
         <Badge count={count}>
           <Avatar
             className={"bg-white"}
             shape="square"
             icon={
-              <AlarmIcon width={16} height={16} className={"top absolute"} />
+              <AlarmIcon
+                width={16}
+                height={16}
+                className={"absolute right-0 top-[2px]"}
+              />
             }
           />
         </Badge>
       </div>
 
       <Drawer title="알림" onClose={onClose} open={open}>
-        <div className={"flex flex-col gap-4"}>
+        <div className={"relative flex flex-col gap-4"}>
           {data?.map((notice, idx) => {
             return (
               <div
@@ -156,7 +160,7 @@ function Notice() {
                 )}
 
                 <div
-                  className={"absolute right-0 w-[20px] text-[15px]"}
+                  className={"absolute right-[20px] w-[20px] text-[15px]"}
                   onClick={() => handleDeleteNoticeMutate(notice.id)}
                 >
                   {" "}

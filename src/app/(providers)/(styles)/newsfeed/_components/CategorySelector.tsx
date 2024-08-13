@@ -20,12 +20,14 @@ function CategorySelector({ category, onSelectCategory }: CategoryProps) {
     <div className="my-4 flex items-center justify-between">
       {CATEGORIES.map((cat) => (
         <Chip
+          intent="category"
           key={cat.label}
           label={cat.label}
+          variant="outline"
+          size="md"
           // className={`mr-2 cursor-pointer rounded-lg border border-white p-2 ${
           //   category === cat ? "bg-slate-600" : ""
           // }`}
-          intent="rounded"
           selected={category == cat.label}
           onClick={() => onSelectCategory(cat.label)}
         />
