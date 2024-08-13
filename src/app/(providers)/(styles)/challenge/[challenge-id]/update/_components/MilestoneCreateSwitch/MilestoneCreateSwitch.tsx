@@ -97,7 +97,7 @@ function MilestoneCreateSwitch({
           )}
         </section>
         <div className="h-[120px]" />
-        <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
+        <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[480px] bg-white px-[20px] pb-8 pt-5">
           <Button
             className="h-full"
             onClick={() => {

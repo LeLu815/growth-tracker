@@ -123,7 +123,7 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
   }, [])
 
   return (
-    <div className="mx-auto flex h-screen max-w-[640px] flex-col">
+    <div className="mx-auto flex h-screen max-w-[480px] flex-col">
       {selectedPageName === "switch" && (
         <>
           <ChallengePageTitle
