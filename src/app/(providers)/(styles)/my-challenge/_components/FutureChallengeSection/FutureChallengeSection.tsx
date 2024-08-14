@@ -1,6 +1,7 @@
 "use client"
 
 import React, { PropsWithChildren } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 
 import BookMarkIcon02 from "@/components/Icon/BookMarkIcon02"
@@ -20,7 +21,13 @@ function FutureChallengeSection({
     <section>
       <div className="flex gap-x-[24px]">
         {/* 챌린지 썸네일 이미지 */}
-        <div className="h-[84px] w-[84px] rounded-md bg-[#DDDDDD]"></div>
+        <Image
+          src={challenge.image_url || ""}
+          alt={challenge.goal}
+          width={84}
+          height={84}
+          className="h-[84px] w-[84px] rounded-md object-cover"
+        />
         {/* 이미지 옆 모든 것 */}
         <div className="flex grow flex-col gap-y-[12px]">
           {/* 챌린지 이름 */}
@@ -38,11 +45,13 @@ function FutureChallengeSection({
           <div className="flex items-center justify-start gap-x-[11px]">
             <div className="flex items-center justify-start gap-x-[4px]">
               <BookMarkIcon02 />
-              <p className="text-[12px] text-[#1A1A1A]">79</p>
+              <p className="text-[12px] text-[#1A1A1A]">{challenge.like_cnt}</p>
             </div>
             <div className="flex items-center justify-start gap-x-[4px]">
               <SaveIcon />
-              <p className="my-auto text-[12px] text-[#1A1A1A]">81</p>
+              <p className="my-auto text-[12px] text-[#1A1A1A]">
+                {challenge.template_cnt}
+              </p>
             </div>
           </div>
           {/* 구분선 */}
