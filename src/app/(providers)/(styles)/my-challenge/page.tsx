@@ -22,7 +22,6 @@ function MyChallengePage() {
   // Pending이나 Error 상태와 상관없이 항상 표시되는 컴포넌트
   const renderAlwaysVisibleComponents = () => (
     <>
-      {/* <StatusBarSpace /> */}
       <TopNavigation title="내 챌린지" />
       <MyChallengeNavBar />
     </>
@@ -42,7 +41,9 @@ function MyChallengePage() {
     return (
       <Page>
         {renderAlwaysVisibleComponents()}
-        <div className="mt-5">서버에서 데이터 로드 중 오류 발생</div>
+        <div className="mt-5 w-full text-center">
+          서버에서 데이터 로드 중 오류 발생
+        </div>
       </Page>
     )
   }

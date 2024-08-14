@@ -5,6 +5,7 @@ import {
   POSTdiary,
   PUTdiary,
 } from "@/api/supabase/diary"
+import { useModal } from "@/context/modal.context"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { v4 } from "uuid"
 
@@ -41,12 +42,23 @@ function DiarySection({
     currentDiary ? currentDiary[0]?.content : ""
   )
   const [diaryReadOnly, setDiaryReadOnly] = useState(!isDiaryToday) // 오늘의 일기일땐 readOnly가 false
-
+  const modal = useModal()
   useEffect(() => {
     if (isDiaryToday && !(currentDiary.length == 0)) {
       setDiaryReadOnly(true)
     }
+    if (currentDiary && currentDiary.length > 0) {
+      setInputText(currentDiary[0]?.content || "")
+    }
   }, [currentDiary])
+
+  const alertOpen = (message: string) => {
+    modal.open({
+      type: "alert",
+      content: message,
+    })
+    return
+  }
 
   const queryClient = useQueryClient()
   if (diaryPending) {
@@ -54,7 +66,11 @@ function DiarySection({
   }
 
   if (diaryError) {
-    return <div className="mt-5">서버에서 데이터 로드 중 오류 발생</div>
+    return (
+      <div className="mt-5 w-full text-center">
+        서버에서 데이터 로드 중 오류 발생
+      </div>
+    )
   }
 
   const handleClickLeftButton = async () => {
@@ -69,8 +85,10 @@ function DiarySection({
 
   const handleClickRightButton = async () => {
     if (!diaryReadOnly) {
+      console.log(inputText)
+
       if (inputText.length < 1) {
-        alert("일기를 입력해주세요")
+        alertOpen("일기를 입력해주세요")
       } else {
         const newId = v4()
         const diaryToPost: DiaryType = {
@@ -82,12 +100,12 @@ function DiarySection({
         }
         if (currentDiary[0]) {
           const putResponse = PUTdiary(diaryToPost)
-          console.log(putResponse)
+
           putResponse.then((response) => {
             if (response.statusText == "OK" || response.status == 200) {
-              alert("수정이 완료되었습니다")
+              alertOpen("수정이 완료되었습니다")
             } else {
-              alert("오류 발생, 콘솔 확인")
+              alertOpen("오류 발생, 콘솔 확인")
               console.log(response)
             }
             setDiaryReadOnly(true)
@@ -96,9 +114,9 @@ function DiarySection({
           const postResponse = POSTdiary(diaryToPost)
           postResponse.then((response) => {
             if (response.statusText == "OK" || response.status == 200) {
-              alert("저장이 완료되었습니다")
+              alertOpen("저장이 완료되었습니다")
             } else {
-              alert("오류 발생, 콘솔 확인")
+              alertOpen("오류 발생, 콘솔 확인")
               console.log(response)
             }
             setDiaryReadOnly(true)
@@ -126,8 +144,8 @@ function DiarySection({
       <div className="mt-5 flex flex-col items-center justify-center">
         <textarea
           className="h-[150px] w-full resize-none rounded-lg border-[1.5px] border-solid border-[#CBC9CF] bg-[#FAFAFA] px-2 py-2"
-          onChange={(event) => setInputText(event.target.value)}
           defaultValue={currentDiary[0]?.content || ""}
+          onChange={(event) => setInputText(event.target.value)}
           readOnly={diaryReadOnly}
         />
         <div className="mt-5 flex w-full">
