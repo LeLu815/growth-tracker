@@ -50,7 +50,6 @@ function CreateChallenge() {
           <MilestoneCreate
             handleChangeStep={handleChangeStep}
             getCreatedChallengeId={(id: string) => {
-              console.log("크리에이트 첼린지 id", id)
               setJustCreatedChallengeId(id)
             }}
             title="루틴 생성"
@@ -76,7 +75,7 @@ function CreateChallenge() {
   }
 
   return (
-    <div className="mx-auto flex h-screen max-w-[640px] flex-col">
+    <div className="mx-auto flex h-screen max-w-[480px] flex-col">
       {getStepTitleWords(stepNum)}
     </div>
   )

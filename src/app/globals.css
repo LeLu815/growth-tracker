@@ -128,6 +128,13 @@ table {
   border-spacing: 0;
 }
 
+/*textarea {*/
+/*  margin: 0;*/
+/*  padding: 0;*/
+/*  border: none;*/
+/*  outline: none;*/
+/*}*/
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -155,6 +162,7 @@ table {
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    /* --font-suite: "SUITE"; */
   }
 
   .dark {
@@ -194,6 +202,7 @@ table {
     @apply bg-background text-foreground;
     @apply min-h-screen; /* 최소 높이를 화면 전체로 설정 */
     margin: 0; /* 기본 여백 제거 */
+    font-family: var(--font-suite);
   }
 }
 @layer utilities {
@@ -203,11 +212,4 @@ table {
   .flex-1 {
     flex-grow: 1;
   }
-}
-
-@font-face {
-  font-family: "SUITE";
-  src: url("/fonts/SUITE-Variable-woff2/SUITE-Variable.woff2") format("woff2");
-  font-weight: normal; /* 필요한 경우 다른 굵기를 추가 */
-  font-style: normal; /* 필요한 경우 다른 스타일을 추가 */
 }

@@ -1,7 +1,6 @@
 "use client"
 
 import Page from "@/components/Page"
-import StatusBarSpace from "@/components/StatusBarSpace"
 import TopNavigation from "@/components/TopNavigation"
 
 import ChallengeList from "./_components/ChallengeList"
@@ -22,7 +21,7 @@ function MyChallengePage() {
   // Pending이나 Error 상태와 상관없이 항상 표시되는 컴포넌트
   const renderAlwaysVisibleComponents = () => (
     <>
-      <StatusBarSpace />
+      {/* <StatusBarSpace /> */}
       <TopNavigation title="내 챌린지" />
       <MyChallengeNavBar />
     </>

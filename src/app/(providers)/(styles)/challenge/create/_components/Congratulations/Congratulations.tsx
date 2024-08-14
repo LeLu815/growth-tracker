@@ -1,6 +1,12 @@
 "use client"
 
+import { useState } from "react"
 import { useRouter } from "next/navigation"
+import useChallengeCreateStore, {
+  categories,
+  defaultSelected,
+} from "@/store/challengeCreate.store"
+import useMilestoneCreateStore from "@/store/milestoneCreate.store"
 
 import Box from "@/components/Box"
 import Button from "@/components/Button"
@@ -18,6 +24,9 @@ function Congratulations({
   justCreatedChallengeId,
 }: CongratulationsProps) {
   const router = useRouter()
+  const { category, setRange, setCategory, setGoal } = useChallengeCreateStore()
+  const { setData } = useMilestoneCreateStore()
+  const [isProcessing, setIsProcessing] = useState(false)
   return (
     <div>
       <ChallengePageTitle title={title} allStepCount={4} titleHidden={false} />
@@ -41,18 +50,33 @@ function Congratulations({
               나중에 루틴을 추가할 수 있어요.
             </p>
           </div>
-          <div className="fixed bottom-0 left-0 right-0 mx-auto flex max-w-[640px] gap-[8px] bg-white px-[20px] pb-8 pt-5">
+          <div className="h-[100px]" />
+          <div className="fixed bottom-0 left-0 right-0 mx-auto flex max-w-[480px] gap-[8px] bg-white px-[20px] pb-8 pt-5">
             <Button
-              intent="secondary"
+              disabled={isProcessing}
+              variant="outline"
               size="lg"
               onClick={() => {
+                setIsProcessing(true)
                 justCreatedChallengeId &&
                   router.replace(`/challenge/${justCreatedChallengeId}/update`)
               }}
             >
               루틴 만들기
             </Button>
-            <Button size="lg" onClick={() => router.replace("/")}>
+            <Button
+              disabled={isProcessing}
+              size="lg"
+              onClick={() => {
+                // 데이터 초기화
+                setIsProcessing(true)
+                setData([])
+                setRange(defaultSelected)
+                setCategory(categories[0])
+                setGoal("")
+                router.replace("/")
+              }}
+            >
               완료하기
             </Button>
           </div>

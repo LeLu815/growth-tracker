@@ -15,7 +15,7 @@ function TopNavigation({ title }: PropsWithChildren<TopNavigationProps>) {
     router.back() // 뒤로가기띠
   }
   return (
-    <div className="flex h-[50px] w-full items-center justify-center px-[20px] py-[4px]">
+    <div className="relative flex h-[50px] w-full items-center justify-center px-[20px] py-[4px]">
       <ArrowLeftIcon
         className="absolute left-[28px]"
         onClick={handleArrowLeftClick}

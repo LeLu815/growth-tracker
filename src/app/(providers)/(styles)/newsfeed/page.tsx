@@ -1,5 +1,3 @@
-"use client"
-
 import Box from "@/components/Box"
 import Page from "@/components/Page"
 

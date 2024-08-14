@@ -6,6 +6,7 @@ import { useInView } from "react-intersection-observer"
 
 import ChallengeCard from "@/components/ChallengeCard"
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
+import Loading from "@/components/Loading"
 
 import { PostType } from "../../../../../../../types/challenge"
 
@@ -64,7 +65,7 @@ function CompleteChallengeList() {
     },
   })
 
-  if (isPending) return <div>Loading...</div>
+  if (isPending) return <Loading />
   if (isError) return <div>Error loading data</div>
 
   return (
@@ -73,7 +74,6 @@ function CompleteChallengeList() {
         {data?.length > 0 ? (
           data?.map((myChallenge, index) => {
             const isLastItem = data?.length - 1 === index
-            debugger
             return (
               <li
                 key={myChallenge.id}

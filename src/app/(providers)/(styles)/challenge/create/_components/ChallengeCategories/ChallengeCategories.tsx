@@ -73,16 +73,17 @@ function ChallengeCategories({
                 onClick={() => setSelectedCategory(category)}
               >
                 <Button
+                  variant="outline"
                   size="lg"
                   selected={selectedCategory === category}
-                  intent="secondary"
                 >
                   {category}
                 </Button>
               </li>
             ))}
           </ul>
-          <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
+          <div className="h-[100px]"></div>
+          <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[480px] bg-white px-[20px] pb-8 pt-5">
             <Button
               size="lg"
               onClick={() => {

@@ -16,6 +16,8 @@ import {
 } from "chart.js"
 import { Line } from "react-chartjs-2"
 
+import Loading from "@/components/Loading"
+
 import { MyPageGraphType } from "../../../../../../../types/myPageGraph.type"
 
 ChartJS.register(
@@ -173,14 +175,13 @@ const TopPercentGraph = () => {
     }
   }, [data])
 
-  if (isPending) {
-    return "loading..."
-  }
+  if (isPending) return <Loading />
+  if (isError) return <div>Error loading data</div>
 
   return (
     <div className={"flex flex-col gap-4"}>
       <div className={"text-title-xl"}>
-        현재 닉네임님의 성공률은 <br />
+        현재 성공률은 <br />
         <p className={"inline text-primary"}>상위 {myPercentile}%</p>에
         속합니다.
       </div>

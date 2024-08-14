@@ -10,7 +10,7 @@ function Routine({ routine }: { routine: RoutineType }) {
     >
       <span
         className={
-          "font-pretendard text-[14px] font-medium leading-normal tracking-[-0.35px] text-[#000]"
+          "font-pretendard text-body-m leading-normal tracking-[-0.35px] text-[#000]"
         }
       >
         {routine.content}

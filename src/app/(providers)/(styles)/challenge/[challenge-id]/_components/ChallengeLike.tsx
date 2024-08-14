@@ -2,16 +2,22 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
+import useChallengeCreateStore from "@/store/challengeCreate.store"
 import useChallengeDetailStore from "@/store/challengeDetail.store"
+import useMilestoneCreateStore from "@/store/milestoneCreate.store"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 
 import BookmarkIcon from "@/components/Icon/BookmarkIcon"
 import ImportIcon from "@/components/Icon/ImportIcon"
+import Loading from "@/components/Loading"
 
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
 
-function ChallengeLike({ challengeId }: { challengeId: string }) {
+interface ChallengeLikeProps {
+  challengeId: string
+}
+function ChallengeLike({ challengeId }: ChallengeLikeProps) {
   const router = useRouter()
   const [isLiked, setIsLiked] = useState<boolean>(false)
   const queryClient = useQueryClient()
@@ -165,6 +171,13 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
 
     handleLikeMutate()
   }
+  // copy 버튼 클릭시 실행 함수
+  const handleClickCopy = (challengeId: string) => {
+    return router.push(`/challenge/${challengeId}/import`)
+  }
+
+  if (isPending) return <div />
+  if (isError) return <div>Error loading data</div>
 
   return (
     <div className="col-span-1 flex gap-4">
@@ -175,14 +188,14 @@ function ChallengeLike({ challengeId }: { challengeId: string }) {
         <BookmarkIcon
           width={32}
           height={32}
-          className={`h-[32px] w-full`}
+          className={`h-[32px] w-[32px]`}
           color={isLiked ? "#FC5A6B" : "none"}
           stroke={isLiked ? "#FC5A6B" : ""}
         />
       </button>
       {challengeDetail.state === "on_complete" && (
         <button className="flex w-full flex-col items-center justify-center transition-all duration-300">
-          <ImportIcon width={32} height={32} className={`h-[32px] w-full`} />
+          <ImportIcon width={32} height={32} className={`h-[32px] w-[32px]`} />
         </button>
       )}
     </div>

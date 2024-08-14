@@ -7,6 +7,19 @@ export async function middleware(request: NextRequest) {
       request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token.0")) ||
     request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token")
 
+  console.log("로그인 정보", isLoggedIn)
+  // 로그인 상태일때 로그인, 회원가입 페이지 막기~
+  if (
+    isLoggedIn &&
+    (request.nextUrl.pathname === "/auth/sign-up" ||
+      request.nextUrl.pathname === "/auth/login-email" ||
+      request.nextUrl.pathname === "/auth/login")
+  ) {
+    const newsfeedUrl = request.nextUrl.clone()
+    newsfeedUrl.pathname = "/newsfeed"
+    return NextResponse.redirect(newsfeedUrl)
+  }
+
   // 로그인 필요한 경로 확인
   if (
     !isLoggedIn &&

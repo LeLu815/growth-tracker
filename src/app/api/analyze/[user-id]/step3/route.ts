@@ -28,7 +28,6 @@ export async function GET(
 
   const { data, error } = await supabase.rpc("get_state_counts_by_user", param)
 
-  debugger
   if (error) {
     throw new Error(error.message)
   }

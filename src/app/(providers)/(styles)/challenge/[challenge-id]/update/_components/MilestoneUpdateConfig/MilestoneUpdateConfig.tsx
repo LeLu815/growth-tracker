@@ -184,9 +184,15 @@ function MilestoneUpdateConfig({ goNextPage }: MilestoneCreateConfigProps) {
         <div className="h-[40px]" />
         <Input
           label="루틴명"
+          variant="login"
           placeholder="루틴명을 입력해주세요"
           value={milestoneNameInput}
-          onChange={(e) => setMilestoneNameInput(e.target.value)}
+          onChange={(e) => {
+            if (e.target.value.length > 20) {
+              return
+            }
+            setMilestoneNameInput(e.target.value)
+          }}
         />
         <div>
           <ContentTitle className="mb-[20px] mt-[44px]">
@@ -214,7 +220,7 @@ function MilestoneUpdateConfig({ goNextPage }: MilestoneCreateConfigProps) {
                 <Chip
                   label={value}
                   selected={currentDayGroupType === value}
-                  intent="secondary"
+                  intent="third"
                   variant="outline"
                 />
               </li>
@@ -257,6 +263,7 @@ function MilestoneUpdateConfig({ goNextPage }: MilestoneCreateConfigProps) {
               placeholder="ex. 영단어 100개씩 암기"
               value={routineInpt}
               onChange={(e) => {
+                if (e.target.value.length > 20) return
                 setRoutineInput(e.target.value)
               }}
             />
@@ -284,7 +291,7 @@ function MilestoneUpdateConfig({ goNextPage }: MilestoneCreateConfigProps) {
         </form>
       </div>
       <div className="h-[100px]" />
-      <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
+      <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[480px] bg-white px-[20px] pb-8 pt-5">
         <Button
           onClick={() => {
             // 여기에서 그동안 쌓아둔 데이터를 모두 주스탠드에 넣은 작업을 해야함

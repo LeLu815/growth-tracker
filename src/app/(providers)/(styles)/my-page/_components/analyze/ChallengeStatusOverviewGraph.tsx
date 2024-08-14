@@ -12,6 +12,7 @@ import {
 import { Doughnut } from "react-chartjs-2"
 
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
+import Loading from "@/components/Loading"
 
 import { Step3GraphType } from "../../../../../../../types/myPageGraph.type"
 
@@ -51,7 +52,15 @@ const ChallengeStatusOverviewGraph = () => {
         tooltip: {
           enabled: false,
         },
+        datalabels: {
+          display: (context) => context.dataset.data[context.dataIndex] !== 0, // 값이 0이 아닌 경우에만 표시
+          color: "#000",
+          font: {
+            size: 14,
+          },
+        },
       },
+
       cutout: "40%",
     }),
     []
@@ -149,9 +158,8 @@ const ChallengeStatusOverviewGraph = () => {
     }
   }, [data])
 
-  if (isPending) {
-    return "loading..."
-  }
+  if (isPending) return <Loading />
+  if (isError) return <div>Error loading data</div>
 
   if (!isPossibleStatistics) {
     return (

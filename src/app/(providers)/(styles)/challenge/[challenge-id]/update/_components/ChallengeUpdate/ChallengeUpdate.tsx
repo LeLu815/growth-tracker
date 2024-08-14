@@ -8,7 +8,10 @@ import {
   GETroutines,
 } from "@/api/supabase/challenge"
 import { useModal } from "@/context/modal.context"
-import useChallengeCreateStore from "@/store/challengeCreate.store"
+import useChallengeCreateStore, {
+  categories,
+  defaultSelected,
+} from "@/store/challengeCreate.store"
 import useMilestoneCreateStore, {
   MilestoneType,
 } from "@/store/milestoneCreate.store"
@@ -52,12 +55,42 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
       const milestones = await GETmilestones(challengeId)
       const temp_milestoneIds: string[] = []
 
+      // 만약에 챌린지가 끝난 상태라면 수정이 불가능하다. 되돌려보내기
+      if (
+        challengeObj &&
+        challengeObj[0].state !== "on_progress" &&
+        challengeObj[0].state !== "not_started"
+      ) {
+        open({
+          type: "alert",
+          content: "진행중인 챌린지만 수정이 가능합니다.",
+        })
+        return router.back()
+      }
+
+      // 오늘 날짜
+      const today = new Date() // 현재 날짜와 시간
+      const earliestTime = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        0,
+        0,
+        0,
+        0
+      )
       const routinesPromise =
         milestones &&
         milestones.map((milestone) => {
-          temp_milestoneIds.push(milestone.id)
+          // 오늘 날짜보다 이전에 실행된 마일스톤 아이디 필더링 하기
+          if (
+            new Date(milestone.start_at).getTime() >= earliestTime.getTime()
+          ) {
+            temp_milestoneIds.push(milestone.id)
+          }
           return GETroutines(milestone.id)
         })
+
       setMilestoneIds(temp_milestoneIds)
       const routines = routinesPromise ? await Promise.all(routinesPromise) : []
 
@@ -90,7 +123,7 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
   }, [])
 
   return (
-    <div className="mx-auto flex h-screen max-w-[640px] flex-col">
+    <div className="mx-auto flex h-screen max-w-[480px] flex-col">
       {selectedPageName === "switch" && (
         <>
           <ChallengePageTitle
@@ -99,14 +132,17 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
             titleHidden={false}
             handleClickGoBack={() => {
               // 컨펌 열기 => 확인이면 뒤로 가기
-              if (isModified) {
-                return open({
-                  type: "confirm",
-                  content: "저장되지 않은 변경사항은 삭제됩니다.",
-                  onConfirm: () => router.back(),
-                })
-              }
-              return router.back()
+              return open({
+                type: "confirm",
+                content: "저장되지 않은 변경사항은 삭제됩니다.",
+                onConfirm: () => {
+                  setData([])
+                  setRange(defaultSelected)
+                  setCategory(categories[0])
+                  setGoal("")
+                  router.back()
+                },
+              })
             }}
           />
           <MilestoneCreateSwitch

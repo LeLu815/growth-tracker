@@ -1,6 +1,7 @@
 "use client"
 
 import { ChangeEventHandler, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
 import { useToast } from "@/context/toast.context"
@@ -30,6 +31,8 @@ function SignUpClient() {
   const { open } = useModal()
   const { showToast } = useToast()
   const supabase = createClient()
+
+  const router = useRouter()
 
   const handleChangeNickname: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = e.target.value
@@ -129,6 +132,8 @@ function SignUpClient() {
     setPassword("")
     setPasswordConfirm("")
     setNickname("")
+
+    router.push("/newsfeed")
   }
 
   const toggleShowPassword = () => {

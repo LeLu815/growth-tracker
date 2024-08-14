@@ -98,10 +98,12 @@ function ChallengeName({
             </div>
             <Button
               intent="secondary"
+              size="sm"
               variant="rounded"
               onClick={() => {
                 handleClickRandomImgBtn()
               }}
+              className="mb-[24px]"
             >
               <div className="flex items-center justify-center gap-1">
                 <ResetIcon />
@@ -110,8 +112,14 @@ function ChallengeName({
             </Button>
           </div>
           <Input
+            variant="login"
             label={"챌린지 명"}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value.length > 20) {
+                return
+              }
+              return setInputValue(e.target.value)
+            }}
             value={inputValue}
             placeholder="챌린지명을 입력해주세요"
           />
@@ -120,7 +128,8 @@ function ChallengeName({
               챌린지명을 입력해주세요
             </span>
           )}
-          <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px] bg-white px-[20px] pb-8 pt-5">
+          <div className="h-[100px]" />
+          <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[480px] bg-white px-[20px] pb-8 pt-5">
             <Button
               size="lg"
               disabled={inputValue === ""}

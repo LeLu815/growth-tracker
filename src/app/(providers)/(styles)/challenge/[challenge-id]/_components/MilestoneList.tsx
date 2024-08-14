@@ -37,18 +37,18 @@ function MilestoneList({ milestones }: { milestones: MilestoneType[] }) {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-[640px] flex-col items-start gap-[12px]">
+    <div className="mx-auto flex w-full max-w-[640px] flex-col items-start gap-[12px] px-[20px]">
       {milestones?.map((milestone, index) => {
         const isOpen = openIndexes.includes(index)
         return (
           <div
             key={milestone.id}
-            className="flex cursor-pointer flex-col items-start gap-[10px] self-stretch rounded-[5px] border-[1px] border-solid border-[#E0E0E0] p-[14px_12px] "
+            className="flex cursor-pointer flex-col items-start gap-[10px] self-stretch rounded-[5px] border-[1px] border-solid border-[#E0E0E0] p-[14px_12px]"
             onClick={() => toggleAccordion(index)}
           >
             <div className="flex flex-col items-start gap-[20px] self-stretch">
               <div className="flex items-center justify-between self-stretch">
-                <div className="text-[16px] font-bold text-[#171717] pt-2">
+                <div className="text-title-xs text-[#171717] pt-2">
                   {milestone.name}
                 </div>
                 <span className="text-2xl">
@@ -58,19 +58,19 @@ function MilestoneList({ milestones }: { milestones: MilestoneType[] }) {
               {isOpen && (
                 <div className="flex w-[161px] flex-col items-start gap-[4px]">
                   <div className="flex gap-[8px]">
-                    <div className={"text-[12px] font-medium text-[#171717]"}>
+                    <div className={"text-body-xs text-[#171717]"}>
                       루틴 기간
                     </div>
-                    <div className={"text-[12px] font-medium text-[#FF7D3D]"}>
+                    <div className={"text-body-xs text-[#FF7D3D]"}>
                       {milestone.total_day}일
                     </div>
                   </div>
 
                   <div className={"flex gap-[8px]"}>
-                    <div className={"text-[12px] font-medium text-[#171717]"}>
+                    <div className={"text-body-xs text-[#171717]"}>
                       실천요일
                     </div>
-                    <div className={"text-[12px] font-medium text-[#FF7D3D]"}>
+                    <div className={"text-body-xs text-[#FF7D3D]"}>
                       {milestone.weeks
                         .map((week, index) => {
                           return { value: week, key: numberToWeek(index) }

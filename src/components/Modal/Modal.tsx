@@ -12,7 +12,7 @@ interface ModalProps {
   content?: string
   onConfirm?: () => void
   calendarProps?: {}
-  children?: React.ReactNode // 랜더할 컴포넌트를 위한 prop 추가
+  children?: React.ReactNode
 }
 
 const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
@@ -28,12 +28,33 @@ const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
     setTimeout(() => modal.close(), 300)
   }
 
-  const renderButtons = () => (
+  const renderAlertButtons = () => (
+    <div className="mt-6 flex w-full justify-center space-x-2">
+      <Button
+        variant="outline"
+        onClick={() => {
+          if (onConfirm) onConfirm()
+          handleCloseModal()
+        }}
+      >
+        확인
+      </Button>
+    </div>
+  )
+
+  const renderConfirmButtons = () => (
     <div className="mt-6 flex w-full justify-around space-x-2">
       <Button variant="outline" onClick={handleCloseModal}>
-        {type === "alert" ? "확인" : "취소"}
+        취소
       </Button>
-      {type === "confirm" && <Button onClick={onConfirm}>확인</Button>}
+      <Button
+        onClick={() => {
+          if (onConfirm) onConfirm()
+          handleCloseModal()
+        }}
+      >
+        확인
+      </Button>
     </div>
   )
 
@@ -89,7 +110,8 @@ const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
               </div>
             )}
 
-            {renderButtons()}
+            {type === "alert" && renderAlertButtons()}
+            {type === "confirm" && renderConfirmButtons()}
           </div>
         </div>
       </CSSTransition>

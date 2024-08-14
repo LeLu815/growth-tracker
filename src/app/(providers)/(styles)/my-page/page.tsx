@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 
@@ -14,12 +15,18 @@ import {
 } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
 function UserInfoPage() {
-  const { logOut } = useAuth()
+  const { logOut, isLoggedIn } = useAuth()
   const router = useRouter()
 
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push("/auth/login-email")
+    }
+  }, [isLoggedIn, router])
+
   const handleLogout = async () => {
-    logOut()
-    router.push("/auth/login-email")
+    await logOut()
+    router.push("/newsfeed")
   }
 
   return (
@@ -30,8 +37,11 @@ function UserInfoPage() {
           <div className="flex w-full flex-col items-center rounded-lg p-5 shadow-md">
             <TopPercentGraph></TopPercentGraph>
           </div>
-          <ProfileMenu menuList={MY_INFO_LIST}></ProfileMenu>
-          <ProfileMenu menuList={CHALLENGE_MENU_LIST}></ProfileMenu>
+          <ProfileMenu menuList={MY_INFO_LIST} title={"정보"}></ProfileMenu>
+          <ProfileMenu
+            menuList={CHALLENGE_MENU_LIST}
+            title={"정보"}
+          ></ProfileMenu>
         </div>
         <div className={"h-[150px]"}>
           <Button
