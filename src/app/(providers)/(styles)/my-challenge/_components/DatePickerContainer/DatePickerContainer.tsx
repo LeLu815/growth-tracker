@@ -196,7 +196,7 @@ function DatePickerContainer({}) {
   }
   const todayDayOfWeek = format(startOfDay(Date.now()), "eee", { locale: ko })
   return (
-    <div className="w-full rounded-b-[10px] py-[20px] shadow-2">
+    <div className="w-full rounded-b-[10px] py-[20px] shadow-2 lg:shadow-none">
       <div className="flex items-center justify-between px-[20px]">
         <p className="text-start text-[18px] font-[700] leading-[135%]">
           {visibleMonth.replace("-", ". ")}

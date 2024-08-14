@@ -38,7 +38,7 @@ function FutureChallengeSection({
               챌린지 실행전
             </p>
             <p className="text-[11px] text-[#7A7A7A]">
-              {(challenge.start_at || "").replace(/-/g, ".")} 예정
+              {(challenge.start_at || "").replace(/-/g, ".").slice(5)} 예정
             </p>
           </div>
           {/* 아이콘 섹션 */}
@@ -61,7 +61,7 @@ function FutureChallengeSection({
       {/* 상세페이지 링크 */}
       <div className="mt-[16px] flex w-full justify-center">
         <p
-          className="text-[12px] text-[#1A1A1A]"
+          className="cursor-pointer text-[12px] text-[#1A1A1A]"
           onClick={() => {
             router.push(`/challenge/${challenge.id}`)
           }}

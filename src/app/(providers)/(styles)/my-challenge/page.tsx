@@ -20,7 +20,7 @@ function MyChallengePage() {
   } = useMyChallengePageContext()
 
   // 항상 표시되는 컴포넌트
-  const renderAlwaysVisibleComponents = () => (
+  const renderAlwaysVisibleMobileComponents = () => (
     <>
       <TopNavigation title="내 챌린지" />
       <MyChallengeNavBar />
@@ -43,7 +43,7 @@ function MyChallengePage() {
   // 모바일 레이아웃
   const renderMobileLayout = () => (
     <Page>
-      {renderAlwaysVisibleComponents()}
+      {renderAlwaysVisibleMobileComponents()}
       <div>
         {pageToView === "onProgress" ? (
           <>
@@ -58,7 +58,22 @@ function MyChallengePage() {
   )
 
   // 웹 레이아웃
-  const renderWebLayout = () => <Page>웨에에엡</Page>
+  const renderWebLayout = () => (
+    <Page>
+      <div className="flex gap-x-[30px] px-[40px] py-[114px]">
+        <div className="w-[594px] rounded-[20px] border-[1.5px] border-solid border-[#d9d9d9] px-[30px] py-[20px] shadow-2">
+          <DatePickerContainer />
+          <ChallengeList />
+        </div>
+        <div className="w-[320px]">
+          <h3 className="text-[20px] font-[700] leading-[27px]">
+            진행전 챌린지
+          </h3>
+          <FutureChallengeList />
+        </div>
+      </div>
+    </Page>
+  )
 
   // 조건에 따른 화면 렌더링
   if (
