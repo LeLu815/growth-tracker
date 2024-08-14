@@ -1,5 +1,8 @@
 "use client"
 
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
 
 import {
@@ -13,7 +16,7 @@ function ChallengeList() {
   const { selectedDate, structuredChallengeData } = useMyChallengePageContext()
 
   const CURRENT_DATE_NUMBER = parseInt(selectedDate.replace(/-/g, ""))
-
+  const router = useRouter()
   const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"]
 
   // 마일스톤 생성하는데 필요한 세부 데이터 구성하고 이를 기반으로
@@ -21,37 +24,37 @@ function ChallengeList() {
   const displayTargetMilestoneItem = (challenge: StructuredChallengeType) => {
     return challenge.milestones?.map((milestone, index) => {
       // 요일 필터링 작업 위해 마일스톤 시행 요일이 담긴 배열 형성해주는 함수
-      const generatemilestoneDoDaysArray = (
-        milestone: StructuredMilestoneType
-      ) => {
-        const milestoneDoDays: string[] = []
-        if (milestone.is_sun) {
-          milestoneDoDays.push(DAYS_OF_WEEK[0])
-        }
-        if (milestone.is_mon) {
-          milestoneDoDays.push(DAYS_OF_WEEK[1])
-        }
-        if (milestone.is_tue) {
-          milestoneDoDays.push(DAYS_OF_WEEK[2])
-        }
-        if (milestone.is_wed) {
-          milestoneDoDays.push(DAYS_OF_WEEK[3])
-        }
-        if (milestone.is_thu) {
-          milestoneDoDays.push(DAYS_OF_WEEK[4])
-        }
-        if (milestone.is_fri) {
-          milestoneDoDays.push(DAYS_OF_WEEK[5])
-        }
-        if (milestone.is_sat) {
-          milestoneDoDays.push(DAYS_OF_WEEK[6])
-        }
-
-        return milestoneDoDays
-      }
-      const milestoneDoDays = generatemilestoneDoDaysArray(milestone)
 
       if (milestone.challenge_id == challenge.id) {
+        const generatemilestoneDoDaysArray = (
+          milestone: StructuredMilestoneType
+        ) => {
+          const milestoneDoDays: string[] = []
+          if (milestone.is_sun) {
+            milestoneDoDays.push(DAYS_OF_WEEK[0])
+          }
+          if (milestone.is_mon) {
+            milestoneDoDays.push(DAYS_OF_WEEK[1])
+          }
+          if (milestone.is_tue) {
+            milestoneDoDays.push(DAYS_OF_WEEK[2])
+          }
+          if (milestone.is_wed) {
+            milestoneDoDays.push(DAYS_OF_WEEK[3])
+          }
+          if (milestone.is_thu) {
+            milestoneDoDays.push(DAYS_OF_WEEK[4])
+          }
+          if (milestone.is_fri) {
+            milestoneDoDays.push(DAYS_OF_WEEK[5])
+          }
+          if (milestone.is_sat) {
+            milestoneDoDays.push(DAYS_OF_WEEK[6])
+          }
+
+          return milestoneDoDays
+        }
+        const milestoneDoDays = generatemilestoneDoDaysArray(milestone)
         const milestoneStartDate = parseInt(
           milestone.start_at?.replace(/-/g, "") || "0"
         )
@@ -70,6 +73,36 @@ function ChallengeList() {
               milestone={milestone}
               milestoneDoDays={milestoneDoDays}
             />
+          )
+        } else {
+          return (
+            <section key={challenge.goal}>
+              <div className="flex gap-x-[24px]">
+                {/* 이미지 */}
+                <div className="h-[84px] w-[84px] rounded-md bg-[#DDDDDD]"></div>
+                {/* 이미지 옆 모든 것 */}
+                <div className="flex grow flex-col gap-y-[12px]">
+                  {/* 제목과 열기버튼 */}
+                  <div className="flex w-full justify-between">
+                    <h3 className="text-title-xs font-bold">
+                      {challenge.goal}
+                    </h3>
+                  </div>
+                  {/* 안내 메시지 */}
+                  <p className="text-xs">{"생성한 루틴이 아직 없어요"}</p>
+                </div>
+              </div>
+              <div className="mt-[9px] flex flex-col gap-y-3">
+                <p
+                  onClick={() => {
+                    router.push(`/challenge/${challenge.id}`)
+                  }}
+                  className="w-full cursor-pointer text-center text-[10px] font-[500] leading-[135%] text-black"
+                >
+                  {`챌린지 정보 확인 >`}
+                </p>
+              </div>
+            </section>
           )
         }
       }

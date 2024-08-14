@@ -134,22 +134,24 @@ function NewsfeedClient() {
 
   return (
     <>
-      <div>
-        <SearchBar onSearch={handleSearch} />
-      </div>
-      {/* 카테고리 */}
-      <CategorySelector
-        category={category}
-        onSelectCategory={handleCategoryClick}
-      />
+      <div className="">
+        <div>
+          <SearchBar onSearch={handleSearch} />
+        </div>
+        {/* 카테고리 */}
+        <CategorySelector
+          category={category}
+          onSelectCategory={handleCategoryClick}
+        />
 
-      {/* 정렬 */}
-      <SortSelector
-        filter={filter}
-        showCompleted={showCompleted}
-        onChangeFilter={handleFilterChange}
-        onToggleShowComplete={handleToggleShowCompleted}
-      />
+        {/* 정렬 */}
+        <SortSelector
+          filter={filter}
+          showCompleted={showCompleted}
+          onChangeFilter={handleFilterChange}
+          onToggleShowComplete={handleToggleShowCompleted}
+        />
+      </div>
 
       {/* 목록 */}
       {isLoading ? (
@@ -161,7 +163,7 @@ function NewsfeedClient() {
           <p className="text-body-s">챌린지를 생성해보세요</p>
         </div>
       ) : (
-        <div className="h-full pb-[60px]">
+        <ul className="grid grid-cols-1 gap-x-6 pb-[60px] md:grid-cols-2 lg:mt-[180px] lg:grid-cols-3 lg:gap-y-10">
           {data?.pages
             .flat()
             .map((post) => (
@@ -172,7 +174,7 @@ function NewsfeedClient() {
               />
             ))}
           <div ref={loadMore}>{isFetchingNextPage && <div>로딩중...</div>}</div>
-        </div>
+        </ul>
       )}
     </>
   )

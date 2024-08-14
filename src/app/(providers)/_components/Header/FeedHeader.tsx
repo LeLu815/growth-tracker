@@ -5,7 +5,7 @@ import BaseHeader from "./BaseHeader"
 
 function FeedHeader() {
   return (
-    <BaseHeader className="mx-auto max-w-[480px] bg-white">
+    <BaseHeader className="mx-auto w-full bg-white">
       <div className="relative flex w-full items-center justify-between">
         <div className="absolute right-0">
           <Notice />

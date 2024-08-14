@@ -1,18 +1,16 @@
 import { PropsWithChildren } from "react"
 import classNames from "classnames"
 
-interface PageProps {
+interface PageProps extends PropsWithChildren {
   className?: string
 }
-const Page = ({ children, className = "" }: PropsWithChildren<PageProps>) => {
+
+const Page = ({ children, className }: PageProps) => {
   return (
     <main
-      className={classNames(
-        "border-box mx-auto flex w-full min-w-[320px] max-w-[480px] flex-1 flex-col overflow-y-auto scrollbar-hide",
-        className
-      )}
+      className={`border-box mx-auto flex w-full min-w-[320px] max-w-[480px] flex-1 flex-col overflow-y-auto scrollbar-hide sm:max-w-[480px] md:max-w-[768px] lg:max-w-[1024px] ${className}`}
     >
-      <div className="flex flex-1 flex-col scrollbar-hide">{children}</div>
+      {children}
     </main>
   )
 }

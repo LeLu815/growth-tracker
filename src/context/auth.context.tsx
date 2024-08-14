@@ -145,19 +145,19 @@ export function AuthProvider({ children }: PropsWithChildren) {
       }
     }
 
-    // setMe(responseData)
-    // fetchUserData(responseData.id)
-    // return { status: 200, message: "" }
-    // 회원가입이 성공적으로 완료되면 로그인 처리를 합니다.
-    const loginResponse = await logIn(email, password)
-    if (loginResponse.status !== 200) {
-      return {
-        status: loginResponse.status,
-        message: "회원가입은 성공했지만 자동 로그인이 실패했습니다.",
-      }
-    }
-
+    setMe(responseData)
+    await fetchUserData(responseData.id)
     return { status: 200, message: "" }
+
+    // const loginResponse = await logIn(email, password)
+    // if (loginResponse.status !== 200) {
+    //   return {
+    //     status: loginResponse.status,
+    //     message: "회원가입은 성공했지만 자동 로그인이 실패했습니다.",
+    //   }
+    // }
+
+    // return { status: 200, message: "" }
   }
 
   // 로그아웃 함수

@@ -8,7 +8,10 @@ interface BoxProps {
 function Box({ children, className }: PropsWithChildren<BoxProps>) {
   return (
     <section
-      className={classNames("h-full p-[20px] scrollbar-hide", className)}
+      className={classNames(
+        "mx-auto h-full w-full p-[20px] scrollbar-hide",
+        className
+      )}
     >
       {children}
     </section>
