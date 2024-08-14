@@ -1,11 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-"use client"
-
 import React, {
   ChangeEvent,
   PropsWithChildren,
   useCallback,
   useEffect,
+  useRef, // useRef 추가
   useState,
 } from "react"
 import {
@@ -47,6 +46,7 @@ function RoutineCheckBox({
   })
 
   const [isChecked, setIsChecked] = useState(!!targetRD) // 체크박스 상태를 로컬로 관리
+  const isFirstRender = useRef(true) // 처음 렌더링 여부를 확인하기 위한 useRef 추가
 
   const addRoutineDoneMutation = useMutation({
     mutationFn: async () => {
@@ -100,6 +100,11 @@ function RoutineCheckBox({
   })
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false // 첫 번째 렌더링 시에는 실행을 건너뜀
+      return
+    }
+
     const updateIsSuccess = async () => {
       const todayDoneRoutineArray = routineDone.filter((item) => {
         return (

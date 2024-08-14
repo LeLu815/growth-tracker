@@ -10,6 +10,7 @@ import { v4 } from "uuid"
 
 import Button from "@/components/Button"
 import CloseIcon02 from "@/components/Icon/CloseIcon02"
+import Loading from "@/components/Loading"
 
 import { DiaryType } from "../../../../../../../types/diary.type"
 
@@ -49,7 +50,7 @@ function DiarySection({
 
   const queryClient = useQueryClient()
   if (diaryPending) {
-    return <div className="mt-5">로딩 중</div>
+    return <Loading />
   }
 
   if (diaryError) {

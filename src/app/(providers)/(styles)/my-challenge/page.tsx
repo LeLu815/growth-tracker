@@ -1,5 +1,6 @@
 "use client"
 
+import Loading from "@/components/Loading"
 import Page from "@/components/Page"
 import TopNavigation from "@/components/TopNavigation"
 
@@ -32,7 +33,7 @@ function MyChallengePage() {
     return (
       <Page>
         {renderAlwaysVisibleComponents()}
-        <div className="mt-5">로딩 중</div>
+        <Loading />
       </Page>
     )
   }
