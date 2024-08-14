@@ -4,7 +4,7 @@ import SuccessRateGraph from "@/app/(providers)/(styles)/my-page/_components/ana
 
 function DetailGraph() {
   return (
-    <Box className={"flex flex-col gap-10"}>
+    <Box className={"mt-[28px] flex flex-col gap-10"}>
       <div>
         <SuccessRateGraph />
       </div>

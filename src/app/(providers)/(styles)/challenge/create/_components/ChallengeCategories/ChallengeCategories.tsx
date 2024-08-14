@@ -58,7 +58,7 @@ function ChallengeCategories({
       />
 
       <Page>
-        <Box className="flex-1">
+        <Box className="mt-[28px] flex-1">
           <SubTitle className="justify-center">
             어떤 챌린지에 도전하세요?
           </SubTitle>
