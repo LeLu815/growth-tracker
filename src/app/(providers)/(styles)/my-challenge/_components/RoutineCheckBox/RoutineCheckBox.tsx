@@ -4,6 +4,7 @@
 import React, {
   ChangeEvent,
   PropsWithChildren,
+  useCallback,
   useEffect,
   useState,
 } from "react"
@@ -13,6 +14,7 @@ import {
 } from "@/api/supabase/routineDone"
 import { PUTisSuccessRoutineDoneDaily } from "@/api/supabase/routineDoneDaily"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { debounce } from "lodash"
 import { v4 } from "uuid"
 
 import { RoutineType } from "../../../../../../../types/supabase.type"
@@ -35,7 +37,7 @@ function RoutineCheckBox({
   routineDoneDailyId,
 }: PropsWithChildren<RoutineCheckBoxProps>) {
   const { todayDate, routineDone } = useMyChallengePageContext()
-  const [temp, setTemp] = useState<boolean>(true)
+
   const queryClient = useQueryClient()
 
   const targetRD = routineDone.find((item) => {
@@ -107,17 +109,26 @@ function RoutineCheckBox({
     updateIsSuccess()
   }, [routineDone])
 
+  // debounce를 useCallback으로 감싸서 메모이제이션 처리
+  const debouncedMutation = useCallback(
+    debounce((checked: boolean) => {
+      if (checked) {
+        if (!targetRD) {
+          addRoutineDoneMutation.mutate()
+        }
+      } else {
+        if (targetRD) {
+          deleteRoutineDoneMutation.mutate()
+        }
+      }
+    }, 300),
+    [addRoutineDoneMutation, deleteRoutineDoneMutation]
+  )
+
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      if (!targetRD) {
-        addRoutineDoneMutation.mutate()
-      }
-    } else {
-      if (targetRD) {
-        deleteRoutineDoneMutation.mutate()
-      }
-    }
-    setTemp(!temp)
+    const isChecked = event.target.checked
+
+    debouncedMutation(isChecked) // debounce 적용된 서버 요청 호출
   }
 
   return (

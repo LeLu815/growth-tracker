@@ -97,7 +97,7 @@ function ChallengeList() {
                   onClick={() => {
                     router.push(`/challenge/${challenge.id}`)
                   }}
-                  className="w-full text-center text-[10px] font-[500] leading-[135%] text-black"
+                  className="w-full cursor-pointer text-center text-[10px] font-[500] leading-[135%] text-black"
                 >
                   {`챌린지 정보 확인 >`}
                 </p>
@@ -127,7 +127,6 @@ function ChallengeList() {
     })
 
     if (onDateChallenges.length > 0) {
-      console.log(onDateChallenges)
       return onDateChallenges.map((challenge) => {
         return (
           <div
