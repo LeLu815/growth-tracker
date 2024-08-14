@@ -37,7 +37,6 @@ function RoutineCheckBox({
   routineDoneDailyId,
 }: PropsWithChildren<RoutineCheckBoxProps>) {
   const { todayDate, routineDone } = useMyChallengePageContext()
-
   const queryClient = useQueryClient()
 
   const targetRD = routineDone.find((item) => {
@@ -46,6 +45,8 @@ function RoutineCheckBox({
       item.routine_id === routineId
     )
   })
+
+  const [isChecked, setIsChecked] = useState(!!targetRD) // 체크박스 상태를 로컬로 관리
 
   const addRoutineDoneMutation = useMutation({
     mutationFn: async () => {
@@ -60,6 +61,10 @@ function RoutineCheckBox({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["fetchRoutineDone"] })
     },
+    onError: () => {
+      alert("루틴 완료를 저장하는 데 실패했습니다. 다시 시도해주세요.")
+      setIsChecked(false) // 실패 시 상태 복구
+    },
   })
 
   const deleteRoutineDoneMutation = useMutation({
@@ -73,6 +78,10 @@ function RoutineCheckBox({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["fetchRoutineDone"] })
+    },
+    onError: () => {
+      alert("루틴 완료 취소를 저장하는 데 실패했습니다. 다시 시도해주세요.")
+      setIsChecked(true) // 실패 시 상태 복구
     },
   })
 
@@ -126,9 +135,10 @@ function RoutineCheckBox({
   )
 
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const isChecked = event.target.checked
+    const checked = event.target.checked
+    setIsChecked(checked) // 일단 상태를 업데이트
 
-    debouncedMutation(isChecked) // debounce 적용된 서버 요청 호출
+    debouncedMutation(checked) // debounce 적용된 서버 요청 호출
   }
 
   return (
@@ -136,10 +146,8 @@ function RoutineCheckBox({
       <input
         type="checkbox"
         className="h-[20px] w-[20px] rounded-lg accent-[#FC5A6B] hover:cursor-pointer"
-        onChange={(event) => {
-          handleCheckboxChange(event)
-        }}
-        checked={targetRD ? true : false}
+        onChange={handleCheckboxChange}
+        checked={isChecked}
         disabled={selectedDate === todayDate ? false : true}
       />
     </>
