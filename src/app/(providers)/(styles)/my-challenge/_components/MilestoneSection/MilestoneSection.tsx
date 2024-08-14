@@ -2,6 +2,7 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { PropsWithChildren, useEffect, useState } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { POSTnewRoutineDoneDaily } from "@/api/supabase/routineDoneDaily"
 import { useModal } from "@/context/modal.context"
@@ -22,6 +23,7 @@ interface MilestoneSectionProps {
   milestoneDoDays: string[]
   challengeId: string
   challengeGoal: string
+  challengeImage: string
 }
 
 function MilestoneSection({
@@ -29,6 +31,7 @@ function MilestoneSection({
   milestoneDoDays, // 마일스톤 시행 요일이 담긴 배열
   challengeId,
   challengeGoal,
+  challengeImage,
 }: PropsWithChildren<MilestoneSectionProps>) {
   const {
     userId,
@@ -171,7 +174,14 @@ function MilestoneSection({
         onClick={toggleVisibility}
       >
         {/* 이미지 */}
-        <div className="h-[84px] w-[84px] rounded-md bg-[#DDDDDD]"></div>
+        <Image
+          src={challengeImage}
+          alt={challengeGoal}
+          width={84}
+          height={84}
+          className="h-[84px] w-[84px] rounded-md object-cover"
+        />
+        {/* <div className="h-[84px] w-[84px] rounded-md bg-[#DDDDDD]"></div> */}
         {/* 이미지 옆 모든 것 */}
         <div className="flex grow flex-col gap-y-[12px]">
           {/* 제목과 열기버튼 */}
