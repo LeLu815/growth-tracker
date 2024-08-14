@@ -7,6 +7,7 @@ import {
   GETmilestones,
   GETroutines,
 } from "@/api/supabase/challenge"
+import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
 import useChallengeCreateStore, {
   categories,
@@ -28,8 +29,6 @@ interface ChallengeUpdateProps {
   milestoneId?: string
 }
 function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
-  // 수정 되었는지 여부 체크
-  const [isModified, setIsModified] = useState<boolean>(false)
   const [milestoneIds, setMilestoneIds] = useState<string[]>([])
   // 선택된 페이지 이름
   const [selectedPageName, setSelectedPageName] = useState<
@@ -47,6 +46,22 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
   const { open } = useModal()
   // 넥스트 라우터로 보내기
   const router = useRouter()
+  // 유저 데이터
+  const { me, userData } = useAuth()
+
+  // TODO: 최초 업데이트 유저면 gif 보여주기를 구현해야함. customModal
+  useEffect(() => {
+    if (userData?.is_challenge_first_create) {
+      open({
+        type: "custom",
+        children: (
+          <div className="gif-container mx-auto flex w-full max-w-[480px] items-center justify-center py-[20px]">
+            <img alt="챌린지 스위칭 이미지" src="/image/create_tutorial.gif" />
+          </div>
+        ),
+      })
+    }
+  }, [userData])
 
   // 데이터 불러오기 실패하면?
   useEffect(() => {
@@ -54,6 +69,11 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
       const challengeObj = await GETchallenge(challengeId)
       const milestones = await GETmilestones(challengeId)
       const temp_milestoneIds: string[] = []
+
+      // 작성자가 아니면 수정이 불가함
+      if (challengeObj && challengeObj[0].user_id !== me?.id) {
+        return
+      }
 
       // 만약에 챌린지가 끝난 상태라면 수정이 불가능하다. 되돌려보내기
       if (
@@ -120,7 +140,7 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
         setData(milestoneDatas)
       }
     })()
-  }, [])
+  }, [me])
 
   return (
     <div className="mx-auto flex h-screen max-w-[480px] flex-col">

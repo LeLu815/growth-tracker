@@ -98,6 +98,7 @@ function DragDropContainer({ challenge_id, range }: DragDropContainerProps) {
                 className="mt-4 flex w-full flex-col gap-4 overflow-y-auto pb-[10px]"
               >
                 {data.map((milestone, index) =>
+                  switchPossibleStartIndex !== -1 &&
                   index >= switchPossibleStartIndex ? (
                     <Draggable
                       key={milestone.id}

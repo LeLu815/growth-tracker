@@ -43,6 +43,8 @@ function MilestoneCreateSwitch({
   const { me } = useAuth()
   const router = useRouter()
 
+  console.log("data :", data)
+
   // 뮤테이션 함수 => db에 생성 저장하는 로직
   const {
     challengeCreateMutate,
