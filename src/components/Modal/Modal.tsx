@@ -11,11 +11,18 @@ interface ModalProps {
   type: "alert" | "confirm" | "calendar" | "custom"
   content?: string
   onConfirm?: () => void
+  onCancel?: () => void
   calendarProps?: {}
   children?: React.ReactNode
 }
 
-const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
+const Modal = ({
+  type,
+  content,
+  onConfirm,
+  onCancel,
+  calendarProps,
+}: ModalProps) => {
   const modal = useModal()
   const [isShow, setIsShow] = useState(false)
 
@@ -44,7 +51,13 @@ const Modal = ({ type, content, onConfirm, calendarProps }: ModalProps) => {
 
   const renderConfirmButtons = () => (
     <div className="mt-6 flex w-full justify-around space-x-2">
-      <Button variant="outline" onClick={handleCloseModal}>
+      <Button
+        variant="outline"
+        onClick={() => {
+          if (onCancel) onCancel()
+          handleCloseModal()
+        }}
+      >
         취소
       </Button>
       <Button
