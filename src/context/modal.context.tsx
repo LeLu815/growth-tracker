@@ -8,6 +8,7 @@ import Modal from "@/components/Modal/Modal"
 interface ModalProps {
   type: "alert" | "confirm" | "calendar" | "custom"
   content?: string
+  onCancel?: () => void
   onConfirm?: () => void
   children?: React.ReactNode
 }
@@ -35,6 +36,10 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
       ...options,
       onConfirm: () => {
         if (options.onConfirm) options.onConfirm()
+        close()
+      },
+      oncancel: () => {
+        if (options.onCancel) options.onCancel()
         close()
       },
     }
