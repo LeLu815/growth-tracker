@@ -7,7 +7,7 @@ import PlusComponent from "./_components/PlusComponent"
 
 export default function NewsfeedLayout({ children }: PropsWithChildren) {
   return (
-    <div className="relative flex justify-center">
+    <div className="relative">
       <Header />
       {children}
       <PlusComponent />

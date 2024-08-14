@@ -9,7 +9,7 @@ function Box({ children, className }: PropsWithChildren<BoxProps>) {
   return (
     <section
       className={classNames(
-        "mx-auto mt-[28px] h-full w-full p-[20px] scrollbar-hide",
+        "mx-auto h-full w-full p-[20px] scrollbar-hide",
         className
       )}
     >
