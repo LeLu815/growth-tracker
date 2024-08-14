@@ -89,7 +89,12 @@ function ChallengeList() {
                     </h3>
                   </div>
                   {/* 안내 메시지 */}
-                  <p className="text-xs">{"생성한 루틴이 아직 없어요"}</p>
+                  <div>
+                    <p className="text-xs">{"이 챌린지에 대해선 "}</p>
+                    <p className="text-xs">
+                      {"해당 날짜에 생성한 루틴이 아직 없어요"}
+                    </p>
+                  </div>
                 </div>
               </div>
               <div className="mt-[9px] flex flex-col gap-y-3">
