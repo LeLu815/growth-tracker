@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import BackHeader from "./BackHeader"
 import DefaultHeader from "./DefaultHeader"
 import FeedHeader from "./FeedHeader"
+import WebHeader from "./WebHeader"
 
 // 헤더 타입 정리
 type HeaderType = "default" | "feed" | "back"
@@ -31,15 +32,33 @@ const Header = () => {
 
   const SelectedHeader = headers[headerType]
 
-  switch (headerType) {
-    case "feed":
-      return <SelectedHeader />
-    case "back":
-      return <SelectedHeader title={title} />
+  return (
+    <>
+      <div className="sticky top-0 z-20 hidden lg:block">
+        <WebHeader />
+      </div>
 
-    default:
-      return <SelectedHeader />
-  }
+      <div className="sticky top-0 z-20 lg:hidden">
+        {headerType === "feed" ? (
+          <SelectedHeader />
+        ) : headerType === "back" ? (
+          <SelectedHeader title={title} />
+        ) : (
+          <SelectedHeader />
+        )}
+      </div>
+    </>
+  )
+
+  // switch (headerType) {
+  //   case "feed":
+  //     return <SelectedHeader />
+  //   case "back":
+  //     return <SelectedHeader title={title} />
+
+  //   default:
+  //     return <SelectedHeader />
+  // }
 }
 
 export default Header

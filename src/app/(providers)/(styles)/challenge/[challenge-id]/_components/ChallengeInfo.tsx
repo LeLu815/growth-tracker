@@ -164,7 +164,7 @@ function ChallengeInfo({ challengeId }: { challengeId: string }) {
   if (isError) return <div>Error loading data</div>
 
   return (
-    <div className={"mx-auto flex w-full max-w-[640px] flex-col"}>
+    <div className={"relative mx-auto flex w-full max-w-[640px] flex-col"}>
       {/*이미지*/}
       <ChallengeDetailPageTitle
         title={"상세페이지"}
