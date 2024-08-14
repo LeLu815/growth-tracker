@@ -11,7 +11,9 @@ function DefaultHeader({
   className,
 }: PropsWithChildren<DefaultHeaderProps>) {
   return (
-    <BaseHeader className={classNames(className, "mx-auto max-w-[480px]")}>
+    <BaseHeader
+      className={classNames(className, "mx-auto w-full min-w-[320px]")}
+    >
       {children}
     </BaseHeader>
   )

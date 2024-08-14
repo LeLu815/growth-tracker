@@ -42,13 +42,10 @@ function ChallengeCard({
   const formattedStartDate = startDate ? formatStartDate(startDate) : ""
 
   return (
-    <div
-      className="flex cursor-pointer flex-col rounded-lg bg-white shadow-sm"
-      style={{ border: "1px solid #E0E0E0" }}
-    >
-      <div className="flex w-full px-[12px] py-[14px]">
-        <div className="mr-4 flex w-1/4 min-w-[98px] flex-col">
-          <div className="relative flex h-full w-full flex-col items-start justify-between overflow-hidden rounded-[6px] border">
+    <>
+      <div className="flex w-full px-[12px] py-[14px] lg:flex-col">
+        <div className="mr-4 flex w-1/4 min-w-[98px] flex-col lg:w-full">
+          <div className="relative flex h-full w-full flex-col items-start justify-between overflow-hidden rounded-[6px] border lg:h-[170px] lg:w-full">
             <Image
               fill
               className="object-cover"
@@ -57,7 +54,7 @@ function ChallengeCard({
             />
           </div>
         </div>
-        <div className="flex w-3/4 flex-col">
+        <div className="flex w-3/4 flex-col lg:w-full">
           <div className="flex items-center justify-between">
             <p className="flex w-full justify-between text-title-s font-bold">
               <span>{title}</span>
@@ -100,8 +97,8 @@ function ChallengeCard({
         </div>
       </div>
       <div className="flex w-full">
-        <div className="mr-4 flex w-1/4 min-w-[98px]"></div>
-        <div className="flex w-3/4 flex-col items-end px-[12px]">
+        <div className="mr-4 flex w-1/4 min-w-[98px] lg:hidden"></div>
+        <div className="flex w-3/4 flex-col items-end px-[12px] lg:w-full">
           <ProgressBar progress={Math.round(successRate)} />
         </div>
       </div>
@@ -111,7 +108,7 @@ function ChallengeCard({
           <span className="ml-1 font-[500]">챌린지 상세 보기 &gt;</span>
         </button>
       </div>
-    </div>
+    </>
   )
 }
 

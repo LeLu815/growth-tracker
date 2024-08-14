@@ -11,8 +11,8 @@ import InvisibilityIcon from "@/components/Icon/InvisibilityIcon"
 import VisibilityIcon from "@/components/Icon/VisibilityIcon"
 import Input from "@/components/Input"
 
-import GoogleLoginButton from "../../login/_components/GoogleLoginButton"
-import KakaoLoginButton from "../../login/_components/KakaoLoginButton"
+import GoogleLoginButton from "./GoogleLoginButton"
+import KakaoLoginButton from "./KakaoLoginButton"
 
 function LoginEmailClient() {
   const [email, setEmail] = useState<string>("")

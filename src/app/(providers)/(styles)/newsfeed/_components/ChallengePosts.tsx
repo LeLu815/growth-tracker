@@ -15,13 +15,14 @@ function ChallengePosts({ posts, onClickPost }: ChallengePostsProps) {
   const { me } = useAuth()
 
   return (
-    <ul>
+    <>
       {posts.map((post: PostType) => {
         return (
           <li
             key={post.id}
             onClick={() => onClickPost(post.id)}
-            className="mb-[20px] cursor-pointer"
+            className="mb-[24px] flex cursor-pointer flex-col rounded-lg border border-grey-300 shadow-sm lg:mb-0"
+            style={{ border: "1px solid #E0E0E0" }}
           >
             <ChallengeCard
               challenge={post}
@@ -40,7 +41,7 @@ function ChallengePosts({ posts, onClickPost }: ChallengePostsProps) {
           </li>
         )
       })}
-    </ul>
+    </>
   )
 }
 
