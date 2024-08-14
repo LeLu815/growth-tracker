@@ -10,6 +10,7 @@ import { v4 } from "uuid"
 
 import Button from "@/components/Button"
 import CloseIcon02 from "@/components/Icon/CloseIcon02"
+import Loading from "@/components/Loading"
 
 import { DiaryType } from "../../../../../../../types/diary.type"
 
@@ -49,7 +50,7 @@ function DiarySection({
 
   const queryClient = useQueryClient()
   if (diaryPending) {
-    return <div className="mt-5">로딩 중</div>
+    return <Loading />
   }
 
   if (diaryError) {
@@ -81,8 +82,9 @@ function DiarySection({
         }
         if (currentDiary[0]) {
           const putResponse = PUTdiary(diaryToPost)
+          console.log(putResponse)
           putResponse.then((response) => {
-            if (response.statusText == "OK") {
+            if (response.statusText == "OK" || response.status == 200) {
               alert("수정이 완료되었습니다")
             } else {
               alert("오류 발생, 콘솔 확인")
@@ -93,7 +95,7 @@ function DiarySection({
         } else {
           const postResponse = POSTdiary(diaryToPost)
           postResponse.then((response) => {
-            if (response.statusText == "OK") {
+            if (response.statusText == "OK" || response.status == 200) {
               alert("저장이 완료되었습니다")
             } else {
               alert("오류 발생, 콘솔 확인")

@@ -166,7 +166,10 @@ function MilestoneSection({
 
   return (
     <section>
-      <div className="flex gap-x-[24px] cursor-pointer" onClick={toggleVisibility}>
+      <div
+        className="flex cursor-pointer gap-x-[24px]"
+        onClick={toggleVisibility}
+      >
         {/* 이미지 */}
         <div className="h-[84px] w-[84px] rounded-md bg-[#DDDDDD]"></div>
         {/* 이미지 옆 모든 것 */}
@@ -177,7 +180,7 @@ function MilestoneSection({
             {!checkMilestoneDayOfWeek ? (
               <></>
             ) : (
-              <button >
+              <button>
                 <ArrowDownIcon />
               </button>
             )}
@@ -251,7 +254,7 @@ function MilestoneSection({
             onClick={() => {
               router.push(`/challenge/${challengeId}`)
             }}
-            className="w-full text-center text-[10px] font-[500] leading-[135%] text-black"
+            className="w-full cursor-pointer text-center text-[10px] font-[500] leading-[135%] text-black"
           >
             {`챌린지 정보 확인 >`}
           </p>
