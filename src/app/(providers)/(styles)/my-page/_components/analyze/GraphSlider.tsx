@@ -1,15 +1,12 @@
 "use client"
 
-import Slider from "@ant-design/react-slick"
-
-import CategoryCountGraph from "@/app/(providers)/(styles)/my-page/_components/analyze/CategoryCountGraph"
 import ChallengeStatusOverviewGraph from "@/app/(providers)/(styles)/my-page/_components/analyze/ChallengeStatusOverviewGraph"
-import SuccessRateGraph from "@/app/(providers)/(styles)/my-page/_components/analyze/SuccessRateGraph"
 
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 import "./graphSlider.css"
-import Box from "@/components/Box";
+
+import Box from "@/components/Box"
 
 function GraphSlider() {
   const settings = {
@@ -23,12 +20,12 @@ function GraphSlider() {
   }
 
   return (
-    <Box className={"mx-auto mb-10 flex h-screen w-full max-w-[640px] flex-col gap-2"}>
-      <Slider {...settings}>
-        <SuccessRateGraph />
-        <CategoryCountGraph />
-        <ChallengeStatusOverviewGraph />
-      </Slider>
+    <Box className={"mx-auto h-full w-full max-w-[640px]"}>
+      {/*<Slider {...settings}>*/}
+      <ChallengeStatusOverviewGraph />
+      {/*<SuccessRateGraph />*/}
+      {/*<CategoryCountGraph />*/}
+      {/*</Slider>*/}
     </Box>
   )
 }

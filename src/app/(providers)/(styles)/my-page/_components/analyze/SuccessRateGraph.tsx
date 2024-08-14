@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useEffect, useMemo, useState } from "react"
 import { useAuth } from "@/context/auth.context"
 import { useQuery } from "@tanstack/react-query"
@@ -186,7 +188,7 @@ const SuccessRateGraph = () => {
   }
 
   return (
-    <div className={"mx-auto flex h-auto w-full flex-col gap-28"}>
+    <div className={"mx-auto flex w-full flex-col gap-20"}>
       <div className={"flex flex-col gap-4"}>
         <div className={"text-title-xl"}>
           이번달 누적 성공률은 <br />
@@ -197,7 +199,7 @@ const SuccessRateGraph = () => {
         </div>
         <div className={"text-body-m"}>{message}</div>
       </div>
-      <div className="h-[300px] w-full">
+      <div className="h-[200px] w-full">
         <Bar data={graphData} options={options} />
       </div>
     </div>

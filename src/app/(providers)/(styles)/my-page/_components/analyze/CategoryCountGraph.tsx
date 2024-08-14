@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect, useState } from "react"
 import { useAuth } from "@/context/auth.context"
 import { useQuery } from "@tanstack/react-query"
@@ -107,8 +109,8 @@ const CategoryCountGraph = () => {
 
   useEffect(() => {
     if (data) {
-      const categoryList:string[] = []
-      const countList:number[] = []
+      const categoryList: string[] = []
+      const countList: number[] = []
 
       let maxCategory = ""
       let maxCategoryCount = 0
@@ -215,7 +217,7 @@ const CategoryCountGraph = () => {
   }
 
   return (
-    <div className={"mx-auto flex w-full flex-col gap-28"}>
+    <div className={"mx-auto flex w-full flex-col gap-20"}>
       <div className={"flex flex-col gap-4"}>
         <div className={"text-title-xl"}>
           <p className={"inline text-primary"}>{category}</p> 항목을 <br /> 제일

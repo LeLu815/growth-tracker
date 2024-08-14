@@ -1,5 +1,3 @@
-"use client"
-
 import MyChallengeStorageBoxTab from "@/app/(providers)/(styles)/my-page/_components/challenge/MyChallengeStorageBoxTab"
 
 function MyChallengeListPage() {

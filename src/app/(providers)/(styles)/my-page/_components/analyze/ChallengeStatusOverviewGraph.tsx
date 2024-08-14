@@ -1,4 +1,7 @@
+"use client"
+
 import React, { useEffect, useMemo, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
@@ -11,8 +14,12 @@ import {
 } from "chart.js"
 import { Doughnut } from "react-chartjs-2"
 
+import Button from "@/components/Button"
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
 import Loading from "@/components/Loading"
+import OverViewCountCard from "@/app/(providers)/(styles)/my-page/_components/analyze/OverViewCountCard"
+import OverViewLegend from "@/app/(providers)/(styles)/my-page/_components/analyze/OverViewLegend"
+import { MY_CHALLENGE_ANALYZE_DETAIL } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
 import { Step3GraphType } from "../../../../../../../types/myPageGraph.type"
 
@@ -20,6 +27,7 @@ ChartJS.register(ArcElement, Tooltip, Legend)
 
 const ChallengeStatusOverviewGraph = () => {
   const { me } = useAuth()
+  const router = useRouter()
   const [isPossibleStatistics, setIsPossibleStatistics] = useState(false)
   const [challengeCount, setChallengeCount] = useState({
     totalCount: 0,
@@ -28,40 +36,43 @@ const ChallengeStatusOverviewGraph = () => {
     progressCount: 0,
   })
   const [graphData, setGraphData] = useState({
-    labels: ["실패 챌린지", "성공 챌린지", "진행중 챌린지"],
     datasets: [
       {
         data: [30, 45, 25],
         backgroundColor: ["#84C3D7", "#A2D0E1", "#CDE7F2"],
-        hoverBackgroundColor: ["#67C8DB", "#84C3D7", "#A2D0E1"],
         borderWidth: 0,
       },
     ],
   })
 
+  const labelList = useMemo(() => {
+    return [
+      {
+        name: "성공 챌린지",
+        color: "#FC5A6B",
+      },
+      {
+        name: "진행중 챌린지",
+        color: "#FEBEC5",
+      },
+      {
+        name: "실패 챌린지",
+        color: "#82D0DC",
+      },
+    ]
+  }, [])
+
   const options: ChartOptions<"doughnut"> = useMemo(
     () => ({
       plugins: {
         legend: {
-          position: "right",
-          labels: {
-            usePointStyle: true,
-            boxWidth: 100,
-          },
+          display: false,
         },
         tooltip: {
           enabled: false,
         },
-        datalabels: {
-          display: (context) => context.dataset.data[context.dataIndex] !== 0, // 값이 0이 아닌 경우에만 표시
-          color: "#000",
-          font: {
-            size: 14,
-          },
-        },
       },
-
-      cutout: "40%",
+      cutout: "60%",
     }),
     []
   )
@@ -115,42 +126,42 @@ const ChallengeStatusOverviewGraph = () => {
     }
   }
 
+  const processData = (data: Step3GraphType) => {
+    const count = {
+      totalCount: 0,
+      successCount: 0,
+      failCount: 0,
+      progressCount: 0,
+    }
+
+    data.forEach((item) => {
+      count.totalCount += item.state_count
+      switch (item.state) {
+        case "on_complete":
+          count.successCount = item.state_count
+          return
+        case "on_fail":
+          count.failCount = item.state_count
+          return
+        case "on_progress":
+          count.progressCount = item.state_count
+          return
+      }
+    })
+
+    return count
+  }
+
   useEffect(() => {
     if (data) {
-      const count = {
-        totalCount: 0,
-        successCount: 0,
-        failCount: 0,
-        progressCount: 0,
-      }
-
-      data.forEach((item) => {
-        count.totalCount += item.state_count
-        switch (item.state) {
-          case "on_complete":
-            count.successCount = item.state_count
-            return
-          case "on_fail":
-            count.failCount = item.state_count
-            return
-          case "on_progress":
-            count.progressCount = item.state_count
-            return
-        }
-      })
-
-      if (count.totalCount > 0) {
-        setIsPossibleStatistics(true)
-      }
-
+      const count = processData(data)
+      setIsPossibleStatistics(count.totalCount > 0)
       setChallengeCount(count)
       setGraphData({
-        labels: ["실패 챌린지", "성공 챌린지", "진행중 챌린지"],
         datasets: [
           {
-            data: [count.failCount, count.successCount, count.progressCount],
-            backgroundColor: ["#84C3D7", "#A2D0E1", "#CDE7F2"],
-            hoverBackgroundColor: ["#67C8DB", "#84C3D7", "#A2D0E1"],
+            data: [count.successCount, count.progressCount, count.failCount],
+            backgroundColor: labelList.map((item) => item.color),
             borderWidth: 0,
           },
         ],
@@ -174,51 +185,63 @@ const ChallengeStatusOverviewGraph = () => {
   }
 
   return (
-    <div>
-      <div className={"text-title-xl"}>
-        {compareNumbersReturnMessage(
-          challengeCount.successCount,
-          challengeCount.failCount,
-          "titleMessage"
-        )}{" "}
-        <br />{" "}
-        {challengeCount.successCount !== challengeCount.failCount
-          ? "더 많아요."
-          : "비슷해요"}
-        {compareNumbersReturnMessage(
-          challengeCount.successCount,
-          challengeCount.failCount,
-          "emoticon"
-        )}
-      </div>
-      <div className={"mt-2 text-body-m"}>
-        {compareNumbersReturnMessage(
-          challengeCount.successCount,
-          challengeCount.failCount,
-          "subMessage"
-        )}
-      </div>
-      <div className="h-[300px] w-full">
+    <div className={"flex flex-col gap-10"}>
+      <div className="flex w-full flex-col items-center gap-8">
+        <div>
+          <div className={"text-title-xl"}>
+            {compareNumbersReturnMessage(
+              challengeCount.successCount,
+              challengeCount.failCount,
+              "titleMessage"
+            )}{" "}
+            <br />{" "}
+            {challengeCount.successCount !== challengeCount.failCount
+              ? "더 많아요."
+              : "비슷해요"}
+            {compareNumbersReturnMessage(
+              challengeCount.successCount,
+              challengeCount.failCount,
+              "emoticon"
+            )}
+          </div>
+          <div className={"mt-2 text-body-m"}>
+            {compareNumbersReturnMessage(
+              challengeCount.successCount,
+              challengeCount.failCount,
+              "subMessage"
+            )}
+          </div>
+        </div>
         <Doughnut data={graphData} options={options} className={"mx-auto"} />
+        <OverViewLegend legendList={labelList}></OverViewLegend>
       </div>
       <hr />
-      <div className={"mt-6 flex flex-col items-start"}>
-        <div className={"flex gap-10"}>
-          <div className={"w-[100px] text-body-l"}>전체 챌린지</div>
-          <div className={"title-xs"}>{challengeCount.totalCount}개</div>
-        </div>
-        <div className={"flex gap-10"}>
-          <div className={"w-[100px] text-body-l"}>성공 챌린지</div>
-          <div className={"title-xs"}>{challengeCount.successCount}개</div>
-        </div>
-        <div className={"flex gap-10"}>
-          <div className={"w-[100px] text-body-l"}>실패 챌린지</div>
-          <div className={"title-xs"}>{challengeCount.failCount}개</div>
-        </div>
-        <div className={"flex gap-10"}>
-          <div className={"w-[100px] text-body-l"}>진행중인 챌린지</div>
-          <div className={"title-xs"}>{challengeCount.progressCount}개</div>
-        </div>
+      <div className="grid w-full grid-cols-2 justify-center gap-[8px]">
+        <OverViewCountCard
+          title="전체 챌린지"
+          count={challengeCount.totalCount}
+        />
+        <OverViewCountCard
+          title="성공 챌린지"
+          count={challengeCount.successCount}
+        />
+        <OverViewCountCard
+          title="실패 챌린지"
+          count={challengeCount.failCount}
+        />
+        <OverViewCountCard
+          title="진행중인 챌린지"
+          count={challengeCount.progressCount}
+        />
+      </div>
+      <div className={"mx-auto mt-[28px] w-full"}>
+        <Button
+          intent="primary"
+          size="lg"
+          onClick={() => router.push(MY_CHALLENGE_ANALYZE_DETAIL.path)}
+        >
+          자세히보기
+        </Button>
       </div>
     </div>
   )
