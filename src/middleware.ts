@@ -7,7 +7,6 @@ export async function middleware(request: NextRequest) {
       request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token.0")) ||
     request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token")
 
-  console.log("로그인 정보", isLoggedIn)
   // 로그인 상태일때 로그인, 회원가입 페이지 막기~
   if (
     isLoggedIn &&
