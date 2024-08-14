@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import { useRouter } from "next/navigation"
 
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"

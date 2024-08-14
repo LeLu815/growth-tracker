@@ -19,7 +19,7 @@ function MyChallengePage() {
     routineDoneDailyError,
   } = useMyChallengePageContext()
 
-  // Pending이나 Error 상태와 상관없이 항상 표시되는 컴포넌트
+  // 항상 표시되는 컴포넌트
   const renderAlwaysVisibleComponents = () => (
     <>
       <TopNavigation title="내 챌린지" />
@@ -28,32 +28,24 @@ function MyChallengePage() {
   )
 
   // 데이터 불러오는 상태가 Pending 또는 Error 상태인 경우에 표시되는 메시지
-  if (challengeDataPending || routineDoneDailyPending) {
-    return (
-      <Page>
-        {renderAlwaysVisibleComponents()}
+  const renderLoadingOrError = () => (
+    <Page>
+      {challengeDataPending || routineDoneDailyPending ? (
         <Loading />
-      </Page>
-    )
-  }
-
-  if (challengeDataError || routineDoneDailyError) {
-    return (
-      <Page>
-        {renderAlwaysVisibleComponents()}
+      ) : (
         <div className="mt-5 w-full text-center">
           서버에서 데이터 로드 중 오류 발생
         </div>
-      </Page>
-    )
-  }
+      )}
+    </Page>
+  )
 
-  // 모든 데이터가 불러와졌을 때 표시되는 컴포넌트
-  return (
+  // 모바일 레이아웃
+  const renderMobileLayout = () => (
     <Page>
       {renderAlwaysVisibleComponents()}
       <div>
-        {pageToView == "onProgress" ? (
+        {pageToView === "onProgress" ? (
           <>
             <DatePickerContainer />
             <ChallengeList />
@@ -63,6 +55,26 @@ function MyChallengePage() {
         )}
       </div>
     </Page>
+  )
+
+  // 웹 레이아웃
+  const renderWebLayout = () => <Page>웨에에엡</Page>
+
+  // 조건에 따른 화면 렌더링
+  if (
+    challengeDataPending ||
+    routineDoneDailyPending ||
+    challengeDataError ||
+    routineDoneDailyError
+  ) {
+    return renderLoadingOrError()
+  }
+
+  return (
+    <>
+      <div className="lg:hidden">{renderMobileLayout()}</div>
+      <div className="hidden lg:block">{renderWebLayout()}</div>
+    </>
   )
 }
 
