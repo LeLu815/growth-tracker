@@ -2,6 +2,7 @@
 
 import { FormEventHandler, useEffect, useState } from "react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
 import { useToast } from "@/context/toast.context"
@@ -55,7 +56,10 @@ function ChallengeCreateBrower() {
     useChallengeQuery()
   // 유저데이터
   const { me } = useAuth()
+  // 모달
   const { open } = useModal()
+  // 라우터
+  const router = useRouter()
 
   // 상태---------------------------------------------------------------------------------
   // 1. 랜덤 이미지 생성
@@ -502,6 +506,9 @@ function ChallengeCreateBrower() {
                   open({
                     type: "confirm",
                     content: "루틴을 추가로 생성하시겠습니까?",
+                    onConfirm: () => {
+                      return router.replace("/")
+                    },
                   })
                 },
               }
