@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import {
   addMonths,
   eachDayOfInterval,
@@ -90,7 +90,8 @@ function DatePickerContainer({}) {
     }
   }
   const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"]
-  const checkDateHasRoutine = (date: Date): boolean => {
+
+  const generateHasRoutineDateArray = (date: Date): boolean => {
     const formattedDate = parseInt(
       format(startOfDay(date), "yyyy-MM-dd", { locale: ko }).replace(/-/g, "")
     )
@@ -129,9 +130,6 @@ function DatePickerContainer({}) {
 
     return structuredChallengeData.some((challenge) =>
       challenge.milestones.some((milestone) => {
-        // const milestoneStartDate = parseInt(
-        //   milestone.start_at.replace(/-/g, "")
-        // )
         const milestoneEndDate = parseInt(milestone.end_at.replace(/-/g, ""))
         const milestoneDoDays = generatemilestoneDoDaysArray(milestone)
         const checkMilestoneDayOfWeek = milestoneDoDays.find(
@@ -147,6 +145,10 @@ function DatePickerContainer({}) {
       })
     )
   }
+
+  const hasRoutineDateArray = allDates.filter((day) =>
+    generateHasRoutineDateArray(day)
+  )
 
   const renderAllDatesSwiperSlides = () => {
     return allDates.map((day, index) => (
@@ -166,10 +168,11 @@ function DatePickerContainer({}) {
         </p>
         {/* 빨간점 */}
         <div className="flex h-[6px] w-full justify-center">
-          {format(startOfDay(day), "yyyy-MM-dd", { locale: ko }) ==
-          todayDate ? (
-            <></>
-          ) : checkDateHasRoutine(day) ? (
+          {hasRoutineDateArray.some(
+            (routineDate) =>
+              format(startOfDay(routineDate), "yyyy-MM-dd", { locale: ko }) ===
+              format(startOfDay(day), "yyyy-MM-dd", { locale: ko })
+          ) ? (
             <DatePickerRedDotIcon />
           ) : (
             <></>

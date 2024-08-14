@@ -11,7 +11,7 @@ import MilestoneSection from "../MilestoneSection"
 
 function ChallengeList() {
   const { selectedDate, structuredChallengeData } = useMyChallengePageContext()
-
+  console.log(structuredChallengeData)
   const CURRENT_DATE_NUMBER = parseInt(selectedDate.replace(/-/g, ""))
 
   const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"]
@@ -94,6 +94,7 @@ function ChallengeList() {
     })
 
     if (onDateChallenges.length > 0) {
+      console.log(onDateChallenges)
       return onDateChallenges.map((challenge) => {
         return (
           <div
