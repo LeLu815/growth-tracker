@@ -134,7 +134,7 @@ function NewsfeedClient() {
 
   return (
     <>
-      <div className="">
+      <div className="sticky top-[100px]">
         <div>
           <SearchBar onSearch={handleSearch} />
         </div>
