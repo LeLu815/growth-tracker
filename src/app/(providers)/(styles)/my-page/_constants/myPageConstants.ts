@@ -23,6 +23,11 @@ export const MY_CHALLENGE_ANALYZE: MenuProps = {
   path: "/my-page/analyze",
 }
 
+export const MY_CHALLENGE_ANALYZE_DETAIL: MenuProps = {
+  name: "내 챌린지 분석",
+  path: "/my-page/analyze/detail",
+}
+
 export const CHALLENGE_MENU_LIST: MenuProps[] = [
   {
     name: LIKE_CHALLENGE.name,
