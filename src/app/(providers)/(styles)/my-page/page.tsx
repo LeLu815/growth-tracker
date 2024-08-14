@@ -32,7 +32,7 @@ function UserInfoPage() {
   return (
     <div className="mx-auto flex w-full max-w-[640px] flex-col">
       <MyInfo></MyInfo>
-      <Box className={"flex flex-col gap-[24px]"}>
+      <Box className={"mt-[28px] flex flex-col gap-[24px]"}>
         <div className={"flex flex-col gap-[24px]"}>
           <div className="flex w-full flex-col items-center rounded-lg p-5 shadow-md">
             <TopPercentGraph></TopPercentGraph>

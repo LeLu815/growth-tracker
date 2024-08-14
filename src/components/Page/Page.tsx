@@ -1,4 +1,5 @@
 import { PropsWithChildren } from "react"
+import classNames from "classnames"
 
 interface PageProps extends PropsWithChildren {
   className?: string
@@ -13,5 +14,5 @@ const Page = ({ children, className }: PageProps) => {
     </main>
   )
 }
-
+classNames
 export default Page
