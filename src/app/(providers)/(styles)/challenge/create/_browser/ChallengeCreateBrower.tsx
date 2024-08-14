@@ -507,6 +507,9 @@ function ChallengeCreateBrower() {
                     type: "confirm",
                     content: "루틴을 추가로 생성하시겠습니까?",
                     onConfirm: () => {
+                      return router.replace(`/challenge/${id}/update`)
+                    },
+                    onCancel: () => {
                       return router.replace("/")
                     },
                   })
