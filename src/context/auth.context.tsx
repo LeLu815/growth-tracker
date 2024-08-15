@@ -16,7 +16,11 @@ type AuthContextValue = {
   isLoggedIn: boolean
   me: User | null
 
-  userData: { nickname: string | null; profile_image_url: string | null } | null
+  userData: {
+    nickname: string | null
+    profile_image_url: string | null
+    is_challenge_first_create: boolean
+  } | null
   logIn: (
     email: string,
     password: string,
@@ -56,7 +60,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const fetchUserData = async (userId: string) => {
     const { data, error } = await supabase
       .from("users")
-      .select("nickname, profile_image_url")
+      .select("nickname, profile_image_url, is_challenge_first_create")
       .eq("id", userId)
       .single()
     if (data) {
