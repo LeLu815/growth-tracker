@@ -9,6 +9,8 @@ import {
 } from "@/api/supabase/challenge"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
+import { useToast } from "@/context/toast.context"
+import useUserQuery from "@/query/user/useUserQuery"
 import useChallengeCreateStore, {
   categories,
   defaultSelected,
@@ -18,6 +20,7 @@ import useMilestoneCreateStore, {
 } from "@/store/milestoneCreate.store"
 
 import Box from "@/components/Box"
+import Button from "@/components/Button"
 import Page from "@/components/Page"
 
 import ChallengePageTitle from "../../../../create/_components/ChallengePageTitle"
@@ -29,6 +32,9 @@ interface ChallengeUpdateProps {
   milestoneId?: string
 }
 function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
+  // 유저 상태 업데이트 함수
+  const { userIsInitialStateChangeMutate } = useUserQuery()
+  // 업데이트가 진행되어야할 유저 id
   const [milestoneIds, setMilestoneIds] = useState<string[]>([])
   // 선택된 페이지 이름
   const [selectedPageName, setSelectedPageName] = useState<
@@ -42,8 +48,10 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
   // 마일스톤과 루틴 정보
   const { setData } = useMilestoneCreateStore()
 
+  // 토스트 열기
+  const { showToast } = useToast()
   // 컨펌 모달 열기
-  const { open } = useModal()
+  const { open, close } = useModal()
   // 넥스트 라우터로 보내기
   const router = useRouter()
   // 유저 데이터
@@ -55,8 +63,35 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
       open({
         type: "custom",
         children: (
-          <div className="gif-container mx-auto flex w-full max-w-[480px] items-center justify-center py-[20px]">
-            <img alt="챌린지 스위칭 이미지" src="/image/create_tutorial.gif" />
+          <div className="fixed bottom-0 left-0 right-0 top-0 flex min-w-[320px] items-center justify-center">
+            <div className="gif-container mx-auto flex w-full min-w-[320px] max-w-[480px] items-center justify-center py-[20px]">
+              <img
+                alt="챌린지 스위칭 이미지"
+                src="/image/create_tutorial.gif"
+              />
+            </div>
+            <div className="fixed bottom-0 left-0 right-0 z-50 mx-auto h-[100px] w-full min-w-[320px] max-w-[480px] bg-gradient-to-t from-white from-70% via-white to-transparent px-[20px] pb-2 pt-[20px]">
+              <Button
+                onClick={() => {
+                  // 유저 데이터 업데이트 치기
+                  me &&
+                    userIsInitialStateChangeMutate(me?.id, {
+                      onSuccess: () => {
+                        showToast("다시 보지 않기 처리에 성공했습니다.")
+                      },
+                      onError: () => {
+                        showToast("다시 보지 않기 처리에 실패했습니다.")
+                      },
+                    })
+                  // 모달 닫기
+                  close()
+                }}
+                size="lg"
+                variant="outline"
+              >
+                다시 보지 않기
+              </Button>
+            </div>
           </div>
         ),
       })

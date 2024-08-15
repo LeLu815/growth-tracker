@@ -78,7 +78,7 @@ function DragDropContainer({ challenge_id, range }: DragDropContainerProps) {
         0,
         0
       )
-      new Date(milestone.start_at).getTime() >= earliestTime.getTime()
+      return new Date(milestone.start_at).getTime() >= earliestTime.getTime()
     }
   )
 
