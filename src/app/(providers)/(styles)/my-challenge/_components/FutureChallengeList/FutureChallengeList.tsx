@@ -50,7 +50,7 @@ function FutureChallengeList() {
 
   return (
     <div className="flex w-full flex-col">
-      <div className="flex flex-col gap-y-[10px] px-[20px] pb-[20px] pt-[20px]">
+      <div className="flex flex-col gap-y-[10px] px-[20px] pb-[20px] pt-[20px] lg:px-[0px]">
         {displayFutureChallengeItem()}
       </div>
     </div>
