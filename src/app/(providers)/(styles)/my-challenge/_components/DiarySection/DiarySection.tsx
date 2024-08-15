@@ -26,7 +26,7 @@ interface DiarySectionProps {
 function DiarySection({
   challengeId,
   routineDoneDailyId,
-  handleClickConfirm: closeModal,
+  handleClickConfirm: closeDiary,
   selectedDate,
   isDiaryToday,
 }: PropsWithChildren<DiarySectionProps>) {
@@ -75,8 +75,8 @@ function DiarySection({
 
   const handleClickLeftButton = async () => {
     if (!diaryReadOnly) {
-      if (closeModal) {
-        closeModal()
+      if (closeDiary) {
+        closeDiary()
       }
     } else {
       setDiaryReadOnly(false)
@@ -103,44 +103,50 @@ function DiarySection({
 
           putResponse.then((response) => {
             if (response.statusText == "OK" || response.status == 200) {
+              setDiaryReadOnly(true)
               alertOpen("수정이 완료되었습니다")
             } else {
               alertOpen("오류 발생, 콘솔 확인")
               console.log(response)
             }
-            setDiaryReadOnly(true)
           })
         } else {
           const postResponse = POSTdiary(diaryToPost)
           postResponse.then((response) => {
             if (response.statusText == "OK" || response.status == 200) {
+              setDiaryReadOnly(true)
               alertOpen("저장이 완료되었습니다")
             } else {
               alertOpen("오류 발생, 콘솔 확인")
               console.log(response)
             }
-            setDiaryReadOnly(true)
           })
         }
         queryClient.invalidateQueries({ queryKey: ["fetchDiary"] })
       }
     } else {
-      if (closeModal) {
-        closeModal()
+      if (closeDiary) {
+        closeDiary()
       }
     }
   }
 
   return (
-    <div className="px-3 pt-10">
-      <div className="flex">
+    <div className="px-3 pt-10 lg:px-0 lg:pt-5">
+      <div className="flex lg:hidden">
         <p className="text-[20px] font-bold">루틴 기록하기</p>
         <CloseIcon02
           className="ml-auto mr-0 cursor-pointer"
-          onClick={closeModal}
+          onClick={closeDiary}
         ></CloseIcon02>
       </div>
-      <p className="mt-7 text-[14px] font-bold">오늘 하루 기록하기</p>
+      <div className="lg:flex lg:justify-between">
+        <p className="mt-7 text-[14px] font-bold lg:mt-0">오늘 하루 기록하기</p>
+        <CloseIcon02
+          className="ml-auto mr-0 hidden cursor-pointer lg:block lg:h-[14px] lg:w-[14px]"
+          onClick={closeDiary}
+        ></CloseIcon02>
+      </div>
       <div className="mt-5 flex flex-col items-center justify-center">
         <textarea
           className="h-[150px] w-full resize-none rounded-lg border-[1.5px] border-solid border-[#CBC9CF] bg-[#FAFAFA] px-2 py-2"

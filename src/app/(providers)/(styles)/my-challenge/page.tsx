@@ -1,5 +1,6 @@
 "use client"
 
+import Box from "@/components/Box"
 import Loading from "@/components/Loading"
 import Page from "@/components/Page"
 import TopNavigation from "@/components/TopNavigation"
@@ -60,18 +61,20 @@ function MyChallengePage() {
   // 웹 레이아웃
   const renderWebLayout = () => (
     <Page>
-      <div className="flex gap-x-[30px] px-[40px] py-[114px]">
-        <div className="w-[594px] rounded-[20px] border-[1.5px] border-solid border-[#d9d9d9] px-[30px] py-[20px] shadow-2">
-          <DatePickerContainer />
-          <ChallengeList />
+      <Box>
+        <div className="flex w-full flex-row justify-between gap-x-[30px]">
+          <div className="w-[594px] rounded-[20px] border-[1.5px] border-solid border-[#d9d9d9] px-[30px] py-[20px] shadow-2">
+            <DatePickerContainer />
+            <ChallengeList />
+          </div>
+          <div className="w-[320px]">
+            <h3 className="text-[20px] font-[700] leading-[27px]">
+              진행전 챌린지
+            </h3>
+            <FutureChallengeList />
+          </div>
         </div>
-        <div className="w-[320px]">
-          <h3 className="text-[20px] font-[700] leading-[27px]">
-            진행전 챌린지
-          </h3>
-          <FutureChallengeList />
-        </div>
-      </div>
+      </Box>
     </Page>
   )
 
