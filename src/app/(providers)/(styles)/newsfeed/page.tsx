@@ -6,7 +6,7 @@ import NewsfeedClient from "./_components/NewsfeedClient"
 function NewsfeedPage() {
   return (
     <Page>
-      <Box>
+      <Box className="relative">
         <NewsfeedClient />
       </Box>
     </Page>

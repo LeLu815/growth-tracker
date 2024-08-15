@@ -165,7 +165,7 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
               }}
             />
             <Page>
-              <Box>
+              <Box className="mt-[28px]">
                 <MilestoneUpdateConfig
                   goNextPage={() => setSelectedPageName("switch")}
                 />

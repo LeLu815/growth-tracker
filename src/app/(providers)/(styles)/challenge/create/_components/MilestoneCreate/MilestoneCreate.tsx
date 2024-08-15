@@ -24,7 +24,7 @@ function MilestoneCreate({
         handleClickGoBack={() => handleChangeStep(3)}
       />
       <Page>
-        <Box>
+        <Box className="mt-[28px]">
           <MilestoneCreateConfig
             goNextPage={() => handleChangeStep(5)}
             getCreatedChallengeId={(id: string) => {

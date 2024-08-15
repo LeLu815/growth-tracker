@@ -5,6 +5,7 @@ import useChallengeCreateStore, {
   categories,
 } from "@/store/challengeCreate.store"
 
+import ChallengeCreateBrower from "../../_browser/ChallengeCreateBrower"
 import ChallengeCategories from "../ChallengeCategories"
 import ChallengeName from "../ChallengeName/ChallengeName"
 import ChallengeSelectPeriod from "../ChallengeSelectPeriod"
@@ -75,9 +76,12 @@ function CreateChallenge() {
   }
 
   return (
-    <div className="mx-auto flex h-screen max-w-[480px] flex-col">
-      {getStepTitleWords(stepNum)}
-    </div>
+    <>
+      <div className="mx-auto flex h-screen max-w-[480px] flex-col lg:hidden">
+        {getStepTitleWords(stepNum)}
+      </div>
+      <ChallengeCreateBrower />
+    </>
   )
 }
 

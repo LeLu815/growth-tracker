@@ -6,7 +6,7 @@ import SignUpClient from "./_components/SignUpClient"
 function LoginEmailPage() {
   return (
     <Page>
-      <Box>
+      <Box className="max-w-[375px]">
         <SignUpClient />
       </Box>
     </Page>

@@ -33,7 +33,6 @@ function ChallengeName({
   const [selectedRandomUrl, setSelectedRandomUrl] = useState<string>(
     randomImgUrl || imgs[0]
   )
-  console.log("randomImgUrl :", randomImgUrl)
   useEffect(() => {
     ;(async () => {
       const { data: imgDatas, error } = await supabase.storage
@@ -82,7 +81,7 @@ function ChallengeName({
         handleClickGoBack={() => handleChangeStep(2)}
       />
       <Page>
-        <Box>
+        <Box className="mt-[28px]">
           <SubTitle className="justify-center">무엇을 목표로 하나요?</SubTitle>
           <div className="h-[32px]" />
           <div className="flex flex-col items-center gap-[12px]">

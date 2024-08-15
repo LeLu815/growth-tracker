@@ -24,7 +24,7 @@ function Congratulations({
   justCreatedChallengeId,
 }: CongratulationsProps) {
   const router = useRouter()
-  const { category, setRange, setCategory, setGoal } = useChallengeCreateStore()
+  const { setRange, setCategory, setGoal } = useChallengeCreateStore()
   const { setData } = useMilestoneCreateStore()
   const [isProcessing, setIsProcessing] = useState(false)
   return (
@@ -32,7 +32,7 @@ function Congratulations({
       <ChallengePageTitle title={title} allStepCount={4} titleHidden={false} />
       <div className="h-[40px]"></div>
       <Page>
-        <Box>
+        <Box className="mt-[28px]">
           <div className="flex justify-center">
             <CongratulationsIcon />
           </div>

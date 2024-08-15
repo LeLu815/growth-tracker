@@ -2,8 +2,8 @@
 
 import ChallengeStatusOverviewGraph from "@/app/(providers)/(styles)/my-page/_components/analyze/ChallengeStatusOverviewGraph"
 
-import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
+import "slick-carousel/slick/slick.css"
 import "./graphSlider.css"
 
 import Box from "@/components/Box"
@@ -20,7 +20,7 @@ function GraphSlider() {
   }
 
   return (
-    <Box className={"mx-auto h-full w-full max-w-[640px]"}>
+    <Box className={"mx-auto mt-[28px] h-full w-full max-w-[640px]"}>
       {/*<Slider {...settings}>*/}
       <ChallengeStatusOverviewGraph />
       {/*<SuccessRateGraph />*/}

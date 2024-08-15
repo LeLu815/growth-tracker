@@ -34,7 +34,7 @@ function ChallengeSelectPeriod({
         handleClickGoBack={() => handleChangeStep(1)}
       />
       <Page>
-        <Box className="flex-1">
+        <Box className="mt-[28px] flex-1">
           <SubTitle className="justify-center">
             목표하는 챌린지 기간을 알려주세요.
           </SubTitle>
