@@ -1,7 +1,13 @@
 "use client"
 
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { PropsWithChildren, useEffect, useState } from "react"
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState,
+} from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { POSTnewRoutineDoneDaily } from "@/api/supabase/routineDoneDaily"
 import { useModal } from "@/context/modal.context"
@@ -22,6 +28,7 @@ interface MilestoneSectionProps {
   milestoneDoDays: string[]
   challengeId: string
   challengeGoal: string
+  challengeImage: string
 }
 
 function MilestoneSection({
@@ -29,6 +36,7 @@ function MilestoneSection({
   milestoneDoDays, // 마일스톤 시행 요일이 담긴 배열
   challengeId,
   challengeGoal,
+  challengeImage,
 }: PropsWithChildren<MilestoneSectionProps>) {
   const {
     userId,
@@ -52,11 +60,11 @@ function MilestoneSection({
       )
     })?.id || ""
   )
-  const [isVisible, setIsVisible] = useState(false)
-
+  const [isRoutinesVisible, setIsRoutinesVisible] = useState(false)
+  const [isDiaryInputVisible, setIsDiaryInputVisible] = useState(false)
   const modal = useModal()
 
-  const handleRoutineCompleteButtonClick = (isTodayDiary: boolean) => {
+  const handleRoutineCompleteButtonMobileClick = (isTodayDiary: boolean) => {
     modal.open({
       type: "custom",
       children: (
@@ -71,9 +79,13 @@ function MilestoneSection({
     })
   }
 
-  const toggleVisibility = () => {
-    setIsVisible(!isVisible)
+  const toggleRoutinesVisibility = () => {
+    setIsRoutinesVisible(!isRoutinesVisible)
   }
+
+  const toggleDiaryInputVisibility = useCallback(() => {
+    setIsDiaryInputVisible(!isDiaryInputVisible)
+  }, [isDiaryInputVisible])
   // 오늘 날짜 RDD
   const targetRDD = currentUserRoutineDoneDaily.find((item) => {
     return (
@@ -83,7 +95,7 @@ function MilestoneSection({
   })
 
   useEffect(() => {
-    setIsVisible(false)
+    setIsRoutinesVisible(false)
     initializeRDD()
   }, [selectedDate])
 
@@ -168,10 +180,17 @@ function MilestoneSection({
     <section>
       <div
         className="flex cursor-pointer gap-x-[24px]"
-        onClick={toggleVisibility}
+        onClick={toggleRoutinesVisibility}
       >
         {/* 이미지 */}
-        <div className="h-[84px] w-[84px] rounded-md bg-[#DDDDDD]"></div>
+        <Image
+          src={challengeImage}
+          alt={challengeGoal}
+          width={84}
+          height={84}
+          className="h-[84px] w-[84px] rounded-md object-cover"
+        />
+        {/* <div className="h-[84px] w-[84px] rounded-md bg-[#DDDDDD]"></div> */}
         {/* 이미지 옆 모든 것 */}
         <div className="flex grow flex-col gap-y-[12px]">
           {/* 제목과 열기버튼 */}
@@ -217,7 +236,7 @@ function MilestoneSection({
         </div>
       </div>
 
-      {isVisible && (
+      {isRoutinesVisible && (
         <div className="mt-5 flex flex-col gap-y-3">
           {milestone.routines?.map((routine) => {
             if (routine.milestone_id == milestone.id) {
@@ -240,25 +259,51 @@ function MilestoneSection({
               )
             }
           })}
+          {/* 모바일 용 버튼 */}
           <Button
             intent={todayDate == selectedDate ? "primary" : "primary"}
             size={"lg"}
-            className="mt-3 text-sm"
+            className="mt-3 text-sm lg:hidden"
             onClick={() =>
-              handleRoutineCompleteButtonClick(todayDate == selectedDate)
+              handleRoutineCompleteButtonMobileClick(todayDate == selectedDate)
             }
           >
             {selectedDate == todayDate ? "하루 일기 쓰기" : "오늘의 일기"}
           </Button>
-          <p
-            onClick={() => {
-              router.push(`/challenge/${challengeId}`)
-            }}
-            className="w-full cursor-pointer text-center text-[10px] font-[500] leading-[135%] text-black"
-          >
-            {`챌린지 정보 확인 >`}
-          </p>
+          {/* 웹 용 버튼 */}
+          {!isDiaryInputVisible && (
+            <>
+              {" "}
+              <Button
+                intent={todayDate == selectedDate ? "primary" : "primary"}
+                size={"lg"}
+                className="mt-3 hidden text-sm lg:block"
+                onClick={toggleDiaryInputVisibility}
+              >
+                {selectedDate == todayDate ? "하루 일기 쓰기" : "오늘의 일기"}
+              </Button>
+              <p
+                onClick={() => {
+                  router.push(`/challenge/${challengeId}`)
+                }}
+                className="w-full cursor-pointer text-center text-[10px] font-[500] leading-[135%] text-black"
+              >
+                {`챌린지 정보 확인 >`}
+              </p>
+            </>
+          )}
         </div>
+      )}
+      {isDiaryInputVisible && (
+        <>
+          <DiarySection
+            isDiaryToday={todayDate == selectedDate}
+            selectedDate={selectedDate}
+            challengeId={challengeId}
+            routineDoneDailyId={targetRDDId}
+            handleClickConfirm={toggleDiaryInputVisibility}
+          />
+        </>
       )}
     </section>
   )

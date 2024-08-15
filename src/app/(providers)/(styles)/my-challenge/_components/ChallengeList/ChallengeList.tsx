@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
@@ -13,9 +13,11 @@ import useMyChallengePageContext from "../../context"
 import MilestoneSection from "../MilestoneSection"
 
 function ChallengeList() {
-  const { selectedDate, structuredChallengeData } = useMyChallengePageContext()
+  const { selectedDate, structuredChallengeData, todayDate } =
+    useMyChallengePageContext()
 
   const CURRENT_DATE_NUMBER = parseInt(selectedDate.replace(/-/g, ""))
+  const TODAY_DATE_NUMBER = parseInt(todayDate.replace(/-/g, ""))
   const router = useRouter()
   const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"]
 
@@ -70,6 +72,7 @@ function ChallengeList() {
               key={milestone.id}
               challengeGoal={challenge.goal}
               challengeId={challenge.id}
+              challengeImage={challenge.image_url || ""}
               milestone={milestone}
               milestoneDoDays={milestoneDoDays}
             />
@@ -79,7 +82,13 @@ function ChallengeList() {
             <section key={challenge.goal}>
               <div className="flex gap-x-[24px]">
                 {/* 이미지 */}
-                <div className="h-[84px] w-[84px] rounded-md bg-[#DDDDDD]"></div>
+                <Image
+                  src={challenge.image_url || ""}
+                  alt={challenge.goal}
+                  width={84}
+                  height={84}
+                  className="h-[84px] w-[84px] rounded-md object-cover"
+                />
                 {/* 이미지 옆 모든 것 */}
                 <div className="flex grow flex-col gap-y-[12px]">
                   {/* 제목과 열기버튼 */}
@@ -89,7 +98,12 @@ function ChallengeList() {
                     </h3>
                   </div>
                   {/* 안내 메시지 */}
-                  <p className="text-xs">{"생성한 루틴이 아직 없어요"}</p>
+                  <div>
+                    <p className="text-xs">{"해당 날짜에 대해선 "}</p>
+                    <p className="text-xs">
+                      {"챌린지에 생성한 루틴이 아직 없어요"}
+                    </p>
+                  </div>
                 </div>
               </div>
               <div className="mt-[9px] flex flex-col gap-y-3">
@@ -120,7 +134,9 @@ function ChallengeList() {
       )
       if (
         CURRENT_DATE_NUMBER >= challengeStartDate &&
-        CURRENT_DATE_NUMBER <= challengeEndDate
+        CURRENT_DATE_NUMBER <= challengeEndDate &&
+        TODAY_DATE_NUMBER >= challengeStartDate &&
+        TODAY_DATE_NUMBER <= challengeEndDate
       ) {
         return true
       }

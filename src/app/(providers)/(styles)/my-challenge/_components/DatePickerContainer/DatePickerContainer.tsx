@@ -91,7 +91,7 @@ function DatePickerContainer({}) {
   }
   const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"]
 
-  const generateHasRoutineDateArray = (date: Date): boolean => {
+  const generateHasRoutineDateArrayFilter = (date: Date): boolean => {
     const formattedDate = parseInt(
       format(startOfDay(date), "yyyy-MM-dd", { locale: ko }).replace(/-/g, "")
     )
@@ -128,26 +128,29 @@ function DatePickerContainer({}) {
       return milestoneDoDays
     }
 
-    return structuredChallengeData.some((challenge) =>
-      challenge.milestones.some((milestone) => {
-        const milestoneEndDate = parseInt(milestone.end_at.replace(/-/g, ""))
-        const milestoneDoDays = generatemilestoneDoDaysArray(milestone)
-        const checkMilestoneDayOfWeek = milestoneDoDays.find(
-          (milestoneDoDay) => {
-            return milestoneDoDay == formattedDayOfWeek
-          }
-        )
-        return (
-          formattedDate >= formattedTodayDate &&
-          formattedDate <= milestoneEndDate &&
-          !!checkMilestoneDayOfWeek
-        )
-      })
+    return structuredChallengeData.some(
+      (challenge) =>
+        challenge.milestones.some((milestone) => {
+          const milestoneEndDate = parseInt(milestone.end_at.replace(/-/g, ""))
+          const milestoneDoDays = generatemilestoneDoDaysArray(milestone)
+          const checkMilestoneDayOfWeek = milestoneDoDays.find(
+            (milestoneDoDay) => {
+              return milestoneDoDay == formattedDayOfWeek
+            }
+          )
+          return (
+            formattedDate >= formattedTodayDate &&
+            formattedDate <= milestoneEndDate &&
+            !!checkMilestoneDayOfWeek
+          )
+        }) &&
+        parseInt((challenge.start_at || "").replace(/-/g, "")) <=
+          parseInt(todayDate.replace(/-/g, ""))
     )
   }
 
   const hasRoutineDateArray = allDates.filter((day) =>
-    generateHasRoutineDateArray(day)
+    generateHasRoutineDateArrayFilter(day)
   )
 
   const renderAllDatesSwiperSlides = () => {
@@ -193,7 +196,7 @@ function DatePickerContainer({}) {
   }
   const todayDayOfWeek = format(startOfDay(Date.now()), "eee", { locale: ko })
   return (
-    <div className="w-full rounded-b-[10px] py-[20px] shadow-2">
+    <div className="w-full rounded-b-[10px] py-[20px] shadow-2 lg:shadow-none">
       <div className="flex items-center justify-between px-[20px]">
         <p className="text-start text-[18px] font-[700] leading-[135%]">
           {visibleMonth.replace("-", ". ")}
