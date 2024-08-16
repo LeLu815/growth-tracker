@@ -1,4 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority"
+import classNames from "classnames"
 
 import ThumbsUpIcon from "@/components/Icon/ThumbsUpIcon"
 
@@ -8,9 +9,11 @@ const chipVariant = cva("border shadow-1", {
       primary: "bg-secondary border-secondary rounded-[30px]",
       secondary: "bg-primary border-primary rounded-[30px]",
       third: "bg-grey-400 border-grey-400 rounded-[30px]",
+      // black: "bg-black",
       category:
         "bg-primary border-primary text-black rounded-[34px] cursor-pointer",
       popular: "bg-[#FF7D3D] border-[#FF7D3D] rounded-[30px]",
+      borderless: "bg-transparent border-b-1 text-grey-600",
     },
     size: {
       sm: "px-2 py-1 text-body-xs font-medium",
@@ -73,6 +76,7 @@ type ChipProps = {
   label: string
   selected?: boolean
   onClick?: () => void
+  className?: string
 } & ChipVariantType
 
 function Chip({
@@ -81,6 +85,7 @@ function Chip({
   variant,
   selected = false,
   size,
+  className,
   onClick,
 }: ChipProps) {
   const finalVariant = selected ? "selected" : variant
@@ -88,11 +93,14 @@ function Chip({
   return (
     <span
       onClick={onClick}
-      className={chipVariant({
-        intent,
-        variant: finalVariant,
-        size,
-      })}
+      className={classNames(
+        chipVariant({
+          intent,
+          variant: finalVariant,
+          size,
+        }),
+        className // 추가적인 클래스 이름을 병합
+      )}
     >
       {intent === "popular" && (
         <ThumbsUpIcon

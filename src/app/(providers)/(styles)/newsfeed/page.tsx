@@ -5,8 +5,8 @@ import NewsfeedClient from "./_components/NewsfeedClient"
 
 function NewsfeedPage() {
   return (
-    <Page>
-      <Box className="relative">
+    <Page className="lg:max-w-full">
+      <Box className="relative pt-0 lg:px-0">
         <NewsfeedClient />
       </Box>
     </Page>
