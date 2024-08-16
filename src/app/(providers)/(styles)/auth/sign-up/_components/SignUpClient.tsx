@@ -1,6 +1,6 @@
 "use client"
 
-import { ChangeEventHandler, useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
@@ -12,93 +12,82 @@ import InvisibilityIcon from "@/components/Icon/InvisibilityIcon"
 import VisibilityIcon from "@/components/Icon/VisibilityIcon"
 import Input from "@/components/Input"
 
+import { useSignupFormInput } from "../_utils/useSignupFormInput"
+
 function SignUpClient() {
-  const [nickname, setNickname] = useState<string>("")
-  const [email, setEmail] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
-  const [passwordConfirm, setPasswordConfirm] = useState<string>("")
-  const [nicknameError, setNicknameError] = useState<string>("")
-  const [emailError, setEmailError] = useState<string>("")
-  const [passwordError, setPasswordError] = useState<string>("")
-  const [passwordConfirmError, setPasswordConfirmError] = useState<string>("")
+  // 유효성 검사
+  const {
+    value: nickname,
+    error: nicknameError,
+    handleChange: handleChangeNickname,
+    setValue: setNickname,
+    setError: setNicknameError,
+  } = useSignupFormInput("", (value) => {
+    if (value.length < 1) {
+      return "닉네임은 2자 이상이어야 합니다"
+    } else if (value.length > 8) {
+      return "닉네임은 8자 이하이어야 합니다"
+    }
+
+    return ""
+  })
+
+  const {
+    value: email,
+    error: emailError,
+    handleChange: handleChangeEmail,
+    setValue: setEmail,
+    setError: setEmailError,
+  } = useSignupFormInput("", (value) =>
+    !/\S+@\S+\.\S+/.test(value) ? "이메일 형식으로 입력해주세요." : ""
+  )
+
+  const {
+    value: password,
+    error: passwordError,
+    handleChange: handleChangePassword,
+    setValue: setPassword,
+    setError: setPasswordError,
+  } = useSignupFormInput("", (value) => {
+    return value.length < 6 ||
+      value.length > 16 ||
+      !/[a-zA-Z]/.test(value) ||
+      !/\d/.test(value)
+      ? "비밀번호 (영문+숫자 6~16자)를 확인해주세요."
+      : ""
+  })
+
+  const {
+    value: passwordConfirm,
+    error: passwordConfirmError,
+    handleChange: handleChangePasswordConfirm,
+    setValue: setPasswordConfirm,
+    setError: setPasswordConfirmError,
+  } = useSignupFormInput("", (value) => {
+    return value !== password ? "비밀번호가 일치하지 않습니다." : ""
+  })
+
   const [nicknameConfirmed, setNicknameConfirmed] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [showPasswordConfirm, setShowPasswordConfirm] = useState<boolean>(false)
   const [nicknameChecked, setNicknameChecked] = useState<boolean>(false)
-  const [passwordsMatch, setPasswordsMatch] = useState<boolean>(false) // New state to track if passwords match
+  const [passwordsMatch, setPasswordsMatch] = useState<boolean>(false)
 
   const { signUp } = useAuth()
   const { open } = useModal()
   const { showToast } = useToast()
   const supabase = createClient()
-
   const router = useRouter()
 
-  const handleChangeNickname: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const value = e.target.value
-    setNickname(value)
-    setNicknameConfirmed(false)
-    setNicknameChecked(false)
-
-    if (value.length < 1) {
-      setNicknameError("닉네임은 1자 이상이어야 합니다.")
-    } else if (value.length > 8) {
-      setNicknameError("닉네임은 8자 이하이어야 합니다.")
-    } else {
-      setNicknameError("")
-    }
-  }
-
-  const handleChangeEmail: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const value = e.target.value
-    setEmail(value)
-
-    if (!/\S+@\S+\.\S+/.test(value)) {
-      setEmailError("이메일 형식으로 입력해주세요.")
-    } else {
-      setEmailError("")
-    }
-  }
-
-  const handleChangePassword: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const value = e.target.value
-    setPassword(value)
-    setPasswordsMatch(value === passwordConfirm)
-
-    if (
-      value.length < 6 ||
-      value.length > 16 ||
-      !/[a-zA-Z]/.test(value) ||
-      !/\d/.test(value)
-    ) {
-      setPasswordError("비밀번호 (영문+숫자 6~16자)를 확인해주세요.")
-    } else {
-      setPasswordError("")
-    }
-  }
-
-  const handleChangePasswordConfirm: ChangeEventHandler<HTMLInputElement> = (
-    e
-  ) => {
-    const value = e.target.value
-    setPasswordConfirm(value)
-    setPasswordsMatch(value === password)
-
-    if (value !== password) {
-      setPasswordConfirmError("비밀번호가 일치하지 않습니다.")
-    } else {
-      setPasswordConfirmError("")
-    }
-  }
+  useEffect(() => {
+    setPasswordsMatch(password === passwordConfirm)
+  }, [password, passwordConfirm])
 
   // 닉네임 중복 확인
   const handleCheckNickname = async () => {
     setNicknameChecked(true)
 
-    if (nickname.length < 1) {
-      setNicknameError("닉네임은 1자 이상이어야 합니다.")
-      return
-    }
+    if (nicknameError) return
 
     const { data: existingUser, error } = await supabase
       .from("users")
@@ -226,7 +215,9 @@ function SignUpClient() {
             placeholder="비밀번호 확인"
             errorMessage={passwordConfirmError}
             confirmMessage={
-              passwordsMatch && !passwordConfirmError
+              passwordsMatch &&
+              !passwordConfirmError &&
+              passwordConfirm.length > 0
                 ? "비밀번호가 일치해요"
                 : undefined
             }
