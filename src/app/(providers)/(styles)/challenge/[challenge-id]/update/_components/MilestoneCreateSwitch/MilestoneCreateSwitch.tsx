@@ -43,8 +43,6 @@ function MilestoneCreateSwitch({
   const { me } = useAuth()
   const router = useRouter()
 
-  console.log("data :", data)
-
   // 뮤테이션 함수 => db에 생성 저장하는 로직
   const {
     challengeCreateMutate,
@@ -91,14 +89,19 @@ function MilestoneCreateSwitch({
 
         <section className="p-[20px]">
           {data.length === 0 ? (
-            <p className="text-center text-[16px] text-grey-400">
-              루틴을 생성해주세요.
-            </p>
+            <div className="mt-[40px]">
+              <p className="text-center text-[20px] font-[700]">
+                최소 하나의 루틴이 필요해요.
+              </p>
+              <p className="mt-[12px] text-center text-[12px] font-[500]">
+                루틴을 설정해야 챌린지를 시작할 수 있어요.
+              </p>
+            </div>
           ) : (
             <DragDropContainer range={range} />
           )}
         </section>
-        <div className="h-[120px]" />
+        <div className="py-[50px]"></div>
         <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[480px] bg-white px-[20px] pb-8 pt-5">
           <Button
             className="h-full"

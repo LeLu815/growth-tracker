@@ -81,7 +81,6 @@ export async function GET(
       // 총 루틴 개수 성공개수로 나누고 백분율로 바꾸기
       const successRate =
         totalRoutines > 0 ? (successfulRoutines / totalRoutines) * 100 : 0
-      console.log(successRate)
       return {
         ...milestone,
         successRate,

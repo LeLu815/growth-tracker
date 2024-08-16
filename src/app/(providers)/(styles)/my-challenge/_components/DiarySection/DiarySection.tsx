@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { PropsWithChildren, useEffect, useState } from "react"
+import { PropsWithChildren, useEffect, useState } from "react"
 import {
   GETdiary as GETcurrentDiary,
   POSTdiary,
@@ -85,8 +85,6 @@ function DiarySection({
 
   const handleClickRightButton = async () => {
     if (!diaryReadOnly) {
-      console.log(inputText)
-
       if (inputText.length < 1) {
         alertOpen("일기를 입력해주세요")
       } else {
@@ -107,7 +105,6 @@ function DiarySection({
               alertOpen("수정이 완료되었습니다")
             } else {
               alertOpen("오류 발생, 콘솔 확인")
-              console.log(response)
             }
           })
         } else {
@@ -118,7 +115,6 @@ function DiarySection({
               alertOpen("저장이 완료되었습니다")
             } else {
               alertOpen("오류 발생, 콘솔 확인")
-              console.log(response)
             }
           })
         }

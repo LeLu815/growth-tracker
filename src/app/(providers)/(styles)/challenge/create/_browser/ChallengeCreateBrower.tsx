@@ -396,7 +396,7 @@ function ChallengeCreateBrower() {
           </div>
           <div className="flex flex-col items-center gap-y-[12px]">
             <p className="text-[16px] font-[500] text-grey-300">완료일</p>
-            <p className="text-black">{`${range?.to ? range.to?.getMonth() + 1 : "-"} 월 ${range?.to ? range.to?.getDate() : "-"} 일`}</p>
+            <p className="text-black">{`${new Date(milestone_end_date).getMonth() + 1 || "-"} 월 ${new Date(milestone_end_date).getDate() || "-"} 일`}</p>
           </div>
         </div>
       </div>
@@ -463,15 +463,15 @@ function ChallengeCreateBrower() {
             challengeCreateMutate(
               {
                 challenge: {
-                  category: category,
+                  category: selectedCategory,
                   user_id: me?.id || "",
                   day_cnt:
                     differenceInCalendarDays(range?.to!, range?.from!) + 1,
                   end_at: format(range?.to!, "yyyy-MM-dd"),
-                  goal: goal,
+                  goal: inputValue,
                   is_secret: false,
                   start_at: format(range?.from!, "yyyy-MM-dd"),
-                  image_url: randomImgUrl,
+                  image_url: selectedRandomUrl,
                 },
                 milestone: [
                   {

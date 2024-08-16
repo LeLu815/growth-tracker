@@ -24,6 +24,7 @@ import Button from "@/components/Button"
 import Page from "@/components/Page"
 
 import ChallengePageTitle from "../../../../create/_components/ChallengePageTitle"
+import ChallengeUpdatePc from "../ChallengeUpdatePc"
 import MilestoneCreateSwitch from "../MilestoneCreateSwitch/MilestoneCreateSwitch"
 import MilestoneUpdateConfig from "../MilestoneUpdateConfig/MilestoneUpdateConfig"
 
@@ -57,7 +58,7 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
   // 유저 데이터
   const { me, userData } = useAuth()
 
-  // TODO: 최초 업데이트 유저면 gif 보여주기를 구현해야함. customModal
+  // 최초 업데이트 유저면 gif 보여주기를 구현해야함. customModal
   useEffect(() => {
     if (userData?.is_challenge_first_create) {
       open({
@@ -178,58 +179,64 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
   }, [me])
 
   return (
-    <div className="mx-auto flex h-screen max-w-[480px] flex-col">
-      {selectedPageName === "switch" && (
-        <>
-          <ChallengePageTitle
-            title={"루틴 수정"}
-            allStepCount={4}
-            titleHidden={false}
-            handleClickGoBack={() => {
-              // 컨펌 열기 => 확인이면 뒤로 가기
-              return open({
-                type: "confirm",
-                content: "저장되지 않은 변경사항은 삭제됩니다.",
-                onConfirm: () => {
-                  setData([])
-                  setRange(defaultSelected)
-                  setCategory(categories[0])
-                  setGoal("")
-                  router.back()
-                },
-              })
-            }}
-          />
-          <MilestoneCreateSwitch
-            challengeId={challengeId}
-            milestoneIds={milestoneIds}
-            goNextPage={() => setSelectedPageName("add")}
-          />
-        </>
-      )}
-      {(selectedPageName === "add" || selectedPageName === "edit") && (
-        <>
-          <div>
+    <>
+      <div className="mx-auto flex h-screen max-w-[480px] flex-col lg:hidden">
+        {selectedPageName === "switch" && (
+          <>
             <ChallengePageTitle
-              title="루틴 생성"
-              step={4}
+              title={"루틴 수정"}
               allStepCount={4}
               titleHidden={false}
               handleClickGoBack={() => {
-                setSelectedPageName("switch")
+                // 컨펌 열기 => 확인이면 뒤로 가기
+                return open({
+                  type: "confirm",
+                  content: "저장되지 않은 변경사항은 삭제됩니다.",
+                  onConfirm: () => {
+                    setData([])
+                    setRange(defaultSelected)
+                    setCategory(categories[0])
+                    setGoal("")
+                    router.back()
+                  },
+                })
               }}
             />
-            <Page>
-              <Box className="mt-[28px]">
-                <MilestoneUpdateConfig
-                  goNextPage={() => setSelectedPageName("switch")}
-                />
-              </Box>
-            </Page>
-          </div>
-        </>
-      )}
-    </div>
+            <MilestoneCreateSwitch
+              challengeId={challengeId}
+              milestoneIds={milestoneIds}
+              goNextPage={() => setSelectedPageName("add")}
+            />
+          </>
+        )}
+        {(selectedPageName === "add" || selectedPageName === "edit") && (
+          <>
+            <div>
+              <ChallengePageTitle
+                title="루틴 생성"
+                step={4}
+                allStepCount={4}
+                titleHidden={false}
+                handleClickGoBack={() => {
+                  setSelectedPageName("switch")
+                }}
+              />
+              <Page>
+                <Box className="mt-[28px]">
+                  <MilestoneUpdateConfig
+                    goNextPage={() => setSelectedPageName("switch")}
+                  />
+                </Box>
+              </Page>
+            </div>
+          </>
+        )}
+      </div>
+      <ChallengeUpdatePc
+        milestoneIds={milestoneIds}
+        challengeId={challengeId}
+      />
+    </>
   )
 }
 
