@@ -155,6 +155,11 @@ export async function GET(req: NextRequest) {
   const category = searchParams.get("category") || ""
   const showCompleted = searchParams.get("showCompleted") === "true"
 
+  // 무한 스크롤
+  const limit = parseInt(searchParams.get("limit") || "12")
+  const page = parseInt(searchParams.get("page") || "1") - 1
+  const offset = page * limit
+
   const baseQuery = supabase
     .from("challenge")
     .select(
@@ -171,7 +176,9 @@ export async function GET(req: NextRequest) {
       )
     `
     )
-    .ilike("goal", `%${keyword}%`)
+    .like("goal", `%${keyword}%`)
+  // .limit(limit)
+  // .range(offset, offset + limit - 1)
 
   const categoryQuery = category
     ? baseQuery.eq("category", category)

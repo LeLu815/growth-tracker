@@ -9,7 +9,7 @@ export const fetchPosts = async (
   userId: string,
   showCompleted: boolean,
   pageParam: number = 1,
-  limit: number = 5
+  limit: number = 12
 ): Promise<PostType[]> => {
   const response = await axios.get("/api/challenge", {
     params: {
@@ -18,7 +18,7 @@ export const fetchPosts = async (
       filter,
       category: category === "전체" ? "" : category,
       showCompleted,
-      page: pageParam,
+      page: pageParam - 1,
       limit,
     },
   })

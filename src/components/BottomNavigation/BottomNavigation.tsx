@@ -15,7 +15,7 @@ interface NavItem {
   icon: (isActive: boolean) => React.ReactElement
 }
 
-const navItemClasses = cva("flex flex-col items-center text-xs", {
+const navItemClasses = cva("flex flex-col items-center text-xs lg:hidden", {
   variants: {
     active: {
       true: "text-[#FF5C5C]",

@@ -177,6 +177,8 @@ const config = {
         3: "0 5px 10px rgba(0, 0, 0, 0.2)",
         custom:
           "1px 1px 1px 0px rgba(0, 0, 0, 0.08), 0px 4px 8px 0px rgba(0, 0, 0, 0.15), 0px 0px 2px 0px rgba(0, 0, 0, 0.08)",
+
+        bottom: "0px 2px 2px 0px rgba(0, 0, 0, 0.12)",
       },
 
       borderRadius: {

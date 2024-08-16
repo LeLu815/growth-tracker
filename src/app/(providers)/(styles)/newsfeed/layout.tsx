@@ -11,7 +11,6 @@ export default function NewsfeedLayout({ children }: PropsWithChildren) {
       <Header />
       {children}
       <PlusComponent />
-      {/* <div className="h-[80px] w-full"></div> */}
       <BottomNavigation />
     </div>
   )

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import useChallengeCreateStore, {
   categories,
   defaultSelected,
@@ -10,6 +10,7 @@ import { useChallengeSearchStore } from "@/store/challengeSearch.store"
 import useMilestoneCreateStore from "@/store/milestoneCreate.store"
 import { InfiniteData, QueryKey, useInfiniteQuery } from "@tanstack/react-query"
 
+import Box from "@/components/Box"
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
 import Loading from "@/components/Loading"
 
@@ -28,6 +29,7 @@ function NewsfeedClient() {
   const { searchQuery, setSearchQuery } = useChallengeSearchStore()
 
   const router = useRouter()
+  const pathname = usePathname()
 
   const loadMore = useRef<HTMLDivElement | null>(null)
   const {
@@ -36,6 +38,7 @@ function NewsfeedClient() {
     setGoal,
   } = useChallengeCreateStore()
   const { setData } = useMilestoneCreateStore()
+
   useEffect(() => {
     // 최초 랜더링시에 초기 데이터 삭제
     setData([])
@@ -43,6 +46,13 @@ function NewsfeedClient() {
     setZustandCategory(categories[0])
     setGoal("")
   }, [])
+
+  useEffect(() => {
+    if (!pathname.startsWith("/challenge")) {
+      setSearchQuery("")
+    }
+  }, [pathname, setSearchQuery])
+
   const {
     data,
     error,
@@ -67,12 +77,12 @@ function NewsfeedClient() {
         userId,
         showCompleted,
         pageParam,
-        5
+        12
       )
     },
 
     getNextPageParam: (lastPage, pages) => {
-      return lastPage?.length === 5 ? pages.length + 1 : undefined
+      return lastPage?.length === 12 ? pages.length + 1 : undefined
     },
 
     initialPageParam: 1,
@@ -98,6 +108,7 @@ function NewsfeedClient() {
   }
   const handleSearch = (query: string) => {
     setSearchQuery(query)
+
     refetch()
   }
 
@@ -134,8 +145,8 @@ function NewsfeedClient() {
 
   return (
     <>
-      <div className="sticky top-[100px]">
-        <div>
+      <div className="lg:shadow-bottom sticky top-[60px] z-20 bg-[#fff] px-0 shadow-none lg:top-[107px] lg:px-[40px]">
+        <div className="mx-auto w-full lg:max-w-[558px]">
           <SearchBar onSearch={handleSearch} />
         </div>
         {/* 카테고리 */}
@@ -143,7 +154,9 @@ function NewsfeedClient() {
           category={category}
           onSelectCategory={handleCategoryClick}
         />
+      </div>
 
+      <Box className="px-0 py-0 lg:max-w-[1024px]">
         {/* 정렬 */}
         <SortSelector
           filter={filter}
@@ -151,31 +164,35 @@ function NewsfeedClient() {
           onChangeFilter={handleFilterChange}
           onToggleShowComplete={handleToggleShowCompleted}
         />
-      </div>
 
-      {/* 목록 */}
-      {isLoading ? (
-        <Loading />
-      ) : noResult ? (
-        <div className="flex w-full flex-col items-center">
-          <NoChallengeFlagsIcon className="mb-[32px] mt-[78px]" />
-          <p className="mb-[12px] text-title-m">일치하는 챌린지가 없어요</p>
-          <p className="text-body-s">챌린지를 생성해보세요</p>
-        </div>
-      ) : (
-        <ul className="grid grid-cols-1 gap-x-6 pb-[60px] md:grid-cols-2 lg:mt-[180px] lg:grid-cols-3 lg:gap-y-10">
-          {data?.pages
-            .flat()
-            .map((post) => (
-              <ChallengePosts
-                key={post.id}
-                posts={[post]}
-                onClickPost={handlePostClick}
-              />
-            ))}
-          <div ref={loadMore}>{isFetchingNextPage && <div>로딩중...</div>}</div>
-        </ul>
-      )}
+        {/* 목록 */}
+        {isLoading ? (
+          <Loading />
+        ) : noResult ? (
+          <div className="flex w-full flex-col items-center">
+            <NoChallengeFlagsIcon className="mb-[32px] mt-[78px]" />
+            <p className="mb-[12px] text-center text-title-m">
+              &quot;{searchQuery}&quot; <br /> 포함되는 챌린지가 없어요
+            </p>
+            <p className="text-body-s">챌린지를 생성해보세요</p>
+          </div>
+        ) : (
+          <ul className="grid grid-cols-1 gap-x-6 pb-[60px] md:grid-cols-2 lg:grid-cols-3 lg:gap-y-10">
+            {data?.pages
+              .flat()
+              .map((post) => (
+                <ChallengePosts
+                  key={post.id}
+                  posts={[post]}
+                  onClickPost={handlePostClick}
+                />
+              ))}
+            <div ref={loadMore}>
+              {isFetchingNextPage && <div>로딩중...</div>}
+            </div>
+          </ul>
+        )}
+      </Box>
     </>
   )
 }
