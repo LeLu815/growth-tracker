@@ -42,6 +42,8 @@ function SignUpClient() {
 
     if (value.length < 1) {
       setNicknameError("닉네임은 1자 이상이어야 합니다.")
+    } else if (value.length > 8) {
+      setNicknameError("닉네임은 8자 이하이어야 합니다.")
     } else {
       setNicknameError("")
     }
