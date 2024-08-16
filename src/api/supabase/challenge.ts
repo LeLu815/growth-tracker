@@ -63,13 +63,11 @@ export interface PUTchallengeArgumentProps {
 
 // 챌린지 생성함수
 export const POSTchallenge = async (params: POSTchallengeArgumentProps) => {
-  console.log("params :", params)
   const postResponse = await axios.post("/api/challenge", {
     challenge: params.challenge,
     milestone: params.milestone,
     routine: params.routine,
   })
-  console.log("postResponse :", postResponse)
   return postResponse.data
 }
 
@@ -124,6 +122,20 @@ export const GETroutines = async (milestoneId: string) => {
     .select()
     .eq("milestone_id", milestoneId)
 
+  if (error) {
+    throw error
+  }
+  return data
+}
+
+// 챌린지 id로 챌린지 삭제하기
+export const DELETEchallenge = async (challengeId: string) => {
+  const supabase = createClient()
+  const { data, error } = await supabase
+    .from("challenge")
+    .delete()
+    .eq("id", challengeId)
+    .select()
   if (error) {
     throw error
   }

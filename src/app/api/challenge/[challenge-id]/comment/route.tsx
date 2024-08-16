@@ -58,8 +58,6 @@ export async function GET(
 
     const data = await pgClient.query(query, params)
 
-    console.log("Executing query:", query)
-    console.log("With parameters:", params)
     return NextResponse.json(data.rows)
   } catch (error: any) {
     throw new Error(error.message)

@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation"
 import {
+  DELETEchallenge,
   POSTchallenge,
   POSTchallengeArgumentProps,
   PUTchallenge,
@@ -27,6 +28,7 @@ function useChallengeQuery() {
   const router = useRouter() // useRouter 훅 사용
   const { open } = useModal()
   const { showToast } = useToast()
+  // 챌린지 생성
   const { isPending: challengeCreateIsPending, mutate: challengeCreateMutate } =
     useMutation({
       mutationFn: async (variables: POSTchallengeArgumentProps) =>
@@ -47,6 +49,7 @@ function useChallengeQuery() {
       },
     })
 
+  // 챌린지 업데이트
   const { isPending: challengeUpdateIsPending, mutate: challengeUpdateMutate } =
     useMutation({
       mutationFn: async (variables: PUTchallengeArgumentProps) =>
@@ -68,11 +71,19 @@ function useChallengeQuery() {
       },
     })
 
+  // 챌린지 삭제 함수
+  const { isPending: challengeDeleteIsPending, mutate: challengeDeleteMutate } =
+    useMutation({
+      mutationFn: async (challengeId: string) =>
+        await DELETEchallenge(challengeId),
+    })
   return {
     challengeCreateMutate,
     challengeCreateIsPending,
     challengeUpdateIsPending,
     challengeUpdateMutate,
+    challengeDeleteIsPending,
+    challengeDeleteMutate,
   }
 }
 
