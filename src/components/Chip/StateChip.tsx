@@ -1,5 +1,5 @@
 import Chip from "@/components/Chip/Chip"
-import { convertStatusToKorean } from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeInfo"
+import { convertStatusToKorean } from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeDetail"
 
 function StateChip({ state }: { state: string }) {
   const statusLabel = convertStatusToKorean(state)
