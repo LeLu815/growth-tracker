@@ -11,9 +11,14 @@ import axios from "axios"
 
 import NoneProfile from "@/components/Icon/NoneProfile"
 import SendIcon from "@/components/Icon/SendIcon"
-import Loading from "@/components/Loading"
 
-function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
+function ChallengeCommentCreate({
+  challengeId,
+  className,
+}: {
+  challengeId: string
+  className: string
+}) {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { me, userData } = useAuth()
@@ -90,8 +95,8 @@ function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[640px]">
-      <div className="flex gap-[9px] bg-white px-[20px] py-[10px]">
+    <div className={`mx-auto min-w-[320px] max-w-[480px] sm:max-w-[480px] md:max-w-[768px] ${className}`}>
+      <div className="flex gap-[9px] bg-white px-[20px] py-[10px] lg:px-0">
         <div className="relative h-[50px] w-[60px] overflow-hidden rounded-full">
           {userData?.profile_image_url ? (
             <Image
@@ -105,10 +110,10 @@ function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
           )}
         </div>
 
-        <form className="flex w-full items-center">
+        <form className="flex w-full items-center ">
           <div className="flex flex-1 p-2">
             <textarea
-              className={`w-full resize-none border-b border-[#141414] bg-transparent p-2 text-grey-200 outline-none`}
+              className={`w-full resize-none border-b border-[#141414] bg-transparent p-2 text-grey-200 outline-none lg:max-w-[335px]`}
               placeholder="댓글을 입력해주세요..."
               value={content}
               ref={textareaRef}
@@ -121,7 +126,7 @@ function ChallengeCommentCreate({ challengeId }: { challengeId: string }) {
           {isFocused && (
             <SendIcon
               color={content ? "#FD8C98" : ""}
-              className="h-[24px] w-[24px] cursor-pointer"
+              className="relative lg:right-3 h-[20px] w-[20px] cursor-pointer"
               onClick={createComment}
             />
           )}

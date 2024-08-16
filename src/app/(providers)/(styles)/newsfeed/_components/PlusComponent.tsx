@@ -11,7 +11,7 @@ function PlusComponent() {
       onClick={() => {
         return router.push("/challenge/create")
       }}
-      className="fixed bottom-32 right-10 z-50 flex h-[50px] w-[50px] cursor-pointer items-center justify-center rounded-full bg-black shadow-custom"
+      className="fixed bottom-32 right-10 z-50 flex h-[50px] w-[50px] cursor-pointer items-center justify-center rounded-full bg-black shadow-custom lg:hidden"
     >
       <PlusIcon className="stroke-white" />
     </div>

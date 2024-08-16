@@ -20,7 +20,7 @@ const buttonVariant = cva(
         lg: "w-full px-[26px] py-[12px] text-[18px]",
       },
       variant: {
-        outline: "rounded-[8px] ",
+        outline: "rounded-[8px] border-1",
         contained: "rounded-[8px] ",
         disabled: "cursor-not-allowed rounded-[8px]",
         selected: "bg-pink-850 text-primary border-primary rounded-[8px]",
@@ -37,7 +37,8 @@ const buttonVariant = cva(
       {
         intent: "primary",
         variant: "outline",
-        className: "text-primary bg-white border-primary active:text-white",
+        className:
+          "text-primary bg-white border-primary active:text-white hover:text-white",
       },
       {
         intent: "primary",
@@ -52,7 +53,7 @@ const buttonVariant = cva(
       {
         intent: "secondary",
         variant: "outline",
-        className: "text-secondary bg-white border-secondary",
+        className: "text-secondary bg-white border-secondary hover:text-white",
       },
       {
         intent: "primary",
