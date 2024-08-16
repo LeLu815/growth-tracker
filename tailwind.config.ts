@@ -233,6 +233,16 @@ const config = {
         ["disabled"]
       )
     },
+    function ({ addUtilities }: { addUtilities: any }) {
+      const newUtilities = {
+        ".custom-scrollbar": {
+          "scrollbar-width": "12px" ,
+          "scrollbar-color": "#FEBEC5 #FCFCFC" ,
+        },
+      }
+
+      addUtilities(newUtilities, ["responsive", "hover"])
+    },
   ],
 } satisfies Config
 

@@ -15,13 +15,22 @@ import { useInView } from "react-intersection-observer"
 
 import NoneProfile from "@/components/Icon/NoneProfile"
 import ThumbsUpIcon from "@/components/Icon/ThumbsUpIcon"
+import ChallengeCommentCreate from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeCommentCreate"
 
 import {
   ChallengeCommentPageType,
   ChallengeCommentType,
 } from "../../../../../../../types/challengeDetail.type"
 
-function ChallengeCommentList({ challengeId }: { challengeId: string }) {
+interface ChallengeCommentListProps {
+  challengeId: string
+  className: string | null
+}
+
+function ChallengeCommentList({
+  challengeId,
+  className = "",
+}: ChallengeCommentListProps) {
   const { me } = useAuth()
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -311,26 +320,32 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
   if (isError) return <div>Error loading data</div>
 
   return (
-    <div className={"flex w-full flex-col items-center gap-4 pb-10"}>
-      <div className={"flex w-full justify-between p-2"}>
-        <div className={"text-body-xxs text-[#141414]"}>
+    <div
+      className={`flex w-full flex-col items-center gap-[14p] mb-20 overflow-hidden px-[20px] ${className}`}
+    >
+      <div className="flex w-full justify-between border-b-[1px] p-[20px] lg:border-t-2 lg:border-solid lg:border-grey-800 lg:bg-grey-900 lg:px-[40px] lg:py-[12px]">
+        <div className={"text-body-xxs text-grey-50 lg:text-body-xs"}>
           댓글 {data?.[0] ? data?.[0].total_count : 0}
         </div>
         <div className={"flex cursor-pointer gap-3"}>
           <div
             onClick={() => handleChangeSortField("like_cnt")}
-            className={`text-[14px] ${sortField === "like_cnt" || !sortField ? "font-bold text-black" : "font-medium text-[#474747]"} `}
+            className={`text-[14px] ${sortField === "like_cnt" || !sortField ? "font-bold text-black" : "font-medium text-[#474747]"} lg:text-[12px]`}
           >
             인기순
           </div>
           <div
             onClick={() => handleChangeSortField("created_at")}
-            className={`text-[14px] ${sortField === "created_at" ? "font-bold text-black" : "font-medium text-[#474747]"} `}
+            className={`text-[14px] ${sortField === "created_at" ? "font-bold text-black" : "font-medium text-[#474747]"} lg:text-[12px]`}
           >
             최신순
           </div>
         </div>
       </div>
+      <ChallengeCommentCreate
+        challengeId={challengeId}
+        className="hidden w-full lg:block lg:mb-4"
+      />
       {data?.length === 0 ? (
         <div className={"text-gray-custom p-24 text-center text-body-m"}>
           아직 댓글이 없어요.
@@ -338,7 +353,11 @@ function ChallengeCommentList({ challengeId }: { challengeId: string }) {
           댓글을 제일 먼저 남겨보세요.
         </div>
       ) : (
-        <div className={"w-full"}>
+        <div
+          className={
+            "flex w-full flex-col lg:gap-[8px] lg:overflow-y-auto lg:custom-scrollbar"
+          }
+        >
           {data?.map((comment, idx) => {
             const isLastItem = data?.length - 1 === idx
             return (

@@ -39,6 +39,7 @@ export type ChallengeType = {
   category: string
   start_at: string
   end_at: string
+  background_image_url: string | undefined | number
   milestones: MilestoneType[]
 }
 
