@@ -8,7 +8,7 @@ const buttonVariant = cva(
   {
     variants: {
       intent: {
-        primary: "active:bg-pink-400 md:hover:bg-pink-400",
+        primary: "active:bg-pink-700 md:hover:bg-pink-700",
         secondary: "md:hover:bg-blue-400 active:bg-blue-400",
         third: "active:bg-grey-800 md:hover:bg-grey-800",
         kakao: "bg-[#FDE500] text-[#1A1A1A]",
@@ -38,12 +38,12 @@ const buttonVariant = cva(
         intent: "primary",
         variant: "outline",
         className:
-          "text-primary bg-white border-primary active:text-white hover:text-white",
+          "text-primary bg-white border-primary active:text-white hover:pink-700 hover:text-white",
       },
       {
         intent: "primary",
         variant: "selected",
-        className: "text-primary border-primary bg-pink-850",
+        className: "text-primary border-primary bg-pink-850 hover:text-white",
       },
       {
         intent: "secondary",
