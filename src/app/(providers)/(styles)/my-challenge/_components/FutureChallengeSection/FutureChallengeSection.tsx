@@ -1,6 +1,7 @@
 "use client"
 
 import React, { PropsWithChildren } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 
 import BookMarkIcon02 from "@/components/Icon/BookMarkIcon02"
@@ -20,7 +21,13 @@ function FutureChallengeSection({
     <section>
       <div className="flex gap-x-[24px]">
         {/* 챌린지 썸네일 이미지 */}
-        <div className="h-[84px] w-[84px] rounded-md bg-[#DDDDDD]"></div>
+        <Image
+          src={challenge.image_url || ""}
+          alt={challenge.goal}
+          width={84}
+          height={84}
+          className="h-[84px] w-[84px] rounded-md object-cover"
+        />
         {/* 이미지 옆 모든 것 */}
         <div className="flex grow flex-col gap-y-[12px]">
           {/* 챌린지 이름 */}
@@ -31,18 +38,20 @@ function FutureChallengeSection({
               챌린지 실행전
             </p>
             <p className="text-[11px] text-[#7A7A7A]">
-              {(challenge.start_at || "").replace(/-/g, ".")} 예정
+              {(challenge.start_at || "").replace(/-/g, ".").slice(5)} 예정
             </p>
           </div>
           {/* 아이콘 섹션 */}
           <div className="flex items-center justify-start gap-x-[11px]">
             <div className="flex items-center justify-start gap-x-[4px]">
               <BookMarkIcon02 />
-              <p className="text-[12px] text-[#1A1A1A]">79</p>
+              <p className="text-[12px] text-[#1A1A1A]">{challenge.like_cnt}</p>
             </div>
             <div className="flex items-center justify-start gap-x-[4px]">
               <SaveIcon />
-              <p className="my-auto text-[12px] text-[#1A1A1A]">81</p>
+              <p className="my-auto text-[12px] text-[#1A1A1A]">
+                {challenge.template_cnt}
+              </p>
             </div>
           </div>
           {/* 구분선 */}
@@ -52,7 +61,7 @@ function FutureChallengeSection({
       {/* 상세페이지 링크 */}
       <div className="mt-[16px] flex w-full justify-center">
         <p
-          className="text-[12px] text-[#1A1A1A]"
+          className="cursor-pointer text-[12px] text-[#1A1A1A]"
           onClick={() => {
             router.push(`/challenge/${challenge.id}`)
           }}

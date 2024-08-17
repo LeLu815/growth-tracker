@@ -18,7 +18,8 @@ function MilestoneCreateComponent({
       <p>{text}</p>
       {onClick && (
         <CloseIcon
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation()
             onClick()
           }}
         />

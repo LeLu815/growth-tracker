@@ -36,12 +36,12 @@ interface MilestoneCreateConfigProps {
   getCreatedChallengeId: (id: string) => void
 }
 
-const SELECT_WEEK_BTN_VALUES: ("주중" | "주말" | "매일")[] = [
+export const SELECT_WEEK_BTN_VALUES: ("주중" | "주말" | "매일")[] = [
   "주중",
   "주말",
   "매일",
 ]
-const initialSelectWeeks = WEEK_DAY_LIST.map((_) => false)
+export const initialSelectWeeks = WEEK_DAY_LIST.map((_) => false)
 
 function MilestoneCreateConfig({
   goNextPage,
@@ -209,7 +209,7 @@ function MilestoneCreateConfig({
         <Input
           variant="login"
           label="루틴명"
-          placeholder="루틴명을 입력해주세요"
+          placeholder="루틴 명을 입력해주세요"
           value={milestoneNameInput}
           onChange={(e) => {
             if (e.target.value.length > 20) {

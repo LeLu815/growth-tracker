@@ -49,7 +49,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className="flex w-full flex-col">
-        <label htmlFor={inputId} className="pb-[16px]">
+        <label htmlFor={inputId} className="pb-[24px]">
           <span className="text-[18px] font-[700]">{label}</span>
           {required && (
             <span className="text-[#FF1F0F text-sm font-semibold">*</span>

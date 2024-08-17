@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation"
 import Box from "@/components/Box"
 import Page from "@/components/Page"
 
+import GoogleLoginButton from "../login-email/_components/GoogleLoginButton"
+import KakaoLoginButton from "../login-email/_components/KakaoLoginButton"
 import EmailLoginButton from "./_components/EmailLoginButton"
-import GoogleLoginButton from "./_components/GoogleLoginButton"
-import KakaoLoginButton from "./_components/KakaoLoginButton"
 
 export default function LoginPage() {
   const router = useRouter()

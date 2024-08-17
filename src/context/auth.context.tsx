@@ -16,7 +16,11 @@ type AuthContextValue = {
   isLoggedIn: boolean
   me: User | null
 
-  userData: { nickname: string | null; profile_image_url: string | null } | null
+  userData: {
+    nickname: string | null
+    profile_image_url: string | null
+    is_challenge_first_create: boolean
+  } | null
   logIn: (
     email: string,
     password: string,
@@ -56,7 +60,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const fetchUserData = async (userId: string) => {
     const { data, error } = await supabase
       .from("users")
-      .select("nickname, profile_image_url")
+      .select("nickname, profile_image_url, is_challenge_first_create")
       .eq("id", userId)
       .single()
     if (data) {
@@ -145,19 +149,19 @@ export function AuthProvider({ children }: PropsWithChildren) {
       }
     }
 
-    // setMe(responseData)
-    // fetchUserData(responseData.id)
-    // return { status: 200, message: "" }
-    // 회원가입이 성공적으로 완료되면 로그인 처리를 합니다.
-    const loginResponse = await logIn(email, password)
-    if (loginResponse.status !== 200) {
-      return {
-        status: loginResponse.status,
-        message: "회원가입은 성공했지만 자동 로그인이 실패했습니다.",
-      }
-    }
-
+    setMe(responseData)
+    await fetchUserData(responseData.id)
     return { status: 200, message: "" }
+
+    // const loginResponse = await logIn(email, password)
+    // if (loginResponse.status !== 200) {
+    //   return {
+    //     status: loginResponse.status,
+    //     message: "회원가입은 성공했지만 자동 로그인이 실패했습니다.",
+    //   }
+    // }
+
+    // return { status: 200, message: "" }
   }
 
   // 로그아웃 함수

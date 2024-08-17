@@ -106,12 +106,6 @@ function MilestoneCreateConfigEdit({
     return prev
   }, 0)
 
-  console.log(
-    "resisteredMilestonePeriodWithoutMe :",
-    resisteredMilestonePeriodWithoutMe,
-    milestonePeriod
-  )
-
   // 마일스톤 종료 날짜 *
   const milestone_end_date = format(
     addDays(new Date(milestone_start_date), +milestonePeriod - 1),
@@ -202,7 +196,7 @@ function MilestoneCreateConfigEdit({
   const deleteMilestone = (milestoneId: string) => {
     setData((prev) =>
       produce(prev, (drafts) => {
-        const draft = drafts.filter((draft) => draft.id === milestoneId)
+        return drafts.filter((draft) => draft.id !== milestoneId)
       })
     )
   }
@@ -294,7 +288,7 @@ function MilestoneCreateConfigEdit({
           <Input
             label="루틴명"
             variant="login"
-            placeholder="챌린지명을 입력해주세요"
+            placeholder="루틴 명을 입력해주세요"
             value={milestoneNameInput}
             onChange={(e) => {
               if (e.target.value.length > 20) return
@@ -401,7 +395,7 @@ function MilestoneCreateConfigEdit({
           </form>
         </div>
       </div>
-      <div className="sticky bottom-0 left-0 z-50 h-[120px] w-full bg-gradient-to-t from-white from-70% via-white to-transparent pb-2 pt-[20px]">
+      <div className="sticky bottom-0 left-0 z-50 w-full bg-gradient-to-t from-white from-70% via-white to-transparent pb-2 pt-[20px]">
         <Button
           onClick={() => {
             // 모달 닫는 함수

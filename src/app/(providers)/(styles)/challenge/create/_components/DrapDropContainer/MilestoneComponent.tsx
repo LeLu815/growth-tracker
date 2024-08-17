@@ -7,6 +7,7 @@ import Button from "@/components/Button"
 import ArrowDownIcon from "@/components/Icon/ArrowDownIcon"
 import ArrowUpIcon from "@/components/Icon/ArrowUpIcon"
 
+import ChallengeUpdateMilestonePc from "../../../[challenge-id]/update/_components/ChallengeUpdatePc/ChallengeUpdateMilestonePc"
 import MilestoneCard from "../Card"
 import MilestoneCreateComponent from "../MilestoneCreate/MilestoneCreateComponent"
 import MilestoneCreateConfigEdit from "../MilestoneCreate/MilestoneCreateConfigEdit"
@@ -50,6 +51,7 @@ function MilestoneComponent({
       {...(provided ? provided.draggableProps : {})} // provided가 있을 때만 draggableProps를 설정
       {...(provided ? provided.dragHandleProps : {})} // provided가 있을 때만 dragHandleProps를 설정
       className={`flex flex-col shadow-md ${disDisabled && "!border-grey-800 !text-grey-600"}`}
+      onClick={() => setShowDetail((prev) => !prev)}
     >
       <div className="ml-auto">
         {!showDetail ? (
@@ -81,33 +83,43 @@ function MilestoneComponent({
           </div>
         </div>
         {showDetail && (
-          <ul className="mt-6 flex flex-col gap-2">
-            {milestone.routines.map((obj) => (
-              <li key={obj.content}>
-                <MilestoneCreateComponent
-                  text={obj.content}
-                  disDisabled={disDisabled}
-                />
-              </li>
-            ))}
+          <>
+            <ul
+              className={`mt-6 flex flex-col gap-2 ${!disDisabled && "lg:hidden"}`}
+            >
+              {milestone.routines.map((obj) => (
+                <li key={obj.content}>
+                  <MilestoneCreateComponent
+                    text={obj.content}
+                    disDisabled={disDisabled}
+                  />
+                </li>
+              ))}
+              {!disDisabled && (
+                <div className="mt-[16px]">
+                  <Button
+                    size="lg"
+                    intent="primary"
+                    variant="outline"
+                    className="h-full"
+                    onClick={() => {
+                      // 수정 모달 띄우기
+                      handleOpenCalendarModal(milestone.id)
+                    }}
+                  >
+                    수정
+                  </Button>
+                  <div className="h-[8px]"></div>
+                </div>
+              )}
+            </ul>
             {!disDisabled && (
-              <div className="mt-[16px]">
-                <Button
-                  size="lg"
-                  intent="primary"
-                  variant="outline"
-                  className="h-full"
-                  onClick={() => {
-                    // 수정 모달 띄우기
-                    handleOpenCalendarModal(milestone.id)
-                  }}
-                >
-                  수정
-                </Button>
-                <div className="h-[8px]"></div>
-              </div>
+              <ChallengeUpdateMilestonePc
+                closeDetail={() => setShowDetail(false)}
+                milestoneId={milestone.id}
+              />
             )}
-          </ul>
+          </>
         )}
       </div>
     </MilestoneCard>

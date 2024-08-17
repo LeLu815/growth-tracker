@@ -122,6 +122,7 @@ function ChallengeLike({ challengeId }: ChallengeLikeProps) {
             view_cnt: prev?.view_cnt || 0,
             is_secret: prev?.is_secret || false,
             day_cnt: prev?.day_cnt || 0,
+            background_image_url: prev?.background_image_url || "",
             comment_cnt: prev?.comment_cnt || 0,
             routine_done_daily_success_count:
               prev?.routine_done_daily_success_count || 0,

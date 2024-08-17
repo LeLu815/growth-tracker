@@ -11,8 +11,8 @@ import InvisibilityIcon from "@/components/Icon/InvisibilityIcon"
 import VisibilityIcon from "@/components/Icon/VisibilityIcon"
 import Input from "@/components/Input"
 
-import GoogleLoginButton from "../../login/_components/GoogleLoginButton"
-import KakaoLoginButton from "../../login/_components/KakaoLoginButton"
+import GoogleLoginButton from "./GoogleLoginButton"
+import KakaoLoginButton from "./KakaoLoginButton"
 
 function LoginEmailClient() {
   const [email, setEmail] = useState<string>("")
@@ -127,7 +127,7 @@ function LoginEmailClient() {
         <div className="text-grey-50">비밀번호 찾기</div>
         <span className="mx-[8px] text-grey-700">|</span> */}
         <Link href="/auth/sign-up" className="text-grey-50 active:text-black">
-          아직 회원이 아니신가요?{" "}
+          아직 회원이 아니신가요?
           <span className="text-body-m font-bold">회원가입</span>
         </Link>
       </div>

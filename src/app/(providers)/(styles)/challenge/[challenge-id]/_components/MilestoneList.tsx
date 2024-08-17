@@ -8,7 +8,12 @@ import Routine from "@/app/(providers)/(styles)/challenge/[challenge-id]/_compon
 
 import { MilestoneType } from "../../../../../../../types/challengeDetail.type"
 
-function MilestoneList({ milestones }: { milestones: MilestoneType[] }) {
+interface MilestoneListProps {
+  milestones: MilestoneType[]
+  className?: string
+}
+
+function MilestoneList({ milestones, className = "" }: MilestoneListProps) {
   const [openIndexes, setOpenIndexes] = useState<number[]>([])
 
   const toggleAccordion = (index: number) => {
@@ -37,7 +42,9 @@ function MilestoneList({ milestones }: { milestones: MilestoneType[] }) {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-[640px] flex-col items-start gap-[12px] px-[20px]">
+    <div
+      className={`mx-auto flex w-full max-w-[640px] flex-col items-start gap-[12px] px-[20px] ${className}`}
+    >
       {milestones?.map((milestone, index) => {
         const isOpen = openIndexes.includes(index)
         return (
@@ -48,7 +55,7 @@ function MilestoneList({ milestones }: { milestones: MilestoneType[] }) {
           >
             <div className="flex flex-col items-start gap-[20px] self-stretch">
               <div className="flex items-center justify-between self-stretch">
-                <div className="text-title-xs text-[#171717] pt-2">
+                <div className="pt-2 text-title-xs text-[#171717]">
                   {milestone.name}
                 </div>
                 <span className="text-2xl">
