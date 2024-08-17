@@ -1,12 +1,14 @@
 "use client"
 
 import { usePathname } from "next/navigation"
+import classNames from "classnames"
+
+import DetailHeader from "@/app/(providers)/_components/Header/DetailHeader"
 
 import BackHeader from "./BackHeader"
 import DefaultHeader from "./DefaultHeader"
 import FeedHeader from "./FeedHeader"
 import WebHeader from "./WebHeader"
-import DetailHeader from "@/app/(providers)/_components/Header/DetailHeader";
 
 // 헤더 타입 정리
 type HeaderType = "default" | "feed" | "back" | "detail"
@@ -24,9 +26,11 @@ const Header = () => {
 
   let headerType: HeaderType = "default"
   let title = ""
+  let isSticky = true
 
   if (pathname.startsWith("/newsfeed")) {
     headerType = "feed"
+    isSticky = false
   } else if (pathname.startsWith("/auth/sign-up")) {
     headerType = "back"
     title = "이메일로 시작하기"
@@ -39,7 +43,11 @@ const Header = () => {
 
   return (
     <>
-      <div className="sticky top-0 z-20 hidden lg:block">
+      <div
+        className={classNames("z-20 hidden lg:block", {
+          "sticky top-0": isSticky,
+        })}
+      >
         <WebHeader />
       </div>
 
