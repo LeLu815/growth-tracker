@@ -30,7 +30,7 @@ function UpFloatingButton() {
   return (
     <div
       onClick={scrollToTop}
-      className={`fixed bottom-32 right-10 z-50 flex h-[50px] w-[50px] cursor-pointer items-center justify-center rounded-full bg-black shadow-custom transition-opacity duration-300 ${
+      className={`fixed bottom-32 right-10 z-50 hidden h-[50px] w-[50px] cursor-pointer items-center justify-center rounded-full bg-black shadow-custom transition-opacity duration-300 lg:flex ${
         isVisible ? "opacity-100" : "opacity-0"
       }`}
     >

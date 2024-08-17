@@ -1,15 +1,17 @@
 "use client"
 
 import { useRef } from "react"
+import classNames from "classnames"
 
 import SearchIcon from "@/components/Icon/SearchIcon"
 import Input from "@/components/Input"
 
 export interface SearchBarProps {
   onSearch?: (query: string) => void
+  className?: string
 }
 
-function SearchBar({ onSearch }: SearchBarProps) {
+function SearchBar({ onSearch, className }: SearchBarProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -27,7 +29,10 @@ function SearchBar({ onSearch }: SearchBarProps) {
 
   return (
     <form
-      className="flex w-full items-center justify-between"
+      className={classNames(
+        "flex w-full items-center justify-between",
+        className
+      )}
       onSubmit={handleSearchSubmit}
     >
       <div className="ml-auto flex flex-1 items-center justify-end gap-[8px]">
@@ -43,7 +48,7 @@ function SearchBar({ onSearch }: SearchBarProps) {
               width={24}
               height={24}
               color="black"
-              className="absolute right-4 top-[26px] cursor-pointer"
+              className="absolute right-4 top-[34px] cursor-pointer"
             />
           </button>
         </div>
