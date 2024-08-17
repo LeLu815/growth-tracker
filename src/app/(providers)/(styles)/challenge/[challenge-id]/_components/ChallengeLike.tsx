@@ -2,15 +2,12 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
-import useChallengeCreateStore from "@/store/challengeCreate.store"
 import useChallengeDetailStore from "@/store/challengeDetail.store"
-import useMilestoneCreateStore from "@/store/milestoneCreate.store"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 
 import BookmarkIcon from "@/components/Icon/BookmarkIcon"
 import ImportIcon from "@/components/Icon/ImportIcon"
-import Loading from "@/components/Loading"
 
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
 
@@ -195,7 +192,10 @@ function ChallengeLike({ challengeId }: ChallengeLikeProps) {
         />
       </button>
       {challengeDetail.state === "on_complete" && (
-        <button className="flex w-full flex-col items-center justify-center transition-all duration-300">
+        <button
+          onClick={() => handleClickCopy(challengeId)}
+          className="flex w-full flex-col items-center justify-center transition-all duration-300"
+        >
           <ImportIcon width={32} height={32} className={`h-[32px] w-[32px]`} />
         </button>
       )}

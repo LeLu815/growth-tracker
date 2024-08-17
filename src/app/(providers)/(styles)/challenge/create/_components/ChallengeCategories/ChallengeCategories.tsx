@@ -3,10 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useModal } from "@/context/modal.context"
-import useChallengeCreateStore, {
-  defaultSelected,
-} from "@/store/challengeCreate.store"
-import useMilestoneCreateStore from "@/store/milestoneCreate.store"
+import useChallengeCreateStore from "@/store/challengeCreate.store"
 
 import Box from "@/components/Box"
 import Button from "@/components/Button"
@@ -28,7 +25,6 @@ function ChallengeCategories({
   handleChangeStep,
 }: ChallengeCategoriesProps) {
   const { category, setRange, setCategory, setGoal } = useChallengeCreateStore()
-  const { setData } = useMilestoneCreateStore()
   const [selectedCategory, setSelectedCategory] = useState<string>(
     category || categories[0]
   )
@@ -46,11 +42,6 @@ function ChallengeCategories({
             type: "confirm",
             content: "챌린지 작성을 취소하시겠습니까?",
             onConfirm: () => {
-              // 2. 주스텐드 싹다 정리하는 함수를 실행하기 (스토어 초기화)
-              setData([])
-              setRange(defaultSelected)
-              setCategory(categories[0])
-              setGoal("")
               router.replace("/")
             },
           })

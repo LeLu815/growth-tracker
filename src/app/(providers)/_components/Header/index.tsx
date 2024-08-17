@@ -2,11 +2,12 @@
 
 import { usePathname } from "next/navigation"
 
+import DetailHeader from "@/app/(providers)/_components/Header/DetailHeader"
+
 import BackHeader from "./BackHeader"
 import DefaultHeader from "./DefaultHeader"
 import FeedHeader from "./FeedHeader"
 import WebHeader from "./WebHeader"
-import DetailHeader from "@/app/(providers)/_components/Header/DetailHeader";
 
 // 헤더 타입 정리
 type HeaderType = "default" | "feed" | "back" | "detail"
@@ -20,6 +21,7 @@ const headers = {
 }
 
 const Header = () => {
+  let ishideTitle = false
   const pathname = usePathname()
 
   let headerType: HeaderType = "default"
@@ -30,6 +32,12 @@ const Header = () => {
   } else if (pathname.startsWith("/auth/sign-up")) {
     headerType = "back"
     title = "이메일로 시작하기"
+  } else if (pathname === "/challenge/create") {
+    ishideTitle = true
+  } else if (/^\/challenge\/[0-9a-fA-F-]{36}\/update$/.test(pathname)) {
+    ishideTitle = true
+  } else if (/^\/challenge\/[0-9a-fA-F-]{36}\/import$/.test(pathname)) {
+    ishideTitle = true
   } else if (/^\/challenge\/[^/]+$/.test(pathname)) {
     headerType = "detail"
     title = ""
@@ -39,11 +47,13 @@ const Header = () => {
 
   return (
     <>
-      <div className="sticky top-0 z-20 hidden lg:block">
+      <div
+        className={`sticky top-0 z-20 hidden lg:block ${ishideTitle && "hidden"}`}
+      >
         <WebHeader />
       </div>
 
-      <div className="sticky top-0 z-20 lg:hidden">
+      <div className={`sticky top-0 z-20 lg:hidden ${ishideTitle && "hidden"}`}>
         {headerType === "feed" ? (
           <SelectedHeader />
         ) : headerType === "back" ? (
