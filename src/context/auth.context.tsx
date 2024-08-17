@@ -71,6 +71,34 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
   }
 
+  // useEffect(() => {
+  //   const checkUser = async () => {
+  //     const { data } = await supabase.auth.getUser()
+
+  //     if (data.user) {
+  //       setMe(data.user)
+  //       fetchUserData(data.user.id)
+  //     } else {
+  //       setMe(null)
+  //       setUserData(null)
+  //     }
+  //     setIsInitialized(true)
+  //   }
+
+  //   // 초기 상태 체크
+  //   checkUser()
+
+  //   const subscription = supabase.auth.onAuthStateChange((event, session) => {
+  //     if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
+  //       checkUser()
+  //     }
+  //   })
+
+  //   return () => {
+  //     subscription
+  //   }
+  // }, [])
+
   // 로그인 함수
   const logIn: AuthContextValue["logIn"] = async (
     email,
