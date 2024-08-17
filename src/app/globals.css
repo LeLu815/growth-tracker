@@ -197,6 +197,15 @@ table {
   transition: all 0.3s ease-in-out;
 }
 
+.ant-drawer-header .ant-drawer-header-title {
+  border: none;
+  border-bottom: none;
+}
+
+.ant-drawer-content-wrapper {
+  width: 100%;
+}
+
 @layer base {
   body {
     @apply bg-background text-foreground;
