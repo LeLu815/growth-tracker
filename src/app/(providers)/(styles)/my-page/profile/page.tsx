@@ -2,12 +2,14 @@
 
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
 import { useToast } from "@/context/toast.context"
+import useGraphSliceCountStore from "@/store/graphSliceCount.store"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
+import { useMediaQuery } from "react-responsive"
 
 import Box from "@/components/Box"
 import Button from "@/components/Button"
@@ -23,6 +25,7 @@ import {
 import { MY_PAGE } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
 function UserInfoPage() {
+  const isLargeScreen = useMediaQuery({ minWidth: 1024 }) // lg 사이즈 이상일 때 true
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const originProfileImageUrlRef = useRef<string | null>(null)
 
@@ -33,7 +36,14 @@ function UserInfoPage() {
   const { me } = useAuth()
   const modal = useModal()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const isResponsive = searchParams.get("isResponsive") || false
+
   const { showToast } = useToast()
+
+  const setCurrentCount = useGraphSliceCountStore(
+    (state) => state.setCurrentCount
+  )
 
   /**
    * 유저 정보 조회
@@ -125,11 +135,21 @@ function UserInfoPage() {
     }
   }
 
+  useEffect(() => {
+    if (!isLargeScreen && isResponsive) {
+      router.push("/my-page")
+    }
+  }, [isLargeScreen])
+
+  useEffect(() => {
+    setCurrentCount(0)
+  }, [])
+
   if (isPending) return <Loading />
   if (isError) return <div>Error loading data</div>
 
   return (
-    <Box className="flex h-screen justify-center">
+    <Box className="flex justify-center">
       <div className={"w-full"}>
         <div className="flex flex-col items-center">
           {profileImageUrl ? (
@@ -178,7 +198,7 @@ function UserInfoPage() {
           className={"mx-auto flex max-w-[640px] flex-col gap-4"}
           onSubmit={handleUpdateUser}
         >
-          <div className="mt-2 text-lg">회원정보</div>
+          <div className="mt-2 text-lg lg:hidden">회원정보</div>
           <div className="mt-6">
             <div className="mb-4">
               <Input

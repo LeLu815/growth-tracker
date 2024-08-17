@@ -1,6 +1,13 @@
 export interface MenuProps {
   name: string
   path: string
+  childMenu?: MenuProps[]
+}
+
+export interface WebMenuProps {
+  name: string
+  path: string
+  childMenu?: MenuProps[]
 }
 
 export const PROFILE: MenuProps = {
@@ -13,9 +20,19 @@ export const MY_PAGE: MenuProps = {
   path: "/my-page",
 }
 
-export const LIKE_CHALLENGE: MenuProps = {
-  name: "내 챌린지 보관함",
+export const CHALLENGE_STORAGE: MenuProps = {
+  name: "챌린지 보관함",
   path: "/my-page/challenge",
+}
+
+export const CHALLENGE_STORAGE_OF_LIKE: MenuProps = {
+  name: "저장한 챌린지",
+  path: CHALLENGE_STORAGE.path + "?type=likeChallenge",
+}
+
+export const CHALLENGE_STORAGE_OF_COMPLETE: MenuProps = {
+  name: "진행완료 챌린지",
+  path: CHALLENGE_STORAGE.path + "?type=completeChallenge",
 }
 
 export const MY_CHALLENGE_ANALYZE: MenuProps = {
@@ -28,10 +45,40 @@ export const MY_CHALLENGE_ANALYZE_DETAIL: MenuProps = {
   path: "/my-page/analyze/detail",
 }
 
+export const MY_PAGE_ALL_MENU = [
+  PROFILE,
+  CHALLENGE_STORAGE_OF_LIKE,
+  CHALLENGE_STORAGE_OF_COMPLETE,
+  CHALLENGE_STORAGE,
+  MY_CHALLENGE_ANALYZE,
+  MY_CHALLENGE_ANALYZE_DETAIL,
+]
+
 export const CHALLENGE_MENU_LIST: MenuProps[] = [
   {
-    name: LIKE_CHALLENGE.name,
-    path: LIKE_CHALLENGE.path,
+    name: CHALLENGE_STORAGE.name,
+    path: CHALLENGE_STORAGE.path,
+  },
+  {
+    name: MY_CHALLENGE_ANALYZE.name,
+    path: MY_CHALLENGE_ANALYZE.path,
+  },
+]
+
+export const CHALLENGE_MENU_LIST_OF_WEB: WebMenuProps[] = [
+  {
+    name: CHALLENGE_STORAGE.name,
+    path: CHALLENGE_STORAGE.path,
+    childMenu: [
+      {
+        name: CHALLENGE_STORAGE_OF_LIKE.name,
+        path: CHALLENGE_STORAGE_OF_LIKE.path,
+      },
+      {
+        name: CHALLENGE_STORAGE_OF_COMPLETE.name,
+        path: CHALLENGE_STORAGE_OF_COMPLETE.path,
+      },
+    ],
   },
   {
     name: MY_CHALLENGE_ANALYZE.name,

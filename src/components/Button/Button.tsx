@@ -12,6 +12,8 @@ const buttonVariant = cva(
         secondary: "md:hover:bg-blue-400 active:bg-blue-400",
         third: "active:bg-grey-800 md:hover:bg-grey-800",
         kakao: "bg-[#FDE500] text-[#1A1A1A]",
+        my: "text-primary",
+        logout: "text-black bg-white",
       },
       size: {
         xs: "text-body-s px-[10px] py-[8px]",
@@ -33,6 +35,11 @@ const buttonVariant = cva(
         intent: "primary",
         variant: "contained",
         className: "bg-primary border-transparent text-white",
+      },
+      {
+        intent: "my",
+        variant: "contained",
+        className: "bg-pink-900 border-transparent",
       },
       {
         intent: "primary",
