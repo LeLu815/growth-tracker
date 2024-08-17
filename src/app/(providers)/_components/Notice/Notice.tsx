@@ -163,11 +163,6 @@ function Notice() {
         title="알림"
         onClose={onClose}
         open={open}
-        // contentWrapperStyle={{
-        //   width: "100%",
-        //   maxWidth: "100%",
-        // }}
-        // width="378"
         width={screenWidth >= 1024 ? "378" : "100%"}
         closeIcon={<ArrowLeftIcon width={24} height={24} />}
         style={{ fontFamily: "SUITE", borderBottom: "none" }}
