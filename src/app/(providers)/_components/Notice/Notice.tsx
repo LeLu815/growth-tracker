@@ -9,6 +9,7 @@ import { Avatar, Badge, Drawer, Space } from "antd"
 import axios from "axios"
 
 import AlarmIcon from "@/components/Icon/AlarmIcon"
+import ArrowLeftIcon from "@/components/Icon/ArrowLeftIcon"
 
 import { NoticeListType, NoticeType } from "../../../../../types/notice.type"
 
@@ -126,7 +127,7 @@ function Notice() {
   }, [me?.id])
 
   return (
-    <div className="relative right-[20px] top-2">
+    <div className="relative right-[20px] top-2 cursor-pointer">
       <div onClick={showDrawer}>
         <Badge count={count}>
           <Avatar
@@ -143,29 +144,55 @@ function Notice() {
         </Badge>
       </div>
 
-      <Drawer title="알림" onClose={onClose} open={open}>
-        <div className={"relative flex flex-col gap-4"}>
+      <Drawer
+        className="w-full text-center text-title-s"
+        title="알림"
+        onClose={onClose}
+        open={open}
+        contentWrapperStyle={{
+          width: "100%",
+          maxWidth: "100%",
+        }}
+        // width="100%"
+        closeIcon={<ArrowLeftIcon width={24} height={24} />}
+        style={{ fontFamily: "SUITE", borderBottom: "none" }}
+      >
+        <div
+          className={
+            "fontFamily-suite relative flex w-full flex-col gap-4 lg:w-[378px]"
+          }
+        >
           {data?.map((notice, idx) => {
             return (
               <div
                 key={notice.id}
                 className={
-                  "flex w-full transform flex-col rounded-lg border shadow-md hover:cursor-pointer"
+                  "flex w-full transform flex-col rounded-lg border border-grey-800 p-[16px] text-left text-title-xs shadow-2 hover:cursor-pointer"
                 }
               >
                 {notice.is_view || (
-                  <Space>
-                    <Badge count={"new"} />
+                  <Space className="mb-[4px] flex justify-end">
+                    <Badge
+                      count={"new"}
+                      color="#FC5A6B"
+                      style={{
+                        padding: "4px 8px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                      // className="border-2 border-black bg-primary"
+                    />
                   </Space>
                 )}
 
-                <div
+                {/* 알림 리스트 삭제 */}
+                {/* <div
                   className={"absolute right-[20px] w-[20px] text-[15px]"}
                   onClick={() => handleDeleteNoticeMutate(notice.id)}
                 >
                   {" "}
                   X
-                </div>
+                </div> */}
                 <div
                   onClick={() =>
                     handleMove({
@@ -174,7 +201,7 @@ function Notice() {
                       isView: notice.is_view,
                     })
                   }
-                  className={`w-[300px] p-4 text-[14px] ${notice.is_view ? "text-gray-500" : "text-black-500"}`}
+                  className={`w-full text-[14px] ${notice.is_view ? "text-gray-500" : "text-black-500"}`}
                 >
                   {notice.content}
                 </div>

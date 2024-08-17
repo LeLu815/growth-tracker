@@ -1,8 +1,8 @@
 "use client"
 
+import { useState } from "react"
 import { useModal } from "@/context/modal.context"
 import { useToast } from "@/context/toast.context"
-import { useState } from "react"
 
 import Button from "@/components/Button"
 import Chip from "@/components/Chip"
@@ -42,9 +42,22 @@ function ComponentTestPage() {
         <Chip label="전체" intent="secondary" selected />
         <Chip size="sm" label="공부" />
         <Chip size="md" intent="secondary" label="제테크" />
+        <br />
+        <br />
         <Chip size="sm" intent="secondary" label="제테크" variant="outline" />
+        <Chip size="sm" intent="secondary" label="제테크" />
+        <Chip size="md" intent="secondary" label="제테크" variant="outline" />
+        <Chip size="md" intent="secondary" label="제테크" />
+
+        <Chip size="sm" label="제테크" variant="outline" />
+        <Chip size="sm" label="제테크" />
+        <Chip size="md" label="제테크" variant="outline" />
+        <Chip size="md" label="제테크" />
+
+        <Chip intent="third" label="제테크" />
         <Chip intent="third" label="제테크" variant="outline" />
-        <Chip size="sm" label="제테크" variant="outline" selected />
+        <Chip intent="third" label="제테크" />
+        <Chip label="제테크" variant="outline" />
       </div>
 
       <h3 className="pt-4">Buttons</h3>

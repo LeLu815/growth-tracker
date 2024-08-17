@@ -21,7 +21,7 @@ function WebHeader() {
   const pathname = usePathname()
 
   return (
-    <header className="sticky top-0 flex w-full items-center bg-[#fff]">
+    <header className="flex w-full items-center bg-[#fff]">
       <nav className="mx-auto flex w-full items-center justify-between gap-x-[31px] px-[40px] py-[32px]">
         <div className="flex gap-x-[30px]">
           <Link href="/">
