@@ -1,5 +1,8 @@
 "use client"
 
+import { useEffect } from "react"
+import useGraphSliceCountStore from "@/store/graphSliceCount.store"
+
 import Box from "@/components/Box"
 import Loading from "@/components/Loading"
 import Page from "@/components/Page"
@@ -19,6 +22,13 @@ function MyChallengePage() {
     challengeDataError,
     routineDoneDailyError,
   } = useMyChallengePageContext()
+
+  const setCurrentCount = useGraphSliceCountStore(
+    (state) => state.setCurrentCount
+  )
+  useEffect(() => {
+    setCurrentCount(0)
+  }, [])
 
   // 항상 표시되는 컴포넌트
   const renderAlwaysVisibleMobileComponents = () => (

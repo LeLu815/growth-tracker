@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
@@ -15,9 +16,15 @@ import {
 } from "chart.js"
 import ChartDataLabels from "chartjs-plugin-datalabels"
 import { Bar } from "react-chartjs-2"
+import { useMediaQuery } from "react-responsive"
 
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
 import Loading from "@/components/Loading"
+import {
+  MY_CHALLENGE_ANALYZE,
+  MY_CHALLENGE_ANALYZE_DETAIL,
+  MY_PAGE,
+} from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
 import { Step2GraphType } from "../../../../../../../types/myPageGraph.type"
 
@@ -32,6 +39,9 @@ ChartJS.register(
 
 const CategoryCountGraph = () => {
   const { me } = useAuth()
+  const router = useRouter()
+  const isLargeScreen = useMediaQuery({ minWidth: 1024 }) // lg 사이즈 이상일 때 true
+
   const [isPossibleStatistics, setIsPossibleStatistics] = useState(false)
   const [category, setCategory] = useState("")
   const [graphData, setGraphData] = useState({
@@ -55,6 +65,7 @@ const CategoryCountGraph = () => {
 
   const [options, setOptions] = useState<ChartOptions<"bar">>({
     responsive: true,
+    maintainAspectRatio: false, // 이 옵션을 false로 설정하여 컨테이너의 크기에 맞게 조정
     plugins: {
       legend: {
         display: false,
@@ -160,6 +171,7 @@ const CategoryCountGraph = () => {
 
       setOptions({
         responsive: true,
+        maintainAspectRatio: false, // 이 옵션을 false로 설정하여 컨테이너의 크기에 맞게 조정
         plugins: {
           legend: {
             display: false,
@@ -201,12 +213,18 @@ const CategoryCountGraph = () => {
     }
   }, [data])
 
+  useEffect(() => {
+    if (isLargeScreen) {
+      router.push(MY_CHALLENGE_ANALYZE.path)
+    }
+  }, [isLargeScreen])
+
   if (isPending) return <Loading />
   if (isError) return <div>Error loading data</div>
 
   if (!isPossibleStatistics) {
     return (
-      <div className="mt-36 flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center lg:mt-36">
         <NoChallengeFlagsIcon />
         <p className="mt-3 text-[20px] font-bold">분석할 데이터가 없습니다.</p>
         <p className="mt-[12px] text-[12px] font-[500]">
@@ -225,7 +243,7 @@ const CategoryCountGraph = () => {
         </div>
         <div className={"text-body-m"}>당신은 습관의 대가</div>
       </div>
-      <div className="h-[300px] w-full">
+      <div className="mx-auto w-full max-w-[740px] lg:h-80">
         <Bar data={graphData} options={options} />
       </div>
     </div>

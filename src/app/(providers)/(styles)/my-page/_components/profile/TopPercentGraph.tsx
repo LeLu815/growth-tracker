@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
@@ -15,8 +16,10 @@ import {
   Tooltip,
 } from "chart.js"
 import { Line } from "react-chartjs-2"
+import { useMediaQuery } from "react-responsive"
 
 import Loading from "@/components/Loading"
+import { MY_PAGE } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
 import { MyPageGraphType } from "../../../../../../../types/myPageGraph.type"
 
@@ -30,7 +33,9 @@ ChartJS.register(
 )
 
 const TopPercentGraph = () => {
+  const isLargeScreen = useMediaQuery({ minWidth: 1024 }) // lg 사이즈 이상일 때 true
   const { me } = useAuth()
+  const router = useRouter()
   const [graphData, setGraphData] = useState({
     labels: ["", "", "", "", "", "", "", "", "", "", ""], // X-axis labels
     datasets: [
@@ -61,7 +66,8 @@ const TopPercentGraph = () => {
   })
 
   const [options, setOptions] = useState<ChartOptions<"line">>({
-    responsive: false,
+    responsive: true, // true로 설정
+    maintainAspectRatio: false, // 이 옵션을 false로 설정하여 컨테이너의 크기에 맞게 조정
     plugins: {
       legend: {
         display: false,
@@ -179,13 +185,15 @@ const TopPercentGraph = () => {
   if (isError) return <div>Error loading data</div>
 
   return (
-    <div className={"flex flex-col gap-4"}>
+    <div className={"flex w-full flex-col gap-4"}>
       <div className={"text-title-xl"}>
         현재 성공률은 <br />
         <p className={"inline text-primary"}>상위 {myPercentile}%</p>에
         속합니다.
       </div>
-      <div className="">
+      <div className="lg:mx-auto lg:mt-20 lg:h-96 lg:w-full lg:max-w-[740px]">
+        {" "}
+        {/* 부모 요소의 넓이와 높이를 설정 */}
         <Line data={graphData} options={options} />
       </div>
     </div>

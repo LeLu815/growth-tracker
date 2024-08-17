@@ -1,17 +1,15 @@
-/* slick-dots 기본 스타일 */
-.slick-dots {
-   margin-top: 10px;
+.slick-prev:before {
+  font-size: 50px; /* 아이콘의 크기를 조정 */
+  color: black; /* 아이콘 색상을 검정으로 설정 */
+  opacity: 1; /* 불투명도 설정 */
+  visibility: visible; /* 가시성 설정 */
+  content: '〈'; /* 커스텀 화살표로 대체할 경우 */
 }
 
-.slick-slider {
-  height: 570px
-}
-
-.slick-dots li {
-  margin: 0 5px; /* 점 사이의 간격 (좌우 마진) */
-}
-
-.slick-dots li button {
-  width: 10px; /* 점의 너비 */
-  height: 10px; /* 점의 높이 */
+.slick-next:before {
+  font-size: 50px; /* 아이콘의 크기를 조정 */
+  color: black; /* 아이콘 색상을 검정으로 설정 */
+  opacity: 1; /* 불투명도 설정 */
+  visibility: visible; /* 가시성 설정 */
+  content: '〉'; /* 커스텀 화살표로 대체할 경우 */
 }

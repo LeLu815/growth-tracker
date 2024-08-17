@@ -7,6 +7,7 @@ import useChallengeCreateStore, {
   defaultSelected,
 } from "@/store/challengeCreate.store"
 import { useChallengeSearchStore } from "@/store/challengeSearch.store"
+import useGraphSliceCountStore from "@/store/graphSliceCount.store"
 import useMilestoneCreateStore from "@/store/milestoneCreate.store"
 import { InfiniteData, QueryKey, useInfiniteQuery } from "@tanstack/react-query"
 import classNames from "classnames"
@@ -36,6 +37,10 @@ function NewsfeedClient() {
 
   const router = useRouter()
   const pathname = usePathname()
+
+  const setCurrentCount = useGraphSliceCountStore(
+    (state) => state.setCurrentCount
+  )
 
   const loadMore = useRef<HTMLDivElement | null>(null)
   const stickyRef = useRef<HTMLDivElement | null>(null)
@@ -143,6 +148,10 @@ function NewsfeedClient() {
     setSearchQuery(query)
     refetch()
   }
+
+  useEffect(() => {
+    setCurrentCount(0)
+  }, [])
 
   if (error) {
     console.error("리스트 페칭 에러", error)
