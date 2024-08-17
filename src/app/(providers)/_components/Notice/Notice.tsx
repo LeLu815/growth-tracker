@@ -7,6 +7,7 @@ import { createClient } from "@/supabase/client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Avatar, Badge, Drawer, Space } from "antd"
 import axios from "axios"
+import { debounce } from "lodash"
 
 import AlarmIcon from "@/components/Icon/AlarmIcon"
 import ArrowLeftIcon from "@/components/Icon/ArrowLeftIcon"
@@ -14,6 +15,7 @@ import ArrowLeftIcon from "@/components/Icon/ArrowLeftIcon"
 import { NoticeListType, NoticeType } from "../../../../../types/notice.type"
 
 function Notice() {
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth)
   const queryClient = useQueryClient()
   const { me } = useAuth()
   const router = useRouter()
@@ -22,6 +24,18 @@ function Notice() {
   const showDrawer = () => {
     setOpen(true)
   }
+
+  const handleResize = debounce(() => {
+    setScreenWidth(window.innerWidth)
+  }, 200)
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize)
+    return () => {
+      // cleanup
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
 
   const onClose = () => {
     setOpen(false)
@@ -145,15 +159,16 @@ function Notice() {
       </div>
 
       <Drawer
-        className="w-full text-center text-title-s"
+        className="text-center text-title-s"
         title="알림"
         onClose={onClose}
         open={open}
-        contentWrapperStyle={{
-          width: "100%",
-          maxWidth: "100%",
-        }}
-        // width="100%"
+        // contentWrapperStyle={{
+        //   width: "100%",
+        //   maxWidth: "100%",
+        // }}
+        // width="378"
+        width={screenWidth >= 1024 ? "378" : "100%"}
         closeIcon={<ArrowLeftIcon width={24} height={24} />}
         style={{ fontFamily: "SUITE", borderBottom: "none" }}
       >
