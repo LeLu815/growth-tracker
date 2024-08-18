@@ -36,7 +36,7 @@ function ChallengeDetailUserInfo({
             {challenge?.start_at} ~ {challenge?.end_at}
           </div>
         </div>
-        <div className={"my-auto lg:hidden"}>
+        <div className={"my-auto flex flex-nowrap lg:hidden"}>
           <StateChip state={challenge?.state || ""} />
         </div>
       </div>
