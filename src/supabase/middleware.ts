@@ -33,18 +33,18 @@ export async function updateSession(request: NextRequest) {
     data,
     Boolean(error && data && !data.user)
   )
-  if (Boolean(error && data && !data.user)) {
-    const currentUrl = request.nextUrl.clone()
-    if (
-      currentUrl.pathname.includes("my-challenge") ||
-      currentUrl.pathname.includes("my-page") ||
-      currentUrl.pathname.includes("create") ||
-      currentUrl.pathname.includes("update") ||
-      currentUrl.pathname.includes("import")
-    ) {
-      return NextResponse.redirect(new URL("/auth/login-email", request.url))
-    }
-  }
+  // if (Boolean(error && data && !data.user)) {
+  //   const currentUrl = request.nextUrl.clone()
+  //   if (
+  //     currentUrl.pathname.includes("my-challenge") ||
+  //     currentUrl.pathname.includes("my-page") ||
+  //     currentUrl.pathname.includes("create") ||
+  //     currentUrl.pathname.includes("update") ||
+  //     currentUrl.pathname.includes("import")
+  //   ) {
+  //     return NextResponse.redirect(new URL("/auth/login-email", request.url))
+  //   }
+  // }
 
   return supabaseResponse
 }
