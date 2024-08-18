@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/context/auth.context"
 import useMyPageResponsive from "@/store/myPageResponsive.store"
 
 import Box from "@/components/Box"
@@ -23,6 +25,14 @@ function MyChallengePage() {
     routineDoneDailyError,
   } = useMyChallengePageContext()
 
+  const setCurrentCount = useMyPageResponsive((state) => state.setCurrentCount)
+  const { isLoggedIn } = useAuth()
+  const router = useRouter()
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.replace("/auth/login-email")
+    }
+  }, [isLoggedIn, router])
   const reset = useMyPageResponsive((state) => state.reset)
   useEffect(() => {
     reset()

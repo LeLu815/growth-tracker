@@ -25,17 +25,13 @@ export async function updateSession(request: NextRequest) {
   )
 
   // Refreshing the auth token
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser()
-
+  const { data, error } = await supabase.auth.getUser()
   // Restrict access if not logged in
-  if (!user) {
+  if (error || (data && !data.user)) {
     const currentUrl = request.nextUrl.clone()
     if (
-      currentUrl.pathname.includes("/my-challenge") ||
-      currentUrl.pathname.includes("/my-page") ||
+      currentUrl.pathname.includes("my-challenge") ||
+      currentUrl.pathname.includes("my-page") ||
       currentUrl.pathname.includes("create") ||
       currentUrl.pathname.includes("update") ||
       currentUrl.pathname.includes("import")
