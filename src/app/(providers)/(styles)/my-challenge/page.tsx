@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/context/auth.context"
 import useMyPageResponsive from "@/store/myPageResponsive.store"
 
 import Box from "@/components/Box"
@@ -24,8 +26,16 @@ function MyChallengePage() {
   } = useMyChallengePageContext()
 
   const setCurrentCount = useMyPageResponsive((state) => state.setCurrentCount)
+  const { isLoggedIn } = useAuth()
+  const router = useRouter()
   useEffect(() => {
-    setCurrentCount(0)
+    if (!isLoggedIn) {
+      router.replace("/auth/login-email")
+    }
+  }, [isLoggedIn, router])
+  const reset = useMyPageResponsive((state) => state.reset)
+  useEffect(() => {
+    reset()
   }, [])
 
   // 항상 표시되는 컴포넌트

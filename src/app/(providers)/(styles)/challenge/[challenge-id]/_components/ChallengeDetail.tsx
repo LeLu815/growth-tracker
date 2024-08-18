@@ -17,6 +17,7 @@ import Page from "@/components/Page"
 import ChallengeCommentCreate from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeCommentCreate"
 import ChallengeCommentList from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeCommentList"
 import ChallengeDetailCount from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeDetailCount"
+import ChallengeDetailHeaderMenu from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeDetailHeaderMenu"
 import ChallengeDetailInfo from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeDetailInfo"
 import ChallengeDetailUserInfo from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeDetailUserInfo"
 import MilestoneList from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/MilestoneList"
@@ -99,7 +100,7 @@ function ChallengeDetail({ challengeId }: { challengeId: string }) {
   if (isError) return <div>Error loading data</div>
 
   return (
-    <div>
+    <div className="border-box mx-auto flex w-full min-w-[320px] max-w-[480px] flex-col sm:max-w-[480px] md:max-w-[768px] lg:max-w-none">
       {isLargeScreen && (
         <div
           className={"max-h-[202px]"}
@@ -108,83 +109,97 @@ function ChallengeDetail({ challengeId }: { challengeId: string }) {
             backgroundSize: "contain",
           }}
         >
-          <Image
-            alt="챌린지 이미지"
-            width={375}
-            height={201}
-            layout="responsive"
-            src={data?.image_url}
-            className={
-              "mx-auto max-h-[202px] w-[375px] flex-shrink-0 object-scale-down"
-            }
-          ></Image>
-          <div className={"relative bottom-32 left-36"}>
-            <div className={"flex gap-4 py-[20px]"}>
-              <h2 className="text-title-xl">{data?.goal}</h2>
-              <div className={"pt-1"}>
-                <StateChip state={data?.state || ""} />
+          <div
+            style={{
+              backgroundImage: `url(${data?.image_url})`,
+              height: "202px",
+              backgroundSize: "375px",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+            }}
+            className="mx-auto max-h-[202px] w-full"
+          >
+            <div
+              className={
+                "mx-auto flex max-w-[1064px] items-end justify-between pt-14"
+              }
+            >
+              <div>
+                <div className={"flex gap-4 py-[20px]"}>
+                  <h2 className="text-title-xl">{data?.goal}</h2>
+                  <div className={"pt-1"}>
+                    <StateChip state={data?.state || ""} />
+                  </div>
+                </div>
+                <ChallengeDetailUserInfo challenge={data as ChallengeType} />
               </div>
+              <ChallengeDetailHeaderMenu className={""} />
             </div>
-            <ChallengeDetailUserInfo challenge={data as ChallengeType} />
           </div>
         </div>
       )}
 
-      <div className="border-box mx-auto flex w-full min-w-[320px] max-w-[480px] flex-col overflow-y-auto bg-white scrollbar-hide sm:max-w-[480px] md:max-w-[768px] lg:h-screen lg:max-w-none lg:pt-[25px]">
-        <Image
-          alt="챌린지 이미지"
-          width={375}
-          height={201}
-          layout="responsive"
-          src={data?.image_url}
-          className={"w-full flex-shrink-0 object-cover lg:hidden"}
-        ></Image>
-        <Page>
-          <div className="mx-auto h-full w-full overflow-hidden scrollbar-hide lg:flex lg:gap-20">
-            {/* PC: 왼쪽 섹션*/}
-            <div className={"w-full overflow-y-auto lg:custom-scrollbar"}>
-              <div className={"hidden lg:block"}>
-                <MilestoneList
-                  milestones={data?.milestones}
-                  className={"lg:mt-10"}
-                />
-              </div>
-
-              <div className="flex w-full flex-col items-start bg-white lg:hidden">
-                <ChallengeDetailCount
-                  challenge={data as ChallengeType}
-                  className={"p-[30px_20px_20px_20px]"}
-                />
-                <div className="mb-[10px] w-full border-b-[1px] border-solid border-grey-800" />
-                <ChallengeDetailUserInfo
-                  challenge={data as ChallengeType}
-                  className={"p-[0px_20px_10px_20px]"}
-                />
-              </div>
-
-              <div className="h-[10px] border-b-[10px] border-solid border-grey-800 lg:hidden" />
-            </div>
-
-            {/* PC: 오른쪽 섹션*/}
-            <div className={"w-full flex-col lg:flex"}>
-              <ChallengeDetailInfo
-                challenge={data as ChallengeType}
-                className={"px-[20px] pt-[24px]"}
-              />
+      <Image
+        alt="챌린지 이미지"
+        width={375}
+        height={201}
+        layout="responsive"
+        src={data?.image_url}
+        className={"max-h-[202px] w-full object-scale-down lg:hidden"}
+        style={{
+          backgroundImage: `url(${data?.background_image_url})`,
+          backgroundSize: "contain",
+        }}
+      ></Image>
+      <Page className={""}>
+        <div className="mx-auto h-full w-full lg:flex lg:gap-20">
+          {/* PC: 왼쪽 섹션*/}
+          <div
+            className={
+              "max-h-[100vh] w-full lg:overflow-y-auto lg:custom-scrollbar"
+            }
+          >
+            <div className={"hidden lg:block"}>
               <MilestoneList
                 milestones={data?.milestones}
-                className={"mt-12 lg:hidden"}
+                className={"lg:mt-10"}
               />
-              <div className="my-5 h-[28px] border-b-[10px] border-solid border-grey-800 lg:hidden" />
-              <ChallengeCommentList challengeId={challengeId} className={""} />
             </div>
+
+            <div className="flex w-full flex-col items-start bg-white lg:hidden">
+              <ChallengeDetailCount
+                challenge={data as ChallengeType}
+                className={"p-[30px_20px_20px_20px]"}
+              />
+              <div className="mb-[10px] w-full border-b-[1px] border-solid border-grey-800" />
+              <ChallengeDetailUserInfo
+                challenge={data as ChallengeType}
+                className={"p-[0px_20px_10px_20px]"}
+              />
+            </div>
+
+            <div className="h-[10px] border-b-[10px] border-solid border-grey-800 lg:hidden" />
           </div>
-        </Page>
-        <ChallengeCommentCreate
-          challengeId={challengeId}
-          className="fixed bottom-0 w-full lg:hidden"
-        />
-      </div>
+
+          {/* PC: 오른쪽 섹션*/}
+          <div className={"max-h-[100vh] w-full flex-col lg:flex"}>
+            <ChallengeDetailInfo
+              challenge={data as ChallengeType}
+              className={"px-[20px] pt-[24px]"}
+            />
+            <MilestoneList
+              milestones={data?.milestones}
+              className={"mt-12 lg:hidden"}
+            />
+            <div className="my-5 h-[28px] border-b-[10px] border-solid border-grey-800 lg:hidden" />
+            <ChallengeCommentList challengeId={challengeId} className={""} />
+          </div>
+        </div>
+      </Page>
+      <ChallengeCommentCreate
+        challengeId={challengeId}
+        className="fixed bottom-0 w-full lg:hidden"
+      />
     </div>
   )
 }
