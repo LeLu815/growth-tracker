@@ -19,7 +19,7 @@ import {
 } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
 function UserInfoPage() {
-  const { logOut, isLoggedIn } = useAuth()
+  const { logOut, isLoggedIn, isInitialized } = useAuth()
   const router = useRouter()
   const isLargeScreen = useMediaQuery({ minWidth: 1024 }) // lg 사이즈 이상일 때 true
   const pathname = usePathname()
@@ -30,12 +30,13 @@ function UserInfoPage() {
   }, [])
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (isInitialized && !isLoggedIn) {
+      alert(`내가 보냄 ㅅㄱ isLoggedIn :${isLoggedIn}`)
       router.push("/auth/login-email")
     } else if (isLargeScreen && pathname.startsWith("/my-page")) {
       router.push(MY_CHALLENGE_ANALYZE.path)
     }
-  }, [isLoggedIn, router])
+  }, [isLoggedIn, router, isInitialized])
 
   const handleLogout = async () => {
     await logOut()

@@ -26,13 +26,14 @@ function MyChallengePage() {
   } = useMyChallengePageContext()
 
   const setCurrentCount = useMyPageResponsive((state) => state.setCurrentCount)
-  const { isLoggedIn } = useAuth()
+  const { isLoggedIn, isInitialized } = useAuth()
   const router = useRouter()
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (isInitialized && !isLoggedIn) {
+      alert(`내가 보냄 ㅅㄱ isLoggedIn :${isLoggedIn}`)
       router.replace("/auth/login-email")
     }
-  }, [isLoggedIn, router])
+  }, [isLoggedIn, router, isInitialized])
   const reset = useMyPageResponsive((state) => state.reset)
   useEffect(() => {
     reset()
