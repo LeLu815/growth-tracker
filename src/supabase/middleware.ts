@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 
+const loggedInOnlyPathsRegex = /\b(my-challenge|my-page|create|update|import)\b/
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -26,25 +27,13 @@ export async function updateSession(request: NextRequest) {
 
   // Refreshing the auth token
   const { data, error } = await supabase.auth.getUser()
-  // Restrict access if not logged in
-  console.log(
-    "버셀배포 로그 request.nextUrl.clone().pathname :",
-    error,
-    data,
-    Boolean(error && data && !data.user)
-  )
-  // if (Boolean(error && data && !data.user)) {
-  //   const currentUrl = request.nextUrl.clone()
-  //   if (
-  //     currentUrl.pathname.includes("my-challenge") ||
-  //     currentUrl.pathname.includes("my-page") ||
-  //     currentUrl.pathname.includes("create") ||
-  //     currentUrl.pathname.includes("update") ||
-  //     currentUrl.pathname.includes("import")
-  //   ) {
-  //     return NextResponse.redirect(new URL("/auth/login-email", request.url))
-  //   }
-  // }
+
+  if (data.user && new URL(request.url).pathname === "/auth/login-email") {
+    return NextResponse.redirect(new URL("/", request.url))
+  }
+  if (!data.user && loggedInOnlyPathsRegex.test(request.url)) {
+    return NextResponse.redirect(new URL("/auth/login-email", request.url))
+  }
 
   return supabaseResponse
 }
