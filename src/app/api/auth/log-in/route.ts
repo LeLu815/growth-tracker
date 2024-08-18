@@ -57,6 +57,7 @@ export async function POST(request: NextRequest) {
   }
 
   await revalidatePath("/my-challenge")
+  await revalidatePath("/my-page")
 
   return NextResponse.json(user)
 }
