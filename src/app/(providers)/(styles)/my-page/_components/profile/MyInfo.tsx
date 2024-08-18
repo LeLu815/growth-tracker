@@ -6,7 +6,7 @@ import { useAuth } from "@/context/auth.context"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
-import NoneProfile from "@/components/Icon/NoneProfile"
+import DefaultProfile from "@/components/Icon/DefaultProfile"
 
 function MyInfo() {
   const originProfileImageUrlRef = useRef<string | null>(null)
@@ -55,7 +55,7 @@ function MyInfo() {
           height={60}
         />
       ) : (
-        <NoneProfile width={60} height={60}></NoneProfile>
+        <DefaultProfile width={60} height={60}></DefaultProfile>
       )}
       <div>
         <div className="mb-1 text-lg font-bold">{nickname || ""}</div>

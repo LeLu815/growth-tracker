@@ -1,6 +1,6 @@
 import Image from "next/image"
 
-import NoneProfile from "@/components/Icon/NoneProfile"
+import DefaultProfile from "@/components/Icon/DefaultProfile"
 
 import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
 import StateChip from "../../../../../../components/Chip/StateChip"
@@ -27,7 +27,7 @@ function ChallengeDetailUserInfo({
           />
         </div>
       ) : (
-        <NoneProfile width={50} height={50}></NoneProfile>
+        <DefaultProfile width={50} height={50}></DefaultProfile>
       )}
       <div className={"flex"}>
         <div className="flex flex-col gap-[10px]">
