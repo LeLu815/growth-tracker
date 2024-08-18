@@ -2,10 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import useChallengeCreateStore, {
-  categories,
-  defaultSelected,
-} from "@/store/challengeCreate.store"
+import useChallengeCreateStore from "@/store/challengeCreate.store"
 import { useChallengeSearchStore } from "@/store/challengeSearch.store"
 import useMilestoneCreateStore from "@/store/milestoneCreate.store"
 import useMyPageResponsive from "@/store/myPageResponsive.store"
@@ -50,13 +47,6 @@ function NewsfeedClient() {
     setGoal,
   } = useChallengeCreateStore()
   const { setData } = useMilestoneCreateStore()
-
-  useEffect(() => {
-    setData([])
-    setRange(defaultSelected)
-    setZustandCategory(categories[0])
-    setGoal("")
-  }, [])
 
   useEffect(() => {
     if (!pathname.startsWith("/challenge")) {
