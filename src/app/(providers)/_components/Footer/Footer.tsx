@@ -6,7 +6,7 @@ function Footer() {
       <div className="mx-auto flex w-full max-w-[1024px] items-center gap-x-[92px] py-8">
         <div className="flex flex-col items-center">
           <div className="h-[112px] w-[112px]">
-            <LogoBlackIcon width="100%" height="auto" />
+            <LogoBlackIcon width="100%" height="100%" />
           </div>
 
           <div className="text-[11px] text-grey-400">
