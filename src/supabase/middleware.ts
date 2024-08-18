@@ -1,5 +1,5 @@
-import { NextResponse, type NextRequest } from "next/server"
 import { createServerClient } from "@supabase/ssr"
+import { NextResponse, type NextRequest } from "next/server"
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -42,7 +42,7 @@ export async function updateSession(request: NextRequest) {
       currentUrl.pathname.includes("update") ||
       currentUrl.pathname.includes("import")
     ) {
-      return NextResponse.redirect(new URL("/auth/login-email", request.url))
+      return NextResponse.redirect(new URL("ail", request.url))
     }
   }
 
