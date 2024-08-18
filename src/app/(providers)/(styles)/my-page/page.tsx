@@ -32,7 +32,7 @@ function UserInfoPage() {
   useEffect(() => {
     if (isInitialized && !isLoggedIn) {
       alert(`내가 보냄 ㅅㄱ isLoggedIn :${isLoggedIn}`)
-      router.push("/auth/login-email")
+      // router.push("/auth/login-email")
     } else if (isLargeScreen && pathname.startsWith("/my-page")) {
       router.push(MY_CHALLENGE_ANALYZE.path)
     }

@@ -31,7 +31,7 @@ function MyChallengePage() {
   useEffect(() => {
     if (isInitialized && !isLoggedIn) {
       alert(`내가 보냄 ㅅㄱ isLoggedIn :${isLoggedIn}`)
-      router.replace("/auth/login-email")
+      // router.replace("/auth/login-email")
     }
   }, [isLoggedIn, router, isInitialized])
   const reset = useMyPageResponsive((state) => state.reset)
