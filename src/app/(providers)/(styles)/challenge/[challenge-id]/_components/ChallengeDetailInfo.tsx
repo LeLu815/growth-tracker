@@ -21,7 +21,9 @@ function ChallengeDetailInfo({
           <div className={"flex gap-[13px]"}>
             <div className="text-title-s text-[#171717]">챌린지 정보</div>
             {challenge.like_cnt >= 10 && (
-              <Chip label={`인기 챌린지`} intent={"popular"} />
+              <div>
+                <Chip label={`인기 챌린지`} intent={"popular"} />
+              </div>
             )}
           </div>
           <div className={"hidden lg:block"}>

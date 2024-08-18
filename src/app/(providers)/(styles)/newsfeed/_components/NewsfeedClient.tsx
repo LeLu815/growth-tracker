@@ -35,7 +35,7 @@ function NewsfeedClient() {
   const router = useRouter()
   const pathname = usePathname()
 
-  const setCurrentCount = useMyPageResponsive((state) => state.setCurrentCount)
+  const reset = useMyPageResponsive((state) => state.reset)
 
   const loadMore = useRef<HTMLDivElement | null>(null)
   const stickyRef = useRef<HTMLDivElement | null>(null)
@@ -138,7 +138,7 @@ function NewsfeedClient() {
   }
 
   useEffect(() => {
-    setCurrentCount(0)
+    reset()
   }, [])
 
   if (error) {

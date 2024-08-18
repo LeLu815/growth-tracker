@@ -33,8 +33,9 @@ function MyChallengePage() {
       router.replace("/auth/login-email")
     }
   }, [isLoggedIn, router])
+  const reset = useMyPageResponsive((state) => state.reset)
   useEffect(() => {
-    setCurrentCount(0)
+    reset()
   }, [])
 
   // 항상 표시되는 컴포넌트

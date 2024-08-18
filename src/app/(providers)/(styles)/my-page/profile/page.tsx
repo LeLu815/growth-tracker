@@ -14,7 +14,7 @@ import { useMediaQuery } from "react-responsive"
 import Box from "@/components/Box"
 import Button from "@/components/Button"
 import Camera from "@/components/Icon/Camera"
-import NoneProfile from "@/components/Icon/NoneProfile"
+import DefaultProfile from "@/components/Icon/DefaultProfile"
 import Input from "@/components/Input"
 import Loading from "@/components/Loading"
 import {
@@ -159,7 +159,7 @@ function UserInfoPage() {
               height={100}
             />
           ) : (
-            <NoneProfile width={100} height={100}></NoneProfile>
+            <DefaultProfile width={100} height={100}></DefaultProfile>
           )}
           <input
             type="file"
