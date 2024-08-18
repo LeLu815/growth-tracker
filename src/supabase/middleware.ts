@@ -31,7 +31,7 @@ export async function updateSession(request: NextRequest) {
     "버셀배포 로그 request.nextUrl.clone().pathname :",
     error,
     data,
-    error && data && !data.user
+    Boolean(error && data && !data.user)
   )
   if (error && data && !data.user) {
     const currentUrl = request.nextUrl.clone()
