@@ -86,6 +86,7 @@ export async function updateSession(request: NextRequest) {
   if (!user) {
     const currentUrl = request.nextUrl.clone()
     if (
+      // 마이첼린지, 마이페이지, 생성, 수정, 가져오기
       currentUrl.pathname.includes("/my-challenge") ||
       currentUrl.pathname.includes("/my-page") ||
       currentUrl.pathname.includes("create") ||
