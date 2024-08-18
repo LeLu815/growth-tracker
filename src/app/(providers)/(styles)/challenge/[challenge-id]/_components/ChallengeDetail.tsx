@@ -7,7 +7,7 @@ import { useModal } from "@/context/modal.context"
 import useChallengeDetailStore, {
   InitialDataType,
 } from "@/store/challengeDetail.store"
-import useGraphSliceCountStore from "@/store/graphSliceCount.store"
+import useMyPageResponsive from "@/store/myPageResponsive.store"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { useMediaQuery } from "react-responsive"
@@ -32,9 +32,7 @@ function ChallengeDetail({ challengeId }: { challengeId: string }) {
     return "https://pyechdkaiizpmqgcezmc.supabase.co/storage/v1/object/public/challenge_img_web"
   }, [])
 
-  const setCurrentCount = useGraphSliceCountStore(
-    (state) => state.setCurrentCount
-  )
+  const setCurrentCount = useMyPageResponsive((state) => state.setCurrentCount)
 
   const setChallengeDetail = useChallengeDetailStore(
     (state) => state.setChallengeDetail

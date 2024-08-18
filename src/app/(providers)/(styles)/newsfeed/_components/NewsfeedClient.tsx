@@ -7,8 +7,8 @@ import useChallengeCreateStore, {
   defaultSelected,
 } from "@/store/challengeCreate.store"
 import { useChallengeSearchStore } from "@/store/challengeSearch.store"
-import useGraphSliceCountStore from "@/store/graphSliceCount.store"
 import useMilestoneCreateStore from "@/store/milestoneCreate.store"
+import useMyPageResponsive from "@/store/myPageResponsive.store"
 import { InfiniteData, QueryKey, useInfiniteQuery } from "@tanstack/react-query"
 import classNames from "classnames"
 
@@ -38,9 +38,7 @@ function NewsfeedClient() {
   const router = useRouter()
   const pathname = usePathname()
 
-  const setCurrentCount = useGraphSliceCountStore(
-    (state) => state.setCurrentCount
-  )
+  const setCurrentCount = useMyPageResponsive((state) => state.setCurrentCount)
 
   const loadMore = useRef<HTMLDivElement | null>(null)
   const stickyRef = useRef<HTMLDivElement | null>(null)

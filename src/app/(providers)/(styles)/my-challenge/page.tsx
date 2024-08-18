@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import useGraphSliceCountStore from "@/store/graphSliceCount.store"
+import useMyPageResponsive from "@/store/myPageResponsive.store"
 
 import Box from "@/components/Box"
 import Loading from "@/components/Loading"
@@ -23,9 +23,7 @@ function MyChallengePage() {
     routineDoneDailyError,
   } = useMyChallengePageContext()
 
-  const setCurrentCount = useGraphSliceCountStore(
-    (state) => state.setCurrentCount
-  )
+  const setCurrentCount = useMyPageResponsive((state) => state.setCurrentCount)
   useEffect(() => {
     setCurrentCount(0)
   }, [])
