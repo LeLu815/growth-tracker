@@ -33,7 +33,7 @@ function Footer() {
             </h3>
             <div className="flex gap-x-[14px] text-[11px] text-black">
               <p>Lee Jinju</p>
-              <p>Yea Nayeo</p>
+              <p>Yea Nayeon</p>
             </div>
           </div>
         </div>
