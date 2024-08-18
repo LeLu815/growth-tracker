@@ -30,6 +30,7 @@ function MyChallengePage() {
   const router = useRouter()
   useEffect(() => {
     if (isInitialized && !isLoggedIn) {
+      alert(`내가 보냄 ㅅㄱ isLoggedIn :${isLoggedIn}`)
       router.replace("/auth/login-email")
     }
   }, [isLoggedIn, router, isInitialized])
