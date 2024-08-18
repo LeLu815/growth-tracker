@@ -15,7 +15,6 @@ type AuthContextValue = {
   isInitialized: boolean
   isLoggedIn: boolean
   me: User | null
-
   userData: {
     nickname: string | null
     profile_image_url: string | null
@@ -70,6 +69,26 @@ export function AuthProvider({ children }: PropsWithChildren) {
       console.error("Error fetching user data:", error)
     }
   }
+
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === "INITIAL_SESSION") {
+          setMe(session?.user || null)
+        } else if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
+          setMe(session?.user || null)
+          if (session?.user) {
+            fetchUserData(session.user.id)
+          }
+        }
+        setIsInitialized(true)
+      }
+    )
+
+    return () => {
+      authListener?.subscription.unsubscribe()
+    }
+  }, [])
 
   // 로그인 함수
   const logIn: AuthContextValue["logIn"] = async (
@@ -152,16 +171,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
     setMe(responseData)
     await fetchUserData(responseData.id)
     return { status: 200, message: "" }
-
-    // const loginResponse = await logIn(email, password)
-    // if (loginResponse.status !== 200) {
-    //   return {
-    //     status: loginResponse.status,
-    //     message: "회원가입은 성공했지만 자동 로그인이 실패했습니다.",
-    //   }
-    // }
-
-    // return { status: 200, message: "" }
   }
 
   // 로그아웃 함수

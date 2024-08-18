@@ -8,6 +8,7 @@ import useChallengeCreateStore, {
 } from "@/store/challengeCreate.store"
 import { useChallengeSearchStore } from "@/store/challengeSearch.store"
 import useMilestoneCreateStore from "@/store/milestoneCreate.store"
+import useMyPageResponsive from "@/store/myPageResponsive.store"
 import { InfiniteData, QueryKey, useInfiniteQuery } from "@tanstack/react-query"
 import classNames from "classnames"
 
@@ -36,6 +37,8 @@ function NewsfeedClient() {
 
   const router = useRouter()
   const pathname = usePathname()
+
+  const setCurrentCount = useMyPageResponsive((state) => state.setCurrentCount)
 
   const loadMore = useRef<HTMLDivElement | null>(null)
   const stickyRef = useRef<HTMLDivElement | null>(null)
@@ -144,6 +147,10 @@ function NewsfeedClient() {
     refetch()
   }
 
+  useEffect(() => {
+    setCurrentCount(0)
+  }, [])
+
   if (error) {
     console.error("리스트 페칭 에러", error)
   }
@@ -177,19 +184,19 @@ function NewsfeedClient() {
   return (
     <>
       {isSearchFullWidth && (
-        <div className="mx-auto w-full lg:mb-4 lg:flex lg:w-full lg:justify-center lg:px-[40px]">
-          <div className="w-full lg:max-w-[558px]">
+        <div className="sticky top-[60px] z-20 mx-auto w-full lg:relative lg:top-0 lg:mb-4 lg:flex lg:w-full lg:items-center lg:justify-center lg:px-[40px]">
+          <div className="mx-auto w-full lg:max-w-[558px]">
             <SearchBar onSearch={handleSearch} />
           </div>
         </div>
       )}
       <div
         ref={stickyRef}
-        className="sticky top-[60px] z-20 bg-[#fff] px-0 shadow-none lg:top-0 lg:px-[40px] lg:shadow-bottom"
+        className="sticky top-[105px] z-10 bg-[#fff] px-0 py-[1px] shadow-none lg:top-0 lg:px-[40px] lg:py-[12px] lg:shadow-bottom"
       >
         <div
           className={classNames(
-            "mx-auto w-full lg:flex lg:max-w-full lg:items-center",
+            "top-[220px] mx-auto w-full lg:flex lg:max-w-full lg:items-center",
             {
               "lg:top-0 lg:z-30 lg:w-full lg:bg-white": sticky,
             }

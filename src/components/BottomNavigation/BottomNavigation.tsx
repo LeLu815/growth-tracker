@@ -55,7 +55,7 @@ function BottomNavigation() {
   ]
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-10 flex justify-around bg-white py-2 shadow-md">
+    <div className="fixed bottom-0 left-0 right-0 z-10 flex justify-around bg-white py-2 shadow-md lg:hidden">
       {navItems.map((item, index) => {
         const isActive = activePath.startsWith(item.path)
         return (

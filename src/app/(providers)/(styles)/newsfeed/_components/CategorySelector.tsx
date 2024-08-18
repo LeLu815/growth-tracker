@@ -26,7 +26,7 @@ const CategorySelector = forwardRef<HTMLDivElement, CategoryProps>(
       <div
         ref={ref}
         className={classNames(
-          "my-4 items-center pb-[10px] lg:my-0 lg:flex lg:justify-between lg:pb-0",
+          "my-4 items-center lg:my-0 lg:flex lg:justify-between lg:pb-0",
           className
         )}
       >
@@ -49,7 +49,7 @@ const CategorySelector = forwardRef<HTMLDivElement, CategoryProps>(
                   variant="borderless"
                   onClick={() => onSelectCategory(cat.label)}
                   className={classNames(
-                    "cursor-pointer list-none leading-10 transition-all duration-300 hover:bg-[#fff]",
+                    "cursor-pointer list-none transition-all duration-300 hover:bg-[#fff]",
                     {
                       "border-red border border-b-4 text-black":
                         category === cat.label,

@@ -1,18 +1,16 @@
-"use client"
-
 import { useCallback, useEffect, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 
 import ArrowLeftIcon from "@/components/Icon/ArrowLeftIcon"
 import DefaultHeader from "@/app/(providers)/_components/Header/DefaultHeader"
 import {
-  LIKE_CHALLENGE,
+  CHALLENGE_STORAGE,
   MY_CHALLENGE_ANALYZE,
   MY_PAGE,
   PROFILE,
 } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
-function MyPageTitleHeader() {
+function MyPageHeader() {
   const [title, setTitle] = useState<string>("")
   const router = useRouter()
   const pathname = usePathname()
@@ -29,11 +27,11 @@ function MyPageTitleHeader() {
         return PROFILE.name
       case MY_CHALLENGE_ANALYZE.path:
         return MY_CHALLENGE_ANALYZE.name
-      case LIKE_CHALLENGE.path:
-        return LIKE_CHALLENGE.name
+      case CHALLENGE_STORAGE.path:
+        return CHALLENGE_STORAGE.name
       default:
-        LIKE_CHALLENGE.path
-        return LIKE_CHALLENGE.name
+        CHALLENGE_STORAGE.path
+        return CHALLENGE_STORAGE.name
     }
   }, [])
 
@@ -50,4 +48,4 @@ function MyPageTitleHeader() {
   )
 }
 
-export default MyPageTitleHeader
+export default MyPageHeader

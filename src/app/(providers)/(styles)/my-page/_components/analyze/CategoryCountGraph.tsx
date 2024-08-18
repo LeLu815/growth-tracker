@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
@@ -15,9 +16,11 @@ import {
 } from "chart.js"
 import ChartDataLabels from "chartjs-plugin-datalabels"
 import { Bar } from "react-chartjs-2"
+import { useMediaQuery } from "react-responsive"
 
-import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
 import Loading from "@/components/Loading"
+import GraphModal from "@/app/(providers)/(styles)/my-page/_components/analyze/GraphModal"
+import { MY_CHALLENGE_ANALYZE } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
 import { Step2GraphType } from "../../../../../../../types/myPageGraph.type"
 
@@ -30,16 +33,24 @@ ChartJS.register(
   ChartDataLabels
 )
 
-const CategoryCountGraph = () => {
+const CategoryCountGraph = ({
+  isActive = true,
+  setIsActive,
+}: {
+  isActive?: boolean
+  setIsActive: (value: boolean) => void
+}) => {
   const { me } = useAuth()
-  const [isPossibleStatistics, setIsPossibleStatistics] = useState(false)
+  const router = useRouter()
+  const isLargeScreen = useMediaQuery({ minWidth: 1024 }) // lg 사이즈 이상일 때 true
+
   const [category, setCategory] = useState("")
   const [graphData, setGraphData] = useState({
     labels: ["생활", "건강", "공부", "취미"],
     datasets: [
       {
         label: "횟수",
-        data: [24, 0, 0, 0],
+        data: [24, 5, 4, 10],
         backgroundColor: [
           "rgba(0, 163, 188, 0.8)",
           "rgba(0, 163, 188, 0.6)",
@@ -55,6 +66,7 @@ const CategoryCountGraph = () => {
 
   const [options, setOptions] = useState<ChartOptions<"bar">>({
     responsive: true,
+    maintainAspectRatio: false, // 이 옵션을 false로 설정하여 컨테이너의 크기에 맞게 조정
     plugins: {
       legend: {
         display: false,
@@ -127,8 +139,14 @@ const CategoryCountGraph = () => {
         }
       })
 
-      if (maxCategoryCount > 0) {
-        setIsPossibleStatistics(true)
+      let isActiveOfNotState = true
+      if (maxCategoryCount === 0) {
+        setIsActive(false)
+        isActiveOfNotState = false
+      }
+
+      if (!isActiveOfNotState) {
+        return
       }
 
       setCategory(maxCategory)
@@ -160,6 +178,7 @@ const CategoryCountGraph = () => {
 
       setOptions({
         responsive: true,
+        maintainAspectRatio: false, // 이 옵션을 false로 설정하여 컨테이너의 크기에 맞게 조정
         plugins: {
           legend: {
             display: false,
@@ -201,33 +220,32 @@ const CategoryCountGraph = () => {
     }
   }, [data])
 
+  useEffect(() => {
+    if (isLargeScreen) {
+      router.push(MY_CHALLENGE_ANALYZE.path)
+    }
+  }, [isLargeScreen])
+
   if (isPending) return <Loading />
   if (isError) return <div>Error loading data</div>
 
-  if (!isPossibleStatistics) {
-    return (
-      <div className="mt-36 flex flex-col items-center justify-center">
-        <NoChallengeFlagsIcon />
-        <p className="mt-3 text-[20px] font-bold">분석할 데이터가 없습니다.</p>
-        <p className="mt-[12px] text-[12px] font-[500]">
-          챌린지를 생성해 목표를 이루어 보세요.
-        </p>
-      </div>
-    )
-  }
-
   return (
-    <div className={"mx-auto flex w-full flex-col gap-20"}>
-      <div className={"flex flex-col gap-4"}>
-        <div className={"text-title-xl"}>
-          <p className={"inline text-primary"}>{category}</p> 항목을 <br /> 제일
-          많이 진행했어요
+    <div className={`${isActive || "ml-10 h-[80vh]"}`}>
+      <div
+        className={`mx-auto flex w-full flex-col gap-20 ${isActive || "blur-md"}`}
+      >
+        <div className={"flex flex-col gap-4"}>
+          <div className={"text-title-xl"}>
+            <p className={"inline text-primary"}>{category}</p> 항목을 <br />{" "}
+            제일 많이 진행했어요
+          </div>
+          <div className={"text-body-m"}>당신은 습관의 대가</div>
         </div>
-        <div className={"text-body-m"}>당신은 습관의 대가</div>
+        <div className="mx-auto w-full max-w-[740px] lg:h-80">
+          <Bar data={graphData} options={options} />
+        </div>
       </div>
-      <div className="h-[300px] w-full">
-        <Bar data={graphData} options={options} />
-      </div>
+      {!isActive && isLargeScreen && <GraphModal top={"-280px"} />}
     </div>
   )
 }

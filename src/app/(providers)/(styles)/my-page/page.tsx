@@ -1,9 +1,11 @@
 "use client"
 
 import { useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
+import { useMediaQuery } from "react-responsive"
 
+import BottomNavigation from "@/components/BottomNavigation"
 import Box from "@/components/Box"
 import Button from "@/components/Button"
 import MyInfo from "@/app/(providers)/(styles)/my-page/_components/profile/MyInfo"
@@ -11,16 +13,21 @@ import ProfileMenu from "@/app/(providers)/(styles)/my-page/_components/profile/
 import TopPercentGraph from "@/app/(providers)/(styles)/my-page/_components/profile/TopPercentGraph"
 import {
   CHALLENGE_MENU_LIST,
+  MY_CHALLENGE_ANALYZE,
   MY_INFO_LIST,
 } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
 function UserInfoPage() {
   const { logOut, isLoggedIn } = useAuth()
   const router = useRouter()
+  const isLargeScreen = useMediaQuery({ minWidth: 1024 }) // lg 사이즈 이상일 때 true
+  const pathname = usePathname()
 
   useEffect(() => {
     if (!isLoggedIn) {
       router.push("/auth/login-email")
+    } else if (isLargeScreen && pathname.startsWith("/my-page")) {
+      router.push(MY_CHALLENGE_ANALYZE.path)
     }
   }, [isLoggedIn, router])
 
@@ -45,7 +52,7 @@ function UserInfoPage() {
         </div>
         <div className={"h-[150px]"}>
           <Button
-            intent="secondary"
+            intent="logout"
             className={"h-[50px]"}
             size="lg"
             onClick={handleLogout}
@@ -54,6 +61,7 @@ function UserInfoPage() {
           </Button>
         </div>
       </Box>
+      <BottomNavigation />
     </div>
   )
 }
