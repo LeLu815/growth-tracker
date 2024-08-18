@@ -23,9 +23,9 @@ function MyChallengePage() {
     routineDoneDailyError,
   } = useMyChallengePageContext()
 
-  const setCurrentCount = useMyPageResponsive((state) => state.setCurrentCount)
+  const reset = useMyPageResponsive((state) => state.reset)
   useEffect(() => {
-    setCurrentCount(0)
+    reset()
   }, [])
 
   // 항상 표시되는 컴포넌트
