@@ -10,7 +10,11 @@ const LogoIcon = (props: SVGProps<SVGSVGElement> & { color?: string }) => (
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
   >
-    <rect width="183" height="87" fill="url(#pattern0_4082_14057)" />
+    <rect
+      width="183"
+      height="87"
+      fill={props.color || "url(#pattern0_4082_14057)"}
+    />
     <defs>
       <pattern
         id="pattern0_4082_14057"

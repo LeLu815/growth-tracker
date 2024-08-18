@@ -80,7 +80,9 @@ function LoginEmailClient() {
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="mb-[26px] flex w-full flex-col">
-        <h3 className="py-[16px] text-center text-[24px] font-[700]">로그인</h3>
+        <h3 className="block py-[16px] text-center text-[24px] font-[700] lg:hidden">
+          로그인
+        </h3>
         <div className="py-5">
           <Input
             variant="login"
@@ -128,7 +130,7 @@ function LoginEmailClient() {
         <span className="mx-[8px] text-grey-700">|</span> */}
         <Link href="/auth/sign-up" className="text-grey-50 active:text-black">
           아직 회원이 아니신가요?
-          <span className="text-body-m font-bold">회원가입</span>
+          <span className="text-body-m font-bold"> 회원가입</span>
         </Link>
       </div>
       <div className="mt-12 flex w-full flex-col items-center">

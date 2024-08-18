@@ -194,7 +194,7 @@ function NewsfeedClient() {
       )}
       <div
         ref={stickyRef}
-        className="sticky top-[60px] z-20 bg-[#fff] px-0 shadow-none lg:top-0 lg:px-[40px] lg:shadow-bottom"
+        className="sticky top-[60px] z-20 bg-[#fff] px-0 shadow-none lg:top-0 lg:px-[40px] lg:py-[12px] lg:shadow-bottom"
       >
         <div
           className={classNames(
