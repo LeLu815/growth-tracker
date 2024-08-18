@@ -27,10 +27,7 @@ export async function updateSession(request: NextRequest) {
   // Refreshing the auth token
   const { data, error } = await supabase.auth.getUser()
   // Restrict access if not logged in
-  console.log(
-    "버셀배포 로그 request.nextUrl.clone().pathname :",
-    request.nextUrl.clone().pathname
-  )
+  console.log("버셀배포 로그 request.nextUrl.clone().pathname :", error, data)
   if (error || (data && !data.user)) {
     const currentUrl = request.nextUrl.clone()
     if (
