@@ -34,6 +34,7 @@ import {
   SELECT_WEEK_BTN_VALUES,
 } from "../_components/MilestoneCreate/MilestoneCreateConfig"
 import SubTitle from "../_components/styles/SubTitle"
+import BrowserHeader from "../../components/BrowserHeader"
 import Subsubtitle from "./_components/Subsubtitle"
 
 function ChallengeCreateBrower() {
@@ -241,57 +242,23 @@ function ChallengeCreateBrower() {
   }, [])
   return (
     <Page className="mx-auto hidden max-w-[1024px] lg:flex">
-      {/* 1. 랜덤 이미지 생성 */}
-      <div>
-        <div className="relative h-[156px] w-[156px] overflow-hidden rounded-[12px]">
-          {selectedRandomUrl && (
-            <Image
-              alt="랜덤 이미지"
-              src={selectedRandomUrl}
-              fill
-              className="object-cover"
-            />
-          )}
+      <BrowserHeader>챌린지 생성</BrowserHeader>
+      <div className="flex w-full items-center">
+        <div className="flex flex-col justify-center gap-5 p-3">
+          <Subsubtitle>어떤 챌린지에 도전하세요?</Subsubtitle>
+          <Image
+            className="mx-auto"
+            alt="트로피 이미지"
+            src="/image/Img_trophy.png"
+            width={152}
+            height={152}
+          />
         </div>
-        <Button
-          intent="secondary"
-          size="sm"
-          variant="rounded"
-          onClick={() => {
-            handleClickRandomImgBtn()
-          }}
-          className="mb-[24px]"
-        >
-          <div className="flex items-center justify-center gap-1">
-            <ResetIcon />
-            랜덤 이미지 변경
-          </div>
-        </Button>
-      </div>
-
-      {/* 2. 챌린지명 */}
-      <div>
-        <SubTitle>무엇을 목표로 하시나요?</SubTitle>
-        <Input
-          variant="login"
-          label={"챌린지 명"}
-          onChange={(e) => {
-            if (e.target.value.length > 20) {
-              return
-            }
-            return setInputValue(e.target.value)
-          }}
-          value={inputValue}
-          placeholder="챌린지명을 입력해주세요"
-        />
-      </div>
-
-      {/* 3. 카테고리 */}
-      <div>
-        <ul className="flex flex-col gap-y-[20px]">
+        {/* 3. 카테고리 */}
+        <ul className="flex flex-1 justify-between">
           {categories.map((category) => (
             <li
-              className="cursor-pointer"
+              className="w-[164px] cursor-pointer"
               key={category}
               onClick={() => setSelectedCategory(category)}
             >
@@ -308,14 +275,16 @@ function ChallengeCreateBrower() {
       </div>
 
       {/* 4. 챌린지 기간 */}
+      <Subsubtitle className="mx-3 my-5">
+        목표하는 챌린지 기간을 알려주세요.
+      </Subsubtitle>
       <div
-        className="relative"
+        className="relative mx-3 mt-3 flex"
         onClick={() => {
           handleClickOpenCalendar()
         }}
       >
-        <Subsubtitle>챌린지 기간</Subsubtitle>
-        <div className="flex w-[230px] justify-between rounded-[12px] border border-solid border-grey-800 px-[16px] py-[12px]">
+        <div className="flex w-[230px] cursor-pointer justify-between rounded-[12px] border border-solid border-grey-800 px-[16px] py-[12px]">
           <div className="flex flex-col items-center gap-y-[12px]">
             <p className="text-[16px] font-[500] text-grey-300">시작일</p>
             <p className="text-black">{`${range?.from ? range.from?.getMonth() + 1 : "-"} 월 ${range?.from ? range.from?.getDate() : "-"} 일`}</p>
@@ -326,19 +295,69 @@ function ChallengeCreateBrower() {
           </div>
         </div>
         {isOpenCalender && (
-          <div className="absolute z-10 bg-white">
+          <div className="absolute left-[242px] z-10 overflow-hidden rounded-[20px] border border-solid border-grey-800 bg-white p-5">
             <ChallengeCalender range={range} setRange={setRange} />
           </div>
         )}
       </div>
 
-      <SubTitle>루틴을 만들어볼까요?</SubTitle>
+      {/* 1. 랜덤 이미지 생성 */}
+      <div>
+        <SubTitle>무엇을 목표로 하시나요?</SubTitle>
+        <div className="flex items-center gap-6">
+          <div>
+            <div className="relative h-[156px] w-[156px] overflow-hidden rounded-[12px]">
+              {selectedRandomUrl && (
+                <Image
+                  alt="랜덤 이미지"
+                  src={selectedRandomUrl}
+                  fill
+                  className="object-cover"
+                />
+              )}
+            </div>
+            <Button
+              intent="secondary"
+              size="sm"
+              variant="rounded"
+              onClick={() => {
+                handleClickRandomImgBtn()
+              }}
+              className="mb-[24px]"
+            >
+              <div className="flex items-center justify-center gap-1">
+                <ResetIcon />
+                랜덤 이미지 변경
+              </div>
+            </Button>
+          </div>
+          {/* 2. 챌린지명 */}
+          <div className="flex flex-1">
+            <Input
+              variant="login"
+              label={"챌린지 명"}
+              onChange={(e) => {
+                if (e.target.value.length > 20) {
+                  return
+                }
+                return setInputValue(e.target.value)
+              }}
+              value={inputValue}
+              placeholder="챌린지명을 입력해주세요"
+            />
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <SubTitle>챌린지 성공을 위한 루틴을 만들어보세요!</SubTitle>
 
       {/* 5. 루틴 이름 */}
       <div>
         <Input
           variant="login"
-          label="루틴 이름"
+          label="루틴 명"
           placeholder="루틴 명을 입력해주세요"
           value={milestoneNameInput}
           onChange={(e) => {
@@ -350,53 +369,45 @@ function ChallengeCreateBrower() {
         />
       </div>
 
-      {/* 6. 루틴 요일 */}
-      <div>
-        <Subsubtitle className="mb-[20px] mt-[44px]">
-          루틴 설정 요일
-        </Subsubtitle>
-        <ul className="mr-auto flex justify-end gap-2">
-          {SELECT_WEEK_BTN_VALUES.map((value) => (
-            <li key={value} onClick={() => handleClickDayGroupType(value)}>
-              <Chip
-                label={value}
-                selected={currentDayGroupType === value}
-                intent="third"
-                variant="outline"
-              />
-            </li>
-          ))}
-        </ul>
-        <ul className="my-[20px] flex h-[40px] justify-between">
-          {WEEK_DAY_LIST.map((value, index) => (
-            <li key={value} onClick={() => handleClickDay(index)}>
-              <DaysItem isSelected={selectWeeks[index]}>{value}</DaysItem>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* 7. 루틴 기간 설정 */}
-      <div>
-        <div>
-          {range && (
-            <ChallengeMilestoneCalender
-              range={range}
-              milestoneStartDate={new Date(milestone_start_date)}
-              getValue={(value: string) => {
-                setMilestonePeriod(value)
-              }}
-            />
-          )}
+      <div className="flex items-center justify-between">
+        {/* 6. 루틴 요일 */}
+        <div className="w-[415px]">
+          <Subsubtitle className="mb-[20px] mt-[44px]">
+            루틴 설정 요일
+          </Subsubtitle>
+          <ul className="mr-auto flex justify-end gap-2">
+            {SELECT_WEEK_BTN_VALUES.map((value) => (
+              <li key={value} onClick={() => handleClickDayGroupType(value)}>
+                <Chip
+                  label={value}
+                  selected={currentDayGroupType === value}
+                  intent="third"
+                  variant="outline"
+                />
+              </li>
+            ))}
+          </ul>
+          <ul className="my-[20px] flex h-[40px] justify-between">
+            {WEEK_DAY_LIST.map((value, index) => (
+              <li key={value} onClick={() => handleClickDay(index)}>
+                <DaysItem isSelected={selectWeeks[index]}>{value}</DaysItem>
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="flex w-[230px] justify-between rounded-[12px] border border-solid border-grey-800 px-[16px] py-[12px]">
-          <div className="flex flex-col items-center gap-y-[12px]">
-            <p className="text-[16px] font-[500] text-grey-300">시작일</p>
-            <p className="text-black">{`${milestone_start_date ? new Date(milestone_start_date).getMonth() + 1 : "-"} 월 ${milestone_start_date ? new Date(milestone_start_date).getDate() : "-"} 일`}</p>
-          </div>
-          <div className="flex flex-col items-center gap-y-[12px]">
-            <p className="text-[16px] font-[500] text-grey-300">완료일</p>
-            <p className="text-black">{`${new Date(milestone_end_date).getMonth() + 1 || "-"} 월 ${new Date(milestone_end_date).getDate() || "-"} 일`}</p>
+
+        {/* 7. 루틴 기간 설정 */}
+        <div className="w-[415px]">
+          <div>
+            {range && (
+              <ChallengeMilestoneCalender
+                range={range}
+                milestoneStartDate={new Date(milestone_start_date)}
+                getValue={(value: string) => {
+                  setMilestonePeriod(value)
+                }}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -436,7 +447,7 @@ function ChallengeCreateBrower() {
             }}
           />
           <button
-            className="absolute right-[20px] top-[25px] flex cursor-pointer items-center justify-center"
+            className="absolute right-[20px] top-[36%] flex cursor-pointer items-center justify-center"
             type="submit"
           >
             <PlusIcon className="stroke-grey-600" />
@@ -457,7 +468,7 @@ function ChallengeCreateBrower() {
           ))}
         </ul>
       </form>
-      <div>
+      <div className="mx-auto mb-[60px] flex w-[375px] flex-col">
         <Button
           onClick={async () => {
             challengeCreateMutate(
@@ -528,6 +539,23 @@ function ChallengeCreateBrower() {
         >
           완료
         </Button>
+        <button
+          className=""
+          onClick={() => {
+            open({
+              type: "confirm",
+              content: "챌린지 작성을 취소하시겠습니까?",
+              onConfirm: () => {
+                router.push("/")
+              },
+              onCancel: () => {
+                close()
+              },
+            })
+          }}
+        >
+          나가기
+        </button>
       </div>
     </Page>
   )
