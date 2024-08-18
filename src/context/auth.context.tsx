@@ -70,25 +70,25 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
   }
 
-  useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (event === "INITIAL_SESSION") {
-          setMe(session?.user || null)
-        } else if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
-          setMe(session?.user || null)
-          if (session?.user) {
-            fetchUserData(session.user.id)
-          }
-        }
-        setIsInitialized(true)
-      }
-    )
+  // useEffect(() => {
+  //   const { data: authListener } = supabase.auth.onAuthStateChange(
+  //     (event, session) => {
+  //       if (event === "INITIAL_SESSION") {
+  //         setMe(session?.user || null)
+  //       } else if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
+  //         setMe(session?.user || null)
+  //         if (session?.user) {
+  //           fetchUserData(session.user.id)
+  //         }
+  //       }
+  //       setIsInitialized(true)
+  //     }
+  //   )
 
-    return () => {
-      authListener?.subscription.unsubscribe()
-    }
-  }, [])
+  //   return () => {
+  //     authListener?.subscription.unsubscribe()
+  //   }
+  // }, [])
 
   // 로그인 함수
   const logIn: AuthContextValue["logIn"] = async (
