@@ -3,6 +3,7 @@
 import { useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
+import useMyPageResponsive from "@/store/myPageResponsive.store"
 import { useMediaQuery } from "react-responsive"
 
 import BottomNavigation from "@/components/BottomNavigation"
@@ -22,6 +23,11 @@ function UserInfoPage() {
   const router = useRouter()
   const isLargeScreen = useMediaQuery({ minWidth: 1024 }) // lg 사이즈 이상일 때 true
   const pathname = usePathname()
+  const reset = useMyPageResponsive((state) => state.reset)
+
+  useEffect(() => {
+    reset()
+  }, [])
 
   useEffect(() => {
     if (!isLoggedIn) {

@@ -9,6 +9,7 @@ type GraphSliceCount = {
   setActiveTap: (currentActiveTap: string) => void
   setCurrentPreviousWidth: (currentPreviousWidth: number) => void
   setIsResponsive: (isResponsive: boolean) => void
+  reset: () => void
 }
 
 const currentCountInitialData = 0
@@ -32,6 +33,14 @@ const useMyPageResponsive = create<GraphSliceCount>((set) => ({
   },
   setIsResponsive: (isResponsive) => {
     set({ isResponsive: isResponsive })
+  },
+  reset: () => {
+    set({
+      currentCount: currentCountInitialData,
+      activeTap: activeTapInitialData,
+      currentPreviousWidth: currentPreviousWidthInitialData,
+      isResponsive: isResponsiveInitialData,
+    })
   },
 }))
 
