@@ -15,8 +15,6 @@ function CompleteChallengeList() {
   const { me } = useAuth()
   const router = useRouter()
 
-  const isMediumScreen = useMediaQuery({ minWidth: 768, maxWidth: 1023 }) // md 사이즈 범위
-
   const getMyChallengeList = async ({
     pageParam,
   }: {

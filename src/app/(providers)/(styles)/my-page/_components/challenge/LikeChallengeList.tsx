@@ -24,7 +24,6 @@ function LikeChallengeList() {
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/challenge/like?page=${pageParam}&limit=20`
       )
       .then((response) => response.data)
-    debugger
     return response.data
   }
 
@@ -106,9 +105,11 @@ function LikeChallengeList() {
         ) : (
           <div className="mt-5 flex flex-col items-center justify-center">
             <NoChallengeFlagsIcon />
-            <p className="mt-3 text-[20px] font-bold">찜한 챌린지가 없어요.</p>
+            <p className="mt-3 text-[20px] font-bold">
+              저장한 챌린지가 없어요.
+            </p>
             <p className="mt-[12px] text-[12px] font-[500]">
-              관심있는 챌린지를 찜 해보세요.
+              관심있는 챌린지를 저장 해보세요.
             </p>
           </div>
         )}

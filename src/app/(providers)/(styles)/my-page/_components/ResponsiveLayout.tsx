@@ -54,7 +54,7 @@ function ResponsiveLayout({ children }: PropsWithChildren) {
           </div>
 
           {/* Main Content */}
-          <div className="max-h-[100vh] w-3/5 flex-grow overflow-auto bg-white p-6">
+          <div className="max-h-[100vh] min-h-[80vh] w-3/5 flex-grow overflow-auto bg-white p-6">
             {MY_PAGE_ALL_MENU.filter((menu) => {
               let queryStr = searchParams.toString()
               if (queryStr) {

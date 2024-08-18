@@ -1,20 +1,23 @@
 "use client"
 
-import React, { useEffect, useMemo, useState } from "react"
-import { useSearchParams } from "next/navigation"
-import useGraphSliceCountStore from "@/store/graphSliceCount.store"
+import React, { useEffect, useMemo } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import useMyPageResponsive from "@/store/myPageResponsive.store"
+import { useMediaQuery } from "react-responsive"
 
 import Box from "@/components/Box"
 import CompleteChallengeList from "@/app/(providers)/(styles)/my-page/_components/challenge/CompleteChallengeList"
 import LikeChallengeList from "@/app/(providers)/(styles)/my-page/_components/challenge/LikeChallengeList"
 
 function MyChallengeStorageBoxTab() {
-  const setCurrentCount = useGraphSliceCountStore(
-    (state) => state.setCurrentCount
+  const { setCurrentCount, activeTap, setActiveTap } = useMyPageResponsive(
+    (state) => state
   )
   const searchParams = useSearchParams() // 쿼리 스트링
-  const [activeTap, setActiveTap] = useState("completeChallenge")
+
   const type = searchParams.get("type")
+  const isLargeScreen = useMediaQuery({ minWidth: 1024 }) // lg 사이즈 이상일 때 true
+  const router = useRouter()
   const menuList = useMemo(
     () => [
       {
@@ -38,6 +41,12 @@ function MyChallengeStorageBoxTab() {
     setCurrentCount(0)
   }, [])
 
+  useEffect(() => {
+    if (isLargeScreen) {
+      router.replace(`/my-page/challenge?type=${activeTap}`)
+    }
+  }, [isLargeScreen])
+
   return (
     <div className={"mx-auto flex w-full max-w-[640px] flex-col lg:max-w-none"}>
       <div className="flex h-[50px] w-full flex-row items-center text-[16px] font-[700] lg:hidden">
@@ -51,12 +60,7 @@ function MyChallengeStorageBoxTab() {
           </div>
         ))}
       </div>
-      <Box className={"lg:hidden"}>
-        {menuList.map((menu) => (
-          <div key={menu.key}>{activeTap === menu.key && menu.children}</div>
-        ))}
-      </Box>
-      <Box className={"hidden lg:block"}>
+      <Box className={""}>
         {menuList.map((menu) => (
           <div key={menu.key}>{activeTap === menu.key && menu.children}</div>
         ))}

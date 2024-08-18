@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
 import { useToast } from "@/context/toast.context"
-import useGraphSliceCountStore from "@/store/graphSliceCount.store"
+import useMyPageResponsive from "@/store/myPageResponsive.store"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { useMediaQuery } from "react-responsive"
@@ -41,9 +41,7 @@ function UserInfoPage() {
 
   const { showToast } = useToast()
 
-  const setCurrentCount = useGraphSliceCountStore(
-    (state) => state.setCurrentCount
-  )
+  const setCurrentCount = useMyPageResponsive((state) => state.setCurrentCount)
 
   /**
    * 유저 정보 조회
@@ -151,7 +149,7 @@ function UserInfoPage() {
   return (
     <Box className="flex justify-center">
       <div className={"w-full"}>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center gap-[10px]">
           {profileImageUrl ? (
             <Image
               src={profileImageUrl as string}
@@ -163,7 +161,7 @@ function UserInfoPage() {
           ) : (
             <NoneProfile width={100} height={100}></NoneProfile>
           )}
-          <Input
+          <input
             type="file"
             accept="image/*"
             className="hidden"
