@@ -1,53 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server"
-import { updateSession } from "@/supabase/middleware"
+
+import { updateSession } from "./supabase/middleware"
 
 export async function middleware(request: NextRequest) {
-  const isLoggedIn =
-    (request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token.1") &&
-      request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token.0")) ||
-    request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token")
-
-  console.log(
-    "token 1 ",
-    request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token.1")
-  )
-  console.log(
-    "token 0 ",
-    request.cookies.get("sb-pyechdkaiizpmqgcezmc-auth-token.0")
-  )
-
-  // 로그인 상태일때 로그인, 회원가입 페이지 막기~
-  if (
-    isLoggedIn &&
-    (request.nextUrl.pathname === "/auth/sign-up" ||
-      request.nextUrl.pathname === "/auth/login-email" ||
-      request.nextUrl.pathname === "/auth/login")
-  ) {
-    const newsfeedUrl = request.nextUrl.clone()
-    newsfeedUrl.pathname = "/newsfeed"
-    return NextResponse.redirect(newsfeedUrl)
-  }
-
-  // 로그인 필요한 경로 확인
-  if (
-    !isLoggedIn &&
-    (request.nextUrl.pathname.includes("/my-page") ||
-      request.nextUrl.pathname.includes("/my-page/**") ||
-      request.nextUrl.pathname.includes("/challenge/create") ||
-      request.nextUrl.pathname.includes("/my-challenge"))
-  ) {
-    const loginUrl = request.nextUrl.clone()
-    loginUrl.pathname = "/auth/login-email"
-    return NextResponse.redirect(loginUrl)
-  }
-
-  // 기본 경로를 /newsfeed로 설정
+  // update user's auth session
   if (request.nextUrl.pathname === "/") {
     const newsfeedUrl = request.nextUrl.clone()
     newsfeedUrl.pathname = "/newsfeed"
     return NextResponse.redirect(newsfeedUrl)
   }
-
   return await updateSession(request)
 }
 
