@@ -33,7 +33,7 @@ export async function updateSession(request: NextRequest) {
     data,
     Boolean(error && data && !data.user)
   )
-  if (error && data && !data.user) {
+  if (Boolean(error && data && !data.user)) {
     const currentUrl = request.nextUrl.clone()
     if (
       currentUrl.pathname.includes("my-challenge") ||
