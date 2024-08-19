@@ -179,8 +179,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
     await fetch(process.env.NEXT_PUBLIC_DOMAIN + "/api/auth/log-out", {
       method: "DELETE",
     })
-    setMe(null)
-    setUserData(null)
+    setMe((value) => null)
+    setUserData((value) => null)
+
+    window.location.href = "/" // 우선 router 로 고치지말아주세요.
+    // router.push("/")
   }
 
   // setUserData 업데이트 최초로 쳐주기!
