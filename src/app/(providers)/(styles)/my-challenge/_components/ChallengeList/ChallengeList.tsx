@@ -160,7 +160,7 @@ function ChallengeList() {
       })
     } else {
       return (
-        <div className="mt-5 flex flex-col items-center justify-center">
+        <div className="my-5 flex flex-col items-center justify-center lg:pb-[20px]">
           <NoChallengeFlagsIcon />
           <p className="mt-3 text-[20px] font-bold">
             진행 중인 챌린지가 없어요
