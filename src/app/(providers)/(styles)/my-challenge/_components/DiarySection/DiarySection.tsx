@@ -80,6 +80,9 @@ function DiarySection({
       }
     } else {
       setDiaryReadOnly(false)
+      if (closeDiary) {
+        closeDiary()
+      }
     }
   }
 
