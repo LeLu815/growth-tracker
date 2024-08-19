@@ -22,7 +22,7 @@ export async function GET(
     .from("notice")
     .select(`*`)
     .eq("user_id", userId)
-    .order("is_view", )
+    .order("is_view")
     .order("created_at", { ascending: false })
     .order("id", { ascending: false })
 
@@ -72,7 +72,7 @@ export async function POST(
     .from("notice")
     .insert([
       {
-        content: `${users[0]?.nickname}님이 ${goal} 챌리지에 좋아요를 표시했습니다.`,
+        content: `${users[0]?.nickname}님이 ${goal} 챌리지를 저장 했습니다.`,
         user_id: toUserId,
         challenge_id: challengeId,
       },

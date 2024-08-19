@@ -64,7 +64,7 @@ function ChallengeDetailInfo({
           </div>
 
           <div className={"hidden lg:flex lg:gap-[24px]"}>
-            <div className="w-[70px] text-body-m text-grey-50">찜 수</div>
+            <div className="w-[70px] text-body-m text-grey-50">저장 수</div>
             <div className="text-body-m text-grey-50">
               {challenge?.like_cnt}
             </div>
