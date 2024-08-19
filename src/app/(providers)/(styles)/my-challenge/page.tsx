@@ -17,7 +17,6 @@ import MyChallengeNavBar from "./_components/MyChallengeNavBar"
 import useMyChallengePageContext from "./context"
 
 function MyChallengePage() {
-  console.log("MyChallengePage", MyChallengePage)
   const {
     pageToView,
     challengeDataPending,
