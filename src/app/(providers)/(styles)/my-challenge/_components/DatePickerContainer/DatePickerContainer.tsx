@@ -203,6 +203,7 @@ function DatePickerContainer({}) {
           {visibleMonth.replace("-", ". ")}
         </p>
         <TodayDateIcon
+          className="cursor-pointer"
           onClick={() => {
             setSelectedDate("")
             setTimeout(() => setSelectedDate(todayDate), 0)

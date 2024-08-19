@@ -95,6 +95,7 @@ function MilestoneSection({
   })
 
   useEffect(() => {
+    setIsDiaryInputVisible(false)
     setIsRoutinesVisible(false)
     initializeRDD()
   }, [selectedDate])
