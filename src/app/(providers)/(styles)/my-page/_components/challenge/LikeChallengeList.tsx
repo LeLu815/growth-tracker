@@ -103,7 +103,7 @@ function LikeChallengeList() {
             )
           })
         ) : (
-          <div className="mt-5 flex flex-col items-center justify-center">
+          <div className="mt-40 flex flex-col items-center justify-center">
             <NoChallengeFlagsIcon />
             <p className="mt-3 text-[20px] font-bold">
               저장한 챌린지가 없어요.

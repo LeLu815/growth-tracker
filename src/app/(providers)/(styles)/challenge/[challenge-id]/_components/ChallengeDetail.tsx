@@ -156,7 +156,7 @@ function ChallengeDetail({ challengeId }: { challengeId: string }) {
           {/* PC: 왼쪽 섹션*/}
           <div
             className={
-              "max-h-[100vh] w-full lg:overflow-y-auto lg:custom-scrollbar"
+              "mb-10 max-h-[110vh] w-full lg:overflow-y-auto lg:custom-scrollbar"
             }
           >
             <div className={"hidden lg:block"}>
@@ -182,7 +182,7 @@ function ChallengeDetail({ challengeId }: { challengeId: string }) {
           </div>
 
           {/* PC: 오른쪽 섹션*/}
-          <div className={"max-h-[100vh] w-full flex-col lg:flex"}>
+          <div className={"max-h-[110vh] w-full flex-col lg:flex"}>
             <ChallengeDetailInfo
               challenge={data as ChallengeType}
               className={"px-[20px] pt-[24px]"}
