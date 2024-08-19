@@ -1,10 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {
   ChangeEvent,
   PropsWithChildren,
   useCallback,
   useEffect,
-  useRef, // useRef 추가
+  useRef,
   useState,
 } from "react"
 import {
@@ -25,15 +24,17 @@ interface RoutineCheckBoxProps {
   selectedDate: string
   userId: string
   routineId: string
-  routines: RoutineType[]
+  routineContent: string
+  numberOfroutines: number
   routineDoneDailyId: string
 }
 
 function RoutineCheckBox({
-  routines,
+  numberOfroutines,
   selectedDate,
   routineId,
   routineDoneDailyId,
+  routineContent,
 }: PropsWithChildren<RoutineCheckBoxProps>) {
   const { todayDate, routineDone } = useMyChallengePageContext()
   const queryClient = useQueryClient()
@@ -45,8 +46,8 @@ function RoutineCheckBox({
     )
   })
 
-  const [isChecked, setIsChecked] = useState(!!targetRD) // 체크박스 상태를 로컬로 관리
-  const isFirstRender = useRef(true) // 처음 렌더링 여부를 확인하기 위한 useRef 추가
+  const [isChecked, setIsChecked] = useState(!!targetRD)
+  const isFirstRender = useRef(true)
 
   const addRoutineDoneMutation = useMutation({
     mutationFn: async () => {
@@ -63,7 +64,7 @@ function RoutineCheckBox({
     },
     onError: () => {
       alert("루틴 완료를 저장하는 데 실패했습니다. 다시 시도해주세요.")
-      setIsChecked(false) // 실패 시 상태 복구
+      setIsChecked(false)
     },
   })
 
@@ -81,7 +82,7 @@ function RoutineCheckBox({
     },
     onError: () => {
       alert("루틴 완료 취소를 저장하는 데 실패했습니다. 다시 시도해주세요.")
-      setIsChecked(true) // 실패 시 상태 복구
+      setIsChecked(true)
     },
   })
 
@@ -101,7 +102,7 @@ function RoutineCheckBox({
 
   useEffect(() => {
     if (isFirstRender.current) {
-      isFirstRender.current = false // 첫 번째 렌더링 시에는 실행을 건너뜀
+      isFirstRender.current = false
       return
     }
 
@@ -113,7 +114,7 @@ function RoutineCheckBox({
         )
       })
       if (routineDoneDailyId.length > 0) {
-        if (todayDoneRoutineArray.length === routines.length) {
+        if (todayDoneRoutineArray.length === numberOfroutines) {
           updateIsSuccessMutation.mutate(true)
         } else {
           updateIsSuccessMutation.mutate(false)
@@ -123,7 +124,6 @@ function RoutineCheckBox({
     updateIsSuccess()
   }, [routineDone])
 
-  // debounce를 useCallback으로 감싸서 메모이제이션 처리
   const debouncedMutation = useCallback(
     debounce((checked: boolean) => {
       if (checked) {
@@ -141,20 +141,34 @@ function RoutineCheckBox({
 
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const checked = event.target.checked
-    setIsChecked(checked) // 일단 상태를 업데이트
+    setIsChecked(checked)
+    debouncedMutation(checked)
+  }
 
-    debouncedMutation(checked) // debounce 적용된 서버 요청 호출
+  const handleDivClick = () => {
+    setIsChecked((prevChecked) => {
+      const newChecked = !prevChecked
+      debouncedMutation(newChecked)
+      return newChecked
+    })
   }
 
   return (
     <>
-      <input
-        type="checkbox"
-        className="h-[20px] w-[20px] rounded-lg accent-[#FC5A6B] hover:cursor-pointer"
-        onChange={handleCheckboxChange}
-        checked={isChecked}
-        disabled={selectedDate === todayDate ? false : true}
-      />
+      <div
+        className="flex items-center justify-between rounded-lg border-[1.5px] border-solid border-[#D9D9D9] px-[10px] py-[14px] hover:cursor-pointer"
+        onClick={handleDivClick}
+      >
+        <p className="text-[14px] font-semibold">{routineContent}</p>
+        <input
+          type="checkbox"
+          className="h-[20px] w-[20px] rounded-lg accent-[#FC5A6B] hover:cursor-pointer"
+          onChange={handleCheckboxChange}
+          checked={isChecked}
+          disabled={selectedDate === todayDate ? false : true}
+          onClick={(e) => e.stopPropagation()} // 이벤트 버블링 방지
+        />
+      </div>
     </>
   )
 }

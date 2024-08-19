@@ -66,7 +66,7 @@ function MilestoneSection({
 
   const handleRoutineCompleteButtonMobileClick = (isTodayDiary: boolean) => {
     modal.open({
-      type: "custom",
+      type: "diary",
       children: (
         <DiarySection
           isDiaryToday={isTodayDiary}
@@ -95,6 +95,7 @@ function MilestoneSection({
   })
 
   useEffect(() => {
+    setIsDiaryInputVisible(false)
     setIsRoutinesVisible(false)
     initializeRDD()
   }, [selectedDate])
@@ -241,47 +242,62 @@ function MilestoneSection({
           {milestone.routines?.map((routine) => {
             if (routine.milestone_id == milestone.id) {
               return (
-                <div
-                  key={routine.id}
-                  className="flex items-center justify-between rounded-lg border-[1.5px] border-solid border-[#D9D9D9] px-[10px] py-[14px]"
-                >
-                  <p className="text-[14px] font-semibold">{routine.content}</p>
-                  <RoutineCheckBox
-                    routines={milestone.routines}
-                    challengeId={challengeId}
-                    selectedDate={selectedDate}
-                    milestoneId={milestone.id}
-                    userId={userId}
-                    routineId={routine.id}
-                    routineDoneDailyId={targetRDDId}
-                  />
-                </div>
+                // <div
+                //   key={routine.id}
+                //   className="flex items-center justify-between rounded-lg border-[1.5px] border-solid border-[#D9D9D9] px-[10px] py-[14px]"
+                // >
+                //   <p className="text-[14px] font-semibold">{routine.content}</p>
+                <RoutineCheckBox
+                  key={routine.content}
+                  numberOfroutines={milestone.routines.length}
+                  challengeId={challengeId}
+                  selectedDate={selectedDate}
+                  milestoneId={milestone.id}
+                  userId={userId}
+                  routineId={routine.id}
+                  routineDoneDailyId={targetRDDId}
+                  routineContent={routine.content}
+                />
+                // </div>
               )
             }
           })}
           {/* 모바일 용 버튼 */}
-          <Button
-            intent={todayDate == selectedDate ? "primary" : "primary"}
-            size={"lg"}
-            className="mt-3 text-sm lg:hidden"
-            onClick={() =>
-              handleRoutineCompleteButtonMobileClick(todayDate == selectedDate)
-            }
-          >
-            {selectedDate == todayDate ? "하루 일기 쓰기" : "오늘의 일기"}
-          </Button>
+          {selectedDate <= todayDate && (
+            <Button
+              intent={todayDate == selectedDate ? "primary" : "primary"}
+              size={"lg"}
+              className="mt-3 text-sm lg:hidden"
+              onClick={() =>
+                handleRoutineCompleteButtonMobileClick(
+                  todayDate == selectedDate
+                )
+              }
+            >
+              {selectedDate == todayDate
+                ? "하루 일기 쓰기"
+                : selectedDate < todayDate
+                  ? "일기 보기"
+                  : "미래 일기"}
+            </Button>
+          )}
           {/* 웹 용 버튼 */}
           {!isDiaryInputVisible && (
             <>
-              {" "}
-              <Button
-                intent={todayDate == selectedDate ? "primary" : "primary"}
-                size={"lg"}
-                className="mt-3 hidden text-sm lg:block"
-                onClick={toggleDiaryInputVisibility}
-              >
-                {selectedDate == todayDate ? "하루 일기 쓰기" : "오늘의 일기"}
-              </Button>
+              {selectedDate <= todayDate && (
+                <Button
+                  intent={todayDate == selectedDate ? "primary" : "primary"}
+                  size={"lg"}
+                  className="mt-3 hidden text-sm lg:block"
+                  onClick={toggleDiaryInputVisibility}
+                >
+                  {selectedDate == todayDate
+                    ? "하루 일기 쓰기"
+                    : selectedDate < todayDate
+                      ? "일기 보기"
+                      : "미래 일기"}
+                </Button>
+              )}
               <p
                 onClick={() => {
                   router.push(`/challenge/${challengeId}`)

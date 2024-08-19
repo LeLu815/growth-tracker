@@ -17,6 +17,7 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
 
 import DatePickerRedDotIcon from "@/components/Icon/DatePickerRedDotIcon"
+import TodayDateIcon from "@/components/Icon/TodayDateIcon"
 
 import { StructuredMilestoneType } from "../../../../../../../types/supabase.type"
 import useMyChallengePageContext from "../../context"
@@ -201,16 +202,14 @@ function DatePickerContainer({}) {
         <p className="text-start text-[18px] font-[700] leading-[135%]">
           {visibleMonth.replace("-", ". ")}
         </p>
-        <button
-          className="rounded-lg border-none bg-gray-400 px-3 py-1 text-sm text-white transition-colors hover:bg-gray-700 focus:outline-none active:bg-gray-700"
+        <TodayDateIcon
+          className="cursor-pointer"
           onClick={() => {
             setSelectedDate("")
             setTimeout(() => setSelectedDate(todayDate), 0)
             setTimeout(() => setSelectedDayOfWeek(todayDayOfWeek), 0)
           }}
-        >
-          오늘 날짜 보기
-        </button>
+        ></TodayDateIcon>
       </div>
       <div className="mt-[24px] px-[18px]">
         <Swiper
