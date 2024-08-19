@@ -32,7 +32,7 @@ function SortSelector({
   }
 
   return (
-    <div className="my-[24px] flex justify-end gap-[12px] lg:mt-[18px]">
+    <div className="my-[16px] flex justify-end gap-[12px] lg:mt-[18px]">
       <div className="flex items-center">
         <label
           className="ml-4 flex cursor-pointer items-center text-sm font-medium text-gray-700"
