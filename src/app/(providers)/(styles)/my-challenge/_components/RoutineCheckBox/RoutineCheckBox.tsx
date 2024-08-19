@@ -16,7 +16,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { debounce } from "lodash"
 import { v4 } from "uuid"
 
-import { RoutineType } from "../../../../../../../types/supabase.type"
+import SmallBackDrop from "@/components/Modal/SmallBackDrop"
+
 import useMyChallengePageContext from "../../context"
 
 interface RoutineCheckBoxProps {
@@ -39,7 +40,7 @@ function RoutineCheckBox({
 }: PropsWithChildren<RoutineCheckBoxProps>) {
   const { todayDate, routineDone } = useMyChallengePageContext()
   const queryClient = useQueryClient()
-
+  const DEBOUNCE_TIME = 200 // 디바운스 시간 설정
   const targetRD = routineDone.find((item) => {
     return (
       item.created_at.slice(0, 10) === selectedDate &&
@@ -48,10 +49,14 @@ function RoutineCheckBox({
   })
 
   const [isChecked, setIsChecked] = useState(!!targetRD)
+  const [isLoading, setIsLoading] = useState(false)
   const isFirstRender = useRef(true)
+  const clickCount = useRef(0) // 클릭 횟수를 추적
 
+  // 루틴 추가 mutation
   const addRoutineDoneMutation = useMutation({
     mutationFn: async () => {
+      setIsLoading(true)
       const routineDoneId = v4()
       await POSTnewRoutineDone({
         routineDoneDailyId,
@@ -62,15 +67,21 @@ function RoutineCheckBox({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["fetchRoutineDone"] })
+      setIsLoading(false)
+      clickCount.current = 0
     },
     onError: () => {
+      setIsLoading(false)
+      setIsChecked(false) // 실패 시 체크 해제
       alert("루틴 완료를 저장하는 데 실패했습니다. 다시 시도해주세요.")
-      setIsChecked(false)
+      clickCount.current = 0
     },
   })
 
+  // 루틴 삭제 mutation
   const deleteRoutineDoneMutation = useMutation({
     mutationFn: async () => {
+      setIsLoading(true)
       if (targetRD) {
         await DELETEroutineDone({
           routineId: targetRD.routine_id,
@@ -80,13 +91,18 @@ function RoutineCheckBox({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["fetchRoutineDone"] })
+      setIsLoading(false)
+      clickCount.current = 0
     },
     onError: () => {
+      setIsLoading(false)
+      setIsChecked(true) // 실패 시 체크 상태 복구
       alert("루틴 완료 취소를 저장하는 데 실패했습니다. 다시 시도해주세요.")
-      setIsChecked(true)
+      clickCount.current = 0
     },
   })
 
+  // isSuccess 업데이트 mutation
   const updateIsSuccessMutation = useMutation({
     mutationFn: async (isSuccess: boolean) => {
       await PUTisSuccessRoutineDoneDaily({
@@ -125,52 +141,58 @@ function RoutineCheckBox({
     updateIsSuccess()
   }, [routineDone])
 
+  // 최종 클릭 상태에 따른 서버 요청 실행
   const debouncedMutation = useCallback(
-    debounce((checked: boolean) => {
-      if (checked) {
-        if (!targetRD) {
+    debounce((finalChecked: boolean) => {
+      if (finalChecked !== !!targetRD) {
+        if (finalChecked) {
           addRoutineDoneMutation.mutate()
-        }
-      } else {
-        if (targetRD) {
+        } else {
           deleteRoutineDoneMutation.mutate()
         }
       }
-    }, 300),
-    [addRoutineDoneMutation, deleteRoutineDoneMutation]
+    }, DEBOUNCE_TIME),
+    [targetRD]
   )
 
+  // 체크박스 클릭 처리
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const checked = event.target.checked
-    setIsChecked(checked)
+    clickCount.current += 1 // 클릭 횟수 증가
+    setIsChecked(checked) // 상태를 낙관적으로 업데이트
+
+    // 디바운스된 mutation 실행
     debouncedMutation(checked)
   }
 
+  // 체크박스를 감싸는 div 클릭 처리
   const handleDivClick = () => {
     setIsChecked((prevChecked) => {
       const newChecked = !prevChecked
+      clickCount.current += 1 // 클릭 횟수 증가
+
+      // 디바운스된 mutation 실행
       debouncedMutation(newChecked)
       return newChecked
     })
   }
 
   return (
-    <>
-      <div
-        className="flex items-center justify-between rounded-lg border-[1.5px] border-solid border-[#D9D9D9] px-[10px] py-[14px] hover:cursor-pointer"
-        onClick={handleDivClick}
-      >
-        <p className="text-[14px] font-semibold">{routineContent}</p>
-        <input
-          type="checkbox"
-          className="h-[20px] w-[20px] rounded-lg accent-[#FC5A6B] hover:cursor-pointer"
-          onChange={handleCheckboxChange}
-          checked={isChecked}
-          disabled={selectedDate === todayDate ? false : true}
-          onClick={(e) => e.stopPropagation()} // 이벤트 버블링 방지
-        />
-      </div>
-    </>
+    <div
+      className="relative flex items-center justify-between rounded-lg border-[1.5px] border-solid border-[#D9D9D9] px-[10px] py-[14px] hover:cursor-pointer"
+      onClick={handleDivClick}
+    >
+      {isLoading && <SmallBackDrop />} {/* 로딩 중일 때 백드롭 표시 */}
+      <p className="text-[14px] font-semibold">{routineContent}</p>
+      <input
+        type="checkbox"
+        className="h-[20px] w-[20px] rounded-lg accent-[#FC5A6B] hover:cursor-pointer"
+        onChange={handleCheckboxChange}
+        checked={isChecked}
+        disabled={isLoading || selectedDate !== todayDate}
+        onClick={(e) => e.stopPropagation()} // 이벤트 버블링 방지
+      />
+    </div>
   )
 }
 
