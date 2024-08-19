@@ -47,7 +47,7 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
   const { setCategory, setGoal, setRandomImgUrl, setRange } =
     useChallengeCreateStore()
   // 마일스톤과 루틴 정보
-  const { setData } = useMilestoneCreateStore()
+  const { setData, data } = useMilestoneCreateStore()
 
   // 토스트 열기
   const { showToast } = useToast()
@@ -176,15 +176,38 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
         setData(milestoneDatas)
       }
     })()
-    // cleanup 함수로 전역 데이터 삭제
+  }, [me])
+  useEffect(() => {
+    // 오늘 날짜
+    const today = new Date() // 현재 날짜와 시간
+    const earliestTime = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+      0,
+      0,
+      0,
+      0
+    )
+    setMilestoneIds(
+      data
+        .filter(
+          (milestone) =>
+            new Date(milestone.start_at).getTime() >= earliestTime.getTime()
+        )
+        .map((milestone) => milestone.id)
+    )
+  }, [data])
+  useEffect(() => {
     return () => {
+      // cleanup 함수로 전역 데이터 삭제
       setData([])
       setRange(defaultSelected)
       setCategory(categories[0])
       setGoal("")
       setRandomImgUrl("")
     }
-  }, [me])
+  }, [])
 
   return (
     <>

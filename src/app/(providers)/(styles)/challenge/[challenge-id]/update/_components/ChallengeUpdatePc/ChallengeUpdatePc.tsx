@@ -74,6 +74,38 @@ function ChallengeUpdatePc({
     range &&
     format(range?.to!, "yyyy-MM-dd") === data[data.length - 1].end_at
 
+  const filteredData = data.filter(
+    (obj) => milestoneIds && milestoneIds.includes(obj.id)
+  )
+  console.log("milestoneIds :", milestoneIds)
+  console.log(filteredData)
+  console.log(
+    filteredData.map((obj) =>
+      produce(
+        obj,
+        (
+          draft: Omit<MilestoneType, "routines" | "id"> & {
+            routines?: MilestoneType["routines"]
+            id?: MilestoneType["id"]
+          }
+        ) => {
+          draft.start_at = draft.start_at
+          draft.end_at = draft.end_at
+          delete draft.routines
+          delete draft.id
+        }
+      )
+    )
+  )
+  console.log(
+    filteredData.map((obj) =>
+      obj.routines.map((routine) => ({
+        content: routine.content,
+        milestone_id: obj.id,
+      }))
+    )
+  )
+
   return (
     <Page className="mx-auto hidden min-h-screen flex-col lg:flex">
       {isOpenAddMilestone ? (
@@ -201,13 +233,13 @@ function ChallengeUpdatePc({
                       {
                         onSuccess: () => {
                           // 3. 주스텐드 싹다 정리하는 함수를 실행하기 (스토어 초기화)
+                          router.push("/")
+                          showToast("챌린지 정보가 업데이트 되었습니다.")
                           setData([])
                           setRange(defaultSelected)
                           setCategory(categories[0])
                           setGoal("")
                           setRandomImgUrl("")
-                          router.push("/")
-                          return showToast("챌린지 정보가 업데이트 되었습니다.")
                         },
                         onError: () => {
                           return showToast(
