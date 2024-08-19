@@ -5,7 +5,7 @@ import { CSSTransition } from "react-transition-group"
 import BackDrop from "./BackDrop"
 
 interface ModalProps {
-  type: "alert" | "confirm" | "calendar" | "custom"
+  type: "alert" | "confirm" | "calendar" | "custom" | "diary"
   content?: string
   onConfirm?: () => void
   calendarProps?: {}

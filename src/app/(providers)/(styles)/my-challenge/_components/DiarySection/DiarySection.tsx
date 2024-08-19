@@ -131,7 +131,7 @@ function DiarySection({
   }
 
   return (
-    <div className="px-3 pt-10 lg:px-0 lg:pt-5">
+    <div className="px-3 py-10 lg:px-0 lg:pt-5">
       <div className="flex lg:hidden">
         <p className="text-[20px] font-bold">루틴 기록하기</p>
         <CloseIcon02

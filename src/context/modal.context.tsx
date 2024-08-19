@@ -3,10 +3,11 @@
 import { createContext, PropsWithChildren, useContext, useState } from "react"
 
 import CustomModal from "@/components/Modal/CustomModal"
+import DiaryModal from "@/components/Modal/DiaryModal"
 import Modal from "@/components/Modal/Modal"
 
 interface ModalProps {
-  type: "alert" | "confirm" | "calendar" | "custom"
+  type: "alert" | "confirm" | "calendar" | "custom" | "diary"
   content?: string
   onCancel?: () => void
   onConfirm?: () => void
@@ -64,6 +65,8 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
       {modalOptions ? (
         modalOptions.type === "custom" ? (
           <CustomModal {...modalOptions} />
+        ) : modalOptions.type === "diary" ? (
+          <DiaryModal {...modalOptions} />
         ) : (
           <Modal {...modalOptions} />
         )

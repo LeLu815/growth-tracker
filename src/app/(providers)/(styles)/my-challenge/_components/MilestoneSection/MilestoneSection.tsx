@@ -66,7 +66,7 @@ function MilestoneSection({
 
   const handleRoutineCompleteButtonMobileClick = (isTodayDiary: boolean) => {
     modal.open({
-      type: "custom",
+      type: "diary",
       children: (
         <DiarySection
           isDiaryToday={isTodayDiary}
