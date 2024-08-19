@@ -103,12 +103,12 @@ function NewsfeedClient() {
         userId,
         showCompleted,
         pageParam,
-        12
+        8
       )
     },
 
     getNextPageParam: (lastPage, pages) => {
-      return lastPage?.length === 12 ? pages.length + 1 : undefined
+      return lastPage?.length === 8 ? pages.length + 1 : undefined
     },
 
     initialPageParam: 1,
@@ -274,7 +274,11 @@ function NewsfeedClient() {
                 />
               ))}
             <div ref={loadMore}>
-              {isFetchingNextPage && <div>로딩중...</div>}
+              {isFetchingNextPage && (
+                <div>
+                  <Loading />{" "}
+                </div>
+              )}
             </div>
           </ul>
         )}
