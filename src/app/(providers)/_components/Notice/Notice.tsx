@@ -7,6 +7,7 @@ import { createClient } from "@/supabase/client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Avatar, Badge, Drawer, Space } from "antd"
 import axios from "axios"
+import { debounce } from "lodash"
 
 import AlarmIcon from "@/components/Icon/AlarmIcon"
 import ArrowLeftIcon from "@/components/Icon/ArrowLeftIcon"
@@ -14,6 +15,7 @@ import ArrowLeftIcon from "@/components/Icon/ArrowLeftIcon"
 import { NoticeListType, NoticeType } from "../../../../../types/notice.type"
 
 function Notice() {
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth)
   const queryClient = useQueryClient()
   const { me } = useAuth()
   const router = useRouter()
@@ -22,6 +24,18 @@ function Notice() {
   const showDrawer = () => {
     setOpen(true)
   }
+
+  const handleResize = debounce(() => {
+    setScreenWidth(window.innerWidth)
+  }, 200)
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize)
+    return () => {
+      // cleanup
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
 
   const onClose = () => {
     setOpen(false)
@@ -127,7 +141,7 @@ function Notice() {
   }, [me?.id])
 
   return (
-    <div className="relative right-[20px] top-2 cursor-pointer">
+    <div className="relative right-[20px] top-2 cursor-pointer font-suite">
       <div onClick={showDrawer}>
         <Badge count={count}>
           <Avatar
@@ -145,29 +159,21 @@ function Notice() {
       </div>
 
       <Drawer
-        className="w-full text-center text-title-s"
+        className="text-center text-title-s"
         title="알림"
         onClose={onClose}
         open={open}
-        contentWrapperStyle={{
-          width: "100%",
-          maxWidth: "100%",
-        }}
-        // width="100%"
+        width={screenWidth >= 1024 ? "378" : "100%"}
         closeIcon={<ArrowLeftIcon width={24} height={24} />}
         style={{ fontFamily: "SUITE", borderBottom: "none" }}
       >
-        <div
-          className={
-            "fontFamily-suite relative flex w-full flex-col gap-4 lg:w-[378px]"
-          }
-        >
+        <div className={"fontFamily-suite relative flex w-full flex-col gap-4"}>
           {data?.map((notice, idx) => {
             return (
               <div
                 key={notice.id}
                 className={
-                  "flex w-full transform flex-col rounded-lg border border-grey-800 p-[16px] text-left text-title-xs shadow-2 hover:cursor-pointer"
+                  "flex w-full transform flex-col rounded-lg border border-grey-800 p-[16px] text-left font-suite text-title-xs shadow-2 hover:cursor-pointer"
                 }
               >
                 {notice.is_view || (
@@ -201,7 +207,7 @@ function Notice() {
                       isView: notice.is_view,
                     })
                   }
-                  className={`w-full text-[14px] ${notice.is_view ? "text-gray-500" : "text-black-500"}`}
+                  className={`w-full font-suite text-[14px] ${notice.is_view ? "font-suite text-gray-500" : "text-black-500 font-suite"}`}
                 >
                   {notice.content}
                 </div>

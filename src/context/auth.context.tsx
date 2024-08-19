@@ -70,25 +70,25 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
   }
 
-  useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (event === "INITIAL_SESSION") {
-          setMe(session?.user || null)
-        } else if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
-          setMe(session?.user || null)
-          if (session?.user) {
-            fetchUserData(session.user.id)
-          }
-        }
-        setIsInitialized(true)
-      }
-    )
+  // useEffect(() => {
+  //   const { data: authListener } = supabase.auth.onAuthStateChange(
+  //     (event, session) => {
+  //       if (event === "INITIAL_SESSION") {
+  //         setMe(session?.user || null)
+  //       } else if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
+  //         setMe(session?.user || null)
+  //         if (session?.user) {
+  //           fetchUserData(session.user.id)
+  //         }
+  //       }
+  //       setIsInitialized(true)
+  //     }
+  //   )
 
-    return () => {
-      authListener?.subscription.unsubscribe()
-    }
-  }, [])
+  //   return () => {
+  //     authListener?.subscription.unsubscribe()
+  //   }
+  // }, [])
 
   // 로그인 함수
   const logIn: AuthContextValue["logIn"] = async (
@@ -179,8 +179,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
     await fetch(process.env.NEXT_PUBLIC_DOMAIN + "/api/auth/log-out", {
       method: "DELETE",
     })
-    setMe(null)
-    setUserData(null)
+    setMe((value) => null)
+    setUserData((value) => null)
+
+    window.location.href = "/" // 우선 router 로 고치지말아주세요.
+    // router.push("/")
   }
 
   // setUserData 업데이트 최초로 쳐주기!

@@ -22,7 +22,7 @@ function ChallengeDetailUserInfo({
             width={50}
             height={50}
             src={challenge.profile_image_url}
-            alt="Profile Image"
+            alt="MyPageMain Image"
             className="h-[50px] w-[50px] object-cover lg:h-[42px] lg:w-[42px]"
           />
         </div>

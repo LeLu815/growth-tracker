@@ -49,7 +49,7 @@ function MyInfo() {
       {profileImageUrl ? (
         <Image
           src={profileImageUrl as string}
-          alt="Profile"
+          alt="MyPageMain"
           className="h-[60px] w-[60px] rounded-full object-cover"
           width={60}
           height={60}

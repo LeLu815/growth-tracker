@@ -35,8 +35,9 @@ const config = {
 
       // 폰트 타입
       fontFamily: {
-        suite: ["SUITE"],
+        suite: ["SUITE", "sans-serif"],
       },
+
       fontSize: {
         "title-xl": ["24px", { lineHeight: "135%", fontWeight: "bold" }],
         "title-l": ["22px", { lineHeight: "135%", fontWeight: "bold" }],
@@ -51,6 +52,7 @@ const config = {
         "body-xs": ["12px", { lineHeight: "130%", fontWeight: "medium" }],
         "sub-m": ["10px", { lineHeight: "135%", fontWeight: "right" }],
       },
+
       fontWeight: {
         bold: "700",
         medium: "500",
@@ -236,8 +238,8 @@ const config = {
     function ({ addUtilities }: { addUtilities: any }) {
       const newUtilities = {
         ".custom-scrollbar": {
-          "scrollbar-width": "12px" ,
-          "scrollbar-color": "#FEBEC5 #FCFCFC" ,
+          "scrollbar-width": "12px",
+          "scrollbar-color": "#FEBEC5 #FCFCFC",
         },
       }
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useModal } from "@/context/modal.context"
 import useChallengeCreateStore, {
   categories,
+  defaultSelected,
 } from "@/store/challengeCreate.store"
 import useMilestoneCreateStore from "@/store/milestoneCreate.store"
 import axios from "axios"
@@ -15,6 +16,7 @@ import { ChallengeType } from "../../../../../../../../../types/challengeDetail.
 import ChallengeCategories from "../../../../create/_components/ChallengeCategories"
 import ChallengeName from "../../../../create/_components/ChallengeName/ChallengeName"
 import ChallengeSelectPeriod from "../../../../create/_components/ChallengeSelectPeriod"
+import ChallengeCreateImportPc from "../ChallengeCreateImportPc"
 import ChallengeSwitchImport from "../ChallengeSwitchImport"
 
 interface ChallengeCreateImportProps {
@@ -28,7 +30,8 @@ function ChallengeCreateImport({ challengeId }: ChallengeCreateImportProps) {
   // 단계
   const [stepNum, setStepNum] = useState<number>(1)
   // 챌린지에서 받아온 챌린지 데이터 저장
-  const { goal, setCategory, setRange } = useChallengeCreateStore()
+  const { goal, setCategory, setRange, setGoal, setRandomImgUrl } =
+    useChallengeCreateStore()
   // 챌린지에서 받아온 마일스톤, 루틴 저장
   const { setData, data } = useMilestoneCreateStore()
   const handleChangeStep = (step: number) => {
@@ -75,11 +78,13 @@ function ChallengeCreateImport({ challengeId }: ChallengeCreateImportProps) {
     // 해당 함수는 컨포넌트 생애 주기에서 딱 한번만 호출되고 이후 반환된 값들을 적절하게 재분배하는 사이트 이팩트가 명확하다. => useEffect가 적절.
     getChallenge()
       .then((data) => {
+        console.log("data :", data)
         if (data.state !== "on_complete") {
           throw Error("400")
         }
         // 여기서 전역으로 데이터들을 관리해줘야 한다!
         // 챌린지 데이터 저장
+        setGoal(data.goal)
         setCategory(data.category)
         setRange({
           from: new Date(),
@@ -155,9 +160,24 @@ function ChallengeCreateImport({ challengeId }: ChallengeCreateImportProps) {
             return router.back()
         }
       })
+    // cleanup 함수로 임포트 페이지가 나가지면 데이터를 날리는 작업을 진행함.
+    return () => {
+      setData([])
+      setRange(defaultSelected)
+      setCategory(categories[0])
+      setGoal("")
+      setRandomImgUrl("")
+    }
   }, [])
 
-  return <>{getImportStep(stepNum)}</>
+  return (
+    <>
+      <ChallengeCreateImportPc />
+      <div className="mx-auto flex h-screen max-w-[480px] flex-col lg:hidden">
+        {getImportStep(stepNum)}
+      </div>
+    </>
+  )
 }
 
 export default ChallengeCreateImport

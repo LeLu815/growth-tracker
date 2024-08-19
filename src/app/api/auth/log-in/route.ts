@@ -35,6 +35,7 @@
 //   return NextResponse.json(user)
 // }
 
+import { revalidatePath } from "next/cache"
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/supabase/server"
 
@@ -54,6 +55,9 @@ export async function POST(request: NextRequest) {
   if (!user) {
     return NextResponse.json({ error: "Wrong information." }, { status: 401 })
   }
+
+  await revalidatePath("/my-challenge")
+  await revalidatePath("/my-page")
 
   return NextResponse.json(user)
 }

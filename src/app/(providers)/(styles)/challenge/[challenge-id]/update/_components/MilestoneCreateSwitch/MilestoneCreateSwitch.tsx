@@ -1,10 +1,8 @@
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
+import { useToast } from "@/context/toast.context"
 import useChallengeQuery from "@/query/challenge/userChallengeQuery"
-import useChallengeCreateStore, {
-  categories,
-  defaultSelected,
-} from "@/store/challengeCreate.store"
+import useChallengeCreateStore from "@/store/challengeCreate.store"
 import useMilestoneCreateStore, {
   MilestoneType,
 } from "@/store/milestoneCreate.store"
@@ -42,6 +40,7 @@ function MilestoneCreateSwitch({
   const { data, setData } = useMilestoneCreateStore()
   const { me } = useAuth()
   const router = useRouter()
+  const { showToast } = useToast()
 
   // 뮤테이션 함수 => db에 생성 저장하는 로직
   const {
@@ -49,7 +48,6 @@ function MilestoneCreateSwitch({
     challengeCreateIsPending,
     challengeUpdateMutate,
   } = useChallengeQuery()
-
   return (
     <>
       <Page>
@@ -78,9 +76,14 @@ function MilestoneCreateSwitch({
               goNextPage()
             }}
             disabled={
-              data.length !== 0 &&
-              range &&
-              format(range?.to!, "yyyy-MM-dd") === data[data.length - 1].end_at
+              (data.length !== 0 &&
+                range &&
+                format(range?.to!, "yyyy-MM-dd") ===
+                  data[data.length - 1].end_at) ||
+              (data.length !== 0 &&
+                range &&
+                new Date(data[data.length - 1].end_at) >
+                  new Date(format(range?.to!, "yyyy-MM-dd")))
             }
           >
             + 루틴 추가
@@ -106,49 +109,60 @@ function MilestoneCreateSwitch({
           <Button
             className="h-full"
             onClick={() => {
-              // 1. 홈으로 네비게이션 돌리기
-              router.push("/")
-              // 2. 여기에서 그냥 생성 함수가 들어갈 수도 있다. 가져오기일때
+              // 1. 여기에서 그냥 생성 함수가 들어갈 수도 있다. 가져오기일때
               {
                 !milestoneIds &&
                   !challengeId &&
-                  challengeCreateMutate({
-                    challenge: {
-                      category: category,
-                      user_id: me?.id || "",
-                      day_cnt:
-                        differenceInCalendarDays(range?.to!, range?.from!) + 1,
-                      end_at: format(range?.to!, "yyyy-MM-dd"),
-                      goal: goal,
-                      is_secret: false,
-                      start_at: format(range?.from!, "yyyy-MM-dd"),
-                      image_url: randomImgUrl,
-                    },
-                    milestone: data.map((obj) =>
-                      produce(
-                        obj,
-                        (
-                          draft: Omit<MilestoneType, "routines" | "id"> & {
-                            routines?: MilestoneType["routines"]
-                            id?: MilestoneType["id"]
+                  challengeCreateMutate(
+                    {
+                      challenge: {
+                        category: category,
+                        user_id: me?.id || "",
+                        day_cnt:
+                          differenceInCalendarDays(range?.to!, range?.from!) +
+                          1,
+                        end_at: format(range?.to!, "yyyy-MM-dd"),
+                        goal: goal,
+                        is_secret: false,
+                        start_at: format(range?.from!, "yyyy-MM-dd"),
+                        image_url: randomImgUrl,
+                      },
+                      milestone: data.map((obj) =>
+                        produce(
+                          obj,
+                          (
+                            draft: Omit<MilestoneType, "routines" | "id"> & {
+                              routines?: MilestoneType["routines"]
+                              id?: MilestoneType["id"]
+                            }
+                          ) => {
+                            draft.start_at = draft.start_at
+                            draft.end_at = draft.end_at
+                            delete draft.routines
+                            delete draft.id
                           }
-                        ) => {
-                          draft.start_at = draft.start_at
-                          draft.end_at = draft.end_at
-                          delete draft.routines
-                          delete draft.id
-                        }
-                      )
-                    ),
-                    routine: data.map((obj) =>
-                      obj.routines.map((routine) => ({
-                        content: routine.content,
-                        milestone_id: obj.id,
-                      }))
-                    ),
-                  })
+                        )
+                      ),
+                      routine: data.map((obj) =>
+                        obj.routines.map((routine) => ({
+                          content: routine.content,
+                          milestone_id: obj.id,
+                        }))
+                      ),
+                    },
+                    {
+                      onSuccess: () => {
+                        // 2. 홈으로 네비게이션 돌리기
+                        showToast("성공했습니다 :)")
+                        router.push("/")
+                      },
+                      onError: () => {
+                        showToast("실패했습니다 :(")
+                      },
+                    }
+                  )
               }
-              // 2. 뮤테이션
+              // 1. 뮤테이션
               // milestoneIds 안에 있는 값만 업데이트하게 필터링
               const filteredData = data.filter(
                 (obj) => milestoneIds && milestoneIds.includes(obj.id)
@@ -157,39 +171,45 @@ function MilestoneCreateSwitch({
               {
                 milestoneIds &&
                   challengeId &&
-                  challengeUpdateMutate({
-                    milestoneIds: milestoneIds,
-                    "challenge-id": challengeId,
-                    milestone: filteredData.map((obj) =>
-                      produce(
-                        obj,
-                        (
-                          draft: Omit<MilestoneType, "routines" | "id"> & {
-                            routines?: MilestoneType["routines"]
-                            id?: MilestoneType["id"]
+                  challengeUpdateMutate(
+                    {
+                      milestoneIds: milestoneIds,
+                      "challenge-id": challengeId,
+                      milestone: filteredData.map((obj) =>
+                        produce(
+                          obj,
+                          (
+                            draft: Omit<MilestoneType, "routines" | "id"> & {
+                              routines?: MilestoneType["routines"]
+                              id?: MilestoneType["id"]
+                            }
+                          ) => {
+                            draft.start_at = draft.start_at
+                            draft.end_at = draft.end_at
+                            delete draft.routines
+                            delete draft.id
                           }
-                        ) => {
-                          draft.start_at = draft.start_at
-                          draft.end_at = draft.end_at
-                          delete draft.routines
-                          delete draft.id
-                        }
-                      )
-                    ),
-                    routine: filteredData.map((obj) =>
-                      obj.routines.map((routine) => ({
-                        content: routine.content,
-                        milestone_id: obj.id,
-                      }))
-                    ),
-                  })
+                        )
+                      ),
+                      routine: filteredData.map((obj) =>
+                        obj.routines.map((routine) => ({
+                          content: routine.content,
+                          milestone_id: obj.id,
+                        }))
+                      ),
+                    },
+                    {
+                      onSuccess: () => {
+                        // 2. 홈으로 네비게이션 돌리기
+                        showToast("성공했습니다 :)")
+                        router.push("/")
+                      },
+                      onError: () => {
+                        showToast("실패했습니다 :(")
+                      },
+                    }
+                  )
               }
-              // 3. 주스텐드 싹다 정리하는 함수를 실행하기 (스토어 초기화)
-              setData([])
-              setRange(defaultSelected)
-              setCategory(categories[0])
-              setGoal("")
-              setRandomImgUrl("")
             }}
             disabled={data.length === 0}
             size="lg"

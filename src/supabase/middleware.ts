@@ -1,11 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 
+const loggedInOnlyPathsRegex = /(my-challenge|my-page|create|update|import)/
+
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
+  const supabaseResponse = NextResponse.next({
     request,
   })
-
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -26,18 +27,11 @@ export async function updateSession(request: NextRequest) {
 
   // Refreshing the auth token
   const { data, error } = await supabase.auth.getUser()
-  // Restrict access if not logged in
-  if (error || (data && !data.user)) {
-    const currentUrl = request.nextUrl.clone()
-    if (
-      currentUrl.pathname.includes("my-challenge") ||
-      currentUrl.pathname.includes("my-page") ||
-      currentUrl.pathname.includes("create") ||
-      currentUrl.pathname.includes("update") ||
-      currentUrl.pathname.includes("import")
-    ) {
-      return NextResponse.redirect(new URL("/auth/login-email", request.url))
-    }
+  if (data.user && new URL(request.url).pathname === "/auth/login-email") {
+    return NextResponse.redirect(new URL("/", request.url))
+  }
+  if (!data.user && loggedInOnlyPathsRegex.test(request.url)) {
+    return NextResponse.redirect(new URL("/auth/login-email", request.url))
   }
 
   return supabaseResponse

@@ -27,12 +27,12 @@ function WebHeader() {
           <Link href="/">
             <LogoIcon width={91.5} height={43.5} />
           </Link>
-
           <ul className="flex items-center gap-x-[30px]">
             {menuLists.map((list) => (
               <li key={list.path} className="text-body-xl">
                 <Link
                   href={list.path}
+                  prefetch={false}
                   className={classNames(
                     "text-base transition-all duration-200",
                     {

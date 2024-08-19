@@ -53,7 +53,7 @@ function SignUpClient() {
       value.length > 16 ||
       !/[a-zA-Z]/.test(value) ||
       !/\d/.test(value)
-      ? "비밀번호 (영문+숫자 6~16자)를 확인해주세요."
+      ? "비밀번호 (영문+숫자 6~16자)를 확인해주세요"
       : ""
   })
 

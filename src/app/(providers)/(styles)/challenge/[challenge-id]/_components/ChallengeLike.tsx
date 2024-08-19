@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
@@ -50,12 +51,11 @@ function ChallengeLike({ challengeId }: ChallengeLikeProps) {
   }
 
   const createOrDeleteLike = async () => {
-    if (!isLiked) {
-      const axiosResponse = await axios.post(
+    debugger
+    if (!isLiked && challengeDetail.userId !== me?.id) {
+      axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/notice?toUserId=${challengeDetail.userId}&goal=${challengeDetail.goal}&challengeId=${challengeId}`
       )
-
-      console.log(axiosResponse)
     }
 
     const method = isLiked ? "delete" : "post"
@@ -196,7 +196,11 @@ function ChallengeLike({ challengeId }: ChallengeLikeProps) {
         <div className={"mx-auto text-body-s"}>저장</div>
       </div>
       {challengeDetail.state === "on_complete" && (
-        <div className={"flex flex-col gap-2"}>
+        <Link
+          prefetch={false}
+          href={`/challenge/${challengeId}/import`}
+          className={"flex flex-col gap-2"}
+        >
           <button className="flex w-full flex-col items-center justify-center transition-all duration-300">
             <ImportIcon
               width={32}
@@ -205,7 +209,7 @@ function ChallengeLike({ challengeId }: ChallengeLikeProps) {
             />
           </button>
           <div className={"mx-auto text-body-s"}>복사</div>
-        </div>
+        </Link>
       )}
     </div>
   )

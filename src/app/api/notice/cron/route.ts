@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
         {
           challenge_id: dataListElement.id,
           user_id: dataListElement.user_id,
-          content: `${dataListElement.nickname} 님  ${dataListElement.goal} 챌린지의 다음 마일스톤 시작일이 까지  ${dataListElement.days_remaining}일 남았습니다. 다음 마일스톤을 설정했는지 확인해주세요.`,
+          content: `${dataListElement.nickname} 님  ${dataListElement.goal} 챌린지의 현재 진행 중인 루틴이 ${dataListElement.days_remaining}일 남았어요. 다음 루틴을 설정하지 않았다면 지금 바로 설정하러 가볼까요?`,
         },
       ])
 
@@ -32,6 +32,24 @@ export async function GET(req: NextRequest) {
       currentUserId = dataListElement.user_id
       userIdList.push(dataListElement.user_id)
     }
+
+    const now = new Date();
+
+    // 하루 전 날짜를 계산
+    const oneDayAgo = new Date(now.setDate(now.getDate() - 1)).toISOString();
+
+    // Supabase에서 하루가 지난 데이터 삭제
+    const { data, error } = await supabase
+    .from('notice')
+    .delete()
+    .lt('created_at', oneDayAgo); // created_at이 하루 전보다 이전인 데이터 삭제
+
+    if (error) {
+      console.error('Error deleting old notices:', error);
+    } else {
+      console.log('Deleted notices:', data);
+    }
+
   } catch (error: any) {
     await supabase.from("log_cron_scheduler").insert([
       {

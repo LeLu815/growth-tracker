@@ -13,8 +13,10 @@ import Chip from "@/components/Chip"
 import DaysItem from "@/components/DaysItem"
 import CalenderIcon from "@/components/Icon/CalenderIcon"
 import Input from "@/components/Input"
+import Page from "@/components/Page"
 import RangeInput from "@/components/RangeInput"
 
+import BrowserHeader from "../../../../_components/BrowserHeader"
 import Subsubtitle from "../../../../create/_browser/_components/Subsubtitle"
 import ChallengeMilestoneCalender from "../../../../create/_components/ChallengeCalender/ChallengeMilestoneCalender"
 import MilestoneCreateComponent from "../../../../create/_components/MilestoneCreate/MilestoneCreateComponent"
@@ -154,8 +156,9 @@ function ChallengeUpdateCreateMilestonePc({
     )
   }
   return (
-    <>
-      <div>
+    <Page>
+      <BrowserHeader>챌린지 수정</BrowserHeader>
+      <div className="mt-[5px] flex flex-col gap-4 py-5 pl-3">
         <Subsubtitle>선택한 챌린지 기간</Subsubtitle>
         <div className="flex items-center gap-2">
           <CalenderIcon color="#717171" />
@@ -166,27 +169,31 @@ function ChallengeUpdateCreateMilestonePc({
           </p>
         </div>
       </div>
-      <hr />
-      <div>
+      <div className="border-b-4 border-solid border-grey-800" />
+      <div className="mb-4 mt-5 py-5 pl-3">
         <Subsubtitle>루틴을 설정해주세요.</Subsubtitle>
       </div>
       {/* 마일스톤 이름 input */}
-      <Input
-        label="루틴명"
-        variant="login"
-        placeholder="루틴명을 입력해주세요"
-        value={milestoneNameInput}
-        onChange={(e) => {
-          if (e.target.value.length > 20) {
-            return
-          }
-          setMilestoneNameInput(e.target.value)
-        }}
-      />
+      <div className="py-5 pl-3">
+        <Input
+          label="루틴명"
+          variant="login"
+          placeholder="루틴명을 입력해주세요"
+          value={milestoneNameInput}
+          onChange={(e) => {
+            if (e.target.value.length > 20) {
+              return
+            }
+            setMilestoneNameInput(e.target.value)
+          }}
+        />
+      </div>
       {/* 루틴기간 설정 */}
-      <div>
-        <Subsubtitle>루틴 기간 설정</Subsubtitle>
-        <div>
+      <Subsubtitle className="mb-4 mt-5 py-4 pl-3 !text-[18px]">
+        루틴 기간 설정
+      </Subsubtitle>
+      <div className="mb-9 flex justify-between pl-3">
+        <div className="w-[420px]">
           {range && (
             <ChallengeMilestoneCalender
               range={range}
@@ -196,50 +203,54 @@ function ChallengeUpdateCreateMilestonePc({
               }}
             />
           )}
-          <div>
-            <Subsubtitle>실행 요일 설정</Subsubtitle>
-            <ul className="mr-auto flex justify-end gap-2">
-              {SELECT_WEEK_BTN_VALUES.map((value) => (
-                <li key={value} onClick={() => handleClickDayGroupType(value)}>
-                  <Chip
-                    label={value}
-                    selected={currentDayGroupType === value}
-                    intent="third"
-                    variant="outline"
-                  />
-                </li>
-              ))}
-            </ul>
-            <ul className="my-[20px] flex h-[40px] justify-between">
-              {WEEK_DAY_LIST.map((value, index) => (
-                <li key={value} onClick={() => handleClickDay(index)}>
-                  <DaysItem isSelected={selectWeeks[index]}>{value}</DaysItem>
-                </li>
-              ))}
-            </ul>
-          </div>
+        </div>
+        <div className="w-[420px]">
+          <h4 className="mb-3 text-[18px] font-[500] text-grey-50">
+            실행 요일 설정
+          </h4>
+          <ul className="mr-auto flex justify-end gap-2">
+            {SELECT_WEEK_BTN_VALUES.map((value) => (
+              <li key={value} onClick={() => handleClickDayGroupType(value)}>
+                <Chip
+                  label={value}
+                  selected={currentDayGroupType === value}
+                  intent="third"
+                  variant="outline"
+                />
+              </li>
+            ))}
+          </ul>
+          <ul className="my-[20px] flex h-[40px] justify-between">
+            {WEEK_DAY_LIST.map((value, index) => (
+              <li key={value} onClick={() => handleClickDay(index)}>
+                <DaysItem isSelected={selectWeeks[index]}>{value}</DaysItem>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
       {/* 목표 달성률 */}
-      <ContentTitle>최소 달성률을 설정해 주세요</ContentTitle>
-      <p className="mb-[20px] text-[14px]">권장 달성률 50%에요</p>
-      <RangeInput
-        thumbColor="#FC5A6B"
-        trackColor="#FC5A6B"
-        getValue={(value: string) => {
-          setMinPercent(value)
-        }}
-        step={10}
-        max={100}
-      />
-      <div className="mt-[4px] flex justify-between">
-        <p className="font-[800]">0%</p>
-        <p className="font-[800]">100%</p>
+      <div className="mt-5 py-5 pl-3">
+        <ContentTitle className="">목표 달성률</ContentTitle>
+        <p className="mb-[20px] text-[14px]">권장 달성률 50%에요</p>
+        <RangeInput
+          thumbColor="#FC5A6B"
+          trackColor="#FC5A6B"
+          getValue={(value: string) => {
+            setMinPercent(value)
+          }}
+          step={10}
+          max={100}
+        />
+        <div className="mt-[4px] flex justify-between text-[14px] text-grey-400">
+          <p className="font-[500]">0%</p>
+          <p className="font-[500]">100%</p>
+        </div>
       </div>
       {/* 루틴 작성 */}
-      <form onSubmit={hanleSubmit}>
-        <ContentTitle className="mb-[10px] mt-[44px]">해야할 루틴</ContentTitle>
-        <p className="mb-[6px] text-[14px]">무엇을 꾸준히 해볼까요?</p>
+      <form onSubmit={hanleSubmit} className="mb-14">
+        <ContentTitle className="mb-[10px] mt-[44px]">루틴 작성</ContentTitle>
+        <p className="mb-[8px] text-[14px]">무엇을 꾸준히 해볼까요?</p>
         <div className="relative">
           <Input
             placeholder="ex. 영단어 100개씩 암기"
@@ -271,16 +282,7 @@ function ChallengeUpdateCreateMilestonePc({
           ))}
         </ul>
       </form>
-      <div className="flex gap-2">
-        <Button
-          onClick={() => {
-            onClickGoBack()
-          }}
-          size="lg"
-          variant="outline"
-        >
-          취소
-        </Button>
+      <div className="mx-auto mb-[60px] flex w-[375px] flex-col gap-2">
         <Button
           onClick={() => {
             createMilestone({
@@ -317,10 +319,18 @@ function ChallengeUpdateCreateMilestonePc({
           }
           size="lg"
         >
-          루틴 추가
+          추가하기
         </Button>
+        <button
+          className="text-grey-500 underline underline-offset-[3px]"
+          onClick={() => {
+            onClickGoBack()
+          }}
+        >
+          나가기
+        </button>
       </div>
-    </>
+    </Page>
   )
 }
 

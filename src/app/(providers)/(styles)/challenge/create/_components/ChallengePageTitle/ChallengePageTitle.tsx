@@ -22,12 +22,12 @@ function ChallengePageTitle({
       <DefaultHeader className="z-[5] flex items-center justify-center bg-white">
         <div className="absolute left-[20px] cursor-pointer">
           {handleClickGoBack && (
-            <ArrowLeftIcon onClick={() => handleClickGoBack(1)} />
+            <ArrowLeftIcon onClick={() => handleClickGoBack()} />
           )}
         </div>
         {!titleHidden && <h1 className="text-[20px] font-[700]">{title}</h1>}
       </DefaultHeader>
-      <div className="h-[60px]"></div>
+      {/* <div className="h-[60px]"></div> */}
       {step && (
         <ul className="mt-[32px] flex justify-center gap-[6px]">
           {!titleHidden &&
