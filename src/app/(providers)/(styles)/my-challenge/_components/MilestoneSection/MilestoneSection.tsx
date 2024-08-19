@@ -260,28 +260,41 @@ function MilestoneSection({
             }
           })}
           {/* 모바일 용 버튼 */}
-          <Button
-            intent={todayDate == selectedDate ? "primary" : "primary"}
-            size={"lg"}
-            className="mt-3 text-sm lg:hidden"
-            onClick={() =>
-              handleRoutineCompleteButtonMobileClick(todayDate == selectedDate)
-            }
-          >
-            {selectedDate == todayDate ? "하루 일기 쓰기" : "오늘의 일기"}
-          </Button>
+          {selectedDate <= todayDate && (
+            <Button
+              intent={todayDate == selectedDate ? "primary" : "primary"}
+              size={"lg"}
+              className="mt-3 text-sm lg:hidden"
+              onClick={() =>
+                handleRoutineCompleteButtonMobileClick(
+                  todayDate == selectedDate
+                )
+              }
+            >
+              {selectedDate == todayDate
+                ? "하루 일기 쓰기"
+                : selectedDate < todayDate
+                  ? "일기 보기"
+                  : "미래 일기"}
+            </Button>
+          )}
           {/* 웹 용 버튼 */}
           {!isDiaryInputVisible && (
             <>
-              {" "}
-              <Button
-                intent={todayDate == selectedDate ? "primary" : "primary"}
-                size={"lg"}
-                className="mt-3 hidden text-sm lg:block"
-                onClick={toggleDiaryInputVisibility}
-              >
-                {selectedDate == todayDate ? "하루 일기 쓰기" : "오늘의 일기"}
-              </Button>
+              {selectedDate <= todayDate && (
+                <Button
+                  intent={todayDate == selectedDate ? "primary" : "primary"}
+                  size={"lg"}
+                  className="mt-3 hidden text-sm lg:block"
+                  onClick={toggleDiaryInputVisibility}
+                >
+                  {selectedDate == todayDate
+                    ? "하루 일기 쓰기"
+                    : selectedDate < todayDate
+                      ? "일기 보기"
+                      : "미래 일기"}
+                </Button>
+              )}
               <p
                 onClick={() => {
                   router.push(`/challenge/${challengeId}`)
