@@ -241,21 +241,23 @@ function MilestoneSection({
           {milestone.routines?.map((routine) => {
             if (routine.milestone_id == milestone.id) {
               return (
-                <div
-                  key={routine.id}
-                  className="flex items-center justify-between rounded-lg border-[1.5px] border-solid border-[#D9D9D9] px-[10px] py-[14px]"
-                >
-                  <p className="text-[14px] font-semibold">{routine.content}</p>
-                  <RoutineCheckBox
-                    routines={milestone.routines}
-                    challengeId={challengeId}
-                    selectedDate={selectedDate}
-                    milestoneId={milestone.id}
-                    userId={userId}
-                    routineId={routine.id}
-                    routineDoneDailyId={targetRDDId}
-                  />
-                </div>
+                // <div
+                //   key={routine.id}
+                //   className="flex items-center justify-between rounded-lg border-[1.5px] border-solid border-[#D9D9D9] px-[10px] py-[14px]"
+                // >
+                //   <p className="text-[14px] font-semibold">{routine.content}</p>
+                <RoutineCheckBox
+                  key={routine.content}
+                  numberOfroutines={milestone.routines.length}
+                  challengeId={challengeId}
+                  selectedDate={selectedDate}
+                  milestoneId={milestone.id}
+                  userId={userId}
+                  routineId={routine.id}
+                  routineDoneDailyId={targetRDDId}
+                  routineContent={routine.content}
+                />
+                // </div>
               )
             }
           })}
