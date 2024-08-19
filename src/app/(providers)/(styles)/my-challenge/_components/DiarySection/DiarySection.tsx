@@ -38,11 +38,12 @@ function DiarySection({
     queryKey: ["fetchDiary", { routineDoneDailyId, selectedDate }],
     queryFn: () => GETcurrentDiary({ routineDoneDailyId, selectedDate }),
   })
-  const [inputText, setInputText] = useState(
-    currentDiary ? currentDiary[0]?.content : ""
+  const [inputText, setInputText] = useState<string>(
+    currentDiary[0]?.content || ""
   )
   const [diaryReadOnly, setDiaryReadOnly] = useState(!isDiaryToday) // 오늘의 일기일땐 readOnly가 false
   const modal = useModal()
+  const TEXT_LIMIT = 500
   useEffect(() => {
     if (isDiaryToday && !(currentDiary.length == 0)) {
       setDiaryReadOnly(true)
@@ -74,14 +75,17 @@ function DiarySection({
   }
 
   const handleClickLeftButton = async () => {
-    if (!diaryReadOnly) {
+    if (!isDiaryToday) {
       if (closeDiary) {
         closeDiary()
       }
     } else {
-      setDiaryReadOnly(false)
-      if (closeDiary) {
-        closeDiary()
+      if (diaryReadOnly) {
+        setDiaryReadOnly(false)
+      } else {
+        if (closeDiary) {
+          closeDiary()
+        }
       }
     }
   }
@@ -129,7 +133,12 @@ function DiarySection({
       }
     }
   }
-
+  const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = event.target.value
+    if (value.length <= TEXT_LIMIT) {
+      setInputText(value)
+    }
+  }
   return (
     <div className="px-3 py-10 lg:px-0 lg:pt-5">
       <div className="flex items-center py-[14px] lg:hidden">
@@ -149,13 +158,22 @@ function DiarySection({
         ></CloseIcon02>
       </div>
       <div className="mt-5 flex flex-col items-center justify-center">
-        <textarea
-          className="h-[250px] w-full resize-none rounded-lg border-[1.5px] border-solid border-[#CBC9CF] bg-[#FAFAFA] px-4 py-4"
-          defaultValue={currentDiary[0]?.content || ""}
-          onChange={(event) => setInputText(event.target.value)}
-          readOnly={diaryReadOnly}
-          placeholder="오늘 하루는 어땠나요?"
-        />
+        <div className="w-full rounded-lg border-[1.5px] border-solid border-[#CBC9CF] bg-[#FAFAFA] px-4 py-4">
+          <textarea
+            value={inputText}
+            defaultValue={currentDiary[0]?.content || ""}
+            onChange={handleTextChange}
+            readOnly={diaryReadOnly}
+            placeholder={
+              isDiaryToday ? "오늘 하루는 어땠나요?" : "작성된 일기가 없어요"
+            }
+            className="h-[250px] w-full resize-none border-none bg-[#FAFAFA] focus:border-none focus:outline-none focus:ring-0"
+          />
+          <p className="mt-2 text-end text-sm text-gray-400">
+            {inputText.length} / {TEXT_LIMIT} 자{" "}
+            {inputText.length >= TEXT_LIMIT && "50자 내로 작성해주세요!"}
+          </p>
+        </div>
         <div className="mt-5 flex w-full">
           <Button intent="diarySecondary" onClick={handleClickLeftButton}>
             {currentDiary[0] ? (diaryReadOnly ? "수정" : "취소") : "취소"}

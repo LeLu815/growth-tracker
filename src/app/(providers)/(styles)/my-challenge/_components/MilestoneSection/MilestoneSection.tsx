@@ -45,7 +45,7 @@ function MilestoneSection({
     selectedDayOfWeek,
     currentUserRoutineDoneDaily,
   } = useMyChallengePageContext()
-
+  console.log("마일스톤 리렌더링")
   const router = useRouter()
   const leftDays =
     (new Date(milestone.end_at).getTime() - new Date(selectedDate).getTime()) /
@@ -60,8 +60,14 @@ function MilestoneSection({
       )
     })?.id || ""
   )
-  const [isRoutinesVisible, setIsRoutinesVisible] = useState(false)
+  console.log(selectedDate, todayDate)
+  const [isRoutinesVisible, setIsRoutinesVisible] = useState(true)
   const [isDiaryInputVisible, setIsDiaryInputVisible] = useState(false)
+
+  console.log(
+    parseInt(selectedDate.replace(/-/g, "")) >=
+      parseInt(todayDate.replace(/-/g, ""))
+  )
   const modal = useModal()
 
   const handleRoutineCompleteButtonMobileClick = (isTodayDiary: boolean) => {
@@ -83,6 +89,12 @@ function MilestoneSection({
     setIsRoutinesVisible(!isRoutinesVisible)
   }
 
+  useEffect(() => {
+    if (!isRoutinesVisible) {
+      setIsDiaryInputVisible(false)
+    }
+  }, [isRoutinesVisible])
+
   const toggleDiaryInputVisibility = useCallback(() => {
     setIsDiaryInputVisible(!isDiaryInputVisible)
   }, [isDiaryInputVisible])
@@ -95,8 +107,15 @@ function MilestoneSection({
   })
 
   useEffect(() => {
-    setIsDiaryInputVisible(false)
-    setIsRoutinesVisible(false)
+    setIsDiaryInputVisible(
+      !(
+        parseInt(selectedDate.replace(/-/g, "")) >=
+        parseInt(todayDate.replace(/-/g, ""))
+      )
+    )
+  }, [selectedDate])
+
+  useEffect(() => {
     initializeRDD()
   }, [selectedDate])
 
@@ -165,6 +184,7 @@ function MilestoneSection({
     // 선택한 일자가 마일스톤 시행 요일이면서
     // 동시에 routine_done_daily에 유효한 레코드가 없는 경우에 새로운 레코드  생성
     if (checkMilestoneDayOfWeek && !targetRDD) {
+      console.log("포스트할거임")
       const newId = v4()
 
       postRDDmutation.mutate(newId)
@@ -172,9 +192,9 @@ function MilestoneSection({
       setTargetRDDId(newId)
     }
 
-    if (targetRDD) {
-      setTargetRDDId(targetRDD.id)
-    }
+    // if (targetRDD) {
+    //   setTargetRDDId(targetRDD.id)
+    // }
   }
 
   return (
@@ -311,7 +331,7 @@ function MilestoneSection({
         </div>
       )}
       {isDiaryInputVisible && (
-        <>
+        <div className="hidden lg:block">
           <DiarySection
             isDiaryToday={todayDate == selectedDate}
             selectedDate={selectedDate}
@@ -319,7 +339,7 @@ function MilestoneSection({
             routineDoneDailyId={targetRDDId}
             handleClickConfirm={toggleDiaryInputVisibility}
           />
-        </>
+        </div>
       )}
     </section>
   )
