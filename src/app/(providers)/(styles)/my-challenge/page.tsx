@@ -1,14 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
 import { useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { useAuth } from "@/context/auth.context"
 import useMyPageResponsive from "@/store/myPageResponsive.store"
 
 import Box from "@/components/Box"
 import Loading from "@/components/Loading"
 import Page from "@/components/Page"
-import TopNavigation from "@/components/TopNavigation"
 
 import ChallengeList from "./_components/ChallengeList"
 import DatePickerContainer from "./_components/DatePickerContainer"
@@ -25,15 +23,6 @@ function MyChallengePage() {
     routineDoneDailyError,
   } = useMyChallengePageContext()
 
-  const setCurrentCount = useMyPageResponsive((state) => state.setCurrentCount)
-  const { isLoggedIn, isInitialized } = useAuth()
-  const router = useRouter()
-  // useEffect(() => {
-  //   if (isInitialized && !isLoggedIn) {
-  //     alert(`내가 보냄 ㅅㄱ isLoggedIn :${isLoggedIn}`)
-  //     // router.replace("/auth/login-email")
-  //   }
-  // }, [isLoggedIn, router, isInitialized])
   const reset = useMyPageResponsive((state) => state.reset)
   useEffect(() => {
     reset()
@@ -42,7 +31,6 @@ function MyChallengePage() {
   // 항상 표시되는 컴포넌트
   const renderAlwaysVisibleMobileComponents = () => (
     <>
-      <TopNavigation title="내 챌린지" />
       <MyChallengeNavBar />
     </>
   )

@@ -9,10 +9,11 @@ import MyPageHeader from "@/app/(providers)/_components/Header/MyPageHeader"
 import BackHeader from "./BackHeader"
 import DefaultHeader from "./DefaultHeader"
 import FeedHeader from "./FeedHeader"
+import MyChallengePageHeader from "./MyChallengePageHeader"
 import WebHeader from "./WebHeader"
 
 // 헤더 타입 정리
-type HeaderType = "default" | "feed" | "back" | "detail" | "my"
+type HeaderType = "default" | "feed" | "back" | "detail" | "my" | "myChallenge"
 
 // 헤더 맵
 const headers = {
@@ -21,6 +22,7 @@ const headers = {
   back: BackHeader,
   detail: DetailHeader,
   my: MyPageHeader,
+  myChallenge: MyChallengePageHeader,
 }
 
 const Header = () => {
@@ -37,6 +39,9 @@ const Header = () => {
   } else if (pathname.startsWith("/auth/sign-up")) {
     headerType = "back"
     title = "이메일로 시작하기"
+  } else if (pathname.startsWith("/my-challenge")) {
+    headerType = "myChallenge"
+    title = "내 챌린지"
   } else if (pathname === "/challenge/create") {
     ishideTitle = true
   } else if (/^\/challenge\/[0-9a-fA-F-]{36}\/update$/.test(pathname)) {
