@@ -60,8 +60,14 @@ function MilestoneSection({
       )
     })?.id || ""
   )
-  const [isRoutinesVisible, setIsRoutinesVisible] = useState(false)
+  console.log(selectedDate, todayDate)
+  const [isRoutinesVisible, setIsRoutinesVisible] = useState(true)
   const [isDiaryInputVisible, setIsDiaryInputVisible] = useState(false)
+
+  console.log(
+    parseInt(selectedDate.replace(/-/g, "")) >=
+      parseInt(todayDate.replace(/-/g, ""))
+  )
   const modal = useModal()
 
   const handleRoutineCompleteButtonMobileClick = (isTodayDiary: boolean) => {
@@ -83,6 +89,12 @@ function MilestoneSection({
     setIsRoutinesVisible(!isRoutinesVisible)
   }
 
+  useEffect(() => {
+    if (!isRoutinesVisible) {
+      setIsDiaryInputVisible(false)
+    }
+  }, [isRoutinesVisible])
+
   const toggleDiaryInputVisibility = useCallback(() => {
     setIsDiaryInputVisible(!isDiaryInputVisible)
   }, [isDiaryInputVisible])
@@ -95,8 +107,12 @@ function MilestoneSection({
   })
 
   useEffect(() => {
-    setIsDiaryInputVisible(false)
-    setIsRoutinesVisible(false)
+    setIsDiaryInputVisible(
+      !(
+        parseInt(selectedDate.replace(/-/g, "")) >=
+        parseInt(todayDate.replace(/-/g, ""))
+      )
+    )
   }, [selectedDate])
 
   useEffect(() => {
@@ -315,7 +331,7 @@ function MilestoneSection({
         </div>
       )}
       {isDiaryInputVisible && (
-        <>
+        <div className="hidden lg:block">
           <DiarySection
             isDiaryToday={todayDate == selectedDate}
             selectedDate={selectedDate}
@@ -323,7 +339,7 @@ function MilestoneSection({
             routineDoneDailyId={targetRDDId}
             handleClickConfirm={toggleDiaryInputVisibility}
           />
-        </>
+        </div>
       )}
     </section>
   )
