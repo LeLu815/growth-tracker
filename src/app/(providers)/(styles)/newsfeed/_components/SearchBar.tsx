@@ -17,7 +17,7 @@ function SearchBar({ onSearch, className }: SearchBarProps) {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const query = inputRef.current?.value.trim() || ""
-    console.log(query)
+
     if (onSearch && query) {
       onSearch(query)
     }
