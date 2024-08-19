@@ -225,6 +225,12 @@ function NewsfeedClient() {
       </div>
 
       <Box className="px-0 py-0 lg:max-w-[1024px]">
+        <div
+          className="border-b-1 mt-[38px] hidden w-full border-grey-800 py-[32px] text-center text-title-xl lg:block"
+          style={{ borderBottom: "1px solid #E0E0E0" }}
+        >
+          {category}
+        </div>
         <SortSelector
           filter={filter}
           showCompleted={showCompleted}
