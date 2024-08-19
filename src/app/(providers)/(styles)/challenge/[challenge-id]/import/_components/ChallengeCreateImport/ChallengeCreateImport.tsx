@@ -78,6 +78,7 @@ function ChallengeCreateImport({ challengeId }: ChallengeCreateImportProps) {
     // 해당 함수는 컨포넌트 생애 주기에서 딱 한번만 호출되고 이후 반환된 값들을 적절하게 재분배하는 사이트 이팩트가 명확하다. => useEffect가 적절.
     getChallenge()
       .then((data) => {
+        console.log("data :", data)
         if (data.state !== "on_complete") {
           throw Error("400")
         }

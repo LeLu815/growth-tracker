@@ -248,7 +248,7 @@ function ChallengeUpdateCreateMilestonePc({
         </div>
       </div>
       {/* 루틴 작성 */}
-      <form onSubmit={hanleSubmit}>
+      <form onSubmit={hanleSubmit} className="mb-14">
         <ContentTitle className="mb-[10px] mt-[44px]">루틴 작성</ContentTitle>
         <p className="mb-[8px] text-[14px]">무엇을 꾸준히 해볼까요?</p>
         <div className="relative">

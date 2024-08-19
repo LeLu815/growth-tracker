@@ -123,7 +123,7 @@ function ChallengeUpdatePc({
 
           {/* 루틴 정보들 */}
           {/* 5. 루틴 추가 */}
-          <div className="mb-10 h-11 border-b-4 border-solid border-grey-800"></div>
+          <div className="mb-10 h-11 border-b-4 border-solid border-grey-800" />
           <div className="flex items-center justify-between py-5 pl-3">
             <Subsubtitle>루틴 정보</Subsubtitle>
             <button
