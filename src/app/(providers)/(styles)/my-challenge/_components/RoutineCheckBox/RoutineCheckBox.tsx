@@ -29,6 +29,7 @@ interface RoutineCheckBoxProps {
   routineContent: string
   numberOfroutines: number
   routineDoneDailyId: string
+  challengeEndAt?: string
 }
 
 function RoutineCheckBox({
@@ -37,6 +38,7 @@ function RoutineCheckBox({
   routineId,
   routineDoneDailyId,
   routineContent,
+  challengeEndAt,
 }: PropsWithChildren<RoutineCheckBoxProps>) {
   const { todayDate, routineDone } = useMyChallengePageContext()
   const queryClient = useQueryClient()
@@ -176,6 +178,8 @@ function RoutineCheckBox({
       return newChecked
     })
   }
+
+  const isEndOfChallenge = todayDate == challengeEndAt
 
   return (
     <div

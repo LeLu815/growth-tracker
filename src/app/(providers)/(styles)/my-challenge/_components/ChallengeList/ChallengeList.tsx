@@ -80,6 +80,7 @@ function ChallengeList() {
               challengeImage={challenge.image_url || ""}
               milestone={milestone}
               milestoneDoDays={milestoneDoDays}
+              challengeEndAt={challenge.end_at || ""}
             />
           )
         } else {

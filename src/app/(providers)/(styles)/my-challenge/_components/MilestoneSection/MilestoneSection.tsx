@@ -29,6 +29,7 @@ interface MilestoneSectionProps {
   challengeId: string
   challengeGoal: string
   challengeImage: string
+  challengeEndAt: string
 }
 
 function MilestoneSection({
@@ -37,6 +38,7 @@ function MilestoneSection({
   challengeId,
   challengeGoal,
   challengeImage,
+  challengeEndAt,
 }: PropsWithChildren<MilestoneSectionProps>) {
   const {
     userId,
@@ -277,6 +279,7 @@ function MilestoneSection({
                   routineId={routine.id}
                   routineDoneDailyId={targetRDDId}
                   routineContent={routine.content}
+                  challengeEndAt={challengeEndAt}
                 />
                 // </div>
               )
