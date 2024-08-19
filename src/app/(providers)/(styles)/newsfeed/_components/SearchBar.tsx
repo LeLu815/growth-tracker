@@ -17,7 +17,7 @@ function SearchBar({ onSearch, className }: SearchBarProps) {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const query = inputRef.current?.value.trim() || ""
-    console.log(query)
+
     if (onSearch && query) {
       onSearch(query)
     }
@@ -36,7 +36,7 @@ function SearchBar({ onSearch, className }: SearchBarProps) {
       onSubmit={handleSearchSubmit}
     >
       <div className="ml-auto flex flex-1 items-center justify-end gap-[8px]">
-        <div className="relative flex flex-1 items-center gap-[8px]">
+        <div className="relative flex flex-1 items-center gap-y-[8px]">
           <Input
             ref={inputRef}
             className="text-body-xl font-medium"

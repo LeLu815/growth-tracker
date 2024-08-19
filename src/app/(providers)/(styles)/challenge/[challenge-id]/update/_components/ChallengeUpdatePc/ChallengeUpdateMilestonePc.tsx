@@ -14,6 +14,7 @@ import { produce } from "immer"
 import Button from "@/components/Button"
 import Chip from "@/components/Chip"
 import DaysItem from "@/components/DaysItem"
+import PlusIcon from "@/components/Icon/PlusIcon"
 import Input from "@/components/Input"
 import RangeInput from "@/components/RangeInput"
 
@@ -244,164 +245,183 @@ function ChallengeUpdateMilestonePc({
     )
   }
 
-  console.log(data, milestoneId)
   return (
     <div
       className="mt-6 hidden flex-col lg:flex"
       onClick={(e) => e.stopPropagation()}
     >
-      <hr />
-      {/* 루틴 명 */}
-      <Input
-        label="루틴명"
-        variant="login"
-        placeholder="챌린지명을 입력해주세요"
-        value={milestoneNameInput}
-        onChange={(e) => {
-          if (e.target.value.length > 20) return
-          setMilestoneNameInput(e.target.value)
-        }}
-      />
-      {/* 루틴 기간 설정 */}
-      <div>
-        <Subsubtitle>루틴 기간 설정</Subsubtitle>
-        {range && (
-          <RangeInput
-            thumbColor="#FC5A6B"
-            trackColor="#FC5A6B"
-            getValue={(value: string) => {
-              setMilestonePeriod(value)
+      <div className="mb-5 h-5 border-b-4 border-solid border-grey-800" />
+      <div className="flex flex-col px-5">
+        {/* 루틴 명 */}
+        <div className="mt-5">
+          <Input
+            label="루틴명"
+            variant="login"
+            placeholder="챌린지명을 입력해주세요"
+            value={milestoneNameInput}
+            onChange={(e) => {
+              if (e.target.value.length > 20) return
+              setMilestoneNameInput(e.target.value)
             }}
-            step={1}
-            max={differenceInCalendarDays(range.to!, range.from!) + 1}
-            min={resisteredMilestonePeriodWithoutMe}
-            defaultValue={resisteredMilestonePeriod}
           />
-        )}
-      </div>
-      {/* 루틴 요일 설정 */}
-      <div>
-        <Subsubtitle>루틴 요일 설정</Subsubtitle>
-        <ul className="mr-auto flex justify-end gap-2">
-          {SELECT_WEEK_BTN_VALUES.map((value) => (
-            <li key={value} onClick={() => handleClickDayGroupType(value)}>
-              <Chip
-                label={value}
-                selected={currentDayGroupType === value}
-                intent="secondary"
-                variant="outline"
-              />
-            </li>
-          ))}
-        </ul>
-        <ul className="my-[20px] flex h-[40px] justify-between">
-          {WEEK_DAY_LIST.map((value, index) => (
-            <li key={value} onClick={() => handleClickDay(index)}>
-              <DaysItem isSelected={selectWeeks[index]}>{value}</DaysItem>
-            </li>
-          ))}
-        </ul>
-      </div>
-      {/* 설정된 루틴 */}
-      <div></div>
-      {/* 목표 달성률 */}
-      <Subsubtitle>목표 달성률</Subsubtitle>
-      <p className="mb-[20px] text-[14px]">권장 달성률 50%에요</p>
-      <RangeInput
-        thumbColor="#FC5A6B"
-        trackColor="#FC5A6B"
-        getValue={(value: string) => {
-          setMinPercent(value)
-        }}
-        step={10}
-        max={100}
-        defaultValue={
-          currentMilestoneObject?.success_percent
-            ? currentMilestoneObject?.success_percent!
-            : 50
-        }
-      />
-      <div className="mt-[4px] flex justify-between">
-        <p className="text-[14px] font-[500] text-grey-400">0%</p>
-        <p className="text-[14px] font-[500] text-grey-400">100%</p>
-      </div>
-      {/* 루틴 작성 */}
-      <form onSubmit={hanleSubmit}>
-        <ContentTitle className="mb-[10px] mt-[44px]">해야할 루틴</ContentTitle>
-        <p className="mb-[6px] text-[14px]">무엇을 꾸준히 해볼까요?</p>
-        <Input
-          placeholder="ex. 영단어 100개씩 암기"
-          value={routineInpt}
-          onChange={(e) => {
-            if (e.target.value.length > 20) return
-            setRoutineInput(e.target.value)
-          }}
-        />
-        <ul className="mt-[24px] flex flex-col gap-[16px]">
-          {routines.map((routine) => (
-            <li key={routine}>
-              <MilestoneCreateComponent
-                text={routine}
-                onClick={() => {
-                  setRoutines((prev) =>
-                    prev.filter((draft) => draft !== routine)
-                  )
-                }}
-              />
-            </li>
-          ))}
-        </ul>
-      </form>
-      {/* 확인 버튼 */}
-      <div className="flex justify-between">
-        <div className="flex">
-          <Button
-            onClick={() => {
-              // 삭제 경고
-              open({
-                type: "confirm",
-                content: "해당 루틴을 삭제하시겠습니까?",
-                onConfirm: () => {
-                  deleteMilestone(milestoneId)
-                  closeDetail()
-                },
-                onCancel: () => close(),
-              })
-            }}
-            size="lg"
-          >
-            삭제하기
-          </Button>
         </div>
-        <div className="flex gap-2">
-          <Button
-            onClick={() => {
-              // 취소하면 수정한 내용 날아감 경고
-              open({
-                type: "confirm",
-                content: "지금 나가면 수정 내용이 저장되지 않습니다.",
-                onCancel: () => {
-                  close()
-                },
-                onConfirm: () => {
-                  closeDetail()
-                },
-              })
-            }}
-            size="lg"
-            variant="outline"
-          >
-            취소
-          </Button>
-          <Button
-            onClick={() => {
-              closeDetail()
-              confirmFunc()
-            }}
-            size="lg"
-          >
-            수정
-          </Button>
+        {/* 루틴 기간 설정 */}
+        <div className="mt-10 flex justify-between">
+          <div className="w-[380px]">
+            <Subsubtitle className="mb-4 !text-[18px]">
+              루틴 기간 설정
+            </Subsubtitle>
+            {range && (
+              <RangeInput
+                thumbColor="#FC5A6B"
+                trackColor="#FC5A6B"
+                getValue={(value: string) => {
+                  setMilestonePeriod(value)
+                }}
+                step={1}
+                max={differenceInCalendarDays(range.to!, range.from!) + 1}
+                min={resisteredMilestonePeriodWithoutMe}
+                defaultValue={resisteredMilestonePeriod}
+              />
+            )}
+          </div>
+          {/* 루틴 요일 설정 */}
+          <div className="w-[380px]">
+            <Subsubtitle className="mb-4 !text-[18px]">
+              루틴 요일 설정
+            </Subsubtitle>
+            <ul className="mr-auto flex justify-end gap-2">
+              {SELECT_WEEK_BTN_VALUES.map((value) => (
+                <li key={value} onClick={() => handleClickDayGroupType(value)}>
+                  <Chip
+                    label={value}
+                    selected={currentDayGroupType === value}
+                    intent="secondary"
+                    variant="outline"
+                  />
+                </li>
+              ))}
+            </ul>
+            <ul className="my-[20px] flex h-[40px] justify-between">
+              {WEEK_DAY_LIST.map((value, index) => (
+                <li key={value} onClick={() => handleClickDay(index)}>
+                  <DaysItem isSelected={selectWeeks[index]}>{value}</DaysItem>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        {/* 설정된 루틴 */}
+        {/* 목표 달성률 */}
+        <div className="mt-5 flex flex-col gap-3">
+          <Subsubtitle className="!text-[18px]">목표 달성률</Subsubtitle>
+          <p className="mb-[10px] text-[14px]">권장 달성률 50%에요</p>
+        </div>
+        <RangeInput
+          thumbColor="#FC5A6B"
+          trackColor="#FC5A6B"
+          getValue={(value: string) => {
+            setMinPercent(value)
+          }}
+          step={10}
+          max={100}
+          defaultValue={
+            currentMilestoneObject?.success_percent
+              ? currentMilestoneObject?.success_percent!
+              : 50
+          }
+        />
+        <div className="mt-[4px] flex justify-between">
+          <p className="text-[14px] font-[500] text-grey-400">0%</p>
+          <p className="text-[14px] font-[500] text-grey-400">100%</p>
+        </div>
+        {/* 루틴 작성 */}
+        <form onSubmit={hanleSubmit}>
+          <ContentTitle className="mb-[12px] mt-[44px]">루틴 작성</ContentTitle>
+          <p className="mb-[6px] text-[14px]">무엇을 꾸준히 해볼까요?</p>
+          <div className="relative">
+            <Input
+              placeholder="ex. 영단어 100개씩 암기"
+              value={routineInpt}
+              onChange={(e) => {
+                if (e.target.value.length > 20) return
+                setRoutineInput(e.target.value)
+              }}
+            />
+            <button
+              className="absolute right-[20px] top-[30%] flex cursor-pointer items-center justify-center"
+              type="submit"
+            >
+              <PlusIcon className="stroke-grey-600" />
+            </button>
+          </div>
+          <ul className="mt-[24px] flex flex-col gap-[16px]">
+            {routines.map((routine) => (
+              <li key={routine}>
+                <MilestoneCreateComponent
+                  text={routine}
+                  onClick={() => {
+                    setRoutines((prev) =>
+                      prev.filter((draft) => draft !== routine)
+                    )
+                  }}
+                />
+              </li>
+            ))}
+          </ul>
+        </form>
+        {/* 확인 버튼 */}
+        <div className="mb-5 mt-16 flex justify-between">
+          <div className="flex">
+            <Button
+              variant="outline"
+              onClick={() => {
+                // 삭제 경고
+                open({
+                  type: "confirm",
+                  content: "해당 루틴을 삭제하시겠습니까?",
+                  onConfirm: () => {
+                    deleteMilestone(milestoneId)
+                    closeDetail()
+                  },
+                  onCancel: () => close(),
+                })
+              }}
+              size="lg"
+            >
+              삭제하기
+            </Button>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => {
+                // 취소하면 수정한 내용 날아감 경고
+                open({
+                  type: "confirm",
+                  content: "지금 나가면 수정 내용이 저장되지 않습니다.",
+                  onCancel: () => {
+                    close()
+                  },
+                  onConfirm: () => {
+                    closeDetail()
+                  },
+                })
+              }}
+              size="lg"
+              variant="outline"
+            >
+              취소
+            </Button>
+            <Button
+              onClick={() => {
+                closeDetail()
+                confirmFunc()
+              }}
+              size="lg"
+            >
+              수정
+            </Button>
+          </div>
         </div>
       </div>
     </div>

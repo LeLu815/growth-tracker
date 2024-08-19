@@ -34,7 +34,7 @@ import {
   SELECT_WEEK_BTN_VALUES,
 } from "../_components/MilestoneCreate/MilestoneCreateConfig"
 import SubTitle from "../_components/styles/SubTitle"
-import BrowserHeader from "../../components/BrowserHeader"
+import BrowserHeader from "../../_components/BrowserHeader"
 import Subsubtitle from "./_components/Subsubtitle"
 
 function ChallengeCreateBrower() {
@@ -295,7 +295,10 @@ function ChallengeCreateBrower() {
           </div>
         </div>
         {isOpenCalender && (
-          <div className="absolute left-[242px] z-10 overflow-hidden rounded-[20px] border border-solid border-grey-800 bg-white p-5">
+          <div
+            className="absolute left-[242px] z-10 overflow-hidden rounded-[20px] border border-solid border-grey-800 bg-white p-5"
+            onClick={(e) => e.stopPropagation()}
+          >
             <ChallengeCalender range={range} setRange={setRange} />
           </div>
         )}
@@ -306,7 +309,7 @@ function ChallengeCreateBrower() {
         <SubTitle className="mb-3 mt-5 px-3 py-5">
           챌린지 이름을 입력해주세요.
         </SubTitle>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 pl-3">
           <div className="flex flex-col items-center gap-[14px]">
             <div className="relative h-[156px] w-[156px] overflow-hidden rounded-[12px]">
               {selectedRandomUrl && (
@@ -451,7 +454,7 @@ function ChallengeCreateBrower() {
             }}
           />
           <button
-            className="absolute right-[20px] top-[36%] flex cursor-pointer items-center justify-center"
+            className="absolute right-[20px] top-[30%] flex cursor-pointer items-center justify-center"
             type="submit"
           >
             <PlusIcon className="stroke-grey-600" />
@@ -541,7 +544,7 @@ function ChallengeCreateBrower() {
           }
           size="lg"
         >
-          완료
+          챌린지 생성
         </Button>
         <button
           className="text-grey-500 underline underline-offset-[3px]"

@@ -23,6 +23,7 @@ import ResetIcon from "@/components/Icon/ResetIcon"
 import Input from "@/components/Input"
 import Page from "@/components/Page"
 
+import BrowserHeader from "../../../../_components/BrowserHeader"
 import Subsubtitle from "../../../../create/_browser/_components/Subsubtitle"
 import ChallengeCalender from "../../../../create/_components/ChallengeCalender/ChallengeCalender"
 import DragDropContainer from "../../../../create/_components/DrapDropContainer/DragDropContainer"
@@ -73,6 +74,8 @@ function ChallengeCreateImportPc() {
   const { setData, data } = useMilestoneCreateStore()
   // 마일스톤 추가
   const [isOpenAddMilestone, setIsOpenAddMilestone] = useState<boolean>(false)
+
+  console.log("data :", data)
 
   // 첼린지 기간이 마일스톤 기간보다 짧으면 토스트 띄우기
   useEffect(() => {
@@ -126,6 +129,12 @@ function ChallengeCreateImportPc() {
       }
     })()
   }, [])
+
+  const addRoutineBtnDisabledCondition =
+    data.length !== 0 &&
+    range &&
+    format(range?.to!, "yyyy-MM-dd") === data[data.length - 1].end_at
+
   return (
     <Page className="mx-auto hidden max-w-[1024px] lg:flex">
       {isOpenAddMilestone ? (
@@ -137,44 +146,48 @@ function ChallengeCreateImportPc() {
         />
       ) : (
         <>
-          <div>챌린지 생성</div>
+          <BrowserHeader>챌린지 생성</BrowserHeader>
           {/* 1. 챌린지 카테고리 */}
-          <SubTitle className="justify-center">
-            어떤 챌린지에 도전하세요?
-          </SubTitle>
-          <div className="">
-            <Image
-              alt="트로피 이미지"
-              src="/image/Img_trophy.png"
-              width={153}
-              height={152}
-            />
-          </div>
-          <ul className="flex flex-col gap-y-[20px]">
-            {categories.map((category) => (
-              <li
-                className="cursor-pointer"
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-              >
-                <Button
-                  variant="outline"
-                  size="lg"
-                  selected={selectedCategory === category}
+          <div className="flex w-full items-center">
+            <div className="flex flex-col justify-center gap-5 p-3">
+              <Subsubtitle>어떤 챌린지에 도전하세요?</Subsubtitle>
+              <Image
+                className="mx-auto"
+                alt="트로피 이미지"
+                src="/image/Img_trophy.png"
+                width={152}
+                height={152}
+              />
+            </div>
+            {/* 3. 카테고리 */}
+            <ul className="flex flex-1 justify-between">
+              {categories.map((category) => (
+                <li
+                  className="w-[164px] cursor-pointer"
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
                 >
-                  {category}
-                </Button>
-              </li>
-            ))}
-          </ul>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    selected={selectedCategory === category}
+                  >
+                    {category}
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          </div>
           {/* 2. 목표하는 챌린지 기간 */}
+          <Subsubtitle className="mx-3 my-5">
+            목표하는 챌린지 기간을 알려주세요.
+          </Subsubtitle>
           <div
-            className="relative"
+            className="relative mx-3 mt-3 flex"
             onClick={() => {
               handleClickOpenCalendar()
             }}
           >
-            <Subsubtitle>목표하는 챌린지 기간을 알려주세요.</Subsubtitle>
             <div className="flex w-[230px] justify-between rounded-[12px] border border-solid border-grey-800 px-[16px] py-[12px]">
               <div className="flex flex-col items-center gap-y-[12px]">
                 <p className="text-[16px] font-[500] text-grey-300">시작일</p>
@@ -195,72 +208,80 @@ function ChallengeCreateImportPc() {
               )}
             {isOpenCalender && (
               <div
-                className="absolute z-10 bg-white"
+                className="absolute left-[242px] z-10 overflow-hidden rounded-[20px] border border-solid border-grey-800 bg-white p-5"
                 onClick={(e) => e.stopPropagation()}
               >
                 <ChallengeCalender range={range} setRange={setRange} />
               </div>
             )}
           </div>
+
           {/* 3. 챌린지 이름 & 랜덤 이미지 변경 */}
-          <div className="flex flex-col items-center gap-[12px]">
-            <div className="relative h-[156px] w-[156px] overflow-hidden rounded-[12px]">
-              {selectedRandomUrl && (
-                <Image
-                  alt="랜덤 이미지"
-                  src={selectedRandomUrl}
-                  fill
-                  className="object-cover"
+          <div>
+            <SubTitle className="mb-3 mt-5 px-3 py-5">
+              챌린지 이름을 입력해주세요.
+            </SubTitle>
+            <div className="flex items-center gap-6 pl-3">
+              <div className="flex flex-col items-center gap-[14px]">
+                <div className="relative h-[156px] w-[156px] overflow-hidden rounded-[12px]">
+                  {selectedRandomUrl && (
+                    <Image
+                      alt="랜덤 이미지"
+                      src={selectedRandomUrl}
+                      fill
+                      className="object-cover"
+                    />
+                  )}
+                </div>
+                <Button
+                  intent="secondary"
+                  size="sm"
+                  variant="rounded"
+                  className="mb-[24px] w-[160px]"
+                  onClick={() => {
+                    handleClickRandomImgBtn()
+                  }}
+                >
+                  <div className="flex items-center justify-center gap-1">
+                    <ResetIcon />
+                    랜덤 이미지 변경
+                  </div>
+                </Button>
+              </div>
+              {inputValue && (
+                <Input
+                  variant="login"
+                  label={"챌린지 명"}
+                  onChange={(e) => {
+                    if (e.target.value.length > 20) {
+                      return
+                    }
+                    return setInputValue(e.target.value)
+                  }}
+                  value={inputValue}
+                  placeholder="챌린지명을 입력해주세요"
                 />
               )}
             </div>
-            <Button
-              intent="secondary"
-              size="sm"
-              variant="rounded"
-              onClick={() => {
-                handleClickRandomImgBtn()
-              }}
-              className="mb-[24px]"
-            >
-              <div className="flex items-center justify-center gap-1">
-                <ResetIcon />
-                랜덤 이미지 변경
-              </div>
-            </Button>
           </div>
-          {inputValue && (
-            <Input
-              variant="login"
-              label={"챌린지 명"}
-              onChange={(e) => {
-                if (e.target.value.length > 20) {
-                  return
-                }
-                return setInputValue(e.target.value)
-              }}
-              value={inputValue}
-              placeholder="챌린지명을 입력해주세요"
-            />
-          )}
-          <hr />
+
+          <div className="mb-10 h-11 border-b-4 border-solid border-grey-800" />
           {/* 4. 루틴 정보 */}
-          <div>
+          <div className="flex items-center justify-between py-5 pl-3">
             <Subsubtitle>루틴 정보</Subsubtitle>
             <button
               onClick={() => {
                 setIsOpenAddMilestone(true)
               }}
-              className="flex items-center gap-2"
-              disabled={
-                data.length !== 0 &&
-                range &&
-                format(range?.to!, "yyyy-MM-dd") ===
-                  data[data.length - 1].end_at
-              }
+              className={`flex items-center gap-2 ${addRoutineBtnDisabledCondition && "cursor-not-allowed text-grey-500"}`}
+              disabled={addRoutineBtnDisabledCondition}
             >
-              <div className="flex h-[48px] w-[48px] items-center justify-center rounded-full border border-solid border-primary">
-                <PlusIcon className="stroke-primary" />
+              <div
+                className={`flex h-[48px] w-[48px] items-center justify-center rounded-full border border-solid ${addRoutineBtnDisabledCondition ? "border-grey-500" : "border-primary"}`}
+              >
+                <PlusIcon
+                  className={`${addRoutineBtnDisabledCondition ? "stroke-grey-500" : "stroke-primary"}`}
+                />
               </div>
               루틴 추가
             </button>
@@ -279,11 +300,12 @@ function ChallengeCreateImportPc() {
               <DragDropContainer range={range} />
             )}
           </section>
-          <div>
+          <div className="mx-auto mb-[60px] flex w-[375px] flex-col gap-3">
             <Button
               disabled={
                 challengeCreateIsPending ||
                 (range &&
+                  data.length !== 0 &&
                   format(range?.to!, "yyyy-MM-dd") !==
                     data[data.length - 1].end_at &&
                   new Date(data[data.length - 1].end_at) >
@@ -293,15 +315,15 @@ function ChallengeCreateImportPc() {
                 challengeCreateMutate(
                   {
                     challenge: {
-                      category: category,
+                      category: selectedCategory,
                       user_id: me?.id || "",
                       day_cnt:
                         differenceInCalendarDays(range?.to!, range?.from!) + 1,
                       end_at: format(range?.to!, "yyyy-MM-dd"),
-                      goal: goal,
+                      goal: inputValue,
                       is_secret: false,
                       start_at: format(range?.from!, "yyyy-MM-dd"),
-                      image_url: randomImgUrl,
+                      image_url: selectedRandomUrl,
                     },
                     milestone: data.map((obj) =>
                       produce(
@@ -338,10 +360,12 @@ function ChallengeCreateImportPc() {
                   }
                 )
               }}
+              size="lg"
             >
               챌린지 생성
             </Button>
             <button
+              className="text-grey-500 underline underline-offset-[3px]"
               onClick={() => {
                 open({
                   type: "confirm",

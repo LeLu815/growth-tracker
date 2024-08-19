@@ -177,8 +177,8 @@ export async function GET(req: NextRequest) {
     `
     )
     .like("goal", `%${keyword}%`)
-  // .limit(limit)
-  // .range(offset, offset + limit - 1)
+    .limit(limit)
+    .range(offset, offset + limit - 1)
 
   const categoryQuery = category
     ? baseQuery.eq("category", category)

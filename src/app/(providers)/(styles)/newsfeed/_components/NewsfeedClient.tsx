@@ -103,12 +103,12 @@ function NewsfeedClient() {
         userId,
         showCompleted,
         pageParam,
-        12
+        8
       )
     },
 
     getNextPageParam: (lastPage, pages) => {
-      return lastPage?.length === 12 ? pages.length + 1 : undefined
+      return lastPage?.length === 8 ? pages.length + 1 : undefined
     },
 
     initialPageParam: 1,
@@ -225,6 +225,12 @@ function NewsfeedClient() {
       </div>
 
       <Box className="px-0 py-0 lg:max-w-[1024px]">
+        <div
+          className="border-b-1 mt-[38px] hidden w-full border-grey-800 py-[32px] text-center text-title-xl lg:block"
+          style={{ borderBottom: "1px solid #E0E0E0" }}
+        >
+          {category}
+        </div>
         <SortSelector
           filter={filter}
           showCompleted={showCompleted}
@@ -241,6 +247,20 @@ function NewsfeedClient() {
               &quot;{searchQuery}&quot; <br /> 포함되는 챌린지가 없어요
             </p>
             <p className="text-body-s">챌린지를 생성해보세요</p>
+
+            <Button
+              className="mb-[78px] mt-[20px]"
+              size="xs"
+              variant="outline"
+              intent="primary"
+              onClick={() => {
+                setSearchQuery("")
+                setCategory("전체")
+                refetch()
+              }}
+            >
+              메인화면으로 돌아가기
+            </Button>
           </div>
         ) : (
           <ul className="grid grid-cols-1 gap-x-6 pb-[60px] md:grid-cols-2 lg:grid-cols-3 lg:gap-y-10">
@@ -254,7 +274,11 @@ function NewsfeedClient() {
                 />
               ))}
             <div ref={loadMore}>
-              {isFetchingNextPage && <div>로딩중...</div>}
+              {isFetchingNextPage && (
+                <div>
+                  <Loading />{" "}
+                </div>
+              )}
             </div>
           </ul>
         )}
