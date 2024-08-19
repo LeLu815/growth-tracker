@@ -41,7 +41,6 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { "challenge-id": string } }
 ) {
-
   const challengeId = params["challenge-id"]
   const { searchParams } = new URL(req.url)
   const userId = searchParams.get("userId")
@@ -54,7 +53,6 @@ export async function POST(
 
   const pgClient = createPGClient()
 
-  // supabase db 연결
   pgClient
     .connect()
     .then(() => console.log("Connected to the database"))
@@ -65,11 +63,6 @@ export async function POST(
     await pgClient.query(
       "INSERT INTO challenge_like (user_id, challenge_id) VALUES($1, $2)",
       [userId, challengeId]
-    )
-
-    await pgClient.query(
-      "UPDATE challenge SET like_cnt = like_cnt + 1 where id = $1",
-      [challengeId]
     )
 
     await pgClient.query("COMMIT")
@@ -100,7 +93,6 @@ export async function DELETE(
 
   const pgClient = createPGClient()
 
-  // supabase db 연결
   pgClient
     .connect()
     .then(() => console.log("Connected to the database"))
@@ -112,11 +104,6 @@ export async function DELETE(
     await pgClient.query(
       "DELETE FROM challenge_like where user_id = $1 AND challenge_id = $2",
       [userId, challengeId]
-    )
-
-    await pgClient.query(
-      "UPDATE challenge SET like_cnt = like_cnt - 1 where id = $1",
-      [challengeId]
     )
 
     await pgClient.query("COMMIT")

@@ -50,12 +50,11 @@ function ChallengeLike({ challengeId }: ChallengeLikeProps) {
   }
 
   const createOrDeleteLike = async () => {
-    if (!isLiked) {
-      const axiosResponse = await axios.post(
+    debugger
+    if (!isLiked && challengeDetail.userId !== me?.id) {
+      axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${me?.id}/notice?toUserId=${challengeDetail.userId}&goal=${challengeDetail.goal}&challengeId=${challengeId}`
       )
-
-      console.log(axiosResponse)
     }
 
     const method = isLiked ? "delete" : "post"
