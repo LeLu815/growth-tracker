@@ -147,7 +147,11 @@ function Button({
 
   if ("href" in props) {
     return (
-      <Link className={classNames(className, customClassName)} {...props}>
+      <Link
+        className={classNames(className, customClassName)}
+        {...props}
+        prefetch={false}
+      >
         {children}
       </Link>
     )

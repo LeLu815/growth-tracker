@@ -17,6 +17,7 @@ import MyChallengeNavBar from "./_components/MyChallengeNavBar"
 import useMyChallengePageContext from "./context"
 
 function MyChallengePage() {
+  console.log("MyChallengePage", MyChallengePage)
   const {
     pageToView,
     challengeDataPending,
@@ -28,12 +29,12 @@ function MyChallengePage() {
   const setCurrentCount = useMyPageResponsive((state) => state.setCurrentCount)
   const { isLoggedIn, isInitialized } = useAuth()
   const router = useRouter()
-  useEffect(() => {
-    if (isInitialized && !isLoggedIn) {
-      alert(`내가 보냄 ㅅㄱ isLoggedIn :${isLoggedIn}`)
-      // router.replace("/auth/login-email")
-    }
-  }, [isLoggedIn, router, isInitialized])
+  // useEffect(() => {
+  //   if (isInitialized && !isLoggedIn) {
+  //     alert(`내가 보냄 ㅅㄱ isLoggedIn :${isLoggedIn}`)
+  //     // router.replace("/auth/login-email")
+  //   }
+  // }, [isLoggedIn, router, isInitialized])
   const reset = useMyPageResponsive((state) => state.reset)
   useEffect(() => {
     reset()
