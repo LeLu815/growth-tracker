@@ -75,6 +75,8 @@ function ChallengeCreateImportPc() {
   // 마일스톤 추가
   const [isOpenAddMilestone, setIsOpenAddMilestone] = useState<boolean>(false)
 
+  console.log("data :", data)
+
   // 첼린지 기간이 마일스톤 기간보다 짧으면 토스트 띄우기
   useEffect(() => {
     if (
@@ -313,15 +315,15 @@ function ChallengeCreateImportPc() {
                 challengeCreateMutate(
                   {
                     challenge: {
-                      category: category,
+                      category: selectedCategory,
                       user_id: me?.id || "",
                       day_cnt:
                         differenceInCalendarDays(range?.to!, range?.from!) + 1,
                       end_at: format(range?.to!, "yyyy-MM-dd"),
-                      goal: goal,
+                      goal: inputValue,
                       is_secret: false,
                       start_at: format(range?.from!, "yyyy-MM-dd"),
-                      image_url: randomImgUrl,
+                      image_url: selectedRandomUrl,
                     },
                     milestone: data.map((obj) =>
                       produce(
