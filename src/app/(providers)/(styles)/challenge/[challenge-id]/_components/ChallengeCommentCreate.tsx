@@ -12,10 +12,16 @@ import axios from "axios"
 import DefaultProfile from "@/components/Icon/DefaultProfile"
 import SendIcon from "@/components/Icon/SendIcon"
 
+import { ChallengeCommentType } from "../../../../../../../types/challengeDetail.type"
+
 function ChallengeCommentCreate({
   challengeId,
   className,
+  setNewCommentList,
+  newCommentList,
 }: {
+  setNewCommentList: (newVar: (any | ChallengeCommentType)[]) => void
+  newCommentList: ChallengeCommentType[]
   challengeId: string
   className: string
 }) {
@@ -68,8 +74,29 @@ function ChallengeCommentCreate({
       alertOpen("댓글 작성에 실패했습니다.")
       throw new Error(response.error)
     }
+
+    const queryData: any = queryClient.getQueryData(["challengeComment"])
+
+    if (queryData.pages[0].length === 0) {
+      queryClient.invalidateQueries({ queryKey: ["challengeComment"] })
+    } else {
+      const newVar = [
+        {
+          ...response.data[0],
+          ...{
+            created_at: response.data[0].created_at.substring(0, 10),
+            user_id: me.id,
+            is_like: false,
+            email: me.email,
+            nickname: userData?.nickname,
+            profile_image_url: userData?.profile_image_url,
+          },
+        },
+        ...newCommentList,
+      ]
+      setNewCommentList(newVar)
+    }
     handleCommentCreateToast()
-    queryClient.invalidateQueries({ queryKey: ["challengeComment"] })
   }
 
   const alertOpen = (message: string) => {

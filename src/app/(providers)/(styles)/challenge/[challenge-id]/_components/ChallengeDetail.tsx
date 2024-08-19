@@ -196,10 +196,10 @@ function ChallengeDetail({ challengeId }: { challengeId: string }) {
           </div>
         </div>
       </Page>
-      <ChallengeCommentCreate
-        challengeId={challengeId}
-        className="fixed bottom-0 w-full lg:hidden"
-      />
+      {/*<ChallengeCommentCreate*/}
+      {/*  challengeId={challengeId}*/}
+      {/*  className="fixed bottom-0 w-full lg:hidden"*/}
+      {/*/>*/}
     </div>
   )
 }
