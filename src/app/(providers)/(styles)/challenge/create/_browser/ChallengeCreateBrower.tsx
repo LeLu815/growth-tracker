@@ -34,7 +34,7 @@ import {
   SELECT_WEEK_BTN_VALUES,
 } from "../_components/MilestoneCreate/MilestoneCreateConfig"
 import SubTitle from "../_components/styles/SubTitle"
-import BrowserHeader from "../../components/BrowserHeader"
+import BrowserHeader from "../../_components/BrowserHeader"
 import Subsubtitle from "./_components/Subsubtitle"
 
 function ChallengeCreateBrower() {
@@ -295,7 +295,10 @@ function ChallengeCreateBrower() {
           </div>
         </div>
         {isOpenCalender && (
-          <div className="absolute left-[242px] z-10 overflow-hidden rounded-[20px] border border-solid border-grey-800 bg-white p-5">
+          <div
+            className="absolute left-[242px] z-10 overflow-hidden rounded-[20px] border border-solid border-grey-800 bg-white p-5"
+            onClick={(e) => e.stopPropagation()}
+          >
             <ChallengeCalender range={range} setRange={setRange} />
           </div>
         )}

@@ -48,8 +48,6 @@ function MilestoneCreateSwitch({
     challengeCreateIsPending,
     challengeUpdateMutate,
   } = useChallengeQuery()
-
-  console.log("data[data.length - 1].end_at :", data[data.length - 1].end_at)
   return (
     <>
       <Page>
