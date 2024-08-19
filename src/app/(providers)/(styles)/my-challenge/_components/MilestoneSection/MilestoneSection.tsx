@@ -45,7 +45,7 @@ function MilestoneSection({
     selectedDayOfWeek,
     currentUserRoutineDoneDaily,
   } = useMyChallengePageContext()
-
+  console.log("마일스톤 리렌더링")
   const router = useRouter()
   const leftDays =
     (new Date(milestone.end_at).getTime() - new Date(selectedDate).getTime()) /
@@ -97,6 +97,9 @@ function MilestoneSection({
   useEffect(() => {
     setIsDiaryInputVisible(false)
     setIsRoutinesVisible(false)
+  }, [selectedDate])
+
+  useEffect(() => {
     initializeRDD()
   }, [selectedDate])
 
@@ -165,6 +168,7 @@ function MilestoneSection({
     // 선택한 일자가 마일스톤 시행 요일이면서
     // 동시에 routine_done_daily에 유효한 레코드가 없는 경우에 새로운 레코드  생성
     if (checkMilestoneDayOfWeek && !targetRDD) {
+      console.log("포스트할거임")
       const newId = v4()
 
       postRDDmutation.mutate(newId)
@@ -172,9 +176,9 @@ function MilestoneSection({
       setTargetRDDId(newId)
     }
 
-    if (targetRDD) {
-      setTargetRDDId(targetRDD.id)
-    }
+    // if (targetRDD) {
+    //   setTargetRDDId(targetRDD.id)
+    // }
   }
 
   return (

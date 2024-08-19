@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 
@@ -13,9 +14,13 @@ import useMyChallengePageContext from "../../context"
 import MilestoneSection from "../MilestoneSection"
 
 function ChallengeList() {
+  console.log("챌린지리스트 리렌더링")
+
   const { selectedDate, structuredChallengeData, todayDate } =
     useMyChallengePageContext()
-
+  console.log("selectedDate: ", selectedDate)
+  console.log("structuredChallengeData: ", structuredChallengeData)
+  console.log("todayDate: ", todayDate)
   const CURRENT_DATE_NUMBER = parseInt(selectedDate.replace(/-/g, ""))
   const TODAY_DATE_NUMBER = parseInt(todayDate.replace(/-/g, ""))
   const router = useRouter()
@@ -177,4 +182,4 @@ function ChallengeList() {
   )
 }
 
-export default ChallengeList
+export default React.memo(ChallengeList)
