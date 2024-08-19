@@ -11,6 +11,8 @@ const buttonVariant = cva(
         primary: "active:bg-pink-700 md:hover:bg-pink-700",
         secondary: "md:hover:bg-blue-400 active:bg-blue-400",
         third: "active:bg-grey-800 md:hover:bg-grey-800",
+        diarySecondary:
+          "md:hover:bg-gray-400 active:bg-blue-400 text-[#FC5A6B] border-[#FC5A6B]",
         kakao: "bg-[#FDE500] text-[#1A1A1A]",
         my: "text-primary",
         logout: "text-black bg-white",
@@ -81,6 +83,12 @@ const buttonVariant = cva(
         intent: "secondary",
         variant: "rounded",
         className: "px-[20px] py-[8px] rounded-full text-[#141414]",
+      },
+      {
+        intent: "diarySecondary",
+        variant: "rounded",
+        className:
+          "px-[20px] py-[8px] rounded-full text-[#FC5A6B] border-[#FC5A6B]",
       },
       {
         intent: "primary",
