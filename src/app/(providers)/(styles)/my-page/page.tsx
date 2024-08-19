@@ -14,7 +14,6 @@ import ProfileMenu from "@/app/(providers)/(styles)/my-page/_components/profile/
 import TopPercentGraph from "@/app/(providers)/(styles)/my-page/_components/profile/TopPercentGraph"
 import {
   CHALLENGE_MENU_LIST,
-  MY_CHALLENGE_ANALYZE,
   MY_INFO_LIST,
 } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
@@ -29,14 +28,14 @@ function UserInfoPage() {
     reset()
   }, [])
 
-  useEffect(() => {
-    if (isInitialized && !isLoggedIn) {
-      alert(`내가 보냄 ㅅㄱ isLoggedIn :${isLoggedIn}`)
-      // router.push("/auth/login-email")
-    } else if (isLargeScreen && pathname.startsWith("/my-page")) {
-      router.push(MY_CHALLENGE_ANALYZE.path)
-    }
-  }, [isLoggedIn, router, isInitialized])
+  // useEffect(() => {
+  //   if (isInitialized && !isLoggedIn) {
+  //     alert(`내가 보냄 ㅅㄱ isLoggedIn :${isLoggedIn}`)
+  //     // router.push("/auth/login-email")
+  //   } else if (isLargeScreen && pathname.startsWith("/my-page")) {
+  //     router.push(MY_CHALLENGE_ANALYZE.path)
+  //   }
+  // }, [isLoggedIn, router, isInitialized])
 
   const handleLogout = async () => {
     await logOut()
