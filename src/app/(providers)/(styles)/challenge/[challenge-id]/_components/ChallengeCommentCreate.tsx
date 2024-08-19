@@ -83,7 +83,7 @@ function ChallengeCommentCreate({
   const handleBlur = () => {
     setTimeout(() => {
       setIsFocused(false)
-    }, 100)
+    }, 200)
   }
 
   const handleOnChangeTextarea = (e: ChangeEvent<HTMLTextAreaElement>) => {
