@@ -55,7 +55,7 @@ function MilestoneList({ milestones, className = "" }: MilestoneListProps) {
           >
             <div className="flex flex-col items-start gap-[20px] self-stretch">
               <div className="flex items-center justify-between self-stretch">
-                <div className="pt-2 text-title-xs text-[#171717]">
+                <div className="pt-3 text-title-xs text-[#171717]">
                   {milestone.name}
                 </div>
                 <span className="text-2xl">

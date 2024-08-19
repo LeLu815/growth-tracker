@@ -5,6 +5,7 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
+import { useToast } from "@/context/toast.context"
 import {
   useInfiniteQuery,
   useMutation,
@@ -34,6 +35,7 @@ function ChallengeCommentList({
   const { me } = useAuth()
   const router = useRouter()
   const queryClient = useQueryClient()
+  const { showToast } = useToast()
 
   const [updateContent, setUpdateContent] = useState("")
   const [isUpdate, setIsUpdate] = useState(false)
@@ -71,6 +73,7 @@ function ChallengeCommentList({
       alertOpen("댓글 삭제에 실패했습니다.")
       throw new Error(response.error)
     }
+    showToast("댓글을 삭제했습니다.", 3000, " bottom-12 mx-auto max-w-[350px]")
     refetch()
   }
 
@@ -321,7 +324,7 @@ function ChallengeCommentList({
 
   return (
     <div
-      className={`flex w-full flex-col items-center gap-[14p] mb-20 overflow-hidden px-[20px] ${className}`}
+      className={`mb-20 flex w-full flex-col items-center gap-[14p] overflow-hidden px-[20px] ${className}`}
     >
       <div className="flex w-full justify-between border-b-[1px] p-[20px] lg:border-t-2 lg:border-solid lg:border-grey-800 lg:bg-grey-900 lg:px-[40px] lg:py-[12px]">
         <div className={"text-body-xxs text-grey-50 lg:text-body-xs"}>
@@ -344,7 +347,7 @@ function ChallengeCommentList({
       </div>
       <ChallengeCommentCreate
         challengeId={challengeId}
-        className="hidden w-full lg:block lg:mb-4"
+        className="hidden w-full lg:mb-4 lg:block"
       />
       {data?.length === 0 ? (
         <div className={"text-gray-custom p-24 text-center text-body-m"}>

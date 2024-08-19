@@ -26,7 +26,11 @@ function ChallengeDetailHeaderMenu({ className = "" }: { className?: string }) {
   const queryClient = useQueryClient()
 
   const handleDeleteChallengeToast = () => {
-    showToast("챌린지가 삭제되었습니다.", 3000, "bottom-20 max-w-[640px]")
+    showToast(
+      "챌린지가 삭제되었습니다.",
+      3000,
+      " bottom-12 mx-auto max-w-[350px]"
+    )
   }
 
   const handleDeleteChallenge = async () => {

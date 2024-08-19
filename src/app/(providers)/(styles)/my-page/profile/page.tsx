@@ -95,7 +95,7 @@ function Profile() {
 
     setSelectedFile(null)
     refetch()
-    showToast("수정되었습니다.")
+    showToast("수정되었습니다.", 3000, " bottom-12 mx-auto max-w-[350px]")
     router.push(MY_PAGE.path)
   }
 

@@ -53,7 +53,7 @@ function MyChallengeStorageBoxTab() {
         {menuList.map((menu) => (
           <div
             key={menu.key}
-            className={`flex h-full w-[50%] cursor-pointer items-center justify-center px-4 text-center ${activeTap === menu.key && "border-b-2 border-solid border-b-[#141414] text-black transition-colors duration-300 ease-in-out"} `}
+            className={`flex h-full w-[50%] cursor-pointer items-center justify-center px-4 text-center text-grey-600 ${activeTap === menu.key && "border-b-2 border-solid border-b-[#141414] !text-black transition-colors duration-300 ease-in-out"} `}
             onClick={() => setActiveTap(menu.key)}
           >
             <p>{menu.name}</p>
