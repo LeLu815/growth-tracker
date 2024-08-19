@@ -1,7 +1,4 @@
-"use client"
-
 import React, { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
@@ -16,10 +13,8 @@ import {
   Tooltip,
 } from "chart.js"
 import { Line } from "react-chartjs-2"
-import { useMediaQuery } from "react-responsive"
 
 import Loading from "@/components/Loading"
-import { MY_PAGE } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
 import { MyPageGraphType } from "../../../../../../../types/myPageGraph.type"
 
@@ -33,15 +28,13 @@ ChartJS.register(
 )
 
 const TopPercentGraph = () => {
-  const isLargeScreen = useMediaQuery({ minWidth: 1024 }) // lg 사이즈 이상일 때 true
   const { me } = useAuth()
-  const router = useRouter()
   const [graphData, setGraphData] = useState({
-    labels: ["", "", "", "", "", "", "", "", "", "", ""], // X-axis labels
+    labels: ["", "", "", "", "", "", "", "", "", "", ""],
     datasets: [
       {
         label: "Success Rate",
-        data: [20, 30, 50, 45, 60, 70, 40, 35, 30, 25, 30], // Data points
+        data: [20, 30, 50, 45, 60, 70, 40, 35, 30, 25, 30],
         borderColor: "rgba(128, 128, 128, 1)",
         borderWidth: 2,
         pointBackgroundColor: [
@@ -50,33 +43,30 @@ const TopPercentGraph = () => {
           "transparent",
           "transparent",
           "transparent",
-          "rgba(255, 99, 132, 0.6)", // Highlighted point
+          "rgba(255, 99, 132, 0.6)",
           "transparent",
           "transparent",
           "transparent",
           "transparent",
           "transparent",
         ],
-        pointBorderColor: "rgba(255, 255, 255, 1)", // Point border color
+        pointBorderColor: "rgba(255, 255, 255, 1)",
         pointBorderWidth: 2,
-        pointRadius: [3, 3, 3, 3, 3, 6, 3, 3, 3, 3, 3], // Highlight one point
+        pointRadius: [3, 3, 3, 3, 3, 6, 3, 3, 3, 3, 3],
         tension: 0.4,
       },
     ],
   })
 
   const [options, setOptions] = useState<ChartOptions<"line">>({
-    responsive: true, // true로 설정
-    maintainAspectRatio: false, // 이 옵션을 false로 설정하여 컨테이너의 크기에 맞게 조정
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: false,
       },
       tooltip: {
         enabled: false,
-      },
-      datalabels: {
-        display: false,
       },
     },
     scales: {
@@ -163,17 +153,17 @@ const TopPercentGraph = () => {
       }
 
       setGraphData({
-        labels: ["", "", "", "", "", "", "", "", "", "", ""], // X-axis labels
+        labels: ["", "", "", "", "", "", "", "", "", "", ""],
         datasets: [
           {
             label: "Success Rate",
-            data: userCount, // Data points
+            data: userCount,
             borderColor: "rgba(128, 128, 128, 1)",
             borderWidth: 2,
             pointBackgroundColor: newPointBackgroundColorList,
-            pointBorderColor: "rgba(255, 255, 255, 1)", // Point border color
+            pointBorderColor: "rgba(255, 255, 255, 1)",
             pointBorderWidth: 2,
-            pointRadius: pointRadiusList, // Highlight one point
+            pointRadius: pointRadiusList,
             tension: 0.4,
           },
         ],
@@ -192,8 +182,6 @@ const TopPercentGraph = () => {
         속합니다.
       </div>
       <div className="lg:mx-auto lg:mt-20 lg:h-96 lg:w-full lg:max-w-[740px]">
-        {" "}
-        {/* 부모 요소의 넓이와 높이를 설정 */}
         <Line data={graphData} options={options} />
       </div>
     </div>

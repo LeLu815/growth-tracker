@@ -24,7 +24,7 @@ import {
 } from "@/app/(providers)/_utils/imageUploadUtils"
 import { MY_PAGE } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
-function UserInfoPage() {
+function Profile() {
   const isLargeScreen = useMediaQuery({ minWidth: 1024 }) // lg 사이즈 이상일 때 true
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const originProfileImageUrlRef = useRef<string | null>(null)
@@ -38,7 +38,6 @@ function UserInfoPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const isResponsive = searchParams.get("isResponsive") || false
-
   const { showToast } = useToast()
 
   const setCurrentCount = useMyPageResponsive((state) => state.setCurrentCount)
@@ -153,7 +152,7 @@ function UserInfoPage() {
           {profileImageUrl ? (
             <Image
               src={profileImageUrl as string}
-              alt="Profile"
+              alt="MyPageMain"
               className="h-[100px] w-[100px] rounded-full object-cover"
               width={100}
               height={100}
@@ -228,4 +227,4 @@ function UserInfoPage() {
   )
 }
 
-export default UserInfoPage
+export default Profile
