@@ -9,4 +9,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Call URL
-        run: curl -X GET "https://growth-tracker-ecru.vercel.app/api/notice/cron"
+        run: curl -X GET "https://growth-tracker-text.vercel.app/api/notice/cron"
