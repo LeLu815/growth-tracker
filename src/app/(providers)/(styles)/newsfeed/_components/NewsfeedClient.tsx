@@ -247,6 +247,20 @@ function NewsfeedClient() {
               &quot;{searchQuery}&quot; <br /> 포함되는 챌린지가 없어요
             </p>
             <p className="text-body-s">챌린지를 생성해보세요</p>
+
+            <Button
+              className="mb-[78px] mt-[20px]"
+              size="xs"
+              variant="outline"
+              intent="primary"
+              onClick={() => {
+                setSearchQuery("")
+                setCategory("전체")
+                refetch()
+              }}
+            >
+              메인화면으로 돌아가기
+            </Button>
           </div>
         ) : (
           <ul className="grid grid-cols-1 gap-x-6 pb-[60px] md:grid-cols-2 lg:grid-cols-3 lg:gap-y-10">

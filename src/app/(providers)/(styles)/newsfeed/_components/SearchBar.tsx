@@ -36,7 +36,7 @@ function SearchBar({ onSearch, className }: SearchBarProps) {
       onSubmit={handleSearchSubmit}
     >
       <div className="ml-auto flex flex-1 items-center justify-end gap-[8px]">
-        <div className="relative flex flex-1 items-center gap-[8px]">
+        <div className="relative flex flex-1 items-center gap-y-[8px]">
           <Input
             ref={inputRef}
             className="text-body-xl font-medium"
