@@ -3,6 +3,7 @@ import { useAuth } from "@/context/auth.context"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { useInView } from "react-intersection-observer"
+import { useMediaQuery } from "react-responsive"
 
 import ChallengeCard from "@/components/ChallengeCard"
 import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
@@ -78,8 +79,8 @@ function CompleteChallengeList() {
               <li
                 key={myChallenge.id}
                 onClick={() => handleMoveDetail(myChallenge.id)}
-                className="mb-[20px] cursor-pointer"
-                ref={isLastItem ? ref : null}
+                className="mb-[24px] flex w-full cursor-pointer flex-col rounded-lg border border-grey-300 shadow-sm"
+                style={{ border: "1px solid #E0E0E0" }}
               >
                 <ChallengeCard
                   title={myChallenge.goal}
@@ -95,6 +96,7 @@ function CompleteChallengeList() {
                   successRate={myChallenge?.successRate}
                   challenge={myChallenge}
                   milestone={myChallenge?.milestone}
+                  isLgSize={false}
                 />
               </li>
             )

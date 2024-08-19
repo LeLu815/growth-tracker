@@ -15,11 +15,14 @@ import {
 import { Doughnut } from "react-chartjs-2"
 
 import Button from "@/components/Button"
-import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
 import Loading from "@/components/Loading"
 import OverViewCountCard from "@/app/(providers)/(styles)/my-page/_components/analyze/OverViewCountCard"
 import OverViewLegend from "@/app/(providers)/(styles)/my-page/_components/analyze/OverViewLegend"
 import { MY_CHALLENGE_ANALYZE_DETAIL } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
+
+import "chartjs-plugin-datalabels"
+
+import Image from "next/image"
 
 import { Step3GraphType } from "../../../../../../../types/myPageGraph.type"
 
@@ -70,6 +73,9 @@ const ChallengeStatusOverviewGraph = () => {
         },
         tooltip: {
           enabled: false,
+        },
+        datalabels: {
+          display: false, // 데이터 레이블을 숨깁니다
         },
       },
       cutout: "60%",
@@ -172,51 +178,62 @@ const ChallengeStatusOverviewGraph = () => {
   if (isPending) return <Loading />
   if (isError) return <div>Error loading data</div>
 
-  if (!isPossibleStatistics) {
-    return (
-      <div className="mt-36 flex flex-col items-center justify-center">
-        <NoChallengeFlagsIcon />
-        <p className="mt-3 text-[20px] font-bold">분석할 데이터가 없습니다.</p>
-        <p className="mt-[12px] text-[12px] font-[500]">
-          챌린지를 생성해 목표를 이루어 보세요.
-        </p>
-      </div>
-    )
-  }
-
   return (
     <div className={"flex flex-col gap-10"}>
-      <div className="flex w-full flex-col items-center gap-8">
-        <div>
-          <div className={"text-title-xl"}>
-            {compareNumbersReturnMessage(
-              challengeCount.successCount,
-              challengeCount.failCount,
-              "titleMessage"
-            )}{" "}
-            <br />{" "}
-            {challengeCount.successCount !== challengeCount.failCount
-              ? "더 많아요."
-              : "비슷해요"}
-            {compareNumbersReturnMessage(
-              challengeCount.successCount,
-              challengeCount.failCount,
-              "emoticon"
-            )}
+      <div className="flex w-full flex-col items-center gap-8 lg:items-start">
+        {isPossibleStatistics ? (
+          <div>
+            <div className={"text-title-xl"}>
+              {compareNumbersReturnMessage(
+                challengeCount.successCount,
+                challengeCount.failCount,
+                "titleMessage"
+              )}
+              <br />
+              {challengeCount.successCount !== challengeCount.failCount
+                ? "더 많아요."
+                : "비슷해요"}
+              {compareNumbersReturnMessage(
+                challengeCount.successCount,
+                challengeCount.failCount,
+                "emoticon"
+              )}
+            </div>
+            <div className={"mt-2 text-body-m"}>
+              {compareNumbersReturnMessage(
+                challengeCount.successCount,
+                challengeCount.failCount,
+                "subMessage"
+              )}
+            </div>
           </div>
-          <div className={"mt-2 text-body-m"}>
-            {compareNumbersReturnMessage(
-              challengeCount.successCount,
-              challengeCount.failCount,
-              "subMessage"
-            )}
+        ) : (
+          <div className={"w-auto"}>
+            <div className={"text-title-xl"}>아직 기록이 없어요.</div>
+            <div className={"mt-2 text-body-m"}>
+              챌린지 달성하고 성공률을 확인해보세요!
+            </div>
           </div>
+        )}
+
+        {isPossibleStatistics ? (
+          <Doughnut data={graphData} options={options} className={"mx-auto"} />
+        ) : (
+          <Image
+            className={"mx-auto"}
+            src={"/image/graph.png"}
+            width={252}
+            height={252}
+            alt={"그래프"}
+          ></Image>
+        )}
+
+        <div className={"mx-auto"}>
+          <OverViewLegend legendList={labelList}></OverViewLegend>
         </div>
-        <Doughnut data={graphData} options={options} className={"mx-auto"} />
-        <OverViewLegend legendList={labelList}></OverViewLegend>
       </div>
       <hr />
-      <div className="grid w-full grid-cols-2 justify-center gap-[8px]">
+      <div className="mx-auto grid w-full max-w-[640px] grid-cols-2 justify-center gap-[8px]">
         <OverViewCountCard
           title="전체 챌린지"
           count={challengeCount.totalCount}
@@ -234,9 +251,10 @@ const ChallengeStatusOverviewGraph = () => {
           count={challengeCount.progressCount}
         />
       </div>
-      <div className={"mx-auto mt-[28px] w-full"}>
+      <div className={"mx-auto mt-[28px] w-full lg:hidden"}>
         <Button
-          intent="primary"
+          intent={`${isPossibleStatistics ? "my" : "secondary"}`}
+          disabled={!isPossibleStatistics}
           size="lg"
           onClick={() => router.push(MY_CHALLENGE_ANALYZE_DETAIL.path)}
         >

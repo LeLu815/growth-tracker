@@ -9,7 +9,6 @@ import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
 import Loading from "@/components/Loading"
 
 import { PostType } from "../../../../../../../types/challenge"
-import { MyChallengeType } from "../../../../../../../types/myChallengeList.type"
 
 function LikeChallengeList() {
   const { me } = useAuth()
@@ -79,7 +78,8 @@ function LikeChallengeList() {
               <li
                 key={myChallenge.id}
                 onClick={() => handleMoveDetail(myChallenge.id)}
-                className="mb-[20px] cursor-pointer"
+                className="mb-[24px] flex cursor-pointer flex-col rounded-lg border border-grey-300 shadow-sm"
+                style={{ border: "1px solid #E0E0E0" }}
               >
                 <ChallengeCard
                   title={myChallenge.goal}
@@ -97,6 +97,7 @@ function LikeChallengeList() {
                   successRate={myChallenge.successRate}
                   challenge={myChallenge}
                   milestone={myChallenge.milestone}
+                  isLgSize={false}
                 />
               </li>
             )
@@ -104,9 +105,11 @@ function LikeChallengeList() {
         ) : (
           <div className="mt-5 flex flex-col items-center justify-center">
             <NoChallengeFlagsIcon />
-            <p className="mt-3 text-[20px] font-bold">찜한 챌린지가 없어요.</p>
+            <p className="mt-3 text-[20px] font-bold">
+              저장한 챌린지가 없어요.
+            </p>
             <p className="mt-[12px] text-[12px] font-[500]">
-              관심있는 챌린지를 찜 해보세요.
+              관심있는 챌린지를 저장 해보세요.
             </p>
           </div>
         )}

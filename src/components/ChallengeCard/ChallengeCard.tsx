@@ -23,6 +23,7 @@ interface ChallengeCardProps {
   challenge?: PostType
   milestone?: ProgressMilestoneType[]
   startDate?: string
+  isLgSize?: boolean
 }
 
 function ChallengeCard({
@@ -36,16 +37,25 @@ function ChallengeCard({
   challengeImage,
   successRate,
   startDate,
+  isLgSize = true,
 }: ChallengeCardProps) {
   const isCompleted = state === "on_complete"
   const isNotStarted = state === "not_started"
   const formattedStartDate = startDate ? formatStartDate(startDate) : ""
 
   return (
-    <article className="rounded-lg transition-all lg:hover:bg-pink-900">
-      <div className="flex w-full px-[12px] py-[14px] lg:flex-col">
-        <div className="mr-4 flex w-1/4 min-w-[98px] flex-col lg:w-full">
-          <div className="relative flex h-full w-full flex-col items-start justify-between overflow-hidden rounded-[6px] border lg:h-[170px] lg:w-full">
+    <article
+      className={`rounded-lg transition-all ${isLgSize && "lg:hover:bg-pink-900"}`}
+    >
+      <div
+        className={`flex w-full px-[12px] py-[14px] ${isLgSize && "lg:flex-col"}`}
+      >
+        <div
+          className={`mr-4 flex w-1/4 min-w-[98px] flex-col ${isLgSize && "lg:w-full"}`}
+        >
+          <div
+            className={`relative flex h-full w-full flex-col items-start justify-between overflow-hidden rounded-[6px] border ${isLgSize && "lg:h-[170px] lg:w-full"}`}
+          >
             <Image
               fill
               className="object-cover"
@@ -54,10 +64,10 @@ function ChallengeCard({
             />
           </div>
         </div>
-        <div className="flex w-3/4 flex-col lg:w-full">
+        <div className={`flex w-3/4 flex-col ${isLgSize && "lg:w-full"}`}>
           <div className="flex items-center justify-between">
             <p className="flex w-full justify-between text-title-s font-bold">
-              <span className="lg:pt-[12px]">{title}</span>
+              <span className={`${isLgSize && "lg:pt-[12px]"}`}>{title}</span>
               <span>{successRate === 100 && <SuccessBadge />}</span>
             </p>
           </div>
@@ -97,8 +107,12 @@ function ChallengeCard({
         </div>
       </div>
       <div className="flex w-full">
-        <div className="mr-4 flex w-1/4 min-w-[98px] lg:hidden"></div>
-        <div className="flex w-3/4 flex-col items-end px-[12px] lg:w-full">
+        <div
+          className={`mr-4 flex w-1/4 min-w-[98px] ${isLgSize && "lg:hidden"}`}
+        ></div>
+        <div
+          className={`flex w-3/4 flex-col items-end px-[12px] ${isLgSize && "lg:w-full"}`}
+        >
           <ProgressBar progress={Math.round(successRate)} />
         </div>
       </div>

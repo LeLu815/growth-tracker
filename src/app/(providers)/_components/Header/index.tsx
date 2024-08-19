@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation"
 import classNames from "classnames"
 
 import DetailHeader from "@/app/(providers)/_components/Header/DetailHeader"
+import MyPageHeader from "@/app/(providers)/_components/Header/MyPageHeader"
 
 import BackHeader from "./BackHeader"
 import DefaultHeader from "./DefaultHeader"
@@ -11,7 +12,7 @@ import FeedHeader from "./FeedHeader"
 import WebHeader from "./WebHeader"
 
 // 헤더 타입 정리
-type HeaderType = "default" | "feed" | "back" | "detail"
+type HeaderType = "default" | "feed" | "back" | "detail" | "my"
 
 // 헤더 맵
 const headers = {
@@ -19,6 +20,7 @@ const headers = {
   feed: FeedHeader,
   back: BackHeader,
   detail: DetailHeader,
+  my: MyPageHeader,
 }
 
 const Header = () => {
@@ -43,6 +45,9 @@ const Header = () => {
     ishideTitle = true
   } else if (/^\/challenge\/[^/]+$/.test(pathname)) {
     headerType = "detail"
+    title = ""
+  } else if (pathname.startsWith("/my-page")) {
+    headerType = "my"
     title = ""
   }
 

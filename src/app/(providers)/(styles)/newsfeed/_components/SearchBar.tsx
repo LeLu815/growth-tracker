@@ -42,13 +42,14 @@ function SearchBar({ onSearch, className }: SearchBarProps) {
             className="text-body-xl font-medium"
             placeholder="챌린지를 찾아보세요"
             autoFocus
+            variant="default"
           />
           <button type="submit">
             <SearchIcon
               width={24}
               height={24}
               color="black"
-              className="absolute right-4 top-[34px] cursor-pointer"
+              className="absolute right-[20px] top-[10px] cursor-pointer"
             />
           </button>
         </div>

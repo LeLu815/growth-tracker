@@ -9,7 +9,7 @@ import { useToast } from "@/context/toast.context"
 import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 
-import NoneProfile from "@/components/Icon/NoneProfile"
+import DefaultProfile from "@/components/Icon/DefaultProfile"
 import SendIcon from "@/components/Icon/SendIcon"
 
 function ChallengeCommentCreate({
@@ -106,7 +106,7 @@ function ChallengeCommentCreate({
               src={userData.profile_image_url}
             />
           ) : (
-            <NoneProfile width={50} height={50} />
+            <DefaultProfile width={50} height={50} />
           )}
         </div>
 

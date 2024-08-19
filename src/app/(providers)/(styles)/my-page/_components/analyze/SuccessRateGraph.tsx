@@ -1,7 +1,9 @@
 "use client"
 
 import React, { useEffect, useMemo, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth.context"
+import useMyPageResponsive from "@/store/myPageResponsive.store"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import {
@@ -16,9 +18,12 @@ import {
 } from "chart.js"
 import ChartDataLabels from "chartjs-plugin-datalabels"
 import { Bar } from "react-chartjs-2"
+import { useMediaQuery } from "react-responsive"
 
-import NoChallengeFlagsIcon from "@/components/Icon/NoChallengeFlagsIcon"
+import Button from "@/components/Button"
 import Loading from "@/components/Loading"
+import GraphModal from "@/app/(providers)/(styles)/my-page/_components/analyze/GraphModal"
+import { MY_CHALLENGE_ANALYZE } from "@/app/(providers)/(styles)/my-page/_constants/myPageConstants"
 
 import { Step1GraphType } from "../../../../../../../types/myPageGraph.type"
 
@@ -32,18 +37,30 @@ ChartJS.register(
   ChartDataLabels
 )
 
-const SuccessRateGraph = () => {
+const SuccessRateGraph = ({
+  isActive = true,
+  setIsActive,
+}: {
+  isActive?: boolean
+  setIsActive: (value: boolean) => void
+}) => {
   const { me } = useAuth()
-  const [isPossibleStatistics, setIsPossibleStatistics] = useState(false)
+  const router = useRouter()
+  const isLargeScreen = useMediaQuery({ minWidth: 1024 }) // lg 사이즈 이상일 때 true
+
   const [currentMonthSuccessRate, setCurrentMonthSuccessRate] = useState(0)
   const [message, setMessage] = useState("")
+
+  const { currentCount, setCurrentCount } = useMyPageResponsive(
+    (state) => state
+  )
 
   const [graphData, setGraphData] = useState({
     labels: ["지난달 평균 성공률", "이번달 평균 성공률"],
     datasets: [
       {
         label: "성공률",
-        data: [1, 10],
+        data: [50, 100],
         backgroundColor: ["rgba(255, 229, 233, 1)", "rgba(252, 90, 107, 1)"],
         borderRadius: 12,
         barPercentage: 1.5,
@@ -55,6 +72,7 @@ const SuccessRateGraph = () => {
   const options: ChartOptions<"bar"> = useMemo(
     () => ({
       responsive: true,
+      maintainAspectRatio: false, // 이 옵션을 false로 설정하여 컨테이너의 크기에 맞게 조정
       plugins: {
         legend: {
           display: false,
@@ -135,8 +153,14 @@ const SuccessRateGraph = () => {
         totalSuccessRate += item.success_rate
       }
 
-      if (totalSuccessRate > 0) {
-        setIsPossibleStatistics(true)
+      let isActiveOfNotState = true
+      if (totalSuccessRate === 0) {
+        setIsActive(false)
+        isActiveOfNotState = false
+      }
+
+      if (!isActiveOfNotState) {
+        return
       }
 
       setCurrentMonthSuccessRate(dataList[1])
@@ -172,36 +196,48 @@ const SuccessRateGraph = () => {
     }
   }, [data])
 
+  useEffect(() => {
+    if (isLargeScreen) {
+      router.push(MY_CHALLENGE_ANALYZE.path)
+    }
+  }, [isLargeScreen])
+
+  // const { open } = useModal()
+
+  // useEffect(() => {
+  //   if (!isActive && currentCount === 2) {
+  //     open({
+  //       type: "myPageGraph",
+  //       content:
+  //         "아직 완료한 챌린지가 없어요 최소 1개의 챌린지를 완료해야 분석기능을 이용할 수 있어요!",
+  //       onConfirm: () => router.push("/my-challenge")
+  //     })
+  //   }
+  // }, [isActive, currentCount])
+
   if (isPending) return <Loading />
   if (isError) return <div>Error loading data</div>
 
-  if (!isPossibleStatistics) {
-    return (
-      <div className="mt-36 flex flex-col items-center justify-center">
-        <NoChallengeFlagsIcon />
-        <p className="mt-3 text-[20px] font-bold">분석할 데이터가 없습니다.</p>
-        <p className="mt-[12px] text-[12px] font-[500]">
-          챌린지를 생성해 목표를 이루어 보세요.
-        </p>
-      </div>
-    )
-  }
-
   return (
-    <div className={"mx-auto flex w-full flex-col gap-20"}>
-      <div className={"flex flex-col gap-4"}>
-        <div className={"text-title-xl"}>
-          이번달 누적 성공률은 <br />
-          <p className={"inline text-primary"}>
-            {currentMonthSuccessRate}%
-          </p>{" "}
-          입니다.
+    <div className={`${isActive || "ml-10 h-[80vh]"}`}>
+      <div
+        className={`mx-auto flex w-full flex-col gap-20 ${isActive || "blur-md"}`}
+      >
+        <div className="flex flex-col gap-4">
+          <div className="text-title-xl">
+            이번달 누적 성공률은 <br />
+            <p className="inline text-primary">
+              {currentMonthSuccessRate}%
+            </p>{" "}
+            입니다.
+          </div>
+          <div className="text-body-m">{message}</div>
         </div>
-        <div className={"text-body-m"}>{message}</div>
+        <div className="w-full lg:h-96">
+          <Bar data={graphData} options={options} className="mx-auto" />
+        </div>
       </div>
-      <div className="h-[200px] w-full">
-        <Bar data={graphData} options={options} />
-      </div>
+      {!isActive && isLargeScreen && <GraphModal />}
     </div>
   )
 }

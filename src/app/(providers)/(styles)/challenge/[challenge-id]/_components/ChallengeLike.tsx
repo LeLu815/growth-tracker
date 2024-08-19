@@ -14,6 +14,7 @@ import { ChallengeType } from "../../../../../../../types/challengeDetail.type"
 interface ChallengeLikeProps {
   challengeId: string
 }
+
 function ChallengeLike({ challengeId }: ChallengeLikeProps) {
   const router = useRouter()
   const [isLiked, setIsLiked] = useState<boolean>(false)
@@ -179,25 +180,32 @@ function ChallengeLike({ challengeId }: ChallengeLikeProps) {
 
   return (
     <div className="col-span-1 flex gap-4">
-      <button
-        className="flex w-full flex-col items-center justify-center transition-all duration-300"
-        onClick={handleClick}
-      >
-        <BookmarkIcon
-          width={32}
-          height={32}
-          className={`h-[32px] w-[32px]`}
-          color={isLiked ? "#FC5A6B" : "none"}
-          stroke={isLiked ? "#FC5A6B" : ""}
-        />
-      </button>
-      {challengeDetail.state === "on_complete" && (
+      <div className={"flex flex-col gap-2"}>
         <button
-          onClick={() => handleClickCopy(challengeId)}
           className="flex w-full flex-col items-center justify-center transition-all duration-300"
+          onClick={handleClick}
         >
-          <ImportIcon width={32} height={32} className={`h-[32px] w-[32px]`} />
+          <BookmarkIcon
+            width={32}
+            height={32}
+            className={`h-[32px] w-[32px]`}
+            color={isLiked ? "#FC5A6B" : "none"}
+            stroke={isLiked ? "#FC5A6B" : ""}
+          />
         </button>
+        <div className={"mx-auto text-body-s"}>저장</div>
+      </div>
+      {challengeDetail.state === "on_complete" && (
+        <div className={"flex flex-col gap-2"}>
+          <button className="flex w-full flex-col items-center justify-center transition-all duration-300">
+            <ImportIcon
+              width={32}
+              height={32}
+              className={`h-[32px] w-[32px]`}
+            />
+          </button>
+          <div className={"mx-auto text-body-s"}>복사</div>
+        </div>
       )}
     </div>
   )

@@ -13,7 +13,7 @@ import {
 import axios from "axios"
 import { useInView } from "react-intersection-observer"
 
-import NoneProfile from "@/components/Icon/NoneProfile"
+import DefaultProfile from "@/components/Icon/DefaultProfile"
 import ThumbsUpIcon from "@/components/Icon/ThumbsUpIcon"
 import ChallengeCommentCreate from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeCommentCreate"
 
@@ -381,7 +381,7 @@ function ChallengeCommentList({
                       />
                     </div>
                   ) : (
-                    <NoneProfile width={50} height={50} />
+                    <DefaultProfile width={50} height={50} />
                   )}
                 </div>
                 <div className={"flex w-full flex-col gap-[6px]"}>
