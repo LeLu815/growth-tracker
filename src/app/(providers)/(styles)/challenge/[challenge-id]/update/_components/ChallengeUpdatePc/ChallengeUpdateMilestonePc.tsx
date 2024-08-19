@@ -14,6 +14,7 @@ import { produce } from "immer"
 import Button from "@/components/Button"
 import Chip from "@/components/Chip"
 import DaysItem from "@/components/DaysItem"
+import PlusIcon from "@/components/Icon/PlusIcon"
 import Input from "@/components/Input"
 import RangeInput from "@/components/RangeInput"
 
@@ -338,14 +339,22 @@ function ChallengeUpdateMilestonePc({
         <form onSubmit={hanleSubmit}>
           <ContentTitle className="mb-[12px] mt-[44px]">루틴 작성</ContentTitle>
           <p className="mb-[6px] text-[14px]">무엇을 꾸준히 해볼까요?</p>
-          <Input
-            placeholder="ex. 영단어 100개씩 암기"
-            value={routineInpt}
-            onChange={(e) => {
-              if (e.target.value.length > 20) return
-              setRoutineInput(e.target.value)
-            }}
-          />
+          <div className="relative">
+            <Input
+              placeholder="ex. 영단어 100개씩 암기"
+              value={routineInpt}
+              onChange={(e) => {
+                if (e.target.value.length > 20) return
+                setRoutineInput(e.target.value)
+              }}
+            />
+            <button
+              className="absolute right-[20px] top-[30%] flex cursor-pointer items-center justify-center"
+              type="submit"
+            >
+              <PlusIcon className="stroke-grey-600" />
+            </button>
+          </div>
           <ul className="mt-[24px] flex flex-col gap-[16px]">
             {routines.map((routine) => (
               <li key={routine}>
