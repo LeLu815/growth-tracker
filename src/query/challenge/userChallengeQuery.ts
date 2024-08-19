@@ -8,13 +8,8 @@ import {
 } from "@/api/supabase/challenge"
 import { useModal } from "@/context/modal.context"
 import { useToast } from "@/context/toast.context"
-import useChallengeCreateStore, {
-  categories,
-  defaultSelected,
-} from "@/store/challengeCreate.store"
-import useMilestoneCreateStore, {
-  initialData,
-} from "@/store/milestoneCreate.store"
+import useChallengeCreateStore from "@/store/challengeCreate.store"
+import useMilestoneCreateStore from "@/store/milestoneCreate.store"
 import { useMutation } from "@tanstack/react-query"
 
 import queryClient from "../queryClient"
@@ -36,16 +31,6 @@ function useChallengeQuery() {
       onSuccess: () => {
         // 이전 데이터 초기화
         queryClient.invalidateQueries({ queryKey: [CHALLENGE_QEURY_KEY] })
-        setRange(defaultSelected)
-        setCurrentSlideId("")
-        setData(initialData)
-        setGoal("")
-        setCategory(categories[0])
-        setRandomImgUrl("")
-      },
-      onError: () => {
-        // 모달 추가
-        showToast("생성이 실패 되었습니다.")
       },
     })
 
@@ -55,19 +40,9 @@ function useChallengeQuery() {
       mutationFn: async (variables: PUTchallengeArgumentProps) =>
         await PUTchallenge(variables),
       onSuccess: (data, variables) => {
-        // 모달 추가
-        showToast("챌린지 생성이 성공했습니다.")
         queryClient.invalidateQueries({
           queryKey: [CHALLENGE_QEURY_KEY, variables["challenge-id"]],
         })
-        setRange(defaultSelected)
-        setCurrentSlideId("")
-        setData(initialData)
-        return router.push("/newsfeed")
-      },
-      onError: () => {
-        // 모달 추가
-        showToast("생성이 실패 되었습니다.")
       },
     })
 

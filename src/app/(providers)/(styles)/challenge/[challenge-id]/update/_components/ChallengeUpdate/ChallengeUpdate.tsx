@@ -176,6 +176,14 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
         setData(milestoneDatas)
       }
     })()
+    // cleanup 함수로 전역 데이터 삭제
+    return () => {
+      setData([])
+      setRange(defaultSelected)
+      setCategory(categories[0])
+      setGoal("")
+      setRandomImgUrl("")
+    }
   }, [me])
 
   return (
@@ -193,10 +201,6 @@ function ChallengeUpdate({ challengeId }: ChallengeUpdateProps) {
                   type: "confirm",
                   content: "저장되지 않은 변경사항은 삭제됩니다.",
                   onConfirm: () => {
-                    setData([])
-                    setRange(defaultSelected)
-                    setCategory(categories[0])
-                    setGoal("")
                     router.back()
                   },
                 })
