@@ -8,16 +8,12 @@
 
 
 ## ⭐️ 핵심 기능
+![12](https://github.com/user-attachments/assets/b0f795b2-218c-4c4a-968d-4492ab44688c)
+![13](https://github.com/user-attachments/assets/793aa9d3-07db-41fb-af5e-617c08daf4f6)
+![14](https://github.com/user-attachments/assets/ebacd144-d7bc-4052-afa6-a6c8e5be40aa)
+![409](https://github.com/user-attachments/assets/528628bd-c759-47e8-b582-1db2a02a403b)
+![408](https://github.com/user-attachments/assets/948184a3-da25-43b3-880d-5c787bca59ff)
 
-![12 (2)](https://github.com/user-attachments/assets/711ed249-b4a8-41b0-a54d-ed0bf2d0952f)
-
-![14 (2)](https://github.com/user-attachments/assets/70f129f3-a6f0-4692-b9a8-77b280091034)
-
-![13](https://github.com/user-attachments/assets/566da39a-1f3a-400c-8d35-c7315e8acf0e)
-
-![408](https://github.com/user-attachments/assets/a4cc3d07-60a4-4e32-9094-48fdc1f61d32)
-
-![409](https://github.com/user-attachments/assets/d4b73e63-774c-4ff8-9bc7-c061e9a48e6c)
 
 
 ## ⚙️ 아키텍처
