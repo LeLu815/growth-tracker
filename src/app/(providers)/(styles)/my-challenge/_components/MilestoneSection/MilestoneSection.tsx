@@ -206,7 +206,7 @@ function MilestoneSection({
   return (
     <section>
       <div
-        className="flex cursor-pointer gap-x-[24px]"
+        className={`flex ${checkMilestoneDayOfWeek && "cursor-pointer"} gap-x-[24px]`}
         onClick={toggleRoutinesVisibility}
       >
         {/* 이미지 */}
@@ -319,14 +319,6 @@ function MilestoneSection({
                       : "미래 일기"}
                 </Button>
               )}
-              <p
-                onClick={() => {
-                  router.push(`/challenge/${challengeId}`)
-                }}
-                className="w-full cursor-pointer text-center text-[10px] font-[500] leading-[135%] text-black"
-              >
-                {`챌린지 정보 확인 >`}
-              </p>
             </>
           )}
         </div>
@@ -342,6 +334,16 @@ function MilestoneSection({
           />
         </div>
       )}
+      {
+        <p
+          onClick={() => {
+            router.push(`/challenge/${challengeId}`)
+          }}
+          className="mt-5 w-full cursor-pointer text-center text-[10px] font-[500] leading-[135%] text-black"
+        >
+          {`챌린지 정보 확인 >`}
+        </p>
+      }
     </section>
   )
 }
