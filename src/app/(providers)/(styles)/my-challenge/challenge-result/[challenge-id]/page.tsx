@@ -22,6 +22,7 @@ function ChallengeResultPage({ params }: ChallengeResultPageProps) {
     challengeDataPending,
     routineDoneDailyError,
     routineDoneDailyPending,
+    currentUserRoutineDoneDaily,
   } = useMyChallengePageContext()
 
   if (
@@ -49,7 +50,14 @@ function ChallengeResultPage({ params }: ChallengeResultPageProps) {
 
   const targetMilestones = targetChallenge?.milestones || []
 
-  const isSuccess = true
+  const isSuccess = targetMilestones.every((milestone) => {
+    const targetRDDs = currentUserRoutineDoneDaily.filter((item) => {
+      return item.milestone_id == milestone.id && item.is_success
+    })
+
+    return milestone.success_requirement_cnt == targetRDDs.length
+  })
+  // const isSuccess = true
   console.log(isSuccess)
 
   return (
