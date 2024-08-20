@@ -40,7 +40,7 @@
 <br>
 <br>
 
-## 📋 erd
+## 📋 ERD
 ![erd2](https://github.com/user-attachments/assets/68f825f2-a570-47b4-8264-9e4dad3252d6)
 
 
