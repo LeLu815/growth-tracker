@@ -29,7 +29,10 @@ interface MilestoneSectionProps {
   challengeId: string
   challengeGoal: string
   challengeImage: string
+  challengeEndAt: string
 }
+
+const tempSetToCheckDateInitRDD = new Set()
 
 function MilestoneSection({
   milestone,
@@ -37,6 +40,7 @@ function MilestoneSection({
   challengeId,
   challengeGoal,
   challengeImage,
+  challengeEndAt,
 }: PropsWithChildren<MilestoneSectionProps>) {
   const {
     userId,
@@ -60,14 +64,10 @@ function MilestoneSection({
       )
     })?.id || ""
   )
-  console.log(selectedDate, todayDate)
+
   const [isRoutinesVisible, setIsRoutinesVisible] = useState(true)
   const [isDiaryInputVisible, setIsDiaryInputVisible] = useState(false)
 
-  console.log(
-    parseInt(selectedDate.replace(/-/g, "")) >=
-      parseInt(todayDate.replace(/-/g, ""))
-  )
   const modal = useModal()
 
   const handleRoutineCompleteButtonMobileClick = (isTodayDiary: boolean) => {
@@ -184,6 +184,8 @@ function MilestoneSection({
     // 선택한 일자가 마일스톤 시행 요일이면서
     // 동시에 routine_done_daily에 유효한 레코드가 없는 경우에 새로운 레코드  생성
     if (checkMilestoneDayOfWeek && !targetRDD) {
+      if (tempSetToCheckDateInitRDD.has(selectedDate)) return
+      tempSetToCheckDateInitRDD.add(selectedDate)
       console.log("포스트할거임")
       const newId = v4()
 
@@ -277,6 +279,7 @@ function MilestoneSection({
                   routineId={routine.id}
                   routineDoneDailyId={targetRDDId}
                   routineContent={routine.content}
+                  challengeEndAt={challengeEndAt}
                 />
                 // </div>
               )
