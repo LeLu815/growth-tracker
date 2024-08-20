@@ -252,8 +252,8 @@ function MilestoneSection({
           ) : (
             <ProgressBar
               leftDays={leftDays}
-              routineDoneDailyId={targetRDDId}
               routines={milestone.routines}
+              milestoneId={milestone.id}
             />
           )}
         </div>
@@ -271,7 +271,6 @@ function MilestoneSection({
                   milestoneId={milestone.id}
                   userId={userId}
                   routineId={routine.id}
-                  routineDoneDailyId={targetRDDId}
                   routineContent={routine.content}
                   challengeEndAt={challengeEndAt}
                 />
