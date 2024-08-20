@@ -8,22 +8,33 @@ import useMyChallengePageContext from "../../context"
 
 interface ProgressBar {
   routines: RoutineType[]
-  routineDoneDailyId: string
+
   leftDays: number
+  milestoneId: string
 }
 
 function ProgressBar({
   leftDays,
   routines,
-  routineDoneDailyId,
+
+  milestoneId,
 }: PropsWithChildren<ProgressBar>) {
-  const { selectedDate, routineDone } = useMyChallengePageContext()
+  const { selectedDate, routineDone, currentUserRoutineDoneDaily } =
+    useMyChallengePageContext()
+
+  const targetRDDId =
+    currentUserRoutineDoneDaily.find((item) => {
+      return (
+        item.milestone_id == milestoneId &&
+        item.created_at.slice(0, 10) == selectedDate
+      )
+    })?.id || ""
 
   // 오늘 완료한 루틴의 개수
   const todayDoneRoutineArray = routineDone.filter((item) => {
     return (
       item.created_at.slice(0, 10) == selectedDate &&
-      item.routine_done_daily_id == routineDoneDailyId
+      item.routine_done_daily_id == targetRDDId
     )
   })
   const progress = (todayDoneRoutineArray.length / routines.length) * 100
