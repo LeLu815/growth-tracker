@@ -18,9 +18,6 @@ function ChallengeList() {
 
   const { selectedDate, structuredChallengeData, todayDate } =
     useMyChallengePageContext()
-  console.log("selectedDate: ", selectedDate)
-  console.log("structuredChallengeData: ", structuredChallengeData)
-  console.log("todayDate: ", todayDate)
   const CURRENT_DATE_NUMBER = parseInt(selectedDate.replace(/-/g, ""))
   const TODAY_DATE_NUMBER = parseInt(todayDate.replace(/-/g, ""))
   const router = useRouter()

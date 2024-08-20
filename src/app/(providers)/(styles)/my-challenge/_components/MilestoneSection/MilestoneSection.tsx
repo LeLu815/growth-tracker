@@ -62,14 +62,10 @@ function MilestoneSection({
       )
     })?.id || ""
   )
-  console.log(selectedDate, todayDate)
+
   const [isRoutinesVisible, setIsRoutinesVisible] = useState(true)
   const [isDiaryInputVisible, setIsDiaryInputVisible] = useState(false)
 
-  console.log(
-    parseInt(selectedDate.replace(/-/g, "")) >=
-      parseInt(todayDate.replace(/-/g, ""))
-  )
   const modal = useModal()
 
   const handleRoutineCompleteButtonMobileClick = (isTodayDiary: boolean) => {

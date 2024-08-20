@@ -5,7 +5,6 @@ import Image from "next/image"
 
 import Box from "@/components/Box"
 import ChallengeFailIcon from "@/components/Icon/ChallengeFailIcon"
-import SuccessBadge from "@/components/Icon/SuccessBadge"
 import Loading from "@/components/Loading"
 import Page from "@/components/Page"
 
@@ -19,7 +18,6 @@ function ChallengeResultPage({ params }: ChallengeResultPageProps) {
   const challengeId = params["challenge-id"]
   const {
     structuredChallengeData,
-    currentUserRoutineDoneDaily,
     challengeDataError,
     challengeDataPending,
     routineDoneDailyError,
@@ -51,13 +49,6 @@ function ChallengeResultPage({ params }: ChallengeResultPageProps) {
 
   const targetMilestones = targetChallenge?.milestones || []
 
-  // const isSuccess = targetMilestones.every((milestone) => {
-  //   const targetRDDs = currentUserRoutineDoneDaily.filter((item) => {
-  //     return item.milestone_id == milestone.id && item.is_success
-  //   })
-
-  //   return milestone.success_requirement_cnt == targetRDDs.length
-  // })
   const isSuccess = true
   console.log(isSuccess)
 
