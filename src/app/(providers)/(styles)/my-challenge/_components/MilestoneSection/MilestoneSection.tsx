@@ -1,12 +1,7 @@
 "use client"
 
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useState,
-} from "react"
+import { PropsWithChildren, useCallback, useEffect, useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { POSTnewRoutineDoneDaily } from "@/api/supabase/routineDoneDaily"
@@ -182,7 +177,7 @@ function MilestoneSection({
   // 오늘에 대한 RDD가 없다면 하나 새로 생성해주는 함수
   const initializeRDD = async () => {
     // 선택한 일자가 마일스톤 시행 요일이면서
-    // 동시에 routine_done_daily에 유효한 레코드가 없는 경우에 새로운 레코드  생성
+    // 동시에 routine_done_daily에 유효한 레코드가 없는 경우에 새로운 레코드 생성
     if (checkMilestoneDayOfWeek && !targetRDD) {
       if (tempSetToCheckDateInitRDD.has(selectedDate)) return
       tempSetToCheckDateInitRDD.add(selectedDate)
