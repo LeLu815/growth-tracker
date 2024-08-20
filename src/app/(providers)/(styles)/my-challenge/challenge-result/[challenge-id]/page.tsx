@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation"
 
 import useMyChallengePageContext from "../../context"
 
-function page() {
+function ChallengeResultPage() {
   const params = useSearchParams()
   const challengeId = params.get("challengeId") || ""
   const { structuredChallengeData, currentUserRoutineDoneDaily } =
@@ -35,4 +35,4 @@ function page() {
   return <div>{isSuccess}</div>
 }
 
-export default page
+export default ChallengeResultPage
