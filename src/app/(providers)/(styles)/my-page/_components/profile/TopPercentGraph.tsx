@@ -68,6 +68,9 @@ const TopPercentGraph = () => {
       tooltip: {
         enabled: false,
       },
+      datalabels: {
+        display: false,
+      },
     },
     scales: {
       x: {

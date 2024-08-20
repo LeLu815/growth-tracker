@@ -44,6 +44,7 @@ function ChallengeCommentList({
 
   const textareaRefs = useRef<HTMLTextAreaElement[]>([])
   const [sortField, setSortField] = useState("")
+  const [newCommentList, setNewCommentList] = useState<ChallengeCommentType[]>([])
 
   /**
    * 유저정보, 댓글정보, 좋아요정보 조회
@@ -74,7 +75,6 @@ function ChallengeCommentList({
       throw new Error(response.error)
     }
     showToast("댓글을 삭제했습니다.", 3000, " bottom-12 mx-auto max-w-[350px]")
-    refetch()
   }
 
   /**
@@ -135,7 +135,7 @@ function ChallengeCommentList({
       isLike: boolean
       commentId: string
     }) => {
-      await queryClient.cancelQueries({ queryKey: ["challengeComment"] })
+      // await queryClient.cancelQueries({ queryKey: ["challengeComment"] })
       const commentList = queryClient.getQueryData(["challengeComment"])
       queryClient.setQueryData(
         ["challengeComment"],
@@ -163,10 +163,37 @@ function ChallengeCommentList({
     },
   })
 
+  const { mutate: handleCommentLikeMutateForNewComment } = useMutation({
+    mutationFn: createOrDeleteCommentLike,
+    onMutate: async ({
+      isLike,
+      commentId,
+    }: {
+      isLike: boolean
+      commentId: string
+    }) => {
+      const commentList = [...newCommentList]
+      setNewCommentList(
+        newCommentList.map((newComment) => {
+          if (newComment.id === commentId) {
+            newComment.is_like = !newComment.is_like
+            const updateCnt = newComment.is_like ? 1 : -1
+            newComment.like_cnt = newComment.like_cnt + updateCnt
+          }
+          return newComment
+        })
+      )
+      return { commentList }
+    },
+    onError: (err, test, context) => {
+      queryClient.setQueryData(["challengeComment"], context?.commentList)
+    },
+  })
+
   const { mutate: handleCommentDeleteMutate } = useMutation({
     mutationFn: deleteComment,
     onMutate: async (commentId: string) => {
-      await queryClient.cancelQueries({ queryKey: ["challengeComment"] })
+      // await queryClient.cancelQueries({ queryKey: ["challengeComment"] })
       const commentList = queryClient.getQueryData(["challengeComment"])
 
       queryClient.setQueryData(
@@ -185,8 +212,21 @@ function ChallengeCommentList({
     onError: (err, _commentId, context) => {
       queryClient.setQueryData(["challengeComment"], context?.commentList)
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["challengeComment"] })
+  })
+
+  const { mutate: handleCommentDeleteMutateForNewComment } = useMutation({
+    mutationFn: deleteComment,
+    onMutate: async (commentId: string) => {
+      const commentList = [...newCommentList]
+      setNewCommentList(
+        newCommentList.filter((newComment) => {
+          return newComment.id !== commentId
+        })
+      )
+      return { commentList }
+    },
+    onError: (err, _commentId, context) => {
+      queryClient.setQueryData(["challengeComment"], context?.commentList)
     },
   })
 
@@ -199,7 +239,7 @@ function ChallengeCommentList({
       commentId: string
       content: string
     }) => {
-      await queryClient.cancelQueries({ queryKey: ["challengeComment"] })
+      // await queryClient.cancelQueries({ queryKey: ["challengeComment"] })
       const commentList = queryClient.getQueryData(["challengeComment"])
       queryClient.setQueryData(
         ["challengeComment"],
@@ -225,8 +265,36 @@ function ChallengeCommentList({
     onError: (err, _, context) => {
       queryClient.setQueryData(["challengeComment"], context?.commentList)
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["challengeComment"] })
+  })
+
+  const { mutate: handleCommentMutateForNewComment } = useMutation({
+    mutationFn: updateComment,
+    onMutate: async ({
+      commentId,
+      content,
+    }: {
+      commentId: string
+      content: string
+    }) => {
+      debugger
+      const beforeCommentList = [...newCommentList]
+      setNewCommentList(
+        newCommentList.map((comment) => {
+          if (comment.id === commentId) {
+            comment.content = content
+          }
+          return comment
+        })
+      )
+
+      setUpdateContent("")
+      setIsUpdate(false)
+      setUpdateCommentId("")
+      return { beforeCommentList }
+    },
+    onError: (err, _, context) => {
+      debugger
+      setNewCommentList([...context?.beforeCommentList!])
     },
   })
 
@@ -310,8 +378,10 @@ function ChallengeCommentList({
   }, [me?.id && !isPending])
 
   useEffect(() => {
+    setNewCommentList([]);
     if (sortField) {
       refetch()
+
     }
   }, [sortField])
 
@@ -346,8 +416,10 @@ function ChallengeCommentList({
         </div>
       </div>
       <ChallengeCommentCreate
+        setNewCommentList={setNewCommentList}
+        newCommentList={newCommentList}
         challengeId={challengeId}
-        className="hidden w-full lg:mb-4 lg:block"
+        className="fixed bottom-0 z-20 w-full lg:static lg:mb-4 lg:block"
       />
       {data?.length === 0 ? (
         <div className={"text-gray-custom p-24 text-center text-body-m"}>
@@ -358,9 +430,145 @@ function ChallengeCommentList({
       ) : (
         <div
           className={
-            "flex w-full flex-col lg:gap-[8px] lg:overflow-y-auto lg:custom-scrollbar"
+            "flex w-full flex-col pb-20 lg:gap-[8px] lg:overflow-y-auto lg:pb-0 lg:custom-scrollbar"
           }
         >
+          <div>
+          {newCommentList?.map((comment, idx) => {
+            const idx2 = idx + data?.length - 1
+            return (
+              <div
+                className={"mt-2 flex w-full gap-[8px] rounded-lg border p-4"}
+                key={comment.id}
+              >
+                <div>
+                  {comment.profile_image_url ? (
+                    <div className="relative h-[50px] w-[50px] overflow-hidden rounded-full">
+                      <Image
+                        fill
+                        className="object-cover"
+                        alt="프로필사진"
+                        src={
+                          comment.profile_image_url
+                            ? comment.profile_image_url
+                            : "/image/profileImage.png"
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <DefaultProfile width={50} height={50} />
+                  )}
+                </div>
+                <div className={"flex w-full flex-col gap-[6px]"}>
+                  <div>
+                    <div className={"flex justify-between"}>
+                      <div className={"text-sub-m font-bold text-grey-400"}>
+                        {comment.nickname}
+                      </div>
+                      {comment.user_id === me?.id && (
+                        <div className={"flex gap-2"}>
+                          <button
+                            type="submit"
+                            className="cursor-pointer text-center text-body-s text-[#969696]"
+                            onClick={() => {
+                              isUpdate && comment.id === updateCommentId
+                                ? handleCommentMutateForNewComment({
+                                    commentId: comment.id,
+                                    content: updateContent,
+                                  })
+                                : handleChangeIsUpdate(comment)
+                            }}
+                          >
+                            {isUpdate && comment.id === updateCommentId
+                              ? "수정완료"
+                              : "수정"}
+                          </button>
+                          <button
+                            className="cursor-pointer text-center text-body-s text-[#969696]"
+                            onClick={() => {
+                              isUpdate && comment.id === updateCommentId
+                                ? handleCommentMutateForNewComment({
+                                    commentId: comment.id,
+                                    content: updateContent,
+                                  })
+                                : confirmOpen("댓글을 삭제하겠습니까?", () =>
+                                    handleCommentDeleteMutateForNewComment(
+                                      comment.id
+                                    )
+                                  )
+                            }}
+                          >
+                            {isUpdate && comment.id === updateCommentId
+                              ? "취소"
+                              : "삭제"}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    <div className={"text-sub-m text-grey-400"}>
+                      {comment.created_at}
+                    </div>
+                  </div>
+                  {
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault()
+                        handleCommentMutateForNewComment({
+                          commentId: comment.id,
+                          content: updateContent,
+                        })
+                      }}
+                    >
+                      <textarea
+                        style={{ overflow: "hidden" }}
+                        rows={comment.rows}
+                        disabled={!isUpdate}
+                        className={`h-full w-full resize-none text-black focus:outline-none disabled:text-black ${
+                          isUpdate && comment.id === updateCommentId
+                            ? `border-b border-l-0 border-r-0 border-t-0 border-[#141414] bg-white p-2`
+                            : "border-none bg-transparent"
+                        }`}
+                        value={`${isUpdate && comment.id === updateCommentId ? updateContent : comment.content}`}
+                        ref={(el) => {
+                          if (el) {
+                            textareaRefs.current[idx2] = el
+                          }
+                          return // Ensure the callback returns void
+                        }}
+                        onChange={(e) => handleOnChangeTextarea(e, idx2)}
+                      />
+                    </form>
+                  }
+                  <div
+                    className={"flex gap-1"}
+                    onClick={() =>
+                      me
+                        ? handleCommentLikeMutateForNewComment({
+                            isLike: comment.is_like,
+                            commentId: comment.id,
+                          })
+                        : router.push("/")
+                    }
+                  >
+                    <div>
+                      <ThumbsUpIcon
+                        className={"h-[20px] w-[20px]"}
+                        stroke={`${comment.is_like ? "#FC5A6B" : ""}`}
+                      />
+                    </div>
+                    <div
+                      className={
+                        "pt-[2px] text-body-l leading-none text-gray-600"
+                      }
+                    >
+                      {comment.like_cnt}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+          </div>
           {data?.map((comment, idx) => {
             const isLastItem = data?.length - 1 === idx
             return (
