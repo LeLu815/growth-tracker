@@ -20,6 +20,7 @@ import { v4 } from "uuid"
 
 import SmallBackDrop from "@/components/Modal/SmallBackDrop"
 
+import { MilestoneType } from "../../../../../../../types/supabase.type"
 import useMyChallengePageContext from "../../context"
 
 interface RoutineCheckBoxProps {
@@ -30,7 +31,7 @@ interface RoutineCheckBoxProps {
   routineId: string
   routineContent: string
   numberOfroutines: number
-  routineDoneDailyId: string
+
   challengeEndAt?: string
 }
 
@@ -39,12 +40,20 @@ function RoutineCheckBox({
   numberOfroutines,
   selectedDate,
   routineId,
-  routineDoneDailyId,
+
   challengeId,
   challengeEndAt,
+  milestoneId,
 }: PropsWithChildren<RoutineCheckBoxProps>) {
   const { todayDate, routineDone, currentUserRoutineDoneDaily } =
     useMyChallengePageContext()
+  const targetRDDId =
+    currentUserRoutineDoneDaily.find((item) => {
+      return (
+        item.milestone_id == milestoneId &&
+        item.created_at.slice(0, 10) == selectedDate
+      )
+    })?.id || ""
 
   const queryClient = useQueryClient()
   const router = useRouter()
@@ -87,7 +96,7 @@ function RoutineCheckBox({
       setIsLoading(true)
       const routineDoneId = v4()
       await POSTnewRoutineDone({
-        routineDoneDailyId,
+        routineDoneDailyId: targetRDDId,
         routineId,
         createdAt: selectedDate,
         routineDoneId,
@@ -113,7 +122,7 @@ function RoutineCheckBox({
       if (targetRD) {
         await DELETEroutineDone({
           routineId: targetRD.routine_id,
-          routineDoneDailyId: routineDoneDailyId,
+          routineDoneDailyId: targetRDDId,
         })
       }
     },
@@ -133,7 +142,7 @@ function RoutineCheckBox({
   const handleEndOfChallenge = () => {
     if (isEndOfChallenge) {
       const targetRDD = currentUserRoutineDoneDaily.find((item) => {
-        return item.id == routineDoneDailyId
+        return item.id == targetRDDId
       })
       if (targetRDD?.is_success) {
         alertOpen("챌린지가 종료됐어요. 결과를 확인해볼까요?", challengeId)
@@ -154,7 +163,7 @@ function RoutineCheckBox({
     mutationFn: async (isSuccess: boolean) => {
       await PUTisSuccessRoutineDoneDaily({
         currentIsSuccess: isSuccess,
-        routineDoneDailyId: routineDoneDailyId,
+        routineDoneDailyId: targetRDDId,
       })
     },
     onSuccess: async () => {
@@ -174,10 +183,10 @@ function RoutineCheckBox({
       const todayDoneRoutineArray = routineDone.filter((item) => {
         return (
           item.created_at.slice(0, 10) === selectedDate &&
-          item.routine_done_daily_id === routineDoneDailyId
+          item.routine_done_daily_id === targetRDDId
         )
       })
-      if (routineDoneDailyId.length > 0) {
+      if (targetRDDId.length > 0) {
         if (todayDoneRoutineArray.length === numberOfroutines) {
           await updateIsSuccessMutation.mutateAsync(true)
         } else {

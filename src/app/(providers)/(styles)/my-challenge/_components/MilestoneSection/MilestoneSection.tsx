@@ -271,7 +271,6 @@ function MilestoneSection({
                   milestoneId={milestone.id}
                   userId={userId}
                   routineId={routine.id}
-                  routineDoneDailyId={targetRDDId}
                   routineContent={routine.content}
                   challengeEndAt={challengeEndAt}
                 />
