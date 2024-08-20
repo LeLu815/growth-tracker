@@ -78,6 +78,10 @@ function RoutineCheckBox({
   const isFirstRender02 = useRef(true)
   const clickCount = useRef(0) // 클릭 횟수를 추적
 
+  useEffect(() => {
+    setIsChecked(!!targetRD)
+  }, [selectedDate])
+
   // 루틴 추가 mutation
   const addRoutineDoneMutation = useMutation({
     mutationFn: async () => {
