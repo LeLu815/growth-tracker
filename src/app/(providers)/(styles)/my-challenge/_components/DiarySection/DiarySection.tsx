@@ -176,7 +176,12 @@ function DiarySection({
           </p>
         </div>
         <div className="mt-5 flex w-full">
-          <Button intent="diarySecondary" onClick={handleClickLeftButton}>
+          <Button
+            intent="primary"
+            variant="outline"
+            size={isDiaryToday ? "md" : "lg"}
+            onClick={handleClickLeftButton}
+          >
             {currentDiary[0] ? (diaryReadOnly ? "수정" : "취소") : "취소"}
           </Button>{" "}
           {isDiaryToday ? (
