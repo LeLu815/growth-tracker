@@ -20,6 +20,7 @@ import { v4 } from "uuid"
 
 import SmallBackDrop from "@/components/Modal/SmallBackDrop"
 
+import { RoutineDoneDailyType } from "../../../../../../../types/routineDoneDaily.type"
 import useMyChallengePageContext from "../../context"
 
 interface RoutineCheckBoxProps {
@@ -45,6 +46,7 @@ function RoutineCheckBox({
 }: PropsWithChildren<RoutineCheckBoxProps>) {
   const { todayDate, routineDone, currentUserRoutineDoneDaily } =
     useMyChallengePageContext()
+
   const queryClient = useQueryClient()
   const router = useRouter()
   const DEBOUNCE_TIME = 200 // 디바운스 시간 설정
@@ -72,7 +74,8 @@ function RoutineCheckBox({
   }
   const [isChecked, setIsChecked] = useState(!!targetRD)
   const [isLoading, setIsLoading] = useState(false)
-  const isFirstRender = useRef(true)
+  const isFirstRender01 = useRef(true)
+  const isFirstRender02 = useRef(true)
   const clickCount = useRef(0) // 클릭 횟수를 추적
 
   // 루틴 추가 mutation
@@ -136,8 +139,8 @@ function RoutineCheckBox({
   }
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false
+    if (isFirstRender02.current) {
+      isFirstRender02.current = false
       return
     }
     handleEndOfChallenge()
@@ -159,8 +162,8 @@ function RoutineCheckBox({
   })
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false
+    if (isFirstRender01.current) {
+      isFirstRender01.current = false
       return
     }
 
