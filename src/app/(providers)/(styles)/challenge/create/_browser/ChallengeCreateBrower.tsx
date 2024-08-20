@@ -34,7 +34,7 @@ import {
   SELECT_WEEK_BTN_VALUES,
 } from "../_components/MilestoneCreate/MilestoneCreateConfig"
 import SubTitle from "../_components/styles/SubTitle"
-import BrowserHeader from "../../_components/BrowserHeader"
+import BrowserHeader from "../../components/BrowserHeader"
 import Subsubtitle from "./_components/Subsubtitle"
 
 function ChallengeCreateBrower() {

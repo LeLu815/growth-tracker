@@ -66,7 +66,7 @@ function ChallengeCard({
         </div>
         <div className={`flex w-3/4 flex-col ${isLgSize && "lg:w-full"}`}>
           <div className="flex items-center justify-between">
-            <p className="flex w-full justify-between text-title-s font-bold">
+            <p className="flex w-full items-center justify-between text-title-s font-bold">
               <span className={`${isLgSize && "lg:pt-[12px]"}`}>{title}</span>
               <span>{successRate === 100 && <SuccessBadge />}</span>
             </p>

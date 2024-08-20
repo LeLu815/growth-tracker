@@ -8,6 +8,7 @@ import { useModal } from "@/context/modal.context"
 import { useToast } from "@/context/toast.context"
 import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
+import { useMediaQuery } from "react-responsive"
 
 import DefaultProfile from "@/components/Icon/DefaultProfile"
 import SendIcon from "@/components/Icon/SendIcon"
@@ -32,6 +33,7 @@ function ChallengeCommentCreate({
   const [content, setContent] = useState("")
   const [isFocused, setIsFocused] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const isLargeScreen = useMediaQuery({ minWidth: 1024 }) // lg 사이즈 이상일 때 true
 
   const { showToast } = useToast()
 
@@ -152,7 +154,14 @@ function ChallengeCommentCreate({
               onChange={handleOnChangeTextarea}
             />
           </div>
-          {isFocused && (
+          {!isLargeScreen && isFocused && (
+            <SendIcon
+              color={content ? "#FD8C98" : ""}
+              className="relative h-[20px] w-[20px] cursor-pointer lg:right-3"
+              onClick={createComment}
+            />
+          )}
+          {isLargeScreen && (
             <SendIcon
               color={content ? "#FD8C98" : ""}
               className="relative h-[20px] w-[20px] cursor-pointer lg:right-3"

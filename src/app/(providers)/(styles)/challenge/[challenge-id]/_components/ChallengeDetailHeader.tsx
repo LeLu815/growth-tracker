@@ -2,12 +2,9 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { useAuth } from "@/context/auth.context"
 import useChallengeDetailStore from "@/store/challengeDetail.store"
-import { Dropdown, Space } from "antd"
 
 import ArrowLeftIcon from "@/components/Icon/ArrowLeftIcon"
-import KebabMenuIcon from "@/components/Icon/KebabMenuIcon"
 import DefaultHeader from "@/app/(providers)/_components/Header/DefaultHeader"
 import ChallengeDetailHeaderMenu from "@/app/(providers)/(styles)/challenge/[challenge-id]/_components/ChallengeDetailHeaderMenu"
 

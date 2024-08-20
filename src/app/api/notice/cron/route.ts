@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
     const now = new Date();
 
     // 하루 전 날짜를 계산
-    const oneDayAgo = new Date(now.setDate(now.getDate() - 1)).toISOString();
+    const oneDayAgo = new Date(now.setDate(now.getDate() - 5)).toISOString();
 
     // Supabase에서 하루가 지난 데이터 삭제
     const { data, error } = await supabase

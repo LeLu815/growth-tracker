@@ -240,7 +240,11 @@ function MilestoneCreateConfig({
           </ContentTitle>
           <ul className="mr-auto flex justify-end gap-2">
             {SELECT_WEEK_BTN_VALUES.map((value) => (
-              <li key={value} onClick={() => handleClickDayGroupType(value)}>
+              <li
+                className="cursor-pointer"
+                key={value}
+                onClick={() => handleClickDayGroupType(value)}
+              >
                 <Chip
                   label={value}
                   selected={currentDayGroupType === value}

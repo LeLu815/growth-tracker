@@ -23,7 +23,7 @@ import ResetIcon from "@/components/Icon/ResetIcon"
 import Input from "@/components/Input"
 import Page from "@/components/Page"
 
-import BrowserHeader from "../../../../_components/BrowserHeader"
+import BrowserHeader from "../../../../components/BrowserHeader"
 import Subsubtitle from "../../../../create/_browser/_components/Subsubtitle"
 import ChallengeCalender from "../../../../create/_components/ChallengeCalender/ChallengeCalender"
 import DragDropContainer from "../../../../create/_components/DrapDropContainer/DragDropContainer"
@@ -74,8 +74,6 @@ function ChallengeCreateImportPc() {
   const { setData, data } = useMilestoneCreateStore()
   // 마일스톤 추가
   const [isOpenAddMilestone, setIsOpenAddMilestone] = useState<boolean>(false)
-
-  console.log("data :", data)
 
   // 첼린지 기간이 마일스톤 기간보다 짧으면 토스트 띄우기
   useEffect(() => {
@@ -248,20 +246,18 @@ function ChallengeCreateImportPc() {
                   </div>
                 </Button>
               </div>
-              {inputValue && (
-                <Input
-                  variant="login"
-                  label={"챌린지 명"}
-                  onChange={(e) => {
-                    if (e.target.value.length > 20) {
-                      return
-                    }
-                    return setInputValue(e.target.value)
-                  }}
-                  value={inputValue}
-                  placeholder="챌린지명을 입력해주세요"
-                />
-              )}
+              <Input
+                variant="login"
+                label={"챌린지 명"}
+                onChange={(e) => {
+                  if (e.target.value.length > 20) {
+                    return
+                  }
+                  return setInputValue(e.target.value)
+                }}
+                value={inputValue}
+                placeholder="챌린지명을 입력해주세요"
+              />
             </div>
           </div>
 
