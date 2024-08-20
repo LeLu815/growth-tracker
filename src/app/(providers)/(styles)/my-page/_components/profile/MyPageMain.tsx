@@ -37,6 +37,10 @@ function MyPageMain() {
     }
   }, [isLargeScreen, pathname])
 
+  useEffect(() => {
+    return router.refresh();
+  }, []);
+
   // useEffect(() => {
   //   if (isInitialized && !isLoggedIn) {
   //     router.push("/auth/login-email")
