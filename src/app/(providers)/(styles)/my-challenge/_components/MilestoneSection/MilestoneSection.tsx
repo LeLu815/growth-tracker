@@ -49,7 +49,7 @@ function MilestoneSection({
     selectedDayOfWeek,
     currentUserRoutineDoneDaily,
   } = useMyChallengePageContext()
-  console.log("마일스톤 리렌더링")
+
   const router = useRouter()
   const leftDays =
     (new Date(milestone.end_at).getTime() - new Date(selectedDate).getTime()) /
@@ -190,7 +190,7 @@ function MilestoneSection({
     if (checkMilestoneDayOfWeek && !targetRDD) {
       if (tempSetToCheckDateInitRDD.has(selectedDate)) return
       tempSetToCheckDateInitRDD.add(selectedDate)
-      console.log("포스트할거임")
+
       const newId = v4()
 
       postRDDmutation.mutate(newId)

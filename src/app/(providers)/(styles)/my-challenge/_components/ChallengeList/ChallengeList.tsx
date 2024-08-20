@@ -14,8 +14,6 @@ import useMyChallengePageContext from "../../context"
 import MilestoneSection from "../MilestoneSection"
 
 function ChallengeList() {
-  console.log("챌린지리스트 리렌더링")
-
   const { selectedDate, structuredChallengeData, todayDate } =
     useMyChallengePageContext()
   const CURRENT_DATE_NUMBER = parseInt(selectedDate.replace(/-/g, ""))
@@ -87,15 +85,11 @@ function ChallengeList() {
                       const milestoneStartDate = parseInt(
                         milestone.start_at?.replace(/-/g, "") || "0"
                       )
-                      console.log("milestoneStartDate: ", milestoneStartDate)
+
                       const milestoneEndDate = parseInt(
                         milestone.end_at?.replace(/-/g, "") || "0"
                       )
-                      console.log("milestoneEndDate: ", milestoneEndDate)
-                      console.log(
-                        CURRENT_DATE_NUMBER >= milestoneStartDate &&
-                          CURRENT_DATE_NUMBER <= milestoneEndDate
-                      )
+
                       if (
                         CURRENT_DATE_NUMBER >= milestoneStartDate &&
                         CURRENT_DATE_NUMBER <= milestoneEndDate

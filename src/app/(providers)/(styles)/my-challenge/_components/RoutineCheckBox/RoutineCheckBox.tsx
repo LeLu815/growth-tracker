@@ -20,7 +20,6 @@ import { v4 } from "uuid"
 
 import SmallBackDrop from "@/components/Modal/SmallBackDrop"
 
-import { RoutineDoneDailyType } from "../../../../../../../types/routineDoneDaily.type"
 import useMyChallengePageContext from "../../context"
 
 interface RoutineCheckBoxProps {
@@ -49,7 +48,7 @@ function RoutineCheckBox({
 
   const queryClient = useQueryClient()
   const router = useRouter()
-  const DEBOUNCE_TIME = 200 // 디바운스 시간 설정
+  const DEBOUNCE_TIME = 350 // 디바운스 시간 설정
   const targetRD = routineDone.find((item) => {
     return (
       item.created_at.slice(0, 10) === selectedDate &&
@@ -77,7 +76,7 @@ function RoutineCheckBox({
   const isFirstRender01 = useRef(true)
   const isFirstRender02 = useRef(true)
   const clickCount = useRef(0) // 클릭 횟수를 추적
-
+  const loadingSwitchDelay = 300
   useEffect(() => {
     setIsChecked(!!targetRD)
   }, [selectedDate])
@@ -96,11 +95,11 @@ function RoutineCheckBox({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["fetchRoutineDone"] })
-      setIsLoading(false)
+      setTimeout(() => setIsLoading(false), loadingSwitchDelay)
       clickCount.current = 0
     },
     onError: () => {
-      setIsLoading(false)
+      setTimeout(() => setIsLoading(false), loadingSwitchDelay)
       setIsChecked(false) // 실패 시 체크 해제
       alert("루틴 완료를 저장하는 데 실패했습니다. 다시 시도해주세요.")
       clickCount.current = 0
@@ -120,11 +119,11 @@ function RoutineCheckBox({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["fetchRoutineDone"] })
-      setIsLoading(false)
+      setTimeout(() => setIsLoading(false), loadingSwitchDelay)
       clickCount.current = 0
     },
     onError: () => {
-      setIsLoading(false)
+      setTimeout(() => setIsLoading(false), loadingSwitchDelay)
       setIsChecked(true) // 실패 시 체크 상태 복구
       alert("루틴 완료 취소를 저장하는 데 실패했습니다. 다시 시도해주세요.")
       clickCount.current = 0
@@ -205,17 +204,19 @@ function RoutineCheckBox({
 
   // 체크박스 클릭 처리
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const checked = event.target.checked
-    clickCount.current += 1 // 클릭 횟수 증가
-    setIsChecked(checked) // 상태를 낙관적으로 업데이트
+    if (!isLoading && selectedDate == todayDate) {
+      const checked = event.target.checked
+      clickCount.current += 1 // 클릭 횟수 증가
+      setIsChecked(checked) // 상태를 낙관적으로 업데이트
 
-    // 디바운스된 mutation 실행
-    debouncedMutation(checked)
+      // 디바운스된 mutation 실행
+      debouncedMutation(checked)
+    }
   }
 
   // 체크박스를 감싸는 div 클릭 처리
   const handleDivClick = () => {
-    if (selectedDate == todayDate) {
+    if (!isLoading && selectedDate == todayDate) {
       setIsChecked((prevChecked) => {
         const newChecked = !prevChecked
         clickCount.current += 1 // 클릭 횟수 증가
