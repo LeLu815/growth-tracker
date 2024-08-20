@@ -105,62 +105,60 @@ function ChallengeList() {
                             challengeEndAt={challenge.end_at || ""}
                           />
                         )
-                      } else {
-                        if (milestoneEndDate < CURRENT_DATE_NUMBER) {
-                          return <></>
-                        } else {
-                          if (milestoneStartDate <= CURRENT_DATE_NUMBER) {
-                            return (
-                              <section key={milestone.id}>
-                                <div className="flex gap-x-[24px]">
-                                  <div className="flex flex-col">
-                                    시작일: {milestoneStartDate}
-                                    종료일: {milestoneEndDate}
-                                  </div>
-                                  {/* 이미지 */}
-                                  <Image
-                                    src={challenge.image_url || ""}
-                                    alt={challenge.goal}
-                                    width={84}
-                                    height={84}
-                                    className="h-[84px] w-[84px] rounded-md object-cover"
-                                  />
-                                  {/* 이미지 옆 모든 것 */}
-                                  <div className="flex grow flex-col gap-y-[12px]">
-                                    {/* 제목과 열기버튼 */}
-                                    <div className="flex w-full justify-between">
-                                      <h3 className="text-title-xs font-bold">
-                                        {challenge.goal}
-                                      </h3>
-                                    </div>
-                                    {/* 안내 메시지 */}
-                                    <div>
-                                      <p className="text-xs">
-                                        {"해당 날짜에 대해선"}
-                                      </p>
-                                      <p className="text-xs">
-                                        {"챌린지에 생성한 루틴이 아직 없어요"}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="mt-[9px] flex flex-col gap-y-3">
-                                  <p
-                                    onClick={() => {
-                                      router.push(`/challenge/${challenge.id}`)
-                                    }}
-                                    className="w-full cursor-pointer text-center text-[10px] font-[500] leading-[135%] text-black"
-                                  >
-                                    {`챌린지 정보 확인 >`}
-                                  </p>
-                                </div>
-                              </section>
-                            )
-                          }
-                        }
                       }
                     }
                   })}
+                  {challenge.milestones.every((milestone) => {
+                    const milestoneStartDate = parseInt(
+                      milestone.start_at?.replace(/-/g, "") || "0"
+                    )
+                    const milestoneEndDate = parseInt(
+                      milestone.end_at?.replace(/-/g, "") || "0"
+                    )
+                    const isMilestoneOnProgress =
+                      CURRENT_DATE_NUMBER >= milestoneStartDate &&
+                      CURRENT_DATE_NUMBER <= milestoneEndDate
+                    return !isMilestoneOnProgress
+                  }) && (
+                    <section>
+                      <div className="flex gap-x-[24px]">
+                        {/* 이미지 */}
+                        <Image
+                          src={challenge.image_url || ""}
+                          alt={challenge.goal}
+                          width={84}
+                          height={84}
+                          className="h-[84px] w-[84px] rounded-md object-cover"
+                        />
+                        {/* 이미지 옆 모든 것 */}
+                        <div className="flex grow flex-col gap-y-[12px]">
+                          {/* 제목과 열기버튼 */}
+                          <div className="flex w-full justify-between">
+                            <h3 className="text-title-xs font-bold">
+                              {challenge.goal}
+                            </h3>
+                          </div>
+                          {/* 안내 메시지 */}
+                          <div>
+                            <p className="text-xs">{"해당 날짜에 대해선"}</p>
+                            <p className="text-xs">
+                              {"챌린지에 생성한 루틴이 아직 없어요"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-[9px] flex flex-col gap-y-3">
+                        <p
+                          onClick={() => {
+                            router.push(`/challenge/${challenge.id}`)
+                          }}
+                          className="mt-3 w-full cursor-pointer text-center text-[10px] font-[500] leading-[135%] text-black"
+                        >
+                          {`챌린지 정보 확인 >`}
+                        </p>
+                      </div>
+                    </section>
+                  )}
                 </div>
               )
             })}

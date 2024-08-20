@@ -263,7 +263,6 @@ function MilestoneSection({
           )}
         </div>
       </div>
-
       {isRoutinesVisible && (
         <div className="mt-5 flex flex-col gap-y-3">
           {milestone.routines?.map((routine) => {
