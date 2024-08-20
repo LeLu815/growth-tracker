@@ -65,7 +65,14 @@ function MilestoneSection({
     })?.id || ""
   )
 
-  const [isRoutinesVisible, setIsRoutinesVisible] = useState(true)
+  // 선택된 일자의 요일이 해당 마일스톤의 실행 요일인지 확인
+  const checkMilestoneDayOfWeek = milestoneDoDays.find((milestoneDoDay) => {
+    return milestoneDoDay == selectedDayOfWeek
+  })
+
+  const [isRoutinesVisible, setIsRoutinesVisible] = useState(
+    !!checkMilestoneDayOfWeek
+  )
   const [isDiaryInputVisible, setIsDiaryInputVisible] = useState(false)
 
   const modal = useModal()
@@ -86,7 +93,9 @@ function MilestoneSection({
   }
 
   const toggleRoutinesVisibility = () => {
-    setIsRoutinesVisible(!isRoutinesVisible)
+    if (!!checkMilestoneDayOfWeek) {
+      setIsRoutinesVisible(!isRoutinesVisible)
+    }
   }
 
   useEffect(() => {
@@ -118,11 +127,6 @@ function MilestoneSection({
   useEffect(() => {
     initializeRDD()
   }, [selectedDate])
-
-  // 선택된 일자의 요일이 해당 마일스톤의 실행 요일인지 확인
-  const checkMilestoneDayOfWeek = milestoneDoDays.find((milestoneDoDay) => {
-    return milestoneDoDay == selectedDayOfWeek
-  })
 
   const queryClient = useQueryClient()
 
@@ -213,7 +217,6 @@ function MilestoneSection({
           height={84}
           className="h-[84px] w-[84px] rounded-md object-cover"
         />
-        {/* <div className="h-[84px] w-[84px] rounded-md bg-[#DDDDDD]"></div> */}
         {/* 이미지 옆 모든 것 */}
         <div className="flex grow flex-col gap-y-[12px]">
           {/* 제목과 열기버튼 */}
@@ -264,11 +267,6 @@ function MilestoneSection({
           {milestone.routines?.map((routine) => {
             if (routine.milestone_id == milestone.id) {
               return (
-                // <div
-                //   key={routine.id}
-                //   className="flex items-center justify-between rounded-lg border-[1.5px] border-solid border-[#D9D9D9] px-[10px] py-[14px]"
-                // >
-                //   <p className="text-[14px] font-semibold">{routine.content}</p>
                 <RoutineCheckBox
                   key={routine.content}
                   numberOfroutines={milestone.routines.length}

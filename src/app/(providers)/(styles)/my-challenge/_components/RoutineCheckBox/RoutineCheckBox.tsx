@@ -211,14 +211,16 @@ function RoutineCheckBox({
 
   // 체크박스를 감싸는 div 클릭 처리
   const handleDivClick = () => {
-    setIsChecked((prevChecked) => {
-      const newChecked = !prevChecked
-      clickCount.current += 1 // 클릭 횟수 증가
+    if (selectedDate == todayDate) {
+      setIsChecked((prevChecked) => {
+        const newChecked = !prevChecked
+        clickCount.current += 1 // 클릭 횟수 증가
 
-      // 디바운스된 mutation 실행
-      debouncedMutation(newChecked)
-      return newChecked
-    })
+        // 디바운스된 mutation 실행
+        debouncedMutation(newChecked)
+        return newChecked
+      })
+    }
   }
 
   return (
