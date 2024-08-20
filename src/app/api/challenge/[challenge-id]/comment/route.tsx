@@ -43,7 +43,7 @@ export async function GET(
         "INNER JOIN users u ON u.id = cc.user_id " +
         "WHERE cc.challenge_id = $2 "
 
-      query += `ORDER BY cc.${sortField} DESC, cc.id DESC LIMIT $3 OFFSET $4`
+      query += `ORDER BY cc.${sortField} DESC, cc.created_at DESC, cc.id DESC LIMIT $3 OFFSET $4`
       params.unshift(userId)
     } else {
       query +=
@@ -53,7 +53,7 @@ export async function GET(
         "INNER JOIN users u ON u.id = cc.user_id " +
         "WHERE cc.challenge_id = $1 "
 
-      query += `ORDER BY cc.${sortField} DESC, cc.id DESC LIMIT $2 OFFSET $3`
+      query += `ORDER BY cc.${sortField} DESC, cc.created_at DESC, cc.id DESC LIMIT $2 OFFSET $3`
     }
 
     const data = await pgClient.query(query, params)
@@ -93,7 +93,7 @@ export async function POST(
 
   const supabase = createClient()
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("challenge_comment")
     .insert([
       {
@@ -109,5 +109,5 @@ export async function POST(
     return NextResponse.json({ status: 500, error: error.message })
   }
 
-  return NextResponse.json({ status: 200, error: null })
+  return NextResponse.json({ status: 200, error: null, data: data })
 }

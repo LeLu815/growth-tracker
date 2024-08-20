@@ -12,10 +12,16 @@ import axios from "axios"
 import DefaultProfile from "@/components/Icon/DefaultProfile"
 import SendIcon from "@/components/Icon/SendIcon"
 
+import { ChallengeCommentType } from "../../../../../../../types/challengeDetail.type"
+
 function ChallengeCommentCreate({
   challengeId,
   className,
+  setNewCommentList,
+  newCommentList,
 }: {
+  setNewCommentList: (newVar: (any | ChallengeCommentType)[]) => void
+  newCommentList: ChallengeCommentType[]
   challengeId: string
   className: string
 }) {
@@ -30,7 +36,7 @@ function ChallengeCommentCreate({
   const { showToast } = useToast()
 
   const handleCommentCreateToast = () => {
-    showToast("댓글을 작성했습니다.", 3000, "bottom-20 max-w-[640px]")
+    showToast("댓글을 작성했습니다.", 3000, " bottom-12 mx-auto max-w-[350px]")
   }
 
   /**
@@ -68,8 +74,29 @@ function ChallengeCommentCreate({
       alertOpen("댓글 작성에 실패했습니다.")
       throw new Error(response.error)
     }
+
+    const queryData: any = queryClient.getQueryData(["challengeComment"])
+
+    if (queryData.pages[0].length === 0) {
+      queryClient.invalidateQueries({ queryKey: ["challengeComment"] })
+    } else {
+      const newVar = [
+        {
+          ...response.data[0],
+          ...{
+            created_at: response.data[0].created_at.substring(0, 10),
+            user_id: me.id,
+            is_like: false,
+            email: me.email,
+            nickname: userData?.nickname,
+            profile_image_url: userData?.profile_image_url,
+          },
+        },
+        ...newCommentList,
+      ]
+      setNewCommentList(newVar)
+    }
     handleCommentCreateToast()
-    queryClient.invalidateQueries({ queryKey: ["challengeComment"] })
   }
 
   const alertOpen = (message: string) => {
@@ -95,7 +122,9 @@ function ChallengeCommentCreate({
   }
 
   return (
-    <div className={`mx-auto min-w-[320px] max-w-[480px] sm:max-w-[480px] md:max-w-[768px] ${className}`}>
+    <div
+      className={`mx-auto min-w-[320px] max-w-[480px] sm:max-w-[480px] md:max-w-[768px] ${className}`}
+    >
       <div className="flex gap-[9px] bg-white px-[20px] py-[10px] lg:px-0">
         <div className="relative h-[50px] w-[60px] overflow-hidden rounded-full">
           {userData?.profile_image_url ? (
@@ -110,7 +139,7 @@ function ChallengeCommentCreate({
           )}
         </div>
 
-        <form className="flex w-full items-center ">
+        <form className="flex w-full items-center">
           <div className="flex flex-1 p-2">
             <textarea
               className={`w-full resize-none border-b border-[#141414] bg-transparent p-2 text-grey-200 outline-none lg:max-w-[335px]`}
@@ -126,7 +155,7 @@ function ChallengeCommentCreate({
           {isFocused && (
             <SendIcon
               color={content ? "#FD8C98" : ""}
-              className="relative lg:right-3 h-[20px] w-[20px] cursor-pointer"
+              className="relative h-[20px] w-[20px] cursor-pointer lg:right-3"
               onClick={createComment}
             />
           )}

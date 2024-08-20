@@ -1,12 +1,7 @@
 "use client"
 
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useState,
-} from "react"
+import { PropsWithChildren, useCallback, useEffect, useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { POSTnewRoutineDoneDaily } from "@/api/supabase/routineDoneDaily"
@@ -29,7 +24,10 @@ interface MilestoneSectionProps {
   challengeId: string
   challengeGoal: string
   challengeImage: string
+  challengeEndAt: string
 }
+
+const tempSetToCheckDateInitRDD = new Set()
 
 function MilestoneSection({
   milestone,
@@ -37,6 +35,7 @@ function MilestoneSection({
   challengeId,
   challengeGoal,
   challengeImage,
+  challengeEndAt,
 }: PropsWithChildren<MilestoneSectionProps>) {
   const {
     userId,
@@ -45,7 +44,7 @@ function MilestoneSection({
     selectedDayOfWeek,
     currentUserRoutineDoneDaily,
   } = useMyChallengePageContext()
-
+  console.log("마일스톤 리렌더링")
   const router = useRouter()
   const leftDays =
     (new Date(milestone.end_at).getTime() - new Date(selectedDate).getTime()) /
@@ -60,13 +59,15 @@ function MilestoneSection({
       )
     })?.id || ""
   )
-  const [isRoutinesVisible, setIsRoutinesVisible] = useState(false)
+
+  const [isRoutinesVisible, setIsRoutinesVisible] = useState(true)
   const [isDiaryInputVisible, setIsDiaryInputVisible] = useState(false)
+
   const modal = useModal()
 
   const handleRoutineCompleteButtonMobileClick = (isTodayDiary: boolean) => {
     modal.open({
-      type: "custom",
+      type: "diary",
       children: (
         <DiarySection
           isDiaryToday={isTodayDiary}
@@ -83,6 +84,12 @@ function MilestoneSection({
     setIsRoutinesVisible(!isRoutinesVisible)
   }
 
+  useEffect(() => {
+    if (!isRoutinesVisible) {
+      setIsDiaryInputVisible(false)
+    }
+  }, [isRoutinesVisible])
+
   const toggleDiaryInputVisibility = useCallback(() => {
     setIsDiaryInputVisible(!isDiaryInputVisible)
   }, [isDiaryInputVisible])
@@ -95,7 +102,15 @@ function MilestoneSection({
   })
 
   useEffect(() => {
-    setIsRoutinesVisible(false)
+    setIsDiaryInputVisible(
+      !(
+        parseInt(selectedDate.replace(/-/g, "")) >=
+        parseInt(todayDate.replace(/-/g, ""))
+      )
+    )
+  }, [selectedDate])
+
+  useEffect(() => {
     initializeRDD()
   }, [selectedDate])
 
@@ -162,8 +177,11 @@ function MilestoneSection({
   // 오늘에 대한 RDD가 없다면 하나 새로 생성해주는 함수
   const initializeRDD = async () => {
     // 선택한 일자가 마일스톤 시행 요일이면서
-    // 동시에 routine_done_daily에 유효한 레코드가 없는 경우에 새로운 레코드  생성
+    // 동시에 routine_done_daily에 유효한 레코드가 없는 경우에 새로운 레코드 생성
     if (checkMilestoneDayOfWeek && !targetRDD) {
+      if (tempSetToCheckDateInitRDD.has(selectedDate)) return
+      tempSetToCheckDateInitRDD.add(selectedDate)
+      console.log("포스트할거임")
       const newId = v4()
 
       postRDDmutation.mutate(newId)
@@ -171,9 +189,9 @@ function MilestoneSection({
       setTargetRDDId(newId)
     }
 
-    if (targetRDD) {
-      setTargetRDDId(targetRDD.id)
-    }
+    // if (targetRDD) {
+    //   setTargetRDDId(targetRDD.id)
+    // }
   }
 
   return (
@@ -241,47 +259,63 @@ function MilestoneSection({
           {milestone.routines?.map((routine) => {
             if (routine.milestone_id == milestone.id) {
               return (
-                <div
-                  key={routine.id}
-                  className="flex items-center justify-between rounded-lg border-[1.5px] border-solid border-[#D9D9D9] px-[10px] py-[14px]"
-                >
-                  <p className="text-[14px] font-semibold">{routine.content}</p>
-                  <RoutineCheckBox
-                    routines={milestone.routines}
-                    challengeId={challengeId}
-                    selectedDate={selectedDate}
-                    milestoneId={milestone.id}
-                    userId={userId}
-                    routineId={routine.id}
-                    routineDoneDailyId={targetRDDId}
-                  />
-                </div>
+                // <div
+                //   key={routine.id}
+                //   className="flex items-center justify-between rounded-lg border-[1.5px] border-solid border-[#D9D9D9] px-[10px] py-[14px]"
+                // >
+                //   <p className="text-[14px] font-semibold">{routine.content}</p>
+                <RoutineCheckBox
+                  key={routine.content}
+                  numberOfroutines={milestone.routines.length}
+                  challengeId={challengeId}
+                  selectedDate={selectedDate}
+                  milestoneId={milestone.id}
+                  userId={userId}
+                  routineId={routine.id}
+                  routineDoneDailyId={targetRDDId}
+                  routineContent={routine.content}
+                  challengeEndAt={challengeEndAt}
+                />
+                // </div>
               )
             }
           })}
           {/* 모바일 용 버튼 */}
-          <Button
-            intent={todayDate == selectedDate ? "primary" : "primary"}
-            size={"lg"}
-            className="mt-3 text-sm lg:hidden"
-            onClick={() =>
-              handleRoutineCompleteButtonMobileClick(todayDate == selectedDate)
-            }
-          >
-            {selectedDate == todayDate ? "하루 일기 쓰기" : "오늘의 일기"}
-          </Button>
+          {selectedDate <= todayDate && (
+            <Button
+              intent={todayDate == selectedDate ? "primary" : "primary"}
+              size={"lg"}
+              className="mt-3 text-sm lg:hidden"
+              onClick={() =>
+                handleRoutineCompleteButtonMobileClick(
+                  todayDate == selectedDate
+                )
+              }
+            >
+              {selectedDate == todayDate
+                ? "하루 일기 쓰기"
+                : selectedDate < todayDate
+                  ? "일기 보기"
+                  : "미래 일기"}
+            </Button>
+          )}
           {/* 웹 용 버튼 */}
           {!isDiaryInputVisible && (
             <>
-              {" "}
-              <Button
-                intent={todayDate == selectedDate ? "primary" : "primary"}
-                size={"lg"}
-                className="mt-3 hidden text-sm lg:block"
-                onClick={toggleDiaryInputVisibility}
-              >
-                {selectedDate == todayDate ? "하루 일기 쓰기" : "오늘의 일기"}
-              </Button>
+              {selectedDate <= todayDate && (
+                <Button
+                  intent={todayDate == selectedDate ? "primary" : "primary"}
+                  size={"lg"}
+                  className="mt-3 hidden text-sm lg:block"
+                  onClick={toggleDiaryInputVisibility}
+                >
+                  {selectedDate == todayDate
+                    ? "하루 일기 쓰기"
+                    : selectedDate < todayDate
+                      ? "일기 보기"
+                      : "미래 일기"}
+                </Button>
+              )}
               <p
                 onClick={() => {
                   router.push(`/challenge/${challengeId}`)
@@ -295,7 +329,7 @@ function MilestoneSection({
         </div>
       )}
       {isDiaryInputVisible && (
-        <>
+        <div className="hidden lg:block">
           <DiarySection
             isDiaryToday={todayDate == selectedDate}
             selectedDate={selectedDate}
@@ -303,7 +337,7 @@ function MilestoneSection({
             routineDoneDailyId={targetRDDId}
             handleClickConfirm={toggleDiaryInputVisibility}
           />
-        </>
+        </div>
       )}
     </section>
   )

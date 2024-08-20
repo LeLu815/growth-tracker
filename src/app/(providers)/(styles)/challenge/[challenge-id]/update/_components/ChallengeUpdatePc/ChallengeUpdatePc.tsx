@@ -3,7 +3,6 @@
 import { useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { useAuth } from "@/context/auth.context"
 import { useModal } from "@/context/modal.context"
 import { useToast } from "@/context/toast.context"
 import useChallengeQuery from "@/query/challenge/userChallengeQuery"
@@ -24,7 +23,7 @@ import FlagIcon from "@/components/Icon/FlagIcon"
 import PlusIcon from "@/components/Icon/PlusIcon"
 import Page from "@/components/Page"
 
-import BrowserHeader from "../../../../_components/BrowserHeader"
+import BrowserHeader from "../../../../components/BrowserHeader"
 import Subsubtitle from "../../../../create/_browser/_components/Subsubtitle"
 import DragDropContainer from "../../../../create/_components/DrapDropContainer/DragDropContainer"
 import ChallengeUpdateCreateMilestonePc from "./ChallengeUpdateCreateMilestonePc"
@@ -66,45 +65,11 @@ function ChallengeUpdatePc({
   const { open, close } = useModal()
   // 넥스트 라우터로 보내기
   const router = useRouter()
-  // 유저 데이터
-  const { me, userData } = useAuth()
 
   const addRoutineBtnDisabledCondition =
     data.length !== 0 &&
     range &&
     format(range?.to!, "yyyy-MM-dd") === data[data.length - 1].end_at
-
-  const filteredData = data.filter(
-    (obj) => milestoneIds && milestoneIds.includes(obj.id)
-  )
-  console.log("milestoneIds :", milestoneIds)
-  console.log(filteredData)
-  console.log(
-    filteredData.map((obj) =>
-      produce(
-        obj,
-        (
-          draft: Omit<MilestoneType, "routines" | "id"> & {
-            routines?: MilestoneType["routines"]
-            id?: MilestoneType["id"]
-          }
-        ) => {
-          draft.start_at = draft.start_at
-          draft.end_at = draft.end_at
-          delete draft.routines
-          delete draft.id
-        }
-      )
-    )
-  )
-  console.log(
-    filteredData.map((obj) =>
-      obj.routines.map((routine) => ({
-        content: routine.content,
-        milestone_id: obj.id,
-      }))
-    )
-  )
 
   return (
     <Page className="mx-auto hidden min-h-screen flex-col lg:flex">

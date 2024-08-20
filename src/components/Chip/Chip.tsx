@@ -22,7 +22,7 @@ const chipVariant = cva("<border-1></border-1> shadow-1", {
     variant: {
       outline: "bg-white border-1",
       contained: "text-white border-1",
-      selected: "bg-primary border-primary text-white",
+      selected: "bg-primary border-primary text-white border-1",
     },
   },
   compoundVariants: [
@@ -61,6 +61,11 @@ const chipVariant = cva("<border-1></border-1> shadow-1", {
       intent: "third",
       variant: "outline",
       className: "text-grey-400 border border-solid border-grey-400",
+    },
+    {
+      intent: "third", // 추가된 부분
+      variant: "selected", // 추가된 부분
+      className: "bg-primary  border border-solid border-primary text-white", // 추가된 부분: selected 상태에서도 border를 유지합니다.
     },
     {
       intent: "popular",

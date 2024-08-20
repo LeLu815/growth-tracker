@@ -8,7 +8,7 @@ import { Calendar } from "../ui/calendar"
 import BackDrop from "./BackDrop"
 
 interface ModalProps {
-  type: "alert" | "confirm" | "calendar" | "custom"
+  type: "alert" | "confirm" | "calendar" | "custom" | "diary"
   content?: string
   onConfirm?: () => void
   onCancel?: () => void

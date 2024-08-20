@@ -34,7 +34,7 @@ import {
   SELECT_WEEK_BTN_VALUES,
 } from "../_components/MilestoneCreate/MilestoneCreateConfig"
 import SubTitle from "../_components/styles/SubTitle"
-import BrowserHeader from "../../_components/BrowserHeader"
+import BrowserHeader from "../../components/BrowserHeader"
 import Subsubtitle from "./_components/Subsubtitle"
 
 function ChallengeCreateBrower() {
@@ -454,7 +454,7 @@ function ChallengeCreateBrower() {
             }}
           />
           <button
-            className="absolute right-[20px] top-[36%] flex cursor-pointer items-center justify-center"
+            className="absolute right-[20px] top-[30%] flex cursor-pointer items-center justify-center"
             type="submit"
           >
             <PlusIcon className="stroke-grey-600" />
