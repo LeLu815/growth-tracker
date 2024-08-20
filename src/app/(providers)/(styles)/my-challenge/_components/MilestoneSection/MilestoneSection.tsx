@@ -44,7 +44,7 @@ function MilestoneSection({
     selectedDayOfWeek,
     currentUserRoutineDoneDaily,
   } = useMyChallengePageContext()
-  console.log("마일스톤 리렌더링")
+
   const router = useRouter()
   const leftDays =
     (new Date(milestone.end_at).getTime() - new Date(selectedDate).getTime()) /
@@ -60,7 +60,14 @@ function MilestoneSection({
     })?.id || ""
   )
 
-  const [isRoutinesVisible, setIsRoutinesVisible] = useState(true)
+  // 선택된 일자의 요일이 해당 마일스톤의 실행 요일인지 확인
+  const checkMilestoneDayOfWeek = milestoneDoDays.find((milestoneDoDay) => {
+    return milestoneDoDay == selectedDayOfWeek
+  })
+
+  const [isRoutinesVisible, setIsRoutinesVisible] = useState(
+    !!checkMilestoneDayOfWeek
+  )
   const [isDiaryInputVisible, setIsDiaryInputVisible] = useState(false)
 
   const modal = useModal()
@@ -81,7 +88,9 @@ function MilestoneSection({
   }
 
   const toggleRoutinesVisibility = () => {
-    setIsRoutinesVisible(!isRoutinesVisible)
+    if (!!checkMilestoneDayOfWeek) {
+      setIsRoutinesVisible(!isRoutinesVisible)
+    }
   }
 
   useEffect(() => {
@@ -108,16 +117,13 @@ function MilestoneSection({
         parseInt(todayDate.replace(/-/g, ""))
       )
     )
+
+    setIsRoutinesVisible(!!checkMilestoneDayOfWeek)
   }, [selectedDate])
 
   useEffect(() => {
     initializeRDD()
   }, [selectedDate])
-
-  // 선택된 일자의 요일이 해당 마일스톤의 실행 요일인지 확인
-  const checkMilestoneDayOfWeek = milestoneDoDays.find((milestoneDoDay) => {
-    return milestoneDoDay == selectedDayOfWeek
-  })
 
   const queryClient = useQueryClient()
 
@@ -181,7 +187,7 @@ function MilestoneSection({
     if (checkMilestoneDayOfWeek && !targetRDD) {
       if (tempSetToCheckDateInitRDD.has(selectedDate)) return
       tempSetToCheckDateInitRDD.add(selectedDate)
-      console.log("포스트할거임")
+
       const newId = v4()
 
       postRDDmutation.mutate(newId)
@@ -197,7 +203,7 @@ function MilestoneSection({
   return (
     <section>
       <div
-        className="flex cursor-pointer gap-x-[24px]"
+        className={`flex ${checkMilestoneDayOfWeek && "cursor-pointer"} gap-x-[24px]`}
         onClick={toggleRoutinesVisibility}
       >
         {/* 이미지 */}
@@ -208,7 +214,6 @@ function MilestoneSection({
           height={84}
           className="h-[84px] w-[84px] rounded-md object-cover"
         />
-        {/* <div className="h-[84px] w-[84px] rounded-md bg-[#DDDDDD]"></div> */}
         {/* 이미지 옆 모든 것 */}
         <div className="flex grow flex-col gap-y-[12px]">
           {/* 제목과 열기버튼 */}
@@ -253,17 +258,11 @@ function MilestoneSection({
           )}
         </div>
       </div>
-
       {isRoutinesVisible && (
         <div className="mt-5 flex flex-col gap-y-3">
           {milestone.routines?.map((routine) => {
             if (routine.milestone_id == milestone.id) {
               return (
-                // <div
-                //   key={routine.id}
-                //   className="flex items-center justify-between rounded-lg border-[1.5px] border-solid border-[#D9D9D9] px-[10px] py-[14px]"
-                // >
-                //   <p className="text-[14px] font-semibold">{routine.content}</p>
                 <RoutineCheckBox
                   key={routine.content}
                   numberOfroutines={milestone.routines.length}
@@ -316,14 +315,6 @@ function MilestoneSection({
                       : "미래 일기"}
                 </Button>
               )}
-              <p
-                onClick={() => {
-                  router.push(`/challenge/${challengeId}`)
-                }}
-                className="w-full cursor-pointer text-center text-[10px] font-[500] leading-[135%] text-black"
-              >
-                {`챌린지 정보 확인 >`}
-              </p>
             </>
           )}
         </div>
@@ -339,6 +330,16 @@ function MilestoneSection({
           />
         </div>
       )}
+      {
+        <p
+          onClick={() => {
+            router.push(`/challenge/${challengeId}`)
+          }}
+          className="mt-5 w-full cursor-pointer text-center text-[10px] font-[500] leading-[135%] text-black"
+        >
+          {`챌린지 정보 확인 >`}
+        </p>
+      }
     </section>
   )
 }
