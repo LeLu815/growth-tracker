@@ -111,7 +111,7 @@ function ChallengeList() {
                         } else {
                           if (milestoneStartDate <= CURRENT_DATE_NUMBER) {
                             return (
-                              <section key={challenge.goal}>
+                              <section key={milestone.id}>
                                 <div className="flex gap-x-[24px]">
                                   <div className="flex flex-col">
                                     시작일: {milestoneStartDate}

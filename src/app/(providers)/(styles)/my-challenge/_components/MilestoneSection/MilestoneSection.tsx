@@ -122,6 +122,8 @@ function MilestoneSection({
         parseInt(todayDate.replace(/-/g, ""))
       )
     )
+
+    setIsRoutinesVisible(!!checkMilestoneDayOfWeek)
   }, [selectedDate])
 
   useEffect(() => {
