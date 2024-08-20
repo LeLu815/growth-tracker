@@ -14,6 +14,26 @@ import BottomNavigation from "@/components/BottomNavigation"
 import PlusComponent from "../newsfeed/_components/PlusComponent"
 import { MyChallengePageContext } from "./context"
 
+// 코드 정리 해주신 뒤 주석 해제 해주세요!
+// export const generateMetadata = (): Metadata => {
+//   return {
+//     title: "내 챌린지 - 디딧",
+//     description:
+//       "내 챌린지 페이지에서 나의 루틴을 체크하고 일기를 작성할 수 있습니다.",
+//     openGraph: {
+//       title: "내 챌린지 - 디딧",
+//       description:
+//         "내 챌린지 페이지에서 나의 루틴을 체크하고 일기를 작성할 수 있습니다.",
+//       url: "https://growth-tracker-text.vercel.app/my-challenge",
+//     },
+//     twitter: {
+//       title: "내 챌린지 - 디딧",
+//       description:
+//         "내 챌린지 페이지에서 나의 루틴을 체크하고 일기를 작성할 수 있습니다.",
+//     },
+//   }
+// }
+
 function MyChallengePageLayout({ children }: PropsWithChildren) {
   const TODAY = format(startOfDay(new Date()), "yyyy-MM-dd", { locale: ko })
   const TODAY_DAY_OF_WEEK = format(startOfDay(new Date()), "eee", {
