@@ -136,6 +136,10 @@ function RoutineCheckBox({
   }
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
     handleEndOfChallenge()
   }, [currentUserRoutineDoneDaily])
 
