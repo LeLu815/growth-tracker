@@ -27,6 +27,9 @@ export async function updateSession(request: NextRequest) {
 
   // Refreshing the auth token
   const { data, error } = await supabase.auth.getUser()
+
+  console.log(data && data.user && data.user.id, request.url)
+
   if (data.user && new URL(request.url).pathname === "/auth/login-email") {
     return NextResponse.redirect(new URL("/", request.url))
   }

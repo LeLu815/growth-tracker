@@ -31,6 +31,10 @@ function MyPageMain() {
     reset()
   }, [me])
 
+  // useEffect(() => {
+  //   return router.refresh()
+  // }, [])
+
   useEffect(() => {
     if (isLargeScreen && pathname.startsWith("/my-page")) {
       router.push(MY_CHALLENGE_ANALYZE.path)

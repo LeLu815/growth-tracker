@@ -31,6 +31,7 @@ type AuthContextValue = {
     password: string,
     nickname: string
   ) => Promise<{ status: number; message: string }>
+  updateUser: () => void
 }
 
 const initialValue: AuthContextValue = {
@@ -41,6 +42,7 @@ const initialValue: AuthContextValue = {
   logIn: async () => ({ status: 0, message: "" }),
   logOut: () => {},
   signUp: async () => ({ status: 0, message: "" }),
+  updateUser: async () => {},
 }
 
 const AuthContext = createContext<AuthContextValue>(initialValue)
@@ -69,26 +71,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
       console.error("Error fetching user data:", error)
     }
   }
-
-  // useEffect(() => {
-  //   const { data: authListener } = supabase.auth.onAuthStateChange(
-  //     (event, session) => {
-  //       if (event === "INITIAL_SESSION") {
-  //         setMe(session?.user || null)
-  //       } else if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
-  //         setMe(session?.user || null)
-  //         if (session?.user) {
-  //           fetchUserData(session.user.id)
-  //         }
-  //       }
-  //       setIsInitialized(true)
-  //     }
-  //   )
-
-  //   return () => {
-  //     authListener?.subscription.unsubscribe()
-  //   }
-  // }, [])
+  // me, userData 업데이트 해주는 함수
+  const updateUser = async () => {
+    me && fetchUserData(me.id)
+  }
 
   // 로그인 함수
   const logIn: AuthContextValue["logIn"] = async (
@@ -182,7 +168,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
     setMe((value) => null)
     setUserData((value) => null)
 
-    window.location.href = "/" // 우선 router 로 고치지말아주세요.
+    router.push("/")
+    // router.refresh()
+    // revalidatePath("/")
+    // window.location.href = "/" // 우선 router 로 고치지말아주세요.
     // router.push("/")
   }
 
@@ -209,6 +198,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     logIn,
     logOut,
     signUp,
+    updateUser,
   }
 
   if (!isInitialized) return null
