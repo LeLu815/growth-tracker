@@ -8,7 +8,7 @@ const MilestoneCard = forwardRef<HTMLDivElement, MilestoneCardProps>(
       <div
         ref={ref}
         className={classNames(
-          "w-full rounded-[10px] border border-solid border-slate-300 bg-white py-4 pl-10 pr-4",
+          "w-full rounded-[10px] border border-solid border-slate-300 bg-white px-6 py-6",
           className
         )}
         {...props}
