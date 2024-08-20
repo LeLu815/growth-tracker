@@ -23,7 +23,7 @@ import FlagIcon from "@/components/Icon/FlagIcon"
 import PlusIcon from "@/components/Icon/PlusIcon"
 import Page from "@/components/Page"
 
-import BrowserHeader from "../../../../_components/BrowserHeader"
+import BrowserHeader from "../../../../components/BrowserHeader"
 import Subsubtitle from "../../../../create/_browser/_components/Subsubtitle"
 import DragDropContainer from "../../../../create/_components/DrapDropContainer/DragDropContainer"
 import ChallengeUpdateCreateMilestonePc from "./ChallengeUpdateCreateMilestonePc"

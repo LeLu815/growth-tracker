@@ -41,9 +41,9 @@ function MyPageMain() {
     }
   }, [isLargeScreen, pathname])
 
-  useEffect(() => {
-    return router.refresh();
-  }, []);
+  // useEffect(() => {
+  //   return router.refresh();
+  // }, []);
 
   // useEffect(() => {
   //   if (isInitialized && !isLoggedIn) {

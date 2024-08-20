@@ -7,6 +7,7 @@ import {
   useEffect,
   useState,
 } from "react"
+import { revalidatePath } from "next/cache"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/supabase/client"
 import { User } from "@supabase/supabase-js"
@@ -169,10 +170,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
     setUserData((value) => null)
 
     router.push("/")
-    // router.refresh()
-    // revalidatePath("/")
-    // window.location.href = "/" // 우선 router 로 고치지말아주세요.
-    // router.push("/")
+    router.refresh()
+    revalidatePath("/")
   }
 
   // setUserData 업데이트 최초로 쳐주기!

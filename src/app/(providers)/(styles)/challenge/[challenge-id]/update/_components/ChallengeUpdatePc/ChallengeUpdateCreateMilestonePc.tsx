@@ -16,7 +16,7 @@ import Input from "@/components/Input"
 import Page from "@/components/Page"
 import RangeInput from "@/components/RangeInput"
 
-import BrowserHeader from "../../../../_components/BrowserHeader"
+import BrowserHeader from "../../../../components/BrowserHeader"
 import Subsubtitle from "../../../../create/_browser/_components/Subsubtitle"
 import ChallengeMilestoneCalender from "../../../../create/_components/ChallengeCalender/ChallengeMilestoneCalender"
 import MilestoneCreateComponent from "../../../../create/_components/MilestoneCreate/MilestoneCreateComponent"
