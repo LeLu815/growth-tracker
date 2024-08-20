@@ -32,6 +32,8 @@ interface MilestoneSectionProps {
   challengeEndAt: string
 }
 
+const tempSetToCheckDateInitRDD = new Set()
+
 function MilestoneSection({
   milestone,
   milestoneDoDays, // 마일스톤 시행 요일이 담긴 배열
@@ -182,6 +184,8 @@ function MilestoneSection({
     // 선택한 일자가 마일스톤 시행 요일이면서
     // 동시에 routine_done_daily에 유효한 레코드가 없는 경우에 새로운 레코드  생성
     if (checkMilestoneDayOfWeek && !targetRDD) {
+      if (tempSetToCheckDateInitRDD.has(selectedDate)) return
+      tempSetToCheckDateInitRDD.add(selectedDate)
       console.log("포스트할거임")
       const newId = v4()
 
