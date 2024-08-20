@@ -7,11 +7,13 @@ import React, {
   useRef,
   useState,
 } from "react"
+import { useRouter } from "next/navigation"
 import {
   DELETEroutineDone,
   POSTnewRoutineDone,
 } from "@/api/supabase/routineDone"
 import { PUTisSuccessRoutineDoneDaily } from "@/api/supabase/routineDoneDaily"
+import { useModal } from "@/context/modal.context"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { debounce } from "lodash"
 import { v4 } from "uuid"
@@ -33,15 +35,18 @@ interface RoutineCheckBoxProps {
 }
 
 function RoutineCheckBox({
+  routineContent,
   numberOfroutines,
   selectedDate,
   routineId,
   routineDoneDailyId,
-  routineContent,
+  challengeId,
   challengeEndAt,
 }: PropsWithChildren<RoutineCheckBoxProps>) {
-  const { todayDate, routineDone } = useMyChallengePageContext()
+  const { todayDate, routineDone, currentUserRoutineDoneDaily } =
+    useMyChallengePageContext()
   const queryClient = useQueryClient()
+  const router = useRouter()
   const DEBOUNCE_TIME = 200 // 디바운스 시간 설정
   const targetRD = routineDone.find((item) => {
     return (
@@ -50,6 +55,21 @@ function RoutineCheckBox({
     )
   })
 
+  const modal = useModal()
+  const alertOpen = (message: string, challengeId: string) => {
+    modal.open({
+      type: "confirm",
+      content: message,
+      onConfirm: () => {
+        router.push(`/my-challenge/challenge-result/${challengeId}`)
+      },
+      onCancel: () => {
+        close()
+      },
+    })
+
+    return
+  }
   const [isChecked, setIsChecked] = useState(!!targetRD)
   const [isLoading, setIsLoading] = useState(false)
   const isFirstRender = useRef(true)
@@ -103,6 +123,21 @@ function RoutineCheckBox({
       clickCount.current = 0
     },
   })
+  const isEndOfChallenge = todayDate === challengeEndAt
+  const handleEndOfChallenge = () => {
+    if (isEndOfChallenge) {
+      const targetRDD = currentUserRoutineDoneDaily.find((item) => {
+        return item.id == routineDoneDailyId
+      })
+      if (targetRDD?.is_success) {
+        alertOpen("챌린지가 종료됐어요. 결과를 확인해볼까요?", challengeId)
+      }
+    }
+  }
+
+  useEffect(() => {
+    handleEndOfChallenge()
+  }, [currentUserRoutineDoneDaily])
 
   // isSuccess 업데이트 mutation
   const updateIsSuccessMutation = useMutation({
@@ -112,8 +147,8 @@ function RoutineCheckBox({
         routineDoneDailyId: routineDoneDailyId,
       })
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: ["fetchCurrentUserRoutineDoneDaily"],
       })
     },
@@ -134,9 +169,9 @@ function RoutineCheckBox({
       })
       if (routineDoneDailyId.length > 0) {
         if (todayDoneRoutineArray.length === numberOfroutines) {
-          updateIsSuccessMutation.mutate(true)
+          await updateIsSuccessMutation.mutateAsync(true)
         } else {
-          updateIsSuccessMutation.mutate(false)
+          await updateIsSuccessMutation.mutateAsync(false)
         }
       }
     }
@@ -178,8 +213,6 @@ function RoutineCheckBox({
       return newChecked
     })
   }
-
-  const isEndOfChallenge = todayDate == challengeEndAt
 
   return (
     <div

@@ -44,9 +44,11 @@ function DiarySection({
   const [diaryReadOnly, setDiaryReadOnly] = useState(!isDiaryToday) // 오늘의 일기일땐 readOnly가 false
   const modal = useModal()
   const TEXT_LIMIT = 500
+
   useEffect(() => {
     if (isDiaryToday && !(currentDiary.length == 0)) {
       setDiaryReadOnly(true)
+      setInputText(currentDiary[0]?.content || "")
     }
     if (currentDiary && currentDiary.length > 0) {
       setInputText(currentDiary[0]?.content || "")
@@ -161,7 +163,6 @@ function DiarySection({
         <div className="w-full rounded-lg border-[1.5px] border-solid border-[#CBC9CF] bg-[#FAFAFA] px-4 py-4">
           <textarea
             value={inputText}
-            defaultValue={currentDiary[0]?.content || ""}
             onChange={handleTextChange}
             readOnly={diaryReadOnly}
             placeholder={
