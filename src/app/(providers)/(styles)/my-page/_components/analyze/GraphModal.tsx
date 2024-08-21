@@ -1,8 +1,12 @@
+"use client"
+
 import React from "react"
+import { useRouter } from "next/navigation"
 
 import Button from "@/components/Button"
 
 function GraphModal({ top = "-350px" }: { top?: string }) {
+  const router = useRouter()
   return (
     <div
       className="relative right-[10px] z-20 px-[20px] py-[18px]"
@@ -16,7 +20,11 @@ function GraphModal({ top = "-350px" }: { top?: string }) {
             분석기능을 이용할 수 있어요!
           </p>
         </div>
-        <Button intent="primary" size="lg">
+        <Button
+          intent="primary"
+          size="lg"
+          onClick={() => router.push("/my-challenge")}
+        >
           챌린지 완료하고 분석받기
         </Button>
       </div>
