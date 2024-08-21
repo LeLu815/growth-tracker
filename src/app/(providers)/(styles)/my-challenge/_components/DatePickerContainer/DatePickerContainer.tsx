@@ -16,6 +16,8 @@ import { Swiper, SwiperSlide } from "swiper/react"
 
 import "swiper/css"
 
+import { Milestone } from "lucide-react"
+
 import DatePickerRedDotIcon from "@/components/Icon/DatePickerRedDotIcon"
 import TodayDateIcon from "@/components/Icon/TodayDateIcon"
 
@@ -129,24 +131,52 @@ function DatePickerContainer({}) {
       return milestoneDoDays
     }
 
-    return structuredChallengeData.some(
-      (challenge) =>
-        challenge.milestones.some((milestone) => {
-          const milestoneEndDate = parseInt(milestone.end_at.replace(/-/g, ""))
-          const milestoneDoDays = generatemilestoneDoDaysArray(milestone)
-          const checkMilestoneDayOfWeek = milestoneDoDays.find(
-            (milestoneDoDay) => {
-              return milestoneDoDay == formattedDayOfWeek
-            }
-          )
-          return (
-            formattedDate >= formattedTodayDate &&
-            formattedDate <= milestoneEndDate &&
-            !!checkMilestoneDayOfWeek
-          )
-        }) &&
-        parseInt((challenge.start_at || "").replace(/-/g, "")) <=
-          parseInt(todayDate.replace(/-/g, ""))
+    return (
+      // 최우선적으로 해당 날짜가 오늘 날짜 이상의 날짜여야 한다
+      formattedDate >= formattedTodayDate &&
+      // 그 다음에 챌린지에 대해서 판단을 해보자면,
+      // 현재 진행 중인 챌린지들과 비교하도록 해야한다
+      // 해당 날짜가 챌린지들에 대해서 아래 조건이 하나라도 true이면 해당 날짜를 빨간점 표시할 배열에 포함시키자
+      structuredChallengeData.some((challenge) => {
+        // 최우선적으로 오늘 날짜 기준으로 진행중인 챌린지인지 판단해야 한다
+        // 챌린지 시작일이 오늘 날짜 이전이고, 종료일이 오늘 날짜 이후면 해당 마일스톤은 진행중인거겠지?
+        const challengeStartDate = parseInt(
+          (challenge.start_at || "").replace(/-/g, "")
+        )
+        const challengeEndDate = parseInt(
+          (challenge.end_at || "").replace(/-/g, "")
+        )
+        const isChallengeOnProgress =
+          challengeStartDate <= formattedTodayDate &&
+          challengeEndDate >= formattedTodayDate
+
+        return (
+          isChallengeOnProgress &&
+          // 그 다음엔 마일스톤에서 판단할건데..
+          // 해당 날짜가 마일스톤에 대해서 아래 조건이 하나라도 true이면 해당 날짜를 빨간점 표시할 배열에 포함시키자
+          challenge.milestones.some((milestone) => {
+            // 마일스톤의 시작일이 해당 날짜 이전이고, 종료일이 오늘 날짜 이후면 해당 마일스톤은 진행중인거겠지?
+            // 마일스톤이 진행중인지를 우선 판가름하자.
+            const milestoneStartDate = parseInt(
+              milestone.start_at.replace(/-/g, "")
+            )
+            const milestoneEndDate = parseInt(
+              milestone.end_at.replace(/-/g, "")
+            )
+            const isMilestoneOnProgress =
+              milestoneStartDate <= formattedDate &&
+              milestoneEndDate >= formattedDate
+            const milestoneDoDays = generatemilestoneDoDaysArray(milestone)
+            const checkMilestoneDayOfWeek = milestoneDoDays.find(
+              (milestoneDoDay) => {
+                return milestoneDoDay == formattedDayOfWeek
+              }
+            )
+
+            return !!checkMilestoneDayOfWeek && isMilestoneOnProgress
+          })
+        )
+      })
     )
   }
 

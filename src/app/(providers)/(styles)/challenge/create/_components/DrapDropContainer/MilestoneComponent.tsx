@@ -66,17 +66,19 @@ function MilestoneComponent({
           />
         )}
       </div>
-      <div className="min-h-[40px] pr-[24px]">
-        <div className="flex justify-between">
-          <div className="flex flex-col gap-[10px]">
-            <div className="overflow-hidden truncate whitespace-nowrap text-[16px] font-[700]">
-              {milestone.name}
+      <div className="min-h-[40px]">
+        <div className="flex w-full justify-between gap-x-[10px]">
+          <div className="flex flex-col gap-[16px]">
+            <div className="flex overflow-hidden">
+              <p className="max-w-[150px] truncate whitespace-nowrap text-[16px] font-[700] lg:max-w-full">
+                {milestone.name}
+              </p>
             </div>
             <p
               className={`text-[12px] font-[500] ${disDisabled ? "!text-grey-600" : "text-[#717171]"}`}
             >{`${milestone.start_at.replace(/-/g, ".")} ~ ${milestone.end_at.replace(/-/g, ".")} (${milestone.total_day}일)`}</p>
           </div>
-          <div className="flex flex-1 items-center justify-end">
+          <div className="flex flex-1 flex-grow items-center justify-end">
             <div className="overflow-hidden truncate whitespace-nowrap text-[14px] font-[700]">
               목표 달성률 {milestone.success_percent}%
             </div>
