@@ -7,7 +7,6 @@ import {
   useEffect,
   useState,
 } from "react"
-import { revalidatePath } from "next/cache"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/supabase/client"
 import { User } from "@supabase/supabase-js"
@@ -171,7 +170,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
     router.push("/")
     router.refresh()
-    revalidatePath("/")
+    // revalidatePath("/")
   }
 
   // setUserData 업데이트 최초로 쳐주기!

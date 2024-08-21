@@ -59,7 +59,7 @@ function BottomNavigation() {
       {navItems.map((item, index) => {
         const isActive = activePath.startsWith(item.path)
         return (
-          <Link href={item.path} key={index}>
+          <Link prefetch={false} href={item.path} key={index}>
             <div className={navItemClasses({ active: isActive })}>
               {item.icon(isActive)}
               <span>{item.label}</span>

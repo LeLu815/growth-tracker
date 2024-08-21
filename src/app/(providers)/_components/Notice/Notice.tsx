@@ -76,7 +76,11 @@ function Notice() {
     } catch (error) {
       console.error(error)
     } finally {
-      setCount(count - 1)
+
+      if (count > 0) {
+        setCount(count - 1)
+      }
+
       setOpen(false)
       router.push(`/challenge/${challengeId}`)
     }
