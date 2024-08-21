@@ -136,7 +136,7 @@ const TopPercentGraph = () => {
       const myPositionIndex =
         data.userUserSuccessRateList[0]!.rounded_success_rate / 10
       setMyPercentile(
-        data.userUserSuccessRateList[0]!.percentile === 100
+        data.userUserSuccessRateList[0]!.percentile === 0
           ? 100
           : data.userUserSuccessRateList[0]!.percentile
       )
