@@ -83,7 +83,6 @@ function ComputerComponent() {
           />
         </div>
       </div>
-      <div className="py-[300px]"></div>
       <div
         className={`fixed bottom-[40px] left-0 right-0 z-50 flex justify-center transition-opacity duration-200 ${isShow ? "z-10 opacity-100" : "-z-10 opacity-0"}`}
       >
