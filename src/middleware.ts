@@ -1,14 +1,14 @@
-import { NextResponse, type NextRequest } from "next/server"
+import { type NextRequest } from "next/server"
 
 import { updateSession } from "./supabase/middleware"
 
 export async function middleware(request: NextRequest) {
   // update user's auth session
-  if (request.nextUrl.pathname === "/") {
-    const newsfeedUrl = request.nextUrl.clone()
-    newsfeedUrl.pathname = "/newsfeed"
-    return NextResponse.redirect(newsfeedUrl)
-  }
+  // if (request.nextUrl.pathname === "/") {
+  //   const newsfeedUrl = request.nextUrl.clone()
+  //   newsfeedUrl.pathname = "/newsfeed"
+  //   return NextResponse.redirect(newsfeedUrl)
+  // }
   return await updateSession(request)
 }
 
