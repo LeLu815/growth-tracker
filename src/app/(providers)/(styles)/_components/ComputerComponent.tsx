@@ -7,29 +7,51 @@ import Button from "@/components/Button"
 
 function ComputerComponent() {
   const router = useRouter()
-  const [isVisible, setIsVisible] = useState(false)
   const elementRef = useRef<HTMLDivElement>(null)
+  const timer = useRef<NodeJS.Timeout | null>(null)
+  const [isShow, setIsShow] = useState<boolean>(false)
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting)
-      },
-      { threshold: 0.1 } // 10% 이상 보일 때 감지
-    )
+    const handleScroll = () => {
+      if (timer.current) {
+        clearTimeout(timer.current) // 기존 타이머를 취소
+      }
+      timer.current = setTimeout(() => {
+        const content = elementRef.current
 
-    // 현재 ref 값을 변수에 복사
-    const currentElement = elementRef.current
-    if (currentElement) {
-      observer.observe(currentElement)
+        // nav와 content가 null이 아닌 경우에만 진행
+        if (content) {
+          const contentRect = content.getBoundingClientRect()
+
+          if (contentRect.bottom > 0) {
+            // 안보여야해
+            console.log(1)
+            if (isShow) {
+              console.log("여기여기")
+              setIsShow(false)
+            }
+          } else {
+            // 보여야해!
+            console.log(2)
+            if (!isShow) {
+              setIsShow(true)
+            }
+          }
+        }
+      }, 20) // 디바운스 타이머 설정
     }
+    window.addEventListener("scroll", handleScroll)
 
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-      if (currentElement) {
-        observer.unobserve(currentElement)
+      window.removeEventListener("scroll", handleScroll)
+      if (timer.current) {
+        clearTimeout(timer.current) // 타이머 클리어
       }
     }
-  }, [])
+  }, [isShow])
+
+  console.log("isShow:", isShow)
 
   return (
     <>
@@ -44,12 +66,12 @@ function ComputerComponent() {
         <div className="mt-[72px] flex justify-center">
           <Button
             onClick={() => router.push("/newsfeed")}
-            className="relative !h-[50px] !w-[390px]"
+            className={`relative !h-[50px] !w-[390px] ${isShow && "opacity-0"}`}
           >
             바로 시작하기
             <div
               ref={elementRef}
-              className="absolute top-[-100px] w-3 bg-red-500 py-[54px]"
+              className="absolute top-[-107.5px] w-3 py-[25px]"
             />
           </Button>
         </div>
@@ -61,7 +83,17 @@ function ComputerComponent() {
           />
         </div>
       </div>
-      <div className="py-[200px]"></div>
+      <div className="py-[300px]"></div>
+      <div
+        className={`fixed bottom-[40px] left-0 right-0 z-50 flex justify-center transition-opacity duration-200 ${isShow ? "z-10 opacity-100" : "-z-10 opacity-0"}`}
+      >
+        <Button
+          onClick={() => router.push("/newsfeed")}
+          className="relative !h-[50px] !w-[390px]"
+        >
+          바로 시작하기
+        </Button>
+      </div>
     </>
   )
 }
