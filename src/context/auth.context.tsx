@@ -71,6 +71,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       console.error("Error fetching user data:", error)
     }
   }
+
   // me, userData 업데이트 해주는 함수
   const updateUser = async () => {
     me && fetchUserData(me.id)

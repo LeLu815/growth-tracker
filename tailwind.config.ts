@@ -178,7 +178,7 @@ const config = {
         2: "0px 0px 1px 0px rgba(0, 0, 0, 0.08), 0px 2px 4px 0px rgba(0, 0, 0, 0.15), 0px 0px 1px 0px rgba(0, 0, 0, 0.08)",
         3: "0 5px 10px rgba(0, 0, 0, 0.2)",
         custom:
-          "1px 1px 1px 0px rgba(0, 0, 0, 0.08), 0px 4px 8px 0px rgba(0, 0, 0, 0.15), 0px 0px 2px 0px rgba(0, 0, 0, 0.08)",
+          "1px 1px 1px 0px rgba(0, 0, 0, 0.09), 0px 4px 8px 0px rgba(0, 0, 0, 0.15), 0px 0px 2px 0px rgba(0, 0, 0, 0.09)",
 
         bottom: "0px 2px 2px 0px rgba(0, 0, 0, 0.12)",
       },
@@ -208,8 +208,20 @@ const config = {
           "0%": { transform: "translateY(0)" },
           "100%": { transform: "translateY(100%)" },
         },
+        "move-left": {
+          "0%": { transform: "translateX(0)" },
+          "90%": { transform: "translateX(-90%)" },
+          "100%": { transform: "translateX(-87%)" },
+        },
+        "move-right": {
+          "0%": { transform: "translateX(0)" },
+          "90%": { transform: "translateX(90%)" },
+          "100%": { transform: "translateX(87%)" },
+        },
       },
       animation: {
+        "spread-left": "move-left 0.5s ease-out forwards",
+        "spread-right": "move-right 0.5s ease-out forwards",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "slide-up": "slide-up 300ms ease-out",

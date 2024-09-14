@@ -25,14 +25,11 @@ function ComputerComponent() {
 
           if (contentRect.bottom > 0) {
             // 안보여야해
-            console.log(1)
             if (isShow) {
-              console.log("여기여기")
               setIsShow(false)
             }
           } else {
             // 보여야해!
-            console.log(2)
             if (!isShow) {
               setIsShow(true)
             }
@@ -50,8 +47,6 @@ function ComputerComponent() {
       }
     }
   }, [isShow])
-
-  console.log("isShow:", isShow)
 
   return (
     <>
