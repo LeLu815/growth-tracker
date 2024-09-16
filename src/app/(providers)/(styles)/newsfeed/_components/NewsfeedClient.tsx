@@ -103,12 +103,12 @@ function NewsfeedClient() {
         userId,
         showCompleted,
         pageParam,
-        8
+        12
       )
     },
 
     getNextPageParam: (lastPage, pages) => {
-      return lastPage?.length === 8 ? pages.length + 1 : undefined
+      return lastPage?.length === 12 ? pages.length + 1 : undefined
     },
 
     initialPageParam: 1,

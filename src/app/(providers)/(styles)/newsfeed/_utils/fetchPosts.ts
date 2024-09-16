@@ -9,7 +9,7 @@ export const fetchPosts = async (
   userId: string,
   showCompleted: boolean,
   pageParam: number = 1,
-  limit: number = 8
+  limit: number = 12
 ): Promise<PostType[]> => {
   console.log("데이터요청", { pageParam, limit })
   const response = await axios.get("/api/challenge", {
