@@ -6,6 +6,7 @@ import CreateComponent from "./CreateComponent"
 
 function CreateImportComponent() {
   const [selected, setSeleted] = useState<"create" | "import">("create")
+  const [isFirstSelected, setIsFirstSelected] = useState<Boolean>(false)
   return (
     <div className="bg-[#FCFCFC]">
       <div className="bg-[#feda8a] text-[#BA8103]">
@@ -13,6 +14,7 @@ function CreateImportComponent() {
           <button
             className={`flex-1 rounded-t-[8px] px-[40px] py-[20px] text-center ${selected === "create" && "bg-[#FCFCFC] text-black"}`}
             onClick={() => {
+              setIsFirstSelected(true)
               setSeleted("create")
             }}
           >
@@ -21,6 +23,7 @@ function CreateImportComponent() {
           <button
             className={`flex-1 rounded-t-[8px] px-[40px] py-[20px] text-center ${selected === "import" && "bg-[#FCFCFC] text-black"}`}
             onClick={() => {
+              setIsFirstSelected(true)
               setSeleted("import")
             }}
           >
@@ -29,7 +32,10 @@ function CreateImportComponent() {
         </div>
       </div>
       <div className="mx-auto max-w-[1280px]">
-        <CreateComponent selected={selected} />
+        <CreateComponent
+          selected={selected}
+          isFirstSelected={isFirstSelected}
+        />
       </div>
     </div>
   )

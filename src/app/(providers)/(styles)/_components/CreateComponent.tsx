@@ -2,13 +2,17 @@ import { PropsWithChildren, useEffect, useRef } from "react"
 
 interface CreateComponentProps {
   selected: "create" | "import"
+  isFirstSelected: Boolean
 }
 
-function CreateComponent({ selected }: CreateComponentProps) {
+function CreateComponent({ selected, isFirstSelected }: CreateComponentProps) {
   const createRef = useRef<HTMLDivElement | null>(null)
   const importRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
+    if (!isFirstSelected) {
+      return
+    }
     if (selected === "create" && createRef.current) {
       // selected가 "create"일 때 스크롤 이동
       createRef.current.scrollIntoView({ behavior: "smooth" })
@@ -17,7 +21,7 @@ function CreateComponent({ selected }: CreateComponentProps) {
       // selected가 "create"일 때 스크롤 이동
       importRef.current.scrollIntoView({ behavior: "smooth" })
     }
-  }, [selected]) // selected가 변경될 때마다 실행
+  }, [selected, isFirstSelected]) // selected가 변경될 때마다 실행
 
   return (
     <div>
